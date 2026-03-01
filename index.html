@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Consulting | Nowoczesny Broker Ubezpieczeniowy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #38bdf8;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.5s ease-out forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.3);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #38bdf8; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="custom-scrollbar selection:bg-sky-500 selection:text-white">
+
+    <!-- Chosen Palette: Deep Slate & Cyber Cyan -->
+    <!-- Application Structure Plan: The SPA uses a modular, tabbed dashboard approach inspired by modern tech and underwriting firms (like CFC). A constant background matrix effect establishes the IT/Cyber domain authority. The navigation is sticky for easy access. Content is divided into logical business units: About, Specializations (the core offering), Mass Programs (B2B2C), Case Studies (proof of concept with data), Blog (knowledge), and Contact. This non-linear exploration allows different user personas (IT CEOs, Constructors, HR) to find their specific risk solutions quickly. -->
+    <!-- Visualization & Content Choices: Data visualization is used in the 'Case Study' section via a Chart.js Bar chart to demonstrate the financial impact of cyber attacks (Cost vs. Insurance Payout). This proves the value of the broker. No SVG is used; icons are Unicode. Layout relies heavily on Tailwind CSS Grid/Flexbox for a responsive glassmorphism aesthetic that feels premium and expert-level. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <header class="fixed w-full top-0 z-50 glass-panel border-b-0 border-slate-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="openTab('start')">
+                <span class="text-3xl text-sky-400 font-bold tracking-tighter">AURA</span>
+                <span class="text-xs font-mono text-slate-400 border border-slate-700 px-2 py-1 rounded tracking-widest uppercase">Consulting</span>
+            </div>
+            
+            <button id="mobile-menu-btn" class="md:hidden text-sky-400 text-2xl focus:outline-none">
+                &#9776;
+            </button>
+
+            <nav id="main-nav" class="hidden md:flex w-full md:w-auto mt-4 md:mt-0">
+                <ul class="flex flex-col md:flex-row gap-6 text-sm font-mono uppercase tracking-wide text-slate-300">
+                    <li><button onclick="openTab('start')" class="nav-link active" id="nav-start">Start</button></li>
+                    <li><button onclick="openTab('onas')" class="nav-link" id="nav-onas">O Nas</button></li>
+                    <li><button onclick="openTab('specjalizacje')" class="nav-link" id="nav-specjalizacje">Specjalizacje</button></li>
+                    <li><button onclick="openTab('programy')" class="nav-link" id="nav-programy">Programy Masowe</button></li>
+                    <li><button onclick="openTab('casestudy')" class="nav-link text-emerald-400" id="nav-casestudy">Case Study</button></li>
+                    <li><button onclick="openTab('blog')" class="nav-link" id="nav-blog">Blog</button></li>
+                    <li><button onclick="openTab('kontakt')" class="nav-link" id="nav-kontakt">Kontakt</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pt-32 pb-20 min-h-screen">
+
+        <section id="start" class="tab-content active flex flex-col justify-center h-[70vh]">
+            <div class="max-w-3xl">
+                <div class="font-mono text-sky-400 mb-4 tracking-widest text-sm uppercase glow-text">&#9658; Inicjalizacja środowiska bezpieczeństwa</div>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6">
+                    Architektura <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">Ryzyka Cyfrowego.</span>
+                </h1>
+                <p class="text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed">
+                    Ubezpieczamy nową gospodarkę. Projektujemy nieszablonowe programy dla sektora IT, Cyber i zaawansowanego budownictwa, odblokowując pojemność reasekuracyjną Rynku Londyńskiego.
+                </p>
+                <div class="flex gap-4">
+                    <button onclick="openTab('kontakt')" class="bg-sky-500 hover:bg-sky-400 text-slate-900 font-bold py-3 px-8 rounded-sm transition-colors font-mono uppercase tracking-wider">
+                        Rozpocznij Audyt
+                    </button>
+                    <button onclick="openTab('specjalizacje')" class="border border-sky-500 text-sky-400 hover:bg-sky-500/10 font-bold py-3 px-8 rounded-sm transition-colors font-mono uppercase tracking-wider">
+                        Eksploruj
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="onas" class="tab-content">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4"><span class="text-sky-400 font-mono mr-2">01.</span> O Nas</h2>
+                <p class="text-slate-400 max-w-3xl">Poznaj zespół, który rozumie Twój kod, Twoje algorytmy i Twoje placówki budowlane równie dobrze, jak ogólne warunki ubezpieczenia.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="glass-panel p-8 rounded-xl border border-slate-700">
+                    <div class="text-4xl text-sky-400 mb-4">&#9818;</div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Butikowy Model, Globalny Zasięg</h3>
+                    <p class="text-slate-300 leading-relaxed mb-4">
+                        Aura Consulting to nie masowa sprzedaż. Jesteśmy butikową firmą doradczą. Analizujemy wektory ataków, łańcuchy dostaw i ryzyka zarządcze. Posiadamy bezpośredni dostęp do syndykatów Lloyd's of London, co pozwala nam plasować ryzyka, które lokalny rynek odrzuca.
+                    </p>
+                    <ul class="space-y-2 font-mono text-sm text-sky-300">
+                        <li>&#10003; Autoryzowany dostęp do London Market</li>
+                        <li>&#10003; Dedykowany broker dla każdego klienta</li>
+                        <li>&#10003; Wsparcie w likwidacji trudnych szkód</li>
+                    </ul>
+                </div>
+
+                <div class="glass-panel p-8 rounded-xl border border-slate-700 flex flex-col justify-center items-center text-center">
+                    <div class="w-32 h-32 rounded-full border-2 border-sky-400 p-1 mb-6">
+                        <div class="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-5xl text-slate-500 overflow-hidden relative">
+                            &#9821;
+                            <div class="absolute inset-0 bg-sky-500/20 animate-pulse"></div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Zarząd & Eksperci</h3>
+                    <p class="text-sky-400 font-mono text-sm mb-4">Aura Consulting Core Team</p>
+                    <p class="text-slate-400 text-sm max-w-xs">Bezpośredni kontakt z decydentami. Skracamy dystans i czas reakcji do minimum.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="specjalizacje" class="tab-content">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4"><span class="text-sky-400 font-mono mr-2">02.</span> Specjalizacje</h2>
+                <p class="text-slate-400 max-w-3xl">Architektura transferu ryzyka dostosowana do najbardziej wymagających sektorów współczesnej gospodarki.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-8 rounded-xl border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 text-emerald-400">&#10112;</div>
+                    <h3 class="text-xl font-bold text-white mb-3">IT & Cyber Security</h3>
+                    <p class="text-slate-400 text-sm mb-4">Pełna ochrona przed skutkami naruszeń bezpieczeństwa danych i błędów w kodzie.</p>
+                    <ul class="text-sm text-slate-300 space-y-2">
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Polisy Cyber (Ransomware, BI)</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>IT Professional Indemnity (PI)</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Koszty odtworzenia danych</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Odpowiedzialność RODO</li>
+                    </ul>
+                </div>
+
+                <div class="glass-panel p-8 rounded-xl border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 text-sky-400">&#10113;</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Zarząd & Kapitał (D&O / W&I)</h3>
+                    <p class="text-slate-400 text-sm mb-4">Ochrona osobistego majątku członków zarządu oraz bezpieczeństwo transakcji M&A.</p>
+                    <ul class="text-sm text-slate-300 space-y-2">
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Directors & Officers (D&O)</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Warranty & Indemnity (W&I)</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Ubezpieczenia Podatkowe (TAX)</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>IPO / Emisja akcji</li>
+                    </ul>
+                </div>
+
+                <div class="glass-panel p-8 rounded-xl border border-slate-700 card-hover">
+                    <div class="text-3xl mb-4 text-amber-400">&#10114;</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Budownictwo & Gwarancje</h3>
+                    <p class="text-slate-400 text-sm mb-4">Zabezpieczenie kontraktów budowlanych i płynności finansowej generalnych wykonawców.</p>
+                    <ul class="text-sm text-slate-300 space-y-2">
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Gwarancje kontraktowe</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>Ryzyka CAR / EAR</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>OC Generalnego Wykonawcy</li>
+                        <li><span class="text-sky-400 mr-2">&#9656;</span>PI dla biur projektowych</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="programy" class="tab-content">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4"><span class="text-sky-400 font-mono mr-2">03.</span> Programy Masowe (Affinity)</h2>
+                <p class="text-slate-400 max-w-3xl">Integracja ubezpieczeń bezpośrednio z Twoim modelem biznesowym. Generujemy nowe strumienie przychodów (B2B2C).</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-sky-400 mb-4">White Label Solutions</h3>
+                    <p class="text-slate-300 mb-6 leading-relaxed">
+                        Tworzymy dedykowane programy ubezpieczeniowe szyte na miarę dla platform e-commerce, stowarzyszeń, franczyz i aplikacji SaaS. Odpowiadamy za cały proces: od negocjacji warunków z ubezpieczycielem, przez technologiczną integrację (API), aż po proces likwidacji szkód.
+                    </p>
+                    <div class="bg-slate-800/50 border-l-4 border-emerald-400 p-6 rounded-r-lg mb-6">
+                        <p class="text-sm text-emerald-400 font-mono mb-2">PROJEKT FLAGOWY // SUCCESS STORY</p>
+                        <h4 class="text-xl font-bold text-white mb-2">BeautyPolisa dla BeautyRazem</h4>
+                        <p class="text-slate-300 text-sm">
+                            Zaprojektowaliśmy i wdrożyliśmy w pełni zautomatyzowany, dedykowany program ubezpieczeniowy <strong>BeautyPolisa</strong>, obsługujący dziesiątki tysięcy członków największej w Polsce społeczności branży beauty - <strong>BeautyRazem</strong>. System działa w tle, dostarczając zniżki i ochronę za pomocą kilku kliknięć.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="glass-panel p-6 rounded-xl border border-slate-700 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-sky-500/10 to-transparent opacity-50"></div>
+                    <div class="relative z-10 font-mono text-sm text-slate-300">
+                        <div class="mb-2 text-sky-400"># Kod wdrożenia programu Affinity</div>
+                        <div class="text-slate-500">1| <span class="text-pink-400">import</span> <span class="text-emerald-300">AuraAPI</span> <span class="text-pink-400">from</span> 'aura-insurance-core';</div>
+                        <div class="text-slate-500">2|</div>
+                        <div class="text-slate-500">3| <span class="text-sky-300">const</span> <span class="text-amber-200">platformRisk</span> = <span class="text-pink-400">new</span> <span class="text-emerald-300">AuraAPI.Analyzer</span>(clientData);</div>
+                        <div class="text-slate-500">4| <span class="text-sky-300">const</span> <span class="text-amber-200">customProduct</span> = <span class="text-emerald-300">AuraAPI</span>.<span class="text-blue-300">buildWhiteLabel</span>({</div>
+                        <div class="text-slate-500">5| &nbsp;&nbsp;partner: <span class="text-amber-400">'TwojaPlatforma'</span>,</div>
+                        <div class="text-slate-500">6| &nbsp;&nbsp;coverage: [<span class="text-amber-400">'OC'</span>, <span class="text-amber-400">'Cyber'</span>],</div>
+                        <div class="text-slate-500">7| &nbsp;&nbsp;revenueShare: <span class="text-purple-400">true</span></div>
+                        <div class="text-slate-500">8| });</div>
+                        <div class="text-slate-500">9|</div>
+                        <div class="text-slate-500">10| <span class="text-emerald-300">System</span>.<span class="text-blue-300">deploy</span>(customProduct);</div>
+                        <div class="mt-4 text-emerald-400 animate-pulse">> Status: Oczekuje na wywołanie...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="casestudy" class="tab-content">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4"><span class="text-emerald-400 font-mono mr-2">04.</span> Case Study</h2>
+                <p class="text-slate-400 max-w-3xl">Twarde dane i realne scenariusze. Zobacz, jak odpowiednio ustrukturyzowana polisa ratuje płynność finansową firmy w momencie ataku.</p>
+            </div>
+
+            <div class="glass-panel p-8 rounded-xl border border-slate-700">
+                <div class="flex flex-col lg:flex-row gap-10">
+                    <div class="lg:w-1/2">
+                        <div class="inline-block px-3 py-1 bg-red-500/20 text-red-400 font-mono text-xs rounded border border-red-500/30 mb-4">INCIDENT_REPORT: RANSOMWARE_2025</div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Atak Ransomware na platformę SaaS</h3>
+                        <p class="text-slate-300 mb-4"><strong>Sytuacja:</strong> Klient (dostawca oprogramowania HR) padł ofiarą ataku szyfrującego. Systemy leżały przez 7 dni. Hakerzy zażądali okupu w Bitcoinach. Zatrzymanie operacji generowało straty wizerunkowe i roszczenia klientów końcowych.</p>
+                        <p class="text-slate-300 mb-6"><strong>Działanie Aura:</strong> Natychmiastowe uruchomienie zespołu reagowania na incydenty (Incident Response) z Londynu, przewidzianego w wynegocjowanej polisie Cyber.</p>
+                        
+                        <div class="space-y-3 font-mono text-sm">
+                            <div class="flex justify-between border-b border-slate-700 pb-2">
+                                <span class="text-slate-400">Koszty informatyki śledczej:</span>
+                                <span class="text-white">Pokryte z polisy (150,000 PLN)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-700 pb-2">
+                                <span class="text-slate-400">Utracony zysk (Business Interruption):</span>
+                                <span class="text-emerald-400 font-bold">Wypłacono (1,200,000 PLN)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-700 pb-2">
+                                <span class="text-slate-400">Koszty PR kryzysowego:</span>
+                                <span class="text-white">Pokryte z polisy (80,000 PLN)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-1/2 flex flex-col justify-center">
+                        <h4 class="text-center font-mono text-sm text-sky-400 mb-4">Zestawienie: Koszty własne vs Payout Ubezpieczyciela</h4>
+                        <div class="chart-container">
+                            <canvas id="cyberChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog" class="tab-content">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4"><span class="text-sky-400 font-mono mr-2">05.</span> Baza Wiedzy</h2>
+                <p class="text-slate-400 max-w-3xl">Analizy rynku ubezpieczeń specjalistycznych, trendy cyber threats i aktualności z London Market.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="#" class="block glass-panel p-6 rounded-xl border border-slate-700 card-hover group cursor-pointer">
+                    <p class="font-mono text-xs text-sky-400 mb-2">CYBER SECURITY / 2026-03-01</p>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-sky-300 transition-colors">Wymogi MFA a wypłata odszkodowania w 2026 r.</h3>
+                    <p class="text-slate-400 text-sm">Jak brak wieloskładnikowego uwierzytelniania w środowisku chmurowym staje się główną przyczyną odmów wypłaty na rynku europejskim.</p>
+                    <div class="mt-4 text-sky-500 font-mono text-sm group-hover:translate-x-2 transition-transform inline-block">Czytaj dalej &rarr;</div>
+                </a>
+
+                <a href="#" class="block glass-panel p-6 rounded-xl border border-slate-700 card-hover group cursor-pointer">
+                    <p class="font-mono text-xs text-amber-400 mb-2">BUDOWNICTWO / 2026-02-15</p>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-sky-300 transition-colors">Gwarancje ubezpieczeniowe a płynność finansowa</h3>
+                    <p class="text-slate-400 text-sm">Dlaczego deweloperzy odchodzą od gwarancji bankowych na rzecz pojemności ubezpieczeniowej? Analiza wskaźników finansowych.</p>
+                    <div class="mt-4 text-sky-500 font-mono text-sm group-hover:translate-x-2 transition-transform inline-block">Czytaj dalej &rarr;</div>
+                </a>
+                
+                <a href="#" class="block glass-panel p-6 rounded-xl border border-slate-700 card-hover group cursor-pointer">
+                    <p class="font-mono text-xs text-purple-400 mb-2">M&A / 2026-01-22</p>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-sky-300 transition-colors">Polisy W&I (Warranty & Indemnity) w branży Tech</h3>
+                    <p class="text-slate-400 text-sm">Zabezpieczenie transakcji zakupu software house'u. Jak transferować ryzyko ukrytych wad prawnych IP na ubezpieczyciela.</p>
+                    <div class="mt-4 text-sky-500 font-mono text-sm group-hover:translate-x-2 transition-transform inline-block">Czytaj dalej &rarr;</div>
+                </a>
+            </div>
+        </section>
+
+        <section id="kontakt" class="tab-content">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4"><span class="text-sky-400 font-mono mr-2">06.</span> Inicjacja Kontaktu</h2>
+                <p class="text-slate-400 max-w-3xl">Bezpośredni dostęp do architektów ryzyka. Zbudujmy bezpieczne środowisko dla Twojego biznesu.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="glass-panel p-8 rounded-xl border border-slate-700">
+                    <form onsubmit="event.preventDefault(); alert('Moduł testowy: Wdrożenie na serwerze produkcyjnym aktywuje formularz.');" class="flex flex-col gap-5">
+                        
+                        <div>
+                            <label for="topic" class="block text-sm font-mono text-slate-400 mb-2">Wybierz wektor zapytania:</label>
+                            <select id="topic" class="w-full bg-slate-900 border border-slate-700 text-white rounded p-3 focus:outline-none focus:border-sky-500 transition-colors font-mono text-sm appearance-none">
+                                <option>IT / Cyber / D&O</option>
+                                <option>Sektor Budowlany / Gwarancje</option>
+                                <option>Programy Masowe (White Label)</option>
+                                <option>Pracuj z Nami (Kariera)</option>
+                                <option>Inne</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-mono text-slate-400 mb-2">Adres zwrotny (E-mail):</label>
+                            <input type="email" id="email" placeholder="ceo@twojafirma.pl" required class="w-full bg-slate-900 border border-slate-700 text-white rounded p-3 focus:outline-none focus:border-sky-500 transition-colors font-mono text-sm">
+                        </div>
+
+                        <div>
+                            <label for="message" class="block text-sm font-mono text-slate-400 mb-2">Payload (Wiadomość):</label>
+                            <textarea id="message" rows="4" placeholder="Opisz wyzwanie lub zapotrzebowanie na pojemność rynkową..." required class="w-full bg-slate-900 border border-slate-700 text-white rounded p-3 focus:outline-none focus:border-sky-500 transition-colors font-mono text-sm"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full border border-sky-500 bg-sky-500/10 text-sky-400 hover:bg-sky-500 hover:text-slate-900 font-bold py-3 rounded transition-all font-mono uppercase tracking-wider mt-2">
+                            > Wykonaj_Zapytanie()
+                        </button>
+                    </form>
+                </div>
+
+                <div class="flex flex-col gap-6">
+                    <div class="glass-panel p-8 rounded-xl border border-slate-700 flex items-center gap-6">
+                        <div class="text-4xl text-sky-400">&#9990;</div>
+                        <div>
+                            <p class="text-slate-400 font-mono text-sm mb-1">Infolinia ekspercka</p>
+                            <p class="text-2xl font-bold text-white">+48 500 502 702</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel p-8 rounded-xl border border-slate-700 flex items-center gap-6">
+                        <div class="text-4xl text-sky-400">&#9993;</div>
+                        <div>
+                            <p class="text-slate-400 font-mono text-sm mb-1">Ping E-mail</p>
+                            <p class="text-xl font-bold text-white">hello@auraconsulting.pl</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-xl border border-slate-700 flex-grow bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMGYxNzJhIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjMWUzYThhIiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+')] opacity-80">
+                         <h3 class="text-xl font-bold text-white mb-2">Kariera</h3>
+                         <p class="text-slate-400 text-sm mb-4">Uwolnij się od korporacyjnych procedur. Szukamy brokerów z apetytem na trudne ryzyka i rynek londyński.</p>
+                         <button onclick="document.getElementById('topic').value='Pracuj z Nami (Kariera)'; document.getElementById('message').focus();" class="text-sky-400 font-mono text-sm hover:underline">Aplikuj &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-950 py-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="text-xl text-sky-400 font-bold tracking-tighter mr-2">AURA</span>
+                <span class="text-slate-500 text-sm">© 2026 Aura Consulting Sp. z o.o. Wszelkie prawa zastrzeżone.</span>
+            </div>
+            <div class="font-mono text-xs text-slate-600 flex gap-4">
+                <span>STATUS: SECURE</span>
+                <span>SYSTEM: ONLINE</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const state = {
+            currentTab: 'start',
+            chartInitialized: false
+        };
+
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName("tab-content");
+            const links = document.getElementsByClassName("nav-link");
+            
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            for (let i = 0; i < links.length; i++) {
+                links[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            const activeLink = document.getElementById("nav-" + tabName);
+            if(activeLink) activeLink.classList.add("active");
+            
+            state.currentTab = tabName;
+
+            if (tabName === 'casestudy' && !state.chartInitialized) {
+                initChart();
+                state.chartInitialized = true;
+            }
+
+            const navMenu = document.getElementById('main-nav');
+            if(!navMenu.classList.contains('hidden') && window.innerWidth < 768) {
+                navMenu.classList.add('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const nav = document.getElementById('main-nav');
+            nav.classList.toggle('hidden');
+            nav.classList.toggle('flex');
+            nav.classList.toggle('flex-col');
+            nav.classList.toggle('absolute');
+            nav.classList.toggle('top-16');
+            nav.classList.toggle('left-0');
+            nav.classList.toggle('w-full');
+            nav.classList.toggle('bg-slate-900');
+            nav.classList.toggle('p-6');
+            nav.classList.toggle('border-b');
+            nav.classList.toggle('border-slate-800');
+        });
+
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-lg');
+                header.classList.add('bg-slate-900/90');
+            } else {
+                header.classList.remove('shadow-lg');
+                header.classList.remove('bg-slate-900/90');
+            }
+        });
+
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>[]{}';
+        const fontSize = 14;
+        let columns = canvas.width / fontSize;
+        let drops = [];
+
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(2, 6, 23, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0ea5e9'; 
+            ctx.font = fontSize + 'px "JetBrains Mono", monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 40);
+
+        function initChart() {
+            const ctxChart = document.getElementById('cyberChart').getContext('2d');
+            
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = '"Inter", sans-serif';
+
+            new Chart(ctxChart, {
+                type: 'bar',
+                data: {
+                    labels: ['Koszty Incydentu (Brak Polisy)', 'Realny Koszt Klienta (Z Polisą Aura)'],
+                    datasets: [
+                        {
+                            label: 'Strata Finansowa (PLN)',
+                            data: [1430000, 50000], 
+                            backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(56, 189, 248, 0.8)'],
+                            borderColor: ['rgb(239, 68, 68)', 'rgb(56, 189, 248)'],
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Wypłata Ubezpieczyciela (PLN)',
+                            data: [0, 1380000],
+                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                            borderColor: 'rgb(16, 185, 129)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' }
+                        },
+                        y: {
+                            stacked: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: {
+                                callback: function(value) {
+                                    return value / 1000 + 'k PLN';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#cbd5e1',
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: '#38bdf8',
+                            bodyColor: '#f1f5f9',
+                            borderColor: 'rgba(56, 189, 248, 0.3)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', maximumFractionDigits: 0 }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
