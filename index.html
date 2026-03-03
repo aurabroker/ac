@@ -297,6 +297,13 @@
                     <p class="text-slate-400 text-sm mb-4">
                         Klient z branży tech został zaatakowany przez grupę LockBit. Szyfrowanie objęło backupy i serwery produkcyjne.
                     </p>
+                    
+                    <!-- PRZYKŁAD OSADZENIA WIDEO (YouTube) -->
+                    <div class="mb-6 rounded-lg overflow-hidden border border-slate-700 shadow-lg relative aspect-video w-full bg-slate-900">
+                        <!-- Zmień link w 'src' na własne wideo z YouTube (kliknij Udostępnij -> Umieść na YT) -->
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" title="Aura Consulting Case Study Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+
                     <div class="space-y-2 text-xs font-mono">
                         <div class="flex justify-between border-b border-slate-800 pb-1">
                             <span class="text-slate-500">Koszt przestoju (Business Interruption):</span>
@@ -325,23 +332,25 @@
                 <p class="text-slate-400">Analizy, raporty i insighty, które czynią Cię świadomym decydentem.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <article class="glass-panel p-6 rounded border border-slate-700 card-hover cursor-pointer">
+                <!-- Podłączenie osobnego pliku HTML jako pierwszego artykułu -->
+                <a href="blog-ransomware.html" class="block glass-panel p-6 rounded border border-slate-700 card-hover cursor-pointer group">
                     <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">Cyber / Tech</span>
-                    <h3 class="text-lg font-bold text-white my-3">Ransomware 2.0: Dlaczego samo ubezpieczenie to za mało?</h3>
+                    <h3 class="text-lg font-bold text-white my-3 group-hover:text-sky-400 transition-colors">Ransomware 2.0: Dlaczego samo ubezpieczenie to za mało?</h3>
                     <p class="text-slate-400 text-xs leading-relaxed mb-4">Analizujemy nowe wymogi Rynku Londyńskiego dotyczące higieny IT. Jak przygotować firmę, by w ogóle uzyskać ofertę Cyber?</p>
-                    <span class="text-sky-400 font-mono text-[10px]">Read_Full_Log() &rarr;</span>
-                </article>
-                <article class="glass-panel p-6 rounded border border-slate-700 card-hover cursor-pointer">
+                    <span class="text-sky-400 font-mono text-[10px] group-hover:underline">Read_Full_Log() &rarr;</span>
+                </a>
+                <!-- Zaślepki na przyszłe artykuły -->
+                <article class="block glass-panel p-6 rounded border border-slate-700 card-hover opacity-80 cursor-not-allowed">
                     <span class="text-[10px] font-mono text-sky-400 uppercase tracking-widest">Construction</span>
                     <h3 class="text-lg font-bold text-white my-3">Gwarancje ubezpieczeniowe w dobie wysokich stóp procentowych.</h3>
                     <p class="text-slate-400 text-xs leading-relaxed mb-4">Dlaczego zamiana gwarancji bankowej na ubezpieczeniową to najszybszy sposób na uwolnienie płynności dewelopera?</p>
-                    <span class="text-sky-400 font-mono text-[10px]">Read_Full_Log() &rarr;</span>
+                    <span class="text-slate-600 font-mono text-[10px]">[ Wkrótce_Dostępne ]</span>
                 </article>
-                <article class="glass-panel p-6 rounded border border-slate-700 card-hover cursor-pointer">
+                <article class="block glass-panel p-6 rounded border border-slate-700 card-hover opacity-80 cursor-not-allowed">
                     <span class="text-[10px] font-mono text-pink-400 uppercase tracking-widest">Life & Health</span>
                     <h3 class="text-lg font-bold text-white my-3">Retencja talentów w IT: Czy polisa na życie to wciąż "tylko" benefit?</h3>
                     <p class="text-slate-400 text-xs leading-relaxed mb-4">Jak nowoczesne programy zdrowotne zintegrowane z opieką psychologiczną wpływają na lojalność kluczowych programistów.</p>
-                    <span class="text-sky-400 font-mono text-[10px]">Read_Full_Log() &rarr;</span>
+                    <span class="text-slate-600 font-mono text-[10px]">[ Wkrótce_Dostępne ]</span>
                 </article>
             </div>
         </section>
@@ -356,11 +365,7 @@
                 <div class="glass-panel p-8 rounded border border-slate-700">
                     <!-- Formularz korzysta z darmowego API Web3Forms -->
                     <form id="contact-form" onsubmit="sendEmail(event)">
-                        
-                        <!-- Podłączony klucz API Web3Forms -->
                         <input type="hidden" name="access_key" value="c62e5485-e2d2-4fc3-b454-b312b06aa4fa">
-                        
-                        <!-- Konfiguracja ukryta -->
                         <input type="hidden" name="subject" value="Nowy Lead B2B ze strony Aura Consulting">
                         <input type="hidden" name="from_name" value="System Aura Consulting">
                         <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
@@ -388,18 +393,23 @@
                     </form>
                 </div>
                 <div class="flex flex-col justify-center space-y-8">
-                    <div class="flex items-center gap-6">
-                        <div class="text-4xl text-sky-400">&#9990;</div>
-                        <div>
-                            <p class="text-[10px] font-mono text-slate-500 uppercase">Voice_Line</p>
-                            <p class="text-2xl font-bold text-white">+48 500 502 702</p>
+                    <div class="glass-panel p-8 rounded border border-slate-700">
+                        <div class="text-sky-400 mb-6 border-b border-slate-800 pb-4 inline-block">
+                            <!-- Ikona tarczy/bezpieczeństwa (Unicode/HTML zamiast czystego SVG aby uniknąć błędów) -->
+                            <span class="text-4xl">&#128306;</span> <!-- Kłódka -->
                         </div>
-                    </div>
-                    <div class="flex items-center gap-6">
-                        <div class="text-4xl text-emerald-400">&#9993;</div>
-                        <div>
-                            <p class="text-[10px] font-mono text-slate-500 uppercase">Mail_Server</p>
-                            <p class="text-2xl font-bold text-white">marek.ciesla@auraconsulting.pl</p>
+                        <h3 class="text-xl font-bold text-white mb-3">Bezpieczny Przepływ Informacji</h3>
+                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+                            Zrezygnowaliśmy z udostępniania otwartego adresu e-mail, aby w pełni chronić przepływ danych przed web-skanerami i zautomatyzowanymi botami. 
+                            <br><br>
+                            Użyj szyfrowanego formularza obok, aby przekazać nam wstępny Payload parametrów ryzyka. Ekspert Aura Consulting zwaliduje zapytanie i wróci do Ciebie korzystając z bezpiecznego kanału zwrotnego w ciągu maksymalnie 24 godzin.
+                        </p>
+                        <div class="border-t border-slate-800 pt-6 flex items-center gap-5">
+                            <div class="text-3xl text-emerald-400">&#9990;</div>
+                            <div>
+                                <p class="text-[10px] font-mono text-slate-500 uppercase">Voice_Line (Tylko pilne wezwania)</p>
+                                <p class="text-2xl font-bold text-white tracking-widest">+48 500 502 702</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -521,7 +531,7 @@
 
                 if (response.ok && data.success) {
                     // Sukces
-                    alert("> SYSTEM_LOG: Transmisja zakończona sukcesem.\n> Ekspert Aura Consulting otrzymał Twój payload i wkrótce się z Tobą skontaktuje.");
+                    alert("> SYSTEM_LOG: Transmisja zakończona sukcesem.\n> Dziękujemy! Ekspert Aura Consulting wkrótce się z Tobą skontaktuje.");
                     form.reset(); // Wyczyść formularz
                     
                     // Raportowanie konwersji do GA4
