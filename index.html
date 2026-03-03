@@ -346,12 +346,12 @@
                     <!-- Interaktywny Wykres dla branży Beauty -->
                     <div class="w-full flex flex-col justify-center">
                         <div class="mb-2 text-center">
-                            <span class="text-xs font-mono text-pink-400 tracking-widest uppercase">Skalowanie Sektora (Polska)</span>
+                            <span class="text-xs font-mono text-pink-400 tracking-widest uppercase">Polski Sektor BEAUTY</span>
                         </div>
                         <div class="relative w-full h-[250px]">
                             <canvas id="beautyChart"></canvas>
                         </div>
-                        <p class="text-center text-[10px] text-slate-500 font-mono mt-2">Wykres: Szacunkowa dynamika przyrostu salonów beauty w Polsce (2000-2025)</p>
+                        <p class="text-center text-[10px] text-slate-500 font-mono mt-2">Wykres: Wzrost liczby salonów beauty w Polsce (wg GIS, GUS, D&B)</p>
                     </div>
                 </div>
             </div>
@@ -589,32 +589,52 @@
             });
         }
 
-        // Chart.js - Wykres Liniowy (BeautyRazem)
+        // Chart.js - Wykres Liniowy (BeautyRazem - Dane Rzeczywiste)
         function initBeautyChart() {
             const ctxB = document.getElementById('beautyChart').getContext('2d');
             
-            // Gradient dla wypełnienia pod linią
-            let gradient = ctxB.createLinearGradient(0, 0, 0, 250);
-            gradient.addColorStop(0, 'rgba(244, 114, 182, 0.5)'); // Pink-400
-            gradient.addColorStop(1, 'rgba(244, 114, 182, 0.0)');
-
             state.charts.beauty = new Chart(ctxB, {
                 type: 'line',
                 data: {
-                    labels: ['2000', '2005', '2010', '2015', '2020', '2025'],
-                    datasets: [{
-                        label: 'Liczba salonów (w tys.)',
-                        data: [10, 15, 21, 28, 33, 42],
-                        borderColor: '#f472b6', // Pink-400
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        pointBackgroundColor: '#020617',
-                        pointBorderColor: '#f472b6',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        fill: true,
-                        tension: 0.4 // Krzywizna linii
-                    }]
+                    labels: ['2006', '2009', '2010', '2022', '2024'],
+                    datasets: [
+                        {
+                            label: 'Dun & Bradstreet',
+                            data: [null, null, 58.9, null, 132.4],
+                            borderColor: '#f472b6', // pink-400
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#020617',
+                            pointBorderColor: '#f472b6',
+                            pointRadius: 4,
+                            spanGaps: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'GUS (REGON)',
+                            data: [null, 58.9, null, null, 111.3],
+                            borderColor: '#38bdf8', // sky-400
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#020617',
+                            pointBorderColor: '#38bdf8',
+                            pointRadius: 4,
+                            spanGaps: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'GIS (Sanepid)',
+                            data: [36.3, null, null, 69.5, null],
+                            borderColor: '#10b981', // emerald-400
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#020617',
+                            pointBorderColor: '#10b981',
+                            pointRadius: 4,
+                            spanGaps: true,
+                            tension: 0.3
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -623,7 +643,11 @@
                         y: {
                             beginAtZero: true,
                             grid: { color: 'rgba(51, 65, 85, 0.3)', drawBorder: false },
-                            ticks: { color: '#94a3b8', font: {family: 'JetBrains Mono', size: 10} }
+                            ticks: { 
+                                color: '#94a3b8', 
+                                font: {family: 'JetBrains Mono', size: 10},
+                                callback: function(value) { return value + 'k'; }
+                            }
                         },
                         x: {
                             grid: { display: false },
@@ -631,13 +655,22 @@
                         }
                     },
                     plugins: { 
-                        legend: { display: false },
+                        legend: { 
+                            display: true,
+                            position: 'top',
+                            labels: { color: '#94a3b8', boxWidth: 10, font: {family: 'JetBrains Mono', size: 10} }
+                        },
                         tooltip: {
                             backgroundColor: 'rgba(15, 23, 42, 0.9)',
                             titleFont: {family: 'JetBrains Mono'},
                             bodyFont: {family: 'Inter'},
-                            borderColor: '#f472b6',
-                            borderWidth: 1
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.dataset.label + ': ' + context.parsed.y + ' tys.';
+                                }
+                            }
                         }
                     }
                 }
