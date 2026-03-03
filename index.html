@@ -198,7 +198,9 @@
                 <h2 class="text-3xl font-bold text-white mb-2">Specjalizacje.execute()</h2>
                 <p class="text-slate-400">Dostęp do London Market i dedykowane rozwiązania dla wymagających sektorów.</p>
             </div>
+            <!-- Zmiana siatki na większą, pomieści 6 elementów w 2 rzędach na desktopie -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- 1. Cyber -->
                 <div class="glass-panel p-8 rounded border border-slate-700 card-hover flex flex-col">
                     <div class="text-3xl mb-4 text-emerald-400">0101</div>
                     <h3 class="text-xl font-bold text-white mb-3">Cyber & IT PI</h3>
@@ -211,6 +213,7 @@
                         <p class="text-[10px] text-slate-500 mt-3 font-mono leading-tight">Uruchamia procedurę audytu podatności IT i wyceny dedykowanej pojemności ubezpieczeniowej.</p>
                     </div>
                 </div>
+                <!-- 2. D&O -->
                 <div class="glass-panel p-8 rounded border border-slate-700 card-hover flex flex-col">
                     <div class="text-3xl mb-4 text-sky-400">0110</div>
                     <h3 class="text-xl font-bold text-white mb-3">D&O / W&I / TAX</h3>
@@ -223,6 +226,7 @@
                         <p class="text-[10px] text-slate-500 mt-3 font-mono leading-tight">Inicjuje głęboką analizę ekspozycji zarządu oraz ocenę ryzyk transakcyjno-kapitałowych.</p>
                     </div>
                 </div>
+                <!-- 3. Gwarancje -->
                 <div class="glass-panel p-8 rounded border border-slate-700 card-hover flex flex-col">
                     <div class="text-3xl mb-4 text-amber-400">0111</div>
                     <h3 class="text-xl font-bold text-white mb-3">Gwarancje & CAR</h3>
@@ -233,6 +237,45 @@
                             <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
                         </button>
                         <p class="text-[10px] text-slate-500 mt-3 font-mono leading-tight">Walidacja wymogów kontraktowych i optymalizacja płynności finansowej generalnego wykonawcy.</p>
+                    </div>
+                </div>
+                <!-- 4. Majątek / BI -->
+                <div class="glass-panel p-8 rounded border border-slate-700 card-hover flex flex-col">
+                    <div class="text-3xl mb-4 text-rose-400">1000</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Majątek & Business Interruption</h3>
+                    <p class="text-slate-400 text-sm mb-4 flex-grow">Zabezpieczenie fizycznych aktywów firmy oraz utraconych zysków (BI) w wyniku zdarzeń losowych i katastroficznych.</p>
+                    <div class="mt-4 border-t border-slate-700 pt-5">
+                        <button onclick="openTab('kontakt'); document.querySelector('select[name=\'Temat_Zapytania\']').value='Budownictwo / Gwarancje';" class="w-full bg-slate-800/50 hover:bg-rose-500/20 border border-slate-700 hover:border-rose-500 text-rose-400 font-mono text-sm py-3 px-4 rounded transition-all flex justify-between items-center group">
+                            <span>> Secure(Assets)</span>
+                            <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        </button>
+                        <p class="text-[10px] text-slate-500 mt-3 font-mono leading-tight">Analiza łańcucha dostaw i modelowanie scenariuszy przerw w działalności operacyjnej.</p>
+                    </div>
+                </div>
+                <!-- 5. OC / PI / Środowiskowe -->
+                <div class="glass-panel p-8 rounded border border-slate-700 card-hover flex flex-col">
+                    <div class="text-3xl mb-4 text-indigo-400">1001</div>
+                    <h3 class="text-xl font-bold text-white mb-3">OC Ogólne / PI / Środowiskowe</h3>
+                    <p class="text-slate-400 text-sm mb-4 flex-grow">Kompleksowa ochrona z tytułu prowadzonej działalności, błędów zawodowych i szkód w środowisku.</p>
+                    <div class="mt-4 border-t border-slate-700 pt-5">
+                        <button onclick="openTab('kontakt'); document.querySelector('select[name=\'Temat_Zapytania\']').value='Cyber / IT PI';" class="w-full bg-slate-800/50 hover:bg-indigo-500/20 border border-slate-700 hover:border-indigo-500 text-indigo-400 font-mono text-sm py-3 px-4 rounded transition-all flex justify-between items-center group">
+                            <span>> Mitigate(Liability)</span>
+                            <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        </button>
+                        <p class="text-[10px] text-slate-500 mt-3 font-mono leading-tight">Transfer ryzyka roszczeń od osób trzecich, kontrahentów oraz organów administracji.</p>
+                    </div>
+                </div>
+                <!-- 6. Recall / Terroryzm / K&R -->
+                <div class="glass-panel p-8 rounded border border-slate-700 card-hover flex flex-col">
+                    <div class="text-3xl mb-4 text-orange-400">1010</div>
+                    <h3 class="text-xl font-bold text-white mb-3">Recall / Terroryzm / K&R</h3>
+                    <p class="text-slate-400 text-sm mb-4 flex-grow">Ryzyka specjalistyczne: wycofanie produktu z rynku, akty terroryzmu, sabotaż oraz porwania i okup (Kidnap & Ransom).</p>
+                    <div class="mt-4 border-t border-slate-700 pt-5">
+                        <button onclick="openTab('kontakt'); document.querySelector('select[name=\'Temat_Zapytania\']').value='Programy Masowe / Affinity';" class="w-full bg-slate-800/50 hover:bg-orange-500/20 border border-slate-700 hover:border-orange-500 text-orange-400 font-mono text-sm py-3 px-4 rounded transition-all flex justify-between items-center group">
+                            <span>> Manage(Crisis)</span>
+                            <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                        </button>
+                        <p class="text-[10px] text-slate-500 mt-3 font-mono leading-tight">Dostęp do globalnych firm doradczych PR i negocjatorów kryzysowych z ramienia ubezpieczyciela.</p>
                     </div>
                 </div>
             </div>
