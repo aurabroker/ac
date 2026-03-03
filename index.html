@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aura Consulting | Broker Ekspercki - Cyber, D&O, Benefity</title>
     
+    <!-- TAGI SEO -->
+    <meta name="description" content="Aura Consulting to ekspercki broker ubezpieczeniowy. Projektujemy architekturę bezpieczeństwa dla biznesu: Cyber, D&O, gwarancje budowlane, programy affinity oraz nowoczesne benefity Life & Health. Posiadamy bezpośredni dostęp do rynku londyńskiego.">
+    <meta name="keywords" content="broker ubezpieczeniowy, ubezpieczenia cybernetyczne, ubezpieczenie D&O, gwarancje kontraktowe, ubezpieczenia budowlane CAR EAR, ubezpieczenia grupowe na życie, prywatna opieka medyczna dla firm, programy affinity, ubezpieczenia branża IT, rynek londyński, oc zawodowe IT">
+    <meta name="author" content="Aura Consulting">
+    
+    <!-- Open Graph (LinkedIn / Facebook) -->
+    <meta property="og:title" content="Aura Consulting | Architektura Bezpieczeństwa Biznesu">
+    <meta property="og:description" content="Zmień agenta na eksperta. Specjalizujemy się w ryzykach niestandardowych (Cyber, D&O) i wdrażamy unikalne programy affinity.">
+    <meta property="og:type" content="website">
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GDEW6G7KB0"></script>
     <script>
@@ -141,15 +151,22 @@
 
     <canvas id="matrix-canvas"></canvas>
 
+    <!-- Zaktualizowany Header z Menu Mobilnym -->
     <header class="fixed w-full top-0 z-50 glass-panel border-b-0">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center relative">
             <div class="flex items-center gap-2 cursor-pointer" onclick="openTab('start')">
                 <span class="text-3xl text-sky-400 font-bold tracking-tighter">AURA</span>
-                <span class="text-xs font-mono text-slate-400 border border-slate-700 px-2 py-1 rounded tracking-widest uppercase">Expert_Core</span>
+                <span class="text-xs font-mono text-slate-400 border border-slate-700 px-2 py-1 rounded tracking-widest uppercase hidden sm:inline-block">Expert_Core</span>
             </div>
             
-            <nav class="hidden lg:block">
-                <ul class="flex gap-6 text-xs font-mono uppercase tracking-wide text-slate-300">
+            <!-- Ikona Hamburgera dla Mobile -->
+            <button id="mobile-menu-btn" class="lg:hidden text-sky-400 text-3xl focus:outline-none">
+                &#9776;
+            </button>
+            
+            <!-- Nawigacja (ukryta na mobile, widoczna po kliknięciu) -->
+            <nav id="main-nav" class="hidden lg:flex w-full lg:w-auto mt-4 lg:mt-0 absolute lg:relative top-full left-0 lg:top-auto lg:left-auto bg-slate-950/95 lg:bg-transparent border-b border-slate-800 lg:border-none p-6 lg:p-0 shadow-2xl lg:shadow-none backdrop-blur-md lg:backdrop-blur-none">
+                <ul class="flex flex-col lg:flex-row gap-6 text-xs font-mono uppercase tracking-wide text-slate-300 w-full">
                     <li><a onclick="openTab('start')" class="nav-link active" id="nav-start">Start</a></li>
                     <li><a onclick="openTab('specjalizacje')" class="nav-link" id="nav-specjalizacje">Specjalizacje</a></li>
                     <li><a onclick="openTab('benefity')" class="nav-link" id="nav-benefity">Life & Health</a></li>
@@ -160,7 +177,7 @@
                 </ul>
             </nav>
             
-            <button onclick="openTab('kontakt')" class="cta-button text-xs hidden sm:block">
+            <button onclick="openTab('kontakt')" class="cta-button text-xs hidden lg:block">
                 Execute(Audit)
             </button>
         </div>
@@ -346,7 +363,7 @@
                     <!-- Interaktywny Wykres dla branży Beauty -->
                     <div class="w-full flex flex-col justify-center">
                         <div class="mb-2 text-center">
-                            <span class="text-xs font-mono text-pink-400 tracking-widest uppercase">Polski Sektor BEAUTY</span>
+                            <span class="text-xs font-mono text-pink-400 tracking-widest uppercase">Skalowanie Sektora (Polska)</span>
                         </div>
                         <div class="relative w-full h-[250px]">
                             <canvas id="beautyChart"></canvas>
@@ -543,6 +560,15 @@
         }
         setInterval(draw, 30);
 
+        // Obsługa Menu Mobilnego
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('hidden');
+            mainNav.classList.toggle('flex');
+        });
+
         // Tab Navigation & State
         const state = { currentTab: 'start', charts: {} };
 
@@ -553,6 +579,12 @@
             document.getElementById(tabName).classList.add("active");
             const nav = document.getElementById("nav-" + tabName);
             if(nav) nav.classList.add("active");
+            
+            // Zamknij menu mobilne po kliknięciu w link (jeśli ekran jest mały)
+            if (window.innerWidth < 1024) {
+                mainNav.classList.add('hidden');
+                mainNav.classList.remove('flex');
+            }
             
             // Inicjalizacja wykresów w zależności od zakładki (aby animowały się przy wejściu)
             if(tabName === 'casestudy' && !state.charts.loss) initLossChart();
