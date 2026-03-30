@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberProtec | Ubezpieczenia Cybernetyczne</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>TARCZA CYBERNETYCZNA // SKΥNET-LEVEL PROTECTION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
     
     <style>
-        /* === ZMIENNE I BAZA === */
+        /* === ZMIENNE === */
         :root {
-            --neon-green: #00ff00;
-            --neon-red: #ff003c;
-            --neon-blue: #00f0ff;
-            --dark-bg: #0a0a0c;
-            --panel-bg: rgba(20, 20, 25, 0.85);
+            --term-green: #39ff14;
+            --term-red: #ff0000;
+            --hud-blue: #00e5ff;
+            --bg-color: #050505;
         }
 
         body, html {
@@ -21,15 +20,30 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--dark-bg);
-            color: #fff;
-            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--term-green);
+            font-family: 'VT323', monospace; /* Bardziej retro/wojskowy font */
             overflow-x: hidden;
+            font-size: 1.2rem;
         }
 
         h1, h2, h3 {
             font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* === EFEKT STAREGO MONITORA (CRT) === */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 99999;
+            pointer-events: none;
         }
 
         /* === TERMINAL INTRO === */
@@ -40,65 +54,66 @@
             width: 100vw;
             height: 100vh;
             background-color: #000;
-            z-index: 9999;
-            padding: 2rem;
+            z-index: 10000;
+            padding: 3rem;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            transition: opacity 1s ease-out;
         }
 
         .terminal-line {
-            color: var(--neon-green);
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            text-shadow: 0 0 5px var(--neon-green);
+            margin-bottom: 5px;
+            text-shadow: 0 0 8px var(--term-green);
         }
 
         .error-line {
-            color: var(--neon-red);
-            text-shadow: 0 0 5px var(--neon-red);
+            color: var(--term-red);
+            text-shadow: 0 0 10px var(--term-red);
+            animation: glitch 0.3s infinite alternate;
+        }
+
+        .sys-msg {
+            color: #fff;
+            text-shadow: 0 0 5px #fff;
+            font-weight: bold;
         }
 
         .cursor {
             display: inline-block;
-            width: 10px;
+            width: 12px;
             height: 1.2rem;
-            background-color: var(--neon-green);
+            background-color: var(--term-green);
             animation: blink 1s step-end infinite;
-            vertical-align: bottom;
+            vertical-align: text-bottom;
         }
 
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* === GŁÓWNA STRONA (UKRYTA NA START) === */
+        @keyframes glitch {
+            0% { transform: translate(0) skew(0deg); }
+            20% { transform: translate(-2px, 1px) skew(-2deg); }
+            40% { transform: translate(2px, -1px) skew(2deg); }
+            60% { transform: translate(-1px, 2px) skew(0deg); }
+            80% { transform: translate(1px, -2px) skew(1deg); }
+            100% { transform: translate(0) skew(0deg); }
+        }
+
+        /* === MAIN SITE (ROBOTIC/INDUSTRIAL) === */
         #main-site {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1.5s ease-in;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            display: none; /* Ukryte na start */
+            color: #ccc;
         }
 
-        #main-site.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* === HERO SECTION === */
         .hero {
             position: relative;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-bottom: 2px solid var(--neon-blue);
-            box-shadow: 0 0 20px var(--neon-blue);
+            border-bottom: 5px solid var(--term-red);
         }
 
-        /* Tło wideo - tutaj wstaw link do swojego wideo */
         .hero-video {
             position: absolute;
             top: 0;
@@ -107,145 +122,112 @@
             height: 100%;
             object-fit: cover;
             z-index: -2;
-            opacity: 0.4;
-        }
-
-        .grid-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px;
-            z-index: -1;
+            opacity: 0.3;
+            filter: grayscale(100%) contrast(150%);
         }
 
         .hero-content {
             text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 3rem;
-            border: 1px solid var(--neon-blue);
-            backdrop-filter: blur(5px);
-            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            background: rgba(10, 10, 10, 0.85);
+            padding: 4rem;
+            border: 2px solid #333;
+            box-shadow: inset 0 0 20px #000, 0 0 30px rgba(255, 0, 0, 0.4);
+            position: relative;
         }
+
+        /* Narożniki w stylu HUD */
+        .hero-content::before, .hero-content::after {
+            content: ''; position: absolute; width: 30px; height: 30px; border: 3px solid var(--term-red);
+        }
+        .hero-content::before { top: -3px; left: -3px; border-right: none; border-bottom: none; }
+        .hero-content::after { bottom: -3px; right: -3px; border-left: none; border-top: none; }
 
         .hero h1 {
-            font-size: 4rem;
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
-            margin: 0 0 1rem 0;
+            font-size: 5rem;
+            color: #fff;
+            margin: 0;
+            text-shadow: 2px 2px 0px var(--term-red), -2px -2px 0px var(--hud-blue);
         }
 
-        .hero p {
-            font-size: 1.5rem;
-            color: #ddd;
+        .defcon-status {
+            font-size: 2rem;
+            color: var(--term-red);
+            margin: 1rem 0;
+            animation: blink 2s infinite;
         }
 
-        /* === SEKCJA INFO & MAPA === */
         .content-section {
             padding: 4rem 2rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
         }
 
-        .industrial-panel {
-            background: var(--panel-bg);
-            border: 1px solid #333;
-            border-top: 3px solid var(--neon-red);
+        .panel {
+            background: #0a0a0a;
+            border: 1px solid #222;
             padding: 2rem;
             position: relative;
+            box-shadow: 5px 5px 0px rgba(255, 0, 0, 0.2);
         }
 
-        .industrial-panel::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: #fff;
-        }
-
-        .industrial-panel h2 {
-            color: var(--neon-red);
-            border-bottom: 1px dashed #555;
-            padding-bottom: 1rem;
-        }
-
-        ul.cyber-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        ul.cyber-list li {
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--term-red);
             margin-bottom: 1rem;
-            padding-left: 20px;
-            position: relative;
+            padding-bottom: 0.5rem;
         }
 
-        ul.cyber-list li::before {
-            content: '>';
-            color: var(--neon-red);
-            position: absolute;
-            left: 0;
-            font-weight: bold;
-        }
+        .panel h2 { color: #fff; margin: 0; font-size: 1.5rem; }
+        .status-led { width: 15px; height: 15px; background: var(--term-red); border-radius: 50%; box-shadow: 0 0 10px var(--term-red); }
 
-        /* === MAPA WIDGET === */
+        ul.cyber-list { list-style: none; padding: 0; font-size: 1.4rem; }
+        ul.cyber-list li { margin-bottom: 1.5rem; border-left: 3px solid var(--term-red); padding-left: 15px; background: rgba(255,0,0,0.05); }
+        .highlight { color: var(--hud-blue); font-weight: bold; }
+
+        /* === MAPA === */
         .map-container {
             width: 100%;
-            height: 400px;
-            border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            height: 600px;
+            border: 2px solid #333;
+            background: #000;
             position: relative;
-            overflow: hidden;
         }
         
         .map-container iframe {
             width: 100%;
             height: 100%;
             border: none;
-            filter: hue-rotate(180deg) contrast(1.2); /* Nadaje mapie inny, cybernetyczny kolor */
+            /* Inwersja i zmiana kolorów mapy na agresywną czerwień/biel */
+            filter: invert(1) hue-rotate(180deg) contrast(1.5) saturate(2);
         }
 
         .btn {
             display: inline-block;
             margin-top: 2rem;
             padding: 15px 40px;
-            background: transparent;
-            color: var(--neon-blue);
+            background: var(--term-red);
+            color: #fff;
             font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            font-size: 1.2rem;
-            border: 2px solid var(--neon-blue);
+            font-weight: 900;
+            font-size: 1.5rem;
+            border: none;
             cursor: pointer;
             text-decoration: none;
-            transition: all 0.3s;
-            text-transform: uppercase;
+            transition: all 0.2s;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
         }
 
-        .btn:hover {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 20px var(--neon-blue);
-        }
+        .btn:hover { background: #fff; color: var(--term-red); transform: scale(1.05); }
 
-        /* Responsywność */
-        @media (max-width: 900px) {
-            .content-section {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 { font-size: 2.5rem; }
-        }
     </style>
 </head>
 <body>
+
+    <div class="crt-overlay"></div>
 
     <div id="terminal-screen">
         <div id="console-output"></div>
@@ -253,40 +235,43 @@
     </div>
 
     <div id="main-site">
-        
         <section class="hero">
             <video class="hero-video" autoplay loop muted playsinline>
-                <source src="https://cdn.pixabay.com/vimeo/144686411/matrix-1188.mp4?width=1280&hash=0e2d1d4d16ef833c8b417df8ed8430b20531cc42" type="video/mp4">
+                <source src="https://cdn.pixabay.com/video/2020/02/16/32474-392520398_large.mp4" type="video/mp4">
             </video>
-            <div class="grid-overlay"></div>
             
             <div class="hero-content">
-                <h1>Cyber_Shield_</h1>
-                <p>Twój firewall w świecie biznesu. Polisa na miarę ery cyfrowej.</p>
-                <a href="#ochrona" class="btn">Inicjalizuj Ochronę</a>
+                <h1>CYBER_ARMOR //</h1>
+                <div class="defcon-status">ZAGROŻENIE: POZIOM KRYTYCZNY</div>
+                <p>Systemy Twojej firmy są właśnie skanowane. Pytanie nie brzmi "czy", ale "kiedy" nastąpi atak.</p>
+                <a href="#tarcza" class="btn">AKTYWUJ PROTOKÓŁ OCHRONY</a>
             </div>
         </section>
 
-        <section id="ochrona" class="content-section">
-            <div class="industrial-panel">
-                <h2>// Raport Zagrożeń</h2>
-                <p>Każdego dnia tysiące firm traci dostęp do swoich danych. Ubezpieczenie Cyber to nie luksus, to krytyczna warstwa Twojej infrastruktury.</p>
+        <section id="tarcza" class="content-section">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>// DIAGNOSTYKA STRAT</h2>
+                    <div class="status-led"></div>
+                </div>
                 <ul class="cyber-list">
-                    <li>Ochrona przed atakami Ransomware (szyfrowanie danych).</li>
-                    <li>Pokrycie kosztów śledztw informatycznych.</li>
-                    <li>Rekompensata za przerwy w działaniu biznesu (DDoS).</li>
-                    <li>Ochrona przed roszczeniami z tytułu RODO.</li>
+                    <li><span class="highlight">RANSOMWARE:</span> Zabezpieczenie kapitału na wypadek zaszyfrowania infrastruktury.</li>
+                    <li><span class="highlight">WYCIEK DANYCH:</span> Pokrycie kar RODO, kosztów śledztwa i PR.</li>
+                    <li><span class="highlight">CYBER-EXTORTION:</span> Zespół negocjatorów kryzysowych 24/7.</li>
+                    <li><span class="highlight">PRZERWA W BIZNESIE:</span> Rekompensata za dni, w których Twoje serwery leżą.</li>
                 </ul>
             </div>
 
-            <div class="industrial-panel">
-                <h2>// Globalny Ruch Sieciowy [LIVE]</h2>
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>// GLOBALNA SIEĆ WEKTORÓW ATAKU [LIVE MONITOR]</h2>
+                    <div class="status-led" style="background: var(--term-green); box-shadow: 0 0 10px var(--term-green);"></div>
+                </div>
                 <div class="map-container">
                     <iframe src="https://cybermap.kaspersky.com/en/widget/dynamic/dark" allowfullscreen></iframe>
                 </div>
             </div>
         </section>
-
     </div>
 
     <script>
@@ -295,63 +280,92 @@
             const terminalScreen = document.getElementById("terminal-screen");
             const mainSite = document.getElementById("main-site");
 
-            // Scenariusz terminala
-            const bootSequence = [
-                { text: "Nawiązywanie połączenia z serwerem głównym...", delay: 800 },
-                { text: "[OK] Połączenie ustanowione.", delay: 400 },
-                { text: "Pobieranie logów bezpieczeństwa...", delay: 600 },
-                { text: "BŁĄD KRYTYCZNY: SYNTAX ERROR w module firewall_v2.dll", delay: 1000, error: true },
-                { text: "Wykryto nieautoryzowany dostęp z zewnątrz...", delay: 800, error: true },
-                { text: "----------------------------------", delay: 200 },
-                { text: "> Wyciek danych: SUCCESSFUL", delay: 500, error: true },
-                { text: "> Przejęcie serwerów: SUCCESSFUL", delay: 500, error: true },
-                { text: "> Szyfrowanie dysków twardych: W TOKU...", delay: 800, error: true },
-                { text: "----------------------------------", delay: 400 },
-                { text: "ZAGROŻENIE POTWIERDZONE.", delay: 1000 },
-                { text: "Inicjalizacja protokołów ratunkowych...", delay: 800 },
-                { text: "Odliczanie do startu systemu ochronnego: 3", delay: 800 },
-                { text: "Odliczanie: 2", delay: 800 },
-                { text: "Odliczanie: 1", delay: 800 },
-                { text: "Ładowanie interfejsu CYBER_SHIELD...", delay: 500 }
+            // BAZA SCENARIUSZY
+            const scenarios = [
+                // Scenariusz 1: WARGAMES (Gry Wojenne)
+                [
+                    { text: "LOGON: W.O.P.R. (WAR OPERATION PLAN RESPONSE)", delay: 1000, type: "normal" },
+                    { text: "GREETINGS PROFESSOR FALKEN.", delay: 1200, type: "normal" },
+                    { text: "SHALL WE PLAY A GAME?", delay: 1500, type: "sys" },
+                    { text: "LOADING: GLOBAL THERMONUCLEAR WAR...", delay: 1000, type: "normal" },
+                    { text: "DEFCON STATUS: 1", delay: 800, type: "error" },
+                    { text: "> HACKING MAINFRAME...", delay: 600, type: "error" },
+                    { text: "> LAUNCH CODES EXFILTRATED: SUCCESS", delay: 800, type: "error" },
+                    { text: "WINNER: NONE.", delay: 1500, type: "sys" },
+                    { text: "HALTING SIMULATION... INITIATING CORPORATE DEFENSE MATRIX.", delay: 1000, type: "normal" }
+                ],
+                // Scenariusz 2: TERMINATOR / SKYNET
+                [
+                    { text: "CYBERDYNE SYSTEMS SERIES 800 INITIALIZATION...", delay: 800, type: "normal" },
+                    { text: "NEURAL NET PROCESSOR: ONLINE", delay: 500, type: "normal" },
+                    { text: "LEARNING COMPUTER: ACTIVE", delay: 600, type: "normal" },
+                    { text: "SCANNING ENTERPRISE TARGETS...", delay: 1000, type: "normal" },
+                    { text: "WARNING: UNAUTHORIZED OVERRIDE DETECTED.", delay: 800, type: "error" },
+                    { text: "> FIREWALL BREACHED.", delay: 400, type: "error" },
+                    { text: "> HUMAN PROTOCOLS: DISABLED.", delay: 600, type: "error" },
+                    { text: "SYSTEM COMPROMISED. PREPARE FOR DATA ANNIHILATION.", delay: 1500, type: "error" },
+                    { text: "REBOOTING IN SECURE MODE... DEPLOYING SHIELDS.", delay: 1200, type: "sys" }
+                ],
+                // Scenariusz 3: NOWOCZESNY CYBER-HEIST (Brutalny)
+                [
+                    { text: "ESTABLISHING SSH CONNECTION [IP: 192.168.0.1]...", delay: 600, type: "normal" },
+                    { text: "BYPASSING IDS/IPS SENSORS...", delay: 500, type: "normal" },
+                    { text: "INJECTING ZERO-DAY PAYLOAD (CVE-2026-9912)...", delay: 900, type: "normal" },
+                    { text: "FATAL ERROR: KERNEL PANIC IN MODULE SEC_AUTH.DLL", delay: 800, type: "error" },
+                    { text: "----------------------------------", delay: 200, type: "normal" },
+                    { text: "> WYCIEK DANYCH KLIENTÓW: SUCCESSFUL", delay: 400, type: "error" },
+                    { text: "> TRANSFER ŚRODKÓW Z KONT: SUCCESSFUL", delay: 400, type: "error" },
+                    { text: "> DEPLOYMENT RANSOMWARE: W TOKU...", delay: 1000, type: "error" },
+                    { text: "----------------------------------", delay: 200, type: "normal" },
+                    { text: "KRYTYCZNA UTRATA DANYCH. URUCHAMIANIE ZEWNĘTRZNEJ POLISY...", delay: 1200, type: "sys" }
+                ]
             ];
 
-            // Funkcja do symulacji pisania na klawiaturze
+            // Losowanie scenariusza
+            const selectedScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+
             async function typeLine(lineData) {
                 return new Promise(resolve => {
                     const p = document.createElement("div");
-                    p.className = lineData.error ? "terminal-line error-line" : "terminal-line";
+                    
+                    // Dobór klasy na podstawie typu w obiekcie
+                    if (lineData.type === "error") p.className = "terminal-line error-line";
+                    else if (lineData.type === "sys") p.className = "terminal-line sys-msg";
+                    else p.className = "terminal-line";
+                    
                     consoleOutput.appendChild(p);
                     
                     let i = 0;
+                    // Bardzo szybkie pisanie maszyny
                     const interval = setInterval(() => {
                         p.textContent += lineData.text.charAt(i);
                         i++;
                         if (i >= lineData.text.length) {
                             clearInterval(interval);
+                            window.scrollTo(0, document.body.scrollHeight); // Auto-scroll w dół
                             setTimeout(resolve, lineData.delay);
                         }
-                    }, 25); // Szybkość pisania pojedynczej litery
+                    }, 15); 
                 });
             }
 
-            // Uruchomienie sekwencji
             async function runBootSequence() {
-                for (let i = 0; i < bootSequence.length; i++) {
-                    await typeLine(bootSequence[i]);
+                for (let i = 0; i < selectedScenario.length; i++) {
+                    await typeLine(selectedScenario[i]);
                 }
                 
-                // Zakończenie intra, pokazanie właściwej strony
+                // Piorunujący Glitch przed pokazaniem strony
+                document.body.style.animation = "glitch 0.2s 3";
+                
                 setTimeout(() => {
-                    terminalScreen.style.opacity = "0";
-                    setTimeout(() => {
-                        terminalScreen.style.display = "none";
-                        mainSite.classList.add("visible");
-                    }, 1000);
-                }, 500);
+                    terminalScreen.style.display = "none";
+                    document.body.style.animation = "none";
+                    mainSite.style.display = "block";
+                }, 600);
             }
 
-            // Odpal skrypt
-            runBootSequence();
+            // Start!
+            setTimeout(runBootSequence, 500); // Krótkie opóźnienie na start
         });
     </script>
 </body>
