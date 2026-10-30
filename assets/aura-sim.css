@@ -1,4 +1,4 @@
-/* aura-sim.css — warstwa „symulacja zagrożeń” (dekoracja, aria-hidden). Białe tło, cienkie linie. */
+/* aura-sim.css · warstwa „symulacja zagrożeń” (dekoracja, aria-hidden). Białe tło, cienkie linie, opcjonalne tło wideo. */
 .aura-sim {
     --as-navy: #071428; --as-navy-2: #1a3a6e; --as-gold: #b8920a; --as-gold-txt: #876a06;
     --as-red: #c0392b; --as-teal: #0d7b6e; --as-border: #dde6f0; --as-text-2: #4a6278;
@@ -7,10 +7,31 @@
     overflow: hidden; background: #ffffff; isolation: isolate; contain: layout paint;
     -webkit-user-select: none; user-select: none;
 }
-.aura-sim > canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.aura-sim > canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; display: block; pointer-events: none; }
+.aura-sim-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
 .aura-sim.is-live > .aura-sim-fallback { display: none; }
-.as-pop { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.as-pop { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 
+/* ── tło wideo: dwa klipy z przenikaniem, multiply + biała winieta ── */
+.as-vid {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0; mix-blend-mode: multiply; transition: opacity 1s ease;
+}
+.as-vid.is-ready { opacity: var(--as-video-opacity, .55); }
+.as-vid[hidden] { display: none; }
+.as-vid video {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+    object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out;
+    filter: saturate(.85) contrast(1.04) brightness(1.04);
+}
+.as-vid video.is-on { opacity: 1; }
+.as-vid video.is-top { z-index: 1; }
+.as-vid::after {
+    content: ""; position: absolute; inset: -1px; z-index: 2;
+    background: radial-gradient(ellipse 78% 74% at 50% 50%, rgba(255,255,255,0) 38%, rgba(255,255,255,.72) 72%, #ffffff 100%);
+}
+
+/* ── okienka ostrzeżeń ── */
 .as-card {
     --c: var(--as-navy-2); --ct: var(--as-navy-2);
     position: absolute; left: 0; top: 0;
@@ -20,6 +41,7 @@
     padding: 9px 12px 10px 11px;
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; color: var(--as-navy);
     text-align: left; pointer-events: none;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
     opacity: 0; transform: translate3d(var(--dx, 10px), 12px, 0);
     transition: opacity .45s cubic-bezier(.2, .7, .2, 1), transform .6s cubic-bezier(.2, .7, .2, 1);
     will-change: opacity, transform;
@@ -33,7 +55,7 @@
 
 .as-tag {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    font: 500 9px/1 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    font: 500 9.5px/1 'JetBrains Mono', ui-monospace, Menlo, monospace;
     letter-spacing: .16em; text-transform: uppercase; color: var(--ct);
 }
 .as-tag b { font-weight: 500; display: inline-flex; align-items: center; gap: 7px; }
@@ -42,19 +64,28 @@
 .as-t { margin-top: 7px; font-size: 12.5px; line-height: 1.32; font-weight: 600; letter-spacing: -.005em; color: var(--as-navy); }
 .as-d { margin-top: 3px; font-size: 11.25px; line-height: 1.42; font-weight: 400; color: var(--as-text-2); }
 .as-c {
-    margin-top: 8px; padding-top: 7px; border-top: 1px dashed var(--as-border);
-    font: 500 9.5px/1.35 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: .02em;
-    color: var(--as-gold-txt);
-    opacity: 0; transform: translateX(-4px); transition: opacity .45s ease, transform .45s ease;
+    position: relative; margin-top: 8px; padding: 7px 0 0 1.3em; text-indent: -1.3em;
+    border-top: 1px dashed var(--as-border);
+    font: 500 9.5px/1.4 'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing: .01em;
+    color: transparent; transition: color .45s ease;
 }
-.as-card.is-cov .as-c { opacity: 1; transform: none; }
+.as-card.is-cov .as-c { color: var(--as-gold-txt); }
+/* „odpowiedź programu”: złota linia postępu na separatorze, potem dopisek ochrony */
+.as-c::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 1px;
+    background: var(--as-gold); transform-origin: left; transform: scaleX(0); opacity: .85;
+}
+.as-card.is-in .as-c::before { transform: scaleX(1); transition: transform var(--cov, 1.3s) cubic-bezier(.4, 0, .2, 1); }
+.as-card.is-cov .as-c::before { opacity: 0; transition: opacity .5s ease .15s; }
 
 /* wąskie pudełko (np. 375 px): mniejsze karty, 1 naraz */
 .as-sm .as-card { width: calc(100% - 20px); max-width: 236px; padding: 8px 10px 9px 9px; }
+.as-sm .as-tag { font-size: 9px; }
 .as-sm .as-t { font-size: 11.5px; margin-top: 6px; }
 .as-sm .as-d { font-size: 10.5px; }
 .as-sm .as-c { font-size: 9px; margin-top: 6px; padding-top: 5px; }
 
 @media (prefers-reduced-motion: reduce) {
-    .as-card, .as-c { transition: none !important; }
+    .as-card, .as-c, .as-c::before, .as-vid { transition: none !important; }
+    .as-vid { display: none !important; }
 }
