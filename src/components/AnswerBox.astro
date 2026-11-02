@@ -1,0 +1,77 @@
+---
+/**
+ * „W skrócie”: 40–60 słów samodzielnej odpowiedzi + do 3 punktów (answer-first).
+ * Treść jest zwykłym tekstem (inline Markdown dozwolony).
+ */
+import { inlineMd } from '../lib/inline-md.ts';
+
+interface Props {
+  summary: string;
+  points?: string[];
+  /** Nagłówek bloku (domyślnie „W skrócie”). */
+  heading?: string;
+}
+const { summary, points = [], heading = 'W skrócie' } = Astro.props;
+---
+
+<section class="answer" aria-labelledby="w-skrocie">
+  <h2 id="w-skrocie" class="answer__title">{heading}</h2>
+  <p class="answer__text" set:html={inlineMd(summary)} />
+  {
+    points.length > 0 && (
+      <ul class="answer__points">
+        {points.slice(0, 3).map((pt) => (
+          <li set:html={inlineMd(pt)} />
+        ))}
+      </ul>
+    )
+  }
+</section>
+
+<style>
+  .answer {
+    position: relative;
+    max-width: var(--measure);
+    margin-block: var(--s-4) var(--s-6);
+    padding: var(--s-3) var(--s-3) var(--s-3) var(--s-4);
+    border-left: 1px solid var(--ink);
+    background: linear-gradient(90deg, var(--paper-inset), var(--paper) 70%);
+  }
+  .answer__title {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 var(--s-1);
+    border: 0;
+    padding: 0;
+  }
+  .answer__text {
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .answer__points {
+    margin: var(--s-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .answer__points li {
+    position: relative;
+    padding-left: var(--s-3);
+    color: var(--ink-2);
+  }
+  .answer__points li + li {
+    margin-top: var(--s-1);
+  }
+  .answer__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.8em;
+    width: 12px;
+    border-top: 1px solid var(--ink);
+  }
+</style>

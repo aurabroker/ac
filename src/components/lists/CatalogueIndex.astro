@@ -1,0 +1,96 @@
+---
+/** Indeks katalogu: filary + karty (solutions) pogrupowane wg pola `group`, w kolejności `order`. */
+import SheetCard from '../SheetCard.astro';
+import CardGrid from '../CardGrid.astro';
+import { getRoutes, type PillarEntry, type SolutionEntry } from '../../lib/routes.ts';
+import { polishText } from '../../lib/typography/polish.ts';
+
+const routes = await getRoutes();
+const byOrder = (a: (typeof routes)[number], b: (typeof routes)[number]) =>
+  (a.entry as PillarEntry).data.order - (b.entry as PillarEntry).data.order;
+// „Główne obszary” = cztery filary; segmenty i pod-huby (id z „/”) jako linia pod siatką
+const pillars = routes.filter((r) => r.kind === 'pillar' && !r.entry.id.includes('/')).sort(byOrder);
+const segments = routes.filter((r) => r.kind === 'pillar' && r.entry.id.includes('/')).sort(byOrder);
+const cards = routes
+  .filter((r) => r.kind === 'solution')
+  .sort((a, b) => (a.entry as SolutionEntry).data.order - (b.entry as SolutionEntry).data.order);
+const groups: { name: string; items: typeof cards }[] = [];
+for (const c of cards) {
+  const g = (c.entry as SolutionEntry).data.group;
+  let grp = groups.find((x) => x.name === g);
+  if (!grp) groups.push((grp = { name: g, items: [] }));
+  grp.items.push(c);
+}
+const slug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ł/g, 'l').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const markets = (m: string[]) => m.map((x) => (x === 'krajowy' ? 'rynek krajowy' : 'rynek zagraniczny')).join(' · ');
+---
+
+<section class="catalogue" aria-labelledby="filary">
+  <h2 id="filary">Główne obszary</h2>
+  <CardGrid columns={2}>
+    {
+      pillars.map((r) => {
+        const d = (r.entry as PillarEntry).data;
+        return <SheetCard href={r.path} title={d.title} sheet={d.sheet} summary={d.cardSummary ?? d.description} meta={markets(d.markets)} draft={r.draft} />;
+      })
+    }
+  </CardGrid>
+  {
+    segments.length > 0 && (
+      <p class="catalogue__sub">
+        <span class="label">Arkusze uzupełniające</span>{' '}
+        {segments.map((r, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={r.path}>{polishText(r.entry.data.title)}</a>
+          </>
+        ))}
+      </p>
+    )
+  }
+
+  {
+    groups.map((g) => (
+      <section class="catalogue__group" aria-labelledby={`grupa-${slug(g.name)}`}>
+        <h2 id={`grupa-${slug(g.name)}`}>{g.name}</h2>
+        <CardGrid columns={3}>
+          {g.items.map((r) => {
+            const d = (r.entry as SolutionEntry).data;
+            return (
+              <SheetCard
+                href={r.path}
+                title={d.title}
+                sheet={d.code}
+                summary={d.cardSummary ?? d.description}
+                meta={markets(d.markets)}
+                draft={r.draft}
+              />
+            );
+          })}
+        </CardGrid>
+      </section>
+    ))
+  }
+</section>
+
+<style>
+  .catalogue {
+    margin-top: var(--s-8);
+  }
+  .catalogue h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+  .catalogue__group {
+    margin-top: var(--s-8);
+  }
+  .catalogue__sub {
+    margin-top: calc(-1 * var(--s-1));
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .catalogue__sub .label {
+    display: inline;
+    margin-right: var(--s-1);
+  }
+</style>

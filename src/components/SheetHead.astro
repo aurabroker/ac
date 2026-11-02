@@ -1,0 +1,76 @@
+---
+/**
+ * Głowica arkusza: okruszki → H1 (opcjonalne słowo-akcent) → lead → tabliczka (zwarta) → „W skrócie”
+ * → „Stan prawny na” (gdy podano).
+ */
+import Breadcrumbs from './Breadcrumbs.astro';
+import TitleBlock from './TitleBlock.astro';
+import AnswerBox from './AnswerBox.astro';
+import NoteBlock from './NoteBlock.astro';
+import { polishText } from '../lib/typography/polish.ts';
+import type { PageContext } from '../lib/page.ts';
+
+interface Props {
+  ctx: PageContext;
+  lead?: string;
+  titleAccent?: string;
+  showAnswer?: boolean;
+  /** Wariant H1: „display” (strona główna) lub zwykły. */
+  display?: boolean;
+}
+const { ctx, lead, titleAccent, showAnswer = true, display = false } = Astro.props;
+const d = ctx.route.entry.data;
+const title = polishText(ctx.title);
+let parts: [string, string, string] | null = null;
+if (titleAccent) {
+  const accent = polishText(titleAccent);
+  const i = title.indexOf(accent);
+  if (i >= 0) parts = [title.slice(0, i), accent, title.slice(i + accent.length)];
+}
+---
+
+<header class="sheet-head">
+  <Breadcrumbs items={ctx.crumbs} />
+  <h1 class:list={['sheet-head__title', display && 'display']}>
+    {parts ? <>{parts[0]}<em class="accent">{parts[1]}</em>{parts[2]}</> : title}
+  </h1>
+  {lead && <p class="sheet-head__lead">{polishText(lead)}</p>}
+  <TitleBlock
+    sheet={d.sheet}
+    revision={d.revision}
+    updated={d.updated}
+    published={d.published}
+    author={ctx.authorName}
+    mdPath={ctx.mdPath}
+    draft={ctx.draft}
+  />
+</header>
+{showAnswer && <AnswerBox summary={d.summary} points={d.summaryPoints} />}
+{
+  d.legalStateAsOf && (
+    <NoteBlock variant="legal" date={d.legalStateAsOf}>
+      <p>Opis stanu prawnego i terminów według źródeł wskazanych na końcu arkusza.</p>
+    </NoteBlock>
+  )
+}
+
+<style>
+  .sheet-head {
+    padding-top: var(--s-2);
+  }
+  .sheet-head__title {
+    margin-top: var(--s-4);
+  }
+  .sheet-head__title.display {
+    font-size: var(--fs-display);
+    line-height: 0.98;
+    max-width: 16ch;
+  }
+  .sheet-head__lead {
+    margin-top: var(--s-3);
+    max-width: 60ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+</style>

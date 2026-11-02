@@ -1,0 +1,104 @@
+---
+/** Profil osoby: rola, dane spółki z rejestru KNF, lista opracowanych arkuszy. */
+import SheetCard from '../SheetCard.astro';
+import CardGrid from '../CardGrid.astro';
+import { getRoutes, type SiteRoute, type PageEntry } from '../../lib/routes.ts';
+import { SITE } from '../../lib/site.ts';
+import { displayName, isKnownPerson, type Person } from '../../lib/people.ts';
+
+interface Props {
+  person: Person;
+}
+const { person } = Astro.props;
+const routes = await getRoutes();
+// Arkusze merytoryczne autora: filary, karty katalogu, huby wiedzy i słownik, artykuły i regulacje
+// (strony firmowe i prawne pomijamy). Szkice tylko w podglądzie.
+const RANK: Record<string, number> = { pillar: 0, solution: 1, page: 2, regulation: 3, article: 3 };
+const isSheet = (r: SiteRoute) =>
+  r.kind !== 'page' || ['hub', 'glossary'].includes((r.entry as PageEntry).data.template);
+const orderOf = (r: SiteRoute) => ('order' in r.entry.data ? (r.entry.data.order as number) : 100);
+const authored = routes
+  .filter((r) => isSheet(r) && r.entry.data.author === person.id)
+  .sort(
+    (a, b) =>
+      RANK[a.kind] - RANK[b.kind] ||
+      (a.kind === 'article' || a.kind === 'regulation'
+        ? b.entry.data.published.getTime() - a.entry.data.published.getTime()
+        : orderOf(a) - orderOf(b)),
+  );
+---
+
+<section class="person" aria-labelledby="profil">
+  <h2 id="profil">Profil</h2>
+  <dl class="person__facts">
+    <div><dt>Imię i nazwisko</dt><dd>{displayName(person)}</dd></div>
+    <div><dt>Rola</dt><dd>{person.role}</dd></div>
+    <div>
+      <dt>Spółka</dt>
+      <dd>{SITE.legalName} — broker ubezpieczeniowy, zezwolenie KNF nr {SITE.knfPermit}, rejestr brokerów {SITE.brokerRegister}</dd>
+    </div>
+    {
+      isKnownPerson(person) && person.linkedin && (
+        <div>
+          <dt>LinkedIn</dt>
+          <dd>
+            <a href={person.linkedin} rel="me noopener">
+              {person.linkedin.replace(/^https?:\/\//, '')}
+            </a>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+  {
+    authored.length > 0 && (
+      <>
+        <h2 id="arkusze-autora">Opracowane arkusze</h2>
+        <CardGrid columns={2}>
+          {authored.map((r) => (
+            <SheetCard href={r.path} title={r.entry.data.title} sheet={r.entry.data.sheet} level={3} draft={r.draft} />
+          ))}
+        </CardGrid>
+      </>
+    )
+  }
+</section>
+
+<style>
+  .person {
+    max-width: var(--measure);
+    margin-top: var(--s-8);
+  }
+  .person h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+    margin-top: var(--s-6);
+  }
+  .person__facts {
+    margin: var(--s-2) 0 0;
+  }
+  .person__facts div {
+    display: grid;
+    grid-template-columns: 12rem 1fr;
+    gap: var(--gutter);
+    padding-block: var(--s-1);
+    border-bottom: 1px solid var(--rule);
+  }
+  .person__facts dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-top: 4px;
+  }
+  .person__facts dd {
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .person__facts div {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>

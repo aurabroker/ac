@@ -1,0 +1,88 @@
+---
+/**
+ * DimensionLine — linia wymiarowa (ozdobnik): strzałki, linie pomocnicze, etykieta w HTML.
+ * Ozdobnik → data-md-skip. Treści merytorycznej nie umieszczaj w etykiecie.
+ *
+ * <DimensionLine label="SUMA GWARANCYJNA" />
+ */
+import { polishText } from '../lib/typography/polish.ts';
+interface Props {
+  label: string;
+  /** Etykieta wartości po prawej (np. „100%”). */
+  value?: string;
+}
+const { label, value } = Astro.props;
+---
+
+<div class="dim" data-md-skip>
+  <svg class="dim__svg" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <line class="dim__ext" x1="0.3" y1="0" x2="0.3" y2="12" vector-effect="non-scaling-stroke"></line>
+    <line class="dim__ext" x1="99.7" y1="0" x2="99.7" y2="12" vector-effect="non-scaling-stroke"></line>
+    <line class="dim__line" x1="0.3" y1="6" x2="99.7" y2="6" vector-effect="non-scaling-stroke"></line>
+  </svg>
+  <span class="dim__arrow dim__arrow--l" aria-hidden="true"></span>
+  <span class="dim__arrow dim__arrow--r" aria-hidden="true"></span>
+  <span class="dim__label">{polishText(label)}{value && <span class="dim__value"> · {value}</span>}</span>
+</div>
+
+<style>
+  .dim {
+    position: relative;
+    margin-block: var(--s-3);
+    height: 28px;
+  }
+  .dim__svg {
+    position: absolute;
+    inset: 8px 0 auto 0;
+    width: 100%;
+    height: 12px;
+  }
+  .dim__ext {
+    stroke: var(--blue);
+    stroke-width: 1;
+  }
+  .dim__line {
+    stroke: var(--blue);
+    stroke-width: 0.75;
+  }
+  .dim__arrow {
+    position: absolute;
+    top: 10px;
+    width: 0;
+    height: 0;
+    border-block: 4px solid transparent;
+  }
+  .dim__arrow--l {
+    left: 1px;
+    border-right: 10px solid var(--blue);
+  }
+  .dim__arrow--r {
+    right: 1px;
+    border-left: 10px solid var(--blue);
+  }
+  .dim__label {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding-inline: var(--s-1);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-label);
+    color: var(--blue);
+    white-space: nowrap;
+    /* ozdobnik: na wąskim ekranie skracamy, nigdy nie poszerzamy strony */
+    max-width: calc(100% - 32px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dim__value {
+    color: var(--ink-3);
+  }
+  @media (max-width: 400px) {
+    .dim__value {
+      display: none;
+    }
+  }
+</style>

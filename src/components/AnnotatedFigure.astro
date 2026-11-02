@@ -1,0 +1,102 @@
+---
+/**
+ * AnnotatedFigure — rysunek z numerem, podpisem i legendą odnośników (tekst w HTML).
+ * SVG ma role="img" i aria-labelledby wskazujące legendę. W .md zostaje podpis i legenda.
+ *
+ * <AnnotatedFigure figure="FigPillarIT" />                       — podpis i legenda z FIGURE_META
+ * <AnnotatedFigure figure="FigPillarIT" plotter />               — z jednorazowym rysowaniem (tylko hero)
+ * <AnnotatedFigure code="F-12" caption="…" legend={['…']}>…<svg/>…</AnnotatedFigure>  — własny SVG w slocie
+ */
+import Figure from './Figure.astro';
+import PlotterHero from './PlotterHero.astro';
+import { FIGURE_META, isFigureId } from './figures/index.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  figure?: string;
+  code?: string;
+  caption?: string;
+  legend?: string[];
+  /** Jednorazowe rysowanie (PlotterHero) — tylko hero strony głównej i filarów. */
+  plotter?: boolean;
+  /** Siatka kreślarska za rysunkiem. */
+  grid?: boolean;
+  /** Unikalny prefiks id (gdy kilka rysunków na stronie). */
+  uid?: string;
+}
+const { figure, plotter = false, grid = true, uid } = Astro.props;
+const meta = figure && isFigureId(figure) ? FIGURE_META[figure] : undefined;
+const code = Astro.props.code ?? meta?.code ?? 'RYS.';
+const caption = Astro.props.caption ?? meta?.caption ?? '';
+const legend = Astro.props.legend ?? meta?.legend ?? [];
+const base = (uid ?? code).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const descId = `rys-${base}-opis`;
+---
+
+<figure class="afig">
+  {
+    plotter ? (
+      <PlotterHero grid={grid}>
+        <div class="afig__drawing">{figure ? <Figure id={figure} labelledby={descId} /> : <slot />}</div>
+      </PlotterHero>
+    ) : (
+      <div class:list={['afig__drawing', grid && 'drafting-grid']}>
+        {figure ? <Figure id={figure} labelledby={descId} /> : <slot />}
+      </div>
+    )
+  }
+  <figcaption class="afig__caption" id={descId}>
+    <span class="afig__code">{code}</span>
+    <span class="afig__text">{polishText(caption)}</span>
+    {
+      legend.length > 0 && (
+        <ol class="afig__legend">
+          {legend.map((item) => (
+            <li>{polishText(item)}</li>
+          ))}
+        </ol>
+      )
+    }
+  </figcaption>
+</figure>
+
+<style>
+  .afig {
+    margin: var(--s-6) 0;
+  }
+  .afig__drawing {
+    border: 1px solid var(--rule);
+    padding: clamp(8px, 2vw, 24px);
+  }
+  .afig__drawing :global(.fig-svg) {
+    max-width: 880px;
+    margin-inline: auto;
+  }
+  .afig__caption {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-1) var(--s-2);
+    margin-top: var(--s-2);
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .afig__code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    color: var(--ink);
+    padding-top: 2px;
+  }
+  .afig__legend {
+    grid-column: 2;
+    margin: 0;
+    padding-left: 1.6em;
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .afig__legend li::marker {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--ink);
+  }
+</style>

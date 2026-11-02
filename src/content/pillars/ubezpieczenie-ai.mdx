@@ -1,0 +1,596 @@
+---
+title: "Ubezpieczenie AI: OC i cyber dla firm tworzących AI"
+seoTitle: "Ubezpieczenie AI: OC i cyber dla firm AI · Aura Consulting"
+ogTitle: "Ubezpieczenie AI: OC i cyber dla firm tworzących AI"
+description: "Ubezpieczenie AI dla firm, które tworzą i wdrażają sztuczną inteligencję: OC za błędy modeli i halucynacje, cyber, LLMjacking, deepfake, USA i AI Act."
+titleAccent: "tworzących"
+lead: "Dla firm, które budują modele, agentów i aplikacje oparte na AI, oraz dla tych, które wdrażają AI u klientów. Jak polisy traktują błędy modeli, halucynacje, wycieki danych przez AI i nadużycia kluczy API, gdzie ochrona ma granice i co zmienia AI Act."
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "AI-000"
+pillar: "ai"
+order: 2
+figure: "FigPillarAI"
+reviewEvery: 90
+markets:
+  - "krajowy"
+  - "zagraniczny"
+summary: "Ubezpieczenie AI to zwykle nie osobna polisa, tylko OC zawodowe i ubezpieczenie cyber, które nie wyłączają szkód z działania sztucznej inteligencji. Część polis potwierdza to wprost klauzulą AI. Roszczenie klienta za błędny wynik modelu rozpatruje OC zawodowe, wyciek danych przez chatbota – polisa cyber, a deepfake i LLMjacking – opcjonalny moduł cyberprzestępstw. Zakres potwierdzamy w ofercie."
+summaryPoints:
+  - "Klauzula AI nie tworzy osobnego limitu ani nie znosi wyłączeń. Uruchamia sekcje, które już masz w polisie, na ich zwykłych zasadach."
+  - "Halucynacja, która zaszkodziła klientowi, to sprawa dla OC zawodowego. Jako awaria systemu w przerwie w działalności liczy się tylko wtedy, gdy polisa tak ją definiuje i doszło do nagłego przestoju."
+  - "Patenty, dane zebrane bez zgody, kary umowne, gwarantowana dokładność modelu i kary, których prawo nie pozwala ubezpieczyć, zwykle pozostają poza zakresem."
+cardSummary: "Twórcy modeli, agentów i aplikacji AI: OC za wynik działania systemu, cyber, deepfake i LLMjacking."
+keywords:
+  primary: "ubezpieczenie ai"
+  secondary:
+    - "ubezpieczenie sztucznej inteligencji"
+    - "oc dla firm ai"
+    - "oc dla ai"
+    - "cyber dla ai"
+    - "halucynacje ai odpowiedzialność"
+    - "llmjacking ubezpieczenie"
+    - "deepfake przelew ubezpieczenie"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu: ryzyka AI w OC zawodowym i cyber"
+coverage:
+  # OC zawodowe
+  - event: "Roszczenie klienta za błędny wynik modelu w Twojej usłudze lub produkcie: halucynacja w raporcie, błędna rekomendacja, wadliwa klasyfikacja"
+    module: "OC zawodowe"
+    label: underwriting
+    conditions: "Polisa nie wyłącza ani nie ogranicza AI, usługa mieści się w opisie działalności, roszczenie zgłoszone w okresie ubezpieczenia, błąd po dacie retroaktywnej."
+  - event: "Niezamierzone naruszenie umowy z klientem przy dostarczaniu rozwiązania AI"
+    module: "OC zawodowe"
+    label: underwriting
+    conditions: "W granicach odpowiedzialności z mocy prawa. Bez kar umownych, service credits i gwarantowanej dokładności modelu."
+  - event: "Koszty obrony: prawnicy, biegli, także eksperci oceniający działanie modelu"
+    module: "OC zawodowe"
+    label: typical
+    conditions: "Zwykle w ramach sumy gwarancyjnej i za zgodą ubezpieczyciela. Także gdy roszczenie okaże się bezzasadne."
+  - event: "Naruszenie cudzych praw autorskich, znaków towarowych, licencji lub wizerunku w treściach tworzonych z pomocą AI"
+    module: "OC zawodowe"
+    label: optional
+    conditions: "Patenty zwykle wyłączone. Roszczeń dotyczących danych treningowych nie obiecujemy objąć ochroną."
+  - event: "Szkoda osobowa lub rzeczowa będąca bezpośrednim skutkiem działania Twojego produktu z AI"
+    module: "OC zawodowe"
+    label: underwriting
+    conditions: "Tylko gdy polisa obejmuje taki zakres. Robotyka, sterowanie urządzeniami i zastosowania medyczne: indywidualna ocena. Recall wyłączony."
+  - event: "Koszty zapobieżenia roszczeniu: poprawa modelu lub danych, zanim klient wystąpi z żądaniem"
+    module: "OC zawodowe"
+    label: optional
+    conditions: "Za uprzednią zgodą ubezpieczyciela."
+  - event: "Postępowanie organu nadzoru wszczęte przeciwko Tobie w związku z AI: koszty obrony"
+    module: "OC zawodowe"
+    label: optional
+    conditions: "Kary tylko w zakresie, w jakim prawo pozwala je ubezpieczyć. Postępowania dotyczące całej branży zwykle poza zakresem."
+  # Cyber
+  - event: "Atak na Twoje systemy z użyciem AI: phishing pisany przez model, zautomatyzowane włamanie"
+    module: "Cyber"
+    label: typical
+    conditions: "W ramach definicji zdarzenia cyber w polisie. O ochronie decyduje zdarzenie, a nie narzędzie atakującego."
+  - event: "Wyciek danych przez chatbota lub agenta AI, także po prompt injection: reakcja na incydent, porada prawna, powiadomienia"
+    module: "Cyber"
+    label: underwriting
+    conditions: "Zależy od definicji naruszenia prywatności. Prompt injection to celowe działanie osoby trzeciej, więc liczy się, czy definicja obejmuje ujawnienie w wyniku ataku. Przy błędzie samego systemu, bez ataku, liczy się, czy obejmuje przypadkowe ujawnienie spowodowane użyciem AI."
+  - event: "Roszczenia osób, których dane ujawnił system AI, oraz postępowanie organu ochrony danych"
+    module: "Cyber"
+    label: underwriting
+    conditions: "Kary administracyjne tylko w zakresie, w jakim prawo pozwala je ubezpieczyć."
+  - event: "Przestój Twoich systemów po halucynacji modelu lub błędnym prompcie: utracony dochód i dodatkowe koszty"
+    module: "Cyber"
+    label: optional
+    conditions: "Tylko gdy polisa obejmuje awarię systemu i błąd operatora, a przestój spełnia definicję z polisy i trwa dłużej niż franszyza czasowa."
+  - event: "Przestój u dostawcy chmury lub API modelu (zależna przerwa w działalności)"
+    module: "Cyber"
+    label: underwriting
+    conditions: "Nie zakładamy, że dostawca modelu mieści się w definicji dostawcy usług. Sprawdzamy to w ofercie."
+  # Cyberprzestępstwa
+  - event: "Przelew wyłudzony socjotechniką z użyciem deepfake'a wideo lub sklonowanego głosu"
+    module: "Cyberprzestępstwa"
+    label: optional
+    conditions: "Tylko w wykupionym module. Z OC zawodowego zwykle wyłączone."
+  - event: "LLMjacking: dodatkowe opłaty za tokeny i moc obliczeniową po przejęciu dostępu do Twojego modelu"
+    module: "Cyberprzestępstwa"
+    label: optional
+    conditions: "Część polis wymienia LLMjacking wprost. Czy dotyczy kluczy do modeli u zewnętrznego dostawcy, potwierdzamy w ofercie."
+  # Wyłączenia i luki
+  - event: "Naruszenie patentów, także dotyczących algorytmów, modeli i zgłoszeń patentowych"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[Ochrona prawna własności intelektualnej](/ubezpieczenia/ochrona-prawna-ip/)"
+  - event: "Zbieranie i wykorzystywanie danych osobowych, biometrycznych lub medycznych bez wymaganej zgody, w tym trenowanie modeli na takich danych"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Podstawa prawna przetwarzania i prawa do danych to warunek wstępny, nie przedmiot ochrony."
+  - event: "Kary umowne, service credits, zryczałtowane odszkodowania i gwarantowana dokładność modelu"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Chyba że odpowiadałbyś także bez takiego zapisu. Lukę zmniejsza negocjacja umowy z klientem."
+  - event: "Przesadzone obietnice co do możliwości AI („AI-washing”), reklama wprowadzająca w błąd, naruszenia prawa konsumenckiego"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Z wyjątkami wskazanymi w polisie."
+  - event: "Wycofanie produktu z rynku (recall), naprawa lub wymiana własnego produktu"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[OC za produkt i koszty wycofania](/ubezpieczenia/oc-produktu-i-wycofanie/)"
+  - event: "Spory pracownicze, w tym o odmowę zatrudnienia z udziałem algorytmu"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Roszczeń o dyskryminację algorytmiczną nie obiecujemy objąć ochroną. Ryzyko omawiamy indywidualnie."
+  - event: "Doradztwo inwestycyjne (np. robo-advisory), papiery wartościowe, kryptoaktywa"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[Ubezpieczenia instytucji finansowych i fintech](/ubezpieczenia/instytucje-finansowe-i-fintech/)"
+  - event: "Osobista odpowiedzialność członków zarządu, np. za nadzór nad wdrożeniem AI"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[OC członków zarządu (D&O)](/ubezpieczenia/oc-czlonkow-zarzadu-d-o/)"
+  - event: "Wyłudzony przelew w ramach OC zawodowego"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Moduł cyberprzestępstw lub [ubezpieczenie crime](/ubezpieczenia/ubezpieczenie-crime/)"
+  - event: "Kary i grzywny, których prawo nie pozwala ubezpieczyć, oraz postępowania dotyczące całej branży"
+    module: "Wyłączenie"
+    label: excluded
+  - event: "Niezamówiona komunikacja, np. boty AI, które dzwonią lub wysyłają wiadomości bez zgody (TCPA, CAN-SPAM)"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Poza wyjątkami w części cyber dotyczącej bezpieczeństwa sieci i prywatności, jeśli przewiduje je polisa."
+  - event: "Rozległe awarie internetu, telekomunikacji i zasilania, także gdy zatrzymają usługi dostawcy chmury lub AI"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Na zasadach z polisy."
+  - event: "Błędy sprzed daty retroaktywnej, znane wcześniej roszczenia i okoliczności"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Przy zmianie polisy chroń ciągłość [daty retroaktywnej](/slownik/#data-retroaktywna)."
+  - event: "Działania, których ubezpieczenie naruszałoby sankcje"
+    module: "Wyłączenie"
+    label: excluded
+faq:
+  - q: "Czy ubezpieczenie AI to osobna polisa?"
+    a: "Zwykle nie. Ryzyka AI mieszczą się w OC zawodowym i ubezpieczeniu cyber, które w polisach dla firm technologicznych często łączy się w jednym programie. Część polis potwierdza wprost, że AI nie odbiera ochrony w tych częściach polisy, które same jej nie wyłączają. Osobnego limitu „na AI” wtedy nie ma, obowiązują limity danej części polisy. Rzadziej spotyka się osobne rozwiązania dla ryzyk AI, np. dotyczące skuteczności modelu. Ich dostępność oceniamy indywidualnie."
+  - q: "Co to jest silent AI i dlaczego ma znaczenie?"
+    a: "Silent AI, czyli „ciche AI”, to sytuacja, w której polisa o sztucznej inteligencji milczy: ani jej nie wyłącza, ani nie potwierdza. O ochronie decyduje wtedy ogólne brzmienie sekcji i jego wykładnia, często dopiero po szkodzie. Afirmatywne potwierdzenie AI usuwa tę niepewność w granicach danej sekcji, a wyłączenie AI może ochronę odebrać. Dlatego brzmienie warunków sprawdzamy przed zakupem."
+  - q: "Czy halucynacja AI jest objęta ochroną?"
+    a: "To zależy od skutku. Jeśli halucynacja spowodowała szkodę klienta, np. błędne dane w raporcie, roszczenie rozpatruje się w OC zawodowym, o ile polisa nie wyłącza AI. Jeśli zatrzymała Twoje systemy, część polis może potraktować to jako awarię systemu, a utracony dochód może być pokryty po upływie franszyzy czasowej, jeśli masz sekcję przerwy w działalności i przestój spełnia jej definicję. Halucynacja bez przestoju nie jest awarią systemu."
+  - q: "Kto odpowiada za błąd modelu: my czy dostawca modelu?"
+    a: "Wobec klienta zwykle odpowiadasz Ty, bo to Ty dostarczasz usługę lub produkt. Możliwość dochodzenia zwrotu od dostawcy modelu zależy od jego warunków, które bywają dla niego bardzo korzystne. OC zawodowe może pokryć Twoją odpowiedzialność wobec klienta, zgodnie z warunkami polisy. Nie chroni dostawcy modelu ani nie zastępuje dobrze napisanej umowy z klientem."
+  - q: "Nie tworzymy AI, tylko korzystamy z gotowych narzędzi. Czy to ma znaczenie?"
+    a: "Tak, ale zwykle na Twoją korzyść: ryzyko jest węższe. Klauzula AI, jeśli polisa ją ma, dotyczy zastosowania AI w Twojej działalności, więc obejmuje też korzystanie z gotowych narzędzi, np. asystentów kodu czy tekstu, w granicach sekcji polisy. Ważne, żeby rzetelnie opisać we wniosku, jak używasz AI. Szczegóły: [AI w firmie a ubezpieczenie](/ubezpieczenie-ai/ai-w-firmie/)."
+  - q: "Czy polisa pokryje kary z AI Act?"
+    a: "Nie obiecujemy tego. Polisy, które analizujemy, nie odnoszą się do AI Act wprost, a ubezpieczenie nie zapewnia zgodności z tym rozporządzeniem. Polisa może pokryć koszty obrony w postępowaniu regulacyjnym wszczętym przeciwko Tobie. Kary pokrywa tylko w zakresie, w jakim prawo pozwala je ubezpieczyć, i zgodnie z warunkami polisy. Postępowania dotyczące całej branży zwykle nie są objęte."
+  - q: "Czy AI Act wymaga od firmy ubezpieczenia OC?"
+    a: "Nie. AI Act nakłada na dostawców i podmioty stosujące systemy AI obowiązki organizacyjne i dokumentacyjne, ale nie wprowadza ogólnego obowiązku ubezpieczenia odpowiedzialności. Wymóg polisy może natomiast wynikać z umowy z klientem, przetargu albo innych przepisów branżowych."
+  - q: "Czy objęte są roszczenia o naruszenie praw autorskich przez treści wygenerowane przez AI?"
+    a: "Mogą być, jeśli polisa ma sekcję własności intelektualnej. Obejmuje ona zwykle naruszenie praw autorskich, znaków towarowych i licencji, plagiat oraz naruszenie wizerunku, a klauzula AI sprawia, że może działać także przy treściach tworzonych z pomocą AI. Patenty są zwykle wyłączone. Ochrony roszczeń dotyczących danych treningowych nie obiecujemy, a trenowanie modeli na danych osobowych pozyskanych bez zgody jest wyłączone."
+  - q: "Co z deepfake'ami i oszustwami „na prezesa”?"
+    a: "Przelew wyłudzony socjotechniką, także z użyciem deepfake'a i klonowania głosu, może być objęty w module cyberprzestępstw. To moduł opcjonalny, który trzeba wybrać. W OC zawodowym takie przelewy są zwykle wyłączone. Szerzej o przestępstwach finansowych: [ubezpieczenie crime](/ubezpieczenia/ubezpieczenie-crime/)."
+  - q: "Czym jest LLMjacking i czy jest objęty?"
+    a: "To nieuprawnione lub złośliwe wykorzystanie Twojego modelu językowego, np. przez przejęty klucz API, które podnosi rachunek za tokeny i moc obliczeniową. W części polis moduł cyberprzestępstw (opcjonalny) zwraca takie dodatkowe opłaty, podobnie jak przy cryptojackingu. Czy dotyczy to także kluczy do modeli udostępnianych przez zewnętrznego dostawcę, potwierdzamy w ofercie."
+  - q: "Sprzedajemy produkt AI klientom w USA. Czy jesteśmy chronieni?"
+    a: "Może tak być, jeśli tak wskazuje polisa. W części programów, które analizujemy, terytorium obejmuje cały świat, łącznie z pozwami przed sądami w USA i Kanadzie. Dla roszczeń w USA limit działa wtedy często jako jeden roczny limit łączny, który obejmuje także koszty obrony. Obowiązują wyłączenia, m.in. dla niezamówionej komunikacji, zbierania danych bez zgody i naruszeń prawa ochrony konsumentów. Zakres potwierdzamy w ofercie."
+  - q: "Jeden błąd modelu dotknął wielu klientów. Ile limitów mamy do dyspozycji?"
+    a: "Zwykle jeden. Roszczenia wynikające z tej samej przyczyny lub tego samego zdarzenia są w wielu polisach traktowane jako jedno roszczenie, z jednym limitem i jednym udziałem własnym. Przy modelu wdrożonym u wielu klientów to ważny argument za wyższą [sumą gwarancyjną](/slownik/#suma-gwarancyjna)."
+  - q: "Czy polisa chroni przed zarzutem dyskryminacji przez algorytm?"
+    a: "Nie możemy tego obiecać. Polisy, które analizujemy, nie odnoszą się wprost do stronniczości algorytmów (bias), a spory pracownicze, w tym o odmowę zatrudnienia, są zwykle wyłączone. Jeśli Twój produkt podejmuje lub wspiera decyzje o ludziach, np. w rekrutacji lub scoringu, omawiamy to ryzyko indywidualnie przy ofercie."
+  - q: "Co napisać o AI we wniosku o ubezpieczenie?"
+    a: "Opisz, czy tworzysz własne modele, korzystasz z modeli zewnętrznych czy wdrażasz AI u klientów, do czego służą wyniki, czy sprawdza je człowiek i jakie dane przetwarzasz. Odpowiadaj rzetelnie na pytania ubezpieczyciela. Zatajenie istotnych informacji może skutkować zmianą warunków, obniżeniem odszkodowania, a nawet brakiem ochrony. Pomagamy przygotować ten opis."
+sources:
+  - title: "Rozporządzenie (UE) 2024/1689 w sprawie sztucznej inteligencji (AI Act), m.in. art. 3, 4, 50 i 99"
+    url: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Rozporządzenie (UE) 2026/1744 zmieniające rozporządzenie (UE) 2024/1689 (tzw. omnibus AI)"
+    url: "https://eur-lex.europa.eu/eli/reg/2026/1744/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Dyrektywa (UE) 2024/2853 w sprawie odpowiedzialności za produkty wadliwe"
+    url: "https://eur-lex.europa.eu/eli/dir/2024/2853/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Rozporządzenie (UE) 2016/679 (RODO), art. 33 i 82"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "AI Act: ramy regulacyjne i harmonogram stosowania"
+    url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai"
+    publisher: "Komisja Europejska"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "OWASP Top 10 for Large Language Model Applications"
+    url: "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+    publisher: "OWASP Foundation"
+    accessed: 2026-11-02
+    tier: T3
+  - title: "LLMjacking: Stolen Cloud Credentials Used in New AI Attack"
+    url: "https://sysdig.com/blog/llmjacking-stolen-cloud-credentials-used-in-new-ai-attack/"
+    publisher: "Sysdig"
+    accessed: 2026-11-02
+    tier: T3
+related:
+  - "/ubezpieczenie-ai/ai-w-firmie/"
+  - "/oc-cyber-dla-it/"
+  - "/ubezpieczenie-cyber/"
+  - "/regulacje/ai-act/"
+  - "/regulacje/pld/"
+  - "/wiedza/llmjacking/"
+  - "/wiedza/ai-act-a-ubezpieczenie/"
+  - "/wiedza/usa-kanada-w-polisie/"
+  - "/ubezpieczenia/ubezpieczenie-crime/"
+changelog:
+  - rev: "A"
+    date: 2026-11-02
+    note: "Pierwsze wydanie w nowym serwisie. Treść dawnej strony o ubezpieczeniu AI uporządkowana w arkusz z etykietami zakresu, scenariuszami, mapą luk i notą o AI Act."
+---
+
+Ten arkusz opisuje ubezpieczenie sztucznej inteligencji z perspektywy firm, które AI tworzą lub wdrażają: budują modele i agentów, rozwijają aplikacje oparte na dużych modelach językowych (LLM) albo integrują AI u klientów. Wyjaśnia, jak <Term en="professional indemnity, Tech E&O">OC zawodowe</Term> i polisa cyber traktują błędy modeli, halucynacje, wycieki danych przez AI i nadużycia kluczy API, a także gdzie ochrona się kończy. Jeśli Twoja firma tylko korzysta z gotowych narzędzi AI, zacznij od arkusza [AI w firmie a ubezpieczenie](/ubezpieczenie-ai/ai-w-firmie/). Ogólne zasady OC i cyber dla branży technologicznej opisujemy w arkuszu [OC i cyber dla firm IT](/oc-cyber-dla-it/).
+
+Wszystkie opisy zakresu są warunkowe: konkretna polisa może wyglądać inaczej, a wiążące są oferta, polisa i ogólne warunki ubezpieczenia.
+
+<SectionView label="Rzut główny" />
+## Czy AI da się ubezpieczyć?
+
+Tak, zwykle w ramach OC zawodowego i ubezpieczenia cyber, a nie osobnej polisy „na AI”. To, że szkoda wynikła z działania modelu, samo w sobie nie musi wyłączać ochrony. Kluczowe jest jednak brzmienie warunków, bo polisy traktują AI na trzy różne sposoby.
+
+<SpecTable
+  caption="Trzy sposoby, w jakie polisa może traktować AI"
+  columns={["Zapis w polisie", "Co oznacza", "Co to znaczy dla Twojej firmy"]}
+  rows={[
+    ["Milczenie, czyli „ciche AI” (silent AI)", "Polisa nie wspomina o AI. Ani jej nie wyłącza, ani nie potwierdza", "Ochrona zależy od ogólnego brzmienia sekcji. Spór o to, czy szkoda „od AI” jest objęta, może pojawić się dopiero po szkodzie"],
+    ["Klauzula AI (afirmatywne potwierdzenie)", "Polisa potwierdza wprost, że szkody związane z AI nie są wyłączone tam, gdzie warunki same ich nie wyłączają", "Największa przejrzystość. Nadal obowiązują limity, warunki i wyłączenia każdej sekcji"],
+    ["Wyłączenie lub ograniczenie AI", "Szkody związane z AI są wyłączone w całości albo w części, np. dla decyzji automatycznych", "Ryzyko, które trzeba wychwycić przed zakupem. Przy firmie tworzącej AI może odebrać sens polisie"]
+  ]}
+  note="Wiele polis nie wspomina o AI wprost. Sprawdzamy brzmienie warunków dla Twojego sposobu tworzenia lub używania AI."
+/>
+
+<NoteBlock variant="note" label="Jak czytać klauzulę AI">
+
+Klauzula AI to potwierdzenie, a nie nowy zakres: mówi, że samo użycie sztucznej inteligencji nie wyklucza ochrony tam, gdzie warunki polisy AI nie wyłączają.
+
+**Co to oznacza:** szkoda „od AI” nie jest szarą strefą. Rozpatruje się ją w tej części polisy, do której pasuje zdarzenie, np. w OC zawodowym albo w cyber, tak jak każdą inną szkodę. Zwykle dotyczy to zarówno AI, którą tworzysz, jak i narzędzi AI, z których korzystasz — brzmienie sprawdzamy w ofercie.
+
+**Czego nie oznacza:** klauzula nie tworzy osobnego limitu ani nowego zakresu. Nie usuwa wyłączeń, np. dla patentów, danych zebranych bez zgody czy kar, których prawo nie pozwala ubezpieczyć. Nie każda szkoda związana z AI jest objęta: liczy się, czy mieści się w wykupionej sekcji.
+
+</NoteBlock>
+
+<SectionView label="Schemat ideowy" />
+## Gdzie w systemie AI powstaje ryzyko?
+
+Ryzyko pojawia się w trzech miejscach: przy danych wejściowych, w samym modelu i jego dostawcy oraz w wyniku, który trafia do klienta. Każde z nich uruchamia inną część polisy.
+
+<SpecTable
+  caption="System AI w trzech częściach: zdarzenie i część polisy"
+  columns={["Element systemu", "Przykładowe zdarzenie", "Część polisy, która może zadziałać", "Na co uważać"]}
+  rows={[
+    ["Dane wejściowe i prawa do nich", "Chatbot ujawnia dane innego klienta. Właściciel praw zarzuca naruszenie przy treściach generowanych przez model", "Cyber (naruszenie prywatności), OC zawodowe (własność intelektualna)", "Dane zebrane bez wymaganej zgody i trenowanie na nich modeli są zwykle wyłączone"],
+    ["Model i jego dostawca", "Halucynacja lub błędny prompt zatrzymują system. Ktoś przejmuje klucz API i nabija rachunek za tokeny", "Cyber (przerwa w działalności), moduł cyberprzestępstw", "Przestój u dostawcy modelu nie musi być objęty. Rozległe awarie internetu i zasilania są zwykle wyłączone"],
+    ["Wynik dostarczany klientowi", "Model zaniża wyceny, błędnie klasyfikuje obiekty, „dopisuje” dane do raportu", "OC zawodowe, OC za produkty i usługi technologiczne", "Gwarantowana dokładność modelu i kary umowne są zwykle wyłączone"]
+  ]}
+/>
+
+<SectionView label="Zestawienie elementów" />
+## Co obejmuje ubezpieczenie AI?
+
+Ubezpieczenie AI składa się zwykle z dwóch części: OC zawodowego, które odpowiada na roszczenia klientów, oraz polisy cyber z opcjonalnym modułem cyberprzestępstw, która finansuje Twoje koszty i straty. Etykiety przy pozycjach mówią, czy element jest zwykle w zakresie, czy zależy od oceny ryzyka lub wykupienia rozszerzenia.
+
+<BOM
+  caption="OC zawodowe przy ryzykach AI"
+  prefix="A"
+  rows={frontmatter.coverage.filter((r) => r.module === "OC zawodowe").map(({ module, ...r }) => r)}
+/>
+
+<BOM
+  caption="Cyber i cyberprzestępstwa przy ryzykach AI"
+  prefix="B"
+  rows={frontmatter.coverage.filter((r) => r.module === "Cyber" || r.module === "Cyberprzestępstwa")}
+/>
+
+Dla wielu pozycji użyliśmy etykiety „zależy od oceny ryzyka”, a nie „zwykle w zakresie”. Zapisy o AI w polisach dopiero się kształtują i różnią się między ubezpieczycielami, więc wolimy je potwierdzić w ofercie, niż obiecać z góry.
+
+<SectionView label="Szczegół H" />
+## Czy halucynacja AI jest objęta ochroną?
+
+To zależy od skutku halucynacji. Jeśli model podał nieprawdziwe informacje, a klient poniósł przez to stratę, roszczenie rozpatruje OC zawodowe. Jeśli halucynacja zatrzymała Twoje systemy, w grę wchodzi przerwa w działalności w części cyber, ale tylko przy odpowiedniej definicji w polisie.
+
+<SpecTable
+  caption="Halucynacja i błędny prompt: która część polisy"
+  columns={["Sytuacja", "Część polisy", "Warunek"]}
+  rows={[
+    ["Halucynacja w raporcie, rekomendacji lub odpowiedzi dla klienta, klient ponosi stratę", "OC zawodowe", "Polisa nie wyłącza AI, a roszczenie zgłoszono w okresie ubezpieczenia ([claims made](/slownik/#claims-made))"],
+    ["Halucynacja zatrzymuje Twoje systemy", "Cyber: przerwa w działalności", "Polisa traktuje taki przestój jako awarię systemu, a przestój spełnia jej definicję i trwa dłużej niż franszyza czasowa"],
+    ["Pracownik nieumyślnie zmienia prompt systemowy i system staje", "Cyber: przerwa w działalności", "Definicja błędu operatora w polisie obejmuje taką nieumyślną zmianę konfiguracji. Błąd w projekcie lub architekturze systemu zwykle nie jest błędem operatora"],
+    ["Halucynacja bez przestoju i bez szkody u klienta", "Brak zdarzenia ubezpieczeniowego", "Sama halucynacja nie jest awarią systemu ani roszczeniem"]
+  ]}
+/>
+
+Halucynacja (hallucination) to odpowiedź modelu, która brzmi wiarygodnie, ale jest nieprawdziwa. W części polis pojawia się wprost w definicji awarii systemu, a nieumyślny błąd w prompcie do modelu językowego w definicji błędu operatora. Tam, gdzie takich zapisów nie ma, przestój wywołany przez model może nie uruchomić ochrony, nawet jeśli polisa obejmuje ataki z zewnątrz.
+
+<SectionView label="Specyfikacja definicji" />
+## Na co patrzeć w warunkach polisy przy ryzykach AI?
+
+Najwięcej mówią definicje. Ta sama nazwa sekcji może w dwóch polisach oznaczać zupełnie inny zakres, dlatego przed zakupem sprawdzamy, czy definicje obejmują zdarzenia typowe dla AI.
+
+<SpecTable
+  caption="Pytania do warunków polisy przy ryzykach AI"
+  columns={["Co sprawdzić", "Dlaczego ma znaczenie"]}
+  rows={[
+    ["Czy polisa ma klauzulę AI, wyłączenie AI, czy milczy?", "Klauzula potwierdza zakres, wyłączenie może go odebrać, milczenie zostawia spór na czas szkody"],
+    ["Czy opis działalności w polisie obejmuje Twoje usługi i produkty AI?", "Usługa spoza opisu działalności może nie być objęta, nawet przy korzystnej klauzuli AI"],
+    ["Czy systemy komputerowe w rozumieniu polisy obejmują systemy AI?", "Od tej definicji zależą sekcje cyber: reakcja na incydent, odtworzenie danych, przerwa w działalności"],
+    ["Czy definicje awarii systemu i błędu operatora obejmują przestój wywołany przez model AI?", "Bez tego przestój wywołany przez model może nie uruchomić przerwy w działalności"],
+    ["Czy naruszenie prywatności obejmuje ujawnienie danych spowodowane użyciem AI?", "Chodzi o wycieki bez ataku z zewnątrz, np. gdy chatbot sam poda dane innej osoby"],
+    ["Czy zdarzenie cyber obejmuje ataki z użyciem AI?", "Rzadko to problem, ale wyraźny zapis ułatwia zgłoszenie szkody"],
+    ["Czy moduł cyberprzestępstw wymienia deepfake, klonowanie głosu i LLMjacking?", "Takie straty zwykle nie mieszczą się w OC zawodowym. Bez modułu zostają bez ochrony"],
+    ["Czy dostawca chmury lub API modelu mieści się w definicji dostawcy, którego przestój jest objęty?", "Wiele firm AI zależy od jednego dostawcy modelu. Nie zakładamy, że jest objęty"],
+    ["Jak polisa traktuje kary umowne, service credits i gwarancje dokładności modelu?", "Zobowiązania przyjęte ponad odpowiedzialność z mocy prawa są zwykle wyłączone"]
+  ]}
+  note="Takie zapisy spotykamy w części warunków, które analizujemy. Brzmienie definicji w konkretnej polisie potwierdzamy w ofercie."
+/>
+
+<SectionView label="Przypadki obciążenia LC-A1…LC-A8" />
+## Jak to wygląda w praktyce?
+
+Osiem typowych sytuacji pokazuje, która część polisy może zadziałać i gdzie przebiega granica. To scenariusze ilustracyjne, nie opisy prawdziwych szkód. O ochronie decydują warunki konkretnej polisy, wybrane moduły, limity i wyłączenia.
+
+<NoteBlock variant="scenario" label="LC-A1 · Scenariusz ilustracyjny · firma doradcza">
+
+Firma doradcza przygotowuje dla klienta raport rynkowy z pomocą modelu językowego. Model „dopisuje” dane, które nie istnieją, a nikt tego nie wyłapuje. Klient inwestuje na tej podstawie w nowy kanał sprzedaży, ponosi stratę i żąda odszkodowania.
+
+**Co może zadziałać:** OC zawodowe, czyli odszkodowanie i koszty obrony przy błędzie, zaniechaniu lub wprowadzeniu w błąd przy świadczeniu usług. Przy klauzuli AI to, że błąd pochodzi z modelu, samo w sobie nie wyłącza ochrony.
+
+**Gdzie granica:** liczy się roszczenie postawione po raz pierwszy w okresie ubezpieczenia i błąd popełniony po [dacie retroaktywnej](/slownik/#data-retroaktywna). Kary umowne są zwykle poza zakresem, chyba że firma odpowiadałaby także bez takiego zapisu.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-A2 · Scenariusz ilustracyjny · dostawca modelu uczenia maszynowego">
+
+Dostawca technologii dostarcza towarzystwu ubezpieczeń silnik taryfikacyjny z modelem uczenia maszynowego. Po aktualizacji model zaniża składki w jednym segmencie klientów. Towarzystwo zarzuca dostawcy wadę rozwiązania i naruszenie umowy.
+
+**Co może zadziałać:** OC za produkty i usługi technologiczne oraz za nieumyślne naruszenie umowy z klientem, zgodnie z warunkami polisy. Koszty naprawy błędu, zanim przerodzi się w roszczenie, mogą być pokryte za uprzednią zgodą ubezpieczyciela.
+
+**Gdzie granica:** kary umowne, service credits i rozszerzone gwarancje, np. gwarantowana dokładność modelu, są zwykle wyłączone, chyba że dostawca odpowiadałby także bez takiego zapisu. Doradztwo inwestycyjne również bywa wyłączone.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-A3 · Scenariusz ilustracyjny · platforma z agentem AI">
+
+Pracownik zmienia prompt systemowy agenta AI, który obsługuje zamówienia na platformie firmy. Agent zaczyna odrzucać wszystkie transakcje i system staje na kilkanaście godzin.
+
+**Co może zadziałać:** przerwa w działalności w części cyber, czyli utracony dochód i zwiększone koszty działania, jeśli definicja błędu operatora w polisie obejmuje nieumyślną zmianę konfiguracji systemu.
+
+**Gdzie granica:** przestój musi spełniać definicję z polisy i trwać dłużej niż franszyza czasowa. Błędy w projekcie i architekturze systemu nie są błędem operatora. Sekcja musi być wykupiona.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-A4 · Scenariusz ilustracyjny · LLMjacking">
+
+Ktoś przejmuje klucz API do modelu, z którego korzysta firma, i wykorzystuje go do własnych zapytań. Zanim zespół to zauważy, rachunek za tokeny i moc obliczeniową wielokrotnie przekracza normę.
+
+**Co może zadziałać:** opcjonalny moduł cyberprzestępstw, jeśli obejmuje nieuprawnione użycie zasobów IT. Czy definicja obejmuje nadużycie kluczy do modeli AI, sprawdzamy w brzmieniu polisy.
+
+**Gdzie granica:** moduł nie występuje w każdej ofercie. Czy dotyczy także kluczy do modeli udostępnianych przez zewnętrznego dostawcę, potwierdzamy w ofercie. Polisa nie zastąpi rotacji kluczy, limitów wydatków i monitoringu zużycia.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-A5 · Scenariusz ilustracyjny · deepfake dyrektora finansowego">
+
+Księgowa odbiera wideorozmowę od „dyrektora finansowego”. Twarz i głos się zgadzają, sprawa jest pilna, przelew ma wyjść jeszcze dziś na nowy rachunek kontrahenta. To deepfake.
+
+**Co może zadziałać:** moduł cyberprzestępstw, czyli zwrot straty z przelewu wyłudzonego socjotechniką. Część polis wymienia wprost ataki z użyciem AI, deepfake'a i klonowania głosu.
+
+**Gdzie granica:** takie przelewy są zwykle wyłączone z OC zawodowego. Chroni je wyłącznie wykupiony moduł albo osobne [ubezpieczenie crime](/ubezpieczenia/ubezpieczenie-crime/). Ubezpieczyciel może wymagać procedury weryfikacji płatności, np. oddzwonienia na znany numer.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-A6 · Scenariusz ilustracyjny · prompt injection w aplikacji medycznej">
+
+Chatbot obsługi pacjentów w aplikacji HealthTech dostaje spreparowane polecenie ukryte w wiadomości (prompt injection) i ujawnia fragmenty danych innego pacjenta.
+
+**Co może zadziałać:** cyber, jeśli definicja naruszenia prywatności obejmuje ujawnienie danych w wyniku ataku lub celowego działania osoby trzeciej — a prompt injection jest takim działaniem — także dla danych medycznych. Przy błędzie samego systemu, bez ataku, liczy się, czy polisa obejmuje przypadkowe ujawnienie danych spowodowane użyciem AI. Wtedy w grę wchodzą koszty reakcji, porada prawna co do obowiązku zgłoszenia, powiadomienie osób, obrona w postępowaniu organu ochrony danych i roszczenia osób trzecich.
+
+**Gdzie granica:** zbieranie i przetwarzanie danych bez wymaganej zgody jest zwykle wyłączone. Kary administracyjne tylko w zakresie, w jakim prawo pozwala je ubezpieczyć. Dla HealthTech zakres potwierdzamy indywidualnie.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-A7 · Scenariusz ilustracyjny · produkt z AI wyrządza szkodę">
+
+Software house dostarcza producentowi wózków magazynowych moduł AI do rozpoznawania przeszkód. Po aktualizacji modelu moduł błędnie klasyfikuje część obiektów, a autonomiczny wózek u klienta producenta uderza w regał: niszczy składowany towar i rani pracownika magazynu.
+
+**Co może zadziałać:** roszczenia o szkody rzeczowe i osobowe, które są bezpośrednim skutkiem działalności, oraz o straty finansowe klienta, jeśli taki zakres obejmuje polisa.
+
+**Gdzie granica:** koszty wycofania produktu z rynku oraz naprawy lub wymiany własnego produktu są wyłączone, a oprogramowanie sterujące urządzeniami i robotyka wymagają indywidualnej oceny. Przy produktach fizycznych sprawdź też [OC za produkt](/ubezpieczenia/oc-produktu-i-wycofanie/).
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-A8 · Scenariusz ilustracyjny · treść z AI narusza cudze prawa">
+
+Agencja przygotowuje dla klienta kampanię z grafikami i tekstami tworzonymi z pomocą AI. Właściciel praw zarzuca, że jedna z grafik powiela jego utwór, a klient kieruje roszczenie do agencji.
+
+**Co może zadziałać:** sekcja własności intelektualnej, czyli roszczenia o naruszenie praw autorskich, znaków towarowych i licencji, plagiat oraz naruszenie wizerunku. Przy klauzuli AI może działać także wtedy, gdy treść powstała z pomocą AI.
+
+**Gdzie granica:** patenty są zwykle wyłączone, także dla algorytmów. Roszczeń dotyczących danych treningowych nie obiecujemy objąć ochroną. Przy działalności wydawniczej zobacz [OC mediów](/ubezpieczenia/oc-mediow/).
+
+</NoteBlock>
+
+<SectionView label="Zestawienie odbiorców" />
+## Kto potrzebuje ubezpieczenia AI: twórcy czy użytkownicy?
+
+Obie grupy, ale z innych powodów. Twórcy AI odpowiadają za działanie systemu, który dostarczają klientom, więc ich ekspozycja jest większa. Firmy, które korzystają z gotowych narzędzi, odpowiadają przede wszystkim za jakość własnych usług i za dane, które powierzają narzędziom.
+
+<SpecTable
+  caption="Profile firm i typowe ryzyka AI"
+  columns={["Profil", "Przykłady", "Typowe ryzyka", "Ocena ryzyka"]}
+  rows={[
+    ["Twórcy modeli, agentów i aplikacji AI", "Modele, agenci AI, aplikacje oparte na LLM", "Błędny wynik u klienta, naruszenie umowy, wyciek danych przez model, LLMjacking", "Rdzeń programu"],
+    ["Integratorzy i konsultanci AI", "Wdrożenia AI u klientów, automatyzacja procesów", "Błąd wdrożenia, przestój u klienta, spór o odbiór prac", "Rdzeń programu"],
+    ["MLOps, platformy danych i analityki", "Infrastruktura do trenowania i uruchamiania modeli", "Utrata lub ujawnienie danych klienta, przestój platformy", "Dostawcy danych treningowych: *ograniczony zakres, indywidualna ocena*"],
+    ["SaaS z funkcjami AI", "Asystenci, rekomendacje, automatyzacja, scoring", "Błędna rekomendacja, wyciek danych przez asystenta", "Scoring i ocena osób: *indywidualna ocena*"],
+    ["Urządzenia, IoT i robotyka sterowane AI", "Systemy wizyjne, autonomiczne maszyny", "Szkoda rzeczowa lub osobowa, wada produktu", "*Indywidualna ocena*"],
+    ["InsurTech i FinTech", "Scoring, obsługa szkód, chatboty", "Błąd taryfikacji, decyzja o kliencie oparta na błędnym modelu", "FinTech, scoring i ocena osób: *indywidualna ocena*"],
+    ["MedTech i HealthTech", "Chatboty i automatyzacja procesów administracyjnych", "Wyciek danych medycznych, błędna informacja dla pacjenta", "Poza decyzjami klinicznymi, *indywidualna ocena*"],
+    ["LegalTech, HRTech, EdTech, e-commerce", "Analiza dokumentów, systemy rekrutacyjne, ocena testów, agenci zakupowi", "Błąd analizy, zarzut dyskryminacji, wyciek danych kandydatów", "Rekrutacja, scoring i ocena osób: *indywidualna ocena*"],
+    ["Firmy usługowe korzystające z AI", "Software house z asystentem kodu, agencja, doradca, biuro rachunkowe", "Błąd w usłudze z udziałem AI, wyciek przez narzędzie, deepfake przy przelewie", "Zob. [AI w firmie](/ubezpieczenie-ai/ai-w-firmie/)"]
+  ]}
+  note="Rdzeń programu: profil bliski typowej polisy dla firm technologicznych. Indywidualna ocena: zakres zależy od profilu działalności. Ograniczony zakres: kluczowe ryzyka sektora bywają wyłączone."
+/>
+
+Zakres zależy od branży i opisu działalności w polisie. Sektory technologiczne spoza AI opisujemy w arkuszu [OC i cyber dla firm IT](/oc-cyber-dla-it/).
+
+<SectionView label="Podzespół AI-100" />
+## AI w firmie: co, jeśli tylko korzystasz z narzędzi AI?
+
+Wtedy ryzyko zwykle mieści się w polisach, które firma już ma lub powinna mieć: OC zawodowe odpowiada za błędy w usługach dla klientów, także popełnione z pomocą AI, cyber za wyciek danych przez narzędzie AI, a moduł cyberprzestępstw za przelew wyłudzony deepfake'iem. Najważniejsze są dwie rzeczy: polisa nie może wyłączać AI, a wniosek powinien rzetelnie opisywać, jak firma jej używa.
+
+Najczęstsze sytuacje u użytkowników AI to:
+
+- **asystent kodu lub tekstu:** błąd albo zmyślone dane w pracy oddanej klientowi;
+- **dane wklejane do publicznych narzędzi** (shadow AI): ujawnienie tajemnicy klienta lub danych osobowych;
+- **chatbot lub agent AI na stronie:** błędna informacja dla klienta albo błędna transakcja;
+- **deepfake głosu lub wideo:** wyłudzony przelew.
+
+Te sytuacje, zasady korzystania z AI, których może oczekiwać ubezpieczyciel, i granice ochrony opisujemy w osobnym arkuszu.
+
+<CardGrid columns={3} label="Arkusz dla firm korzystających z AI">
+  <SheetCard href="/ubezpieczenie-ai/ai-w-firmie/" sheet="AI-100" title="AI w firmie a ubezpieczenie" summary="Asystenci AI, chatboty, agenci i deepfake: co obejmuje OC zawodowe i cyber, gdy firma korzysta z gotowych narzędzi AI." />
+</CardGrid>
+
+<SectionView label="Widok z kierunku USA" />
+## Sprzedajesz AI klientom w USA?
+
+Polisa może obejmować pozwy w USA i Kanadzie, ale tylko wtedy, gdy tak wskazuje jej terytorium. Dla wielu firm AI rynek amerykański to pierwszy kierunek eksportu i zarazem najdroższe miejsce na spór, dlatego zakres terytorialny i konstrukcję limitu sprawdzamy, zanim podpiszesz umowę z klientem z Ameryki Północnej.
+
+<SpecTable
+  caption="Produkt AI w USA: parametry polisy"
+  columns={["Parametr", "Na co uważać", "Co bywa możliwe (potwierdzamy w ofercie)"]}
+  rows={[
+    ["Terytorium powództw", "Bywa ograniczone do Polski, UE lub Europy albo wyłącza USA i Kanadę", "Cały świat, w tym sądy USA i Kanady"],
+    ["Limit przy roszczeniach w USA", "Brak ochrony albo niski podlimit", "Jeden roczny limit łączny na wszystkie roszczenia, który obejmuje też koszty obrony"],
+    ["Jedna przyczyna, wielu klientów", "Wada modelu wdrożonego u wielu klientów", "Roszczenia z jednej przyczyny jako jedno roszczenie: jeden limit i jeden udział własny"],
+    ["Prowadzenie obrony", "Samodzielne szukanie kancelarii w USA", "W części polis obronę prowadzi ubezpieczyciel (duty to defend) i nie zawiera ugody bez Twojej zgody"],
+    ["Wymogi kontraktów", "Additional insured, primary & non-contributory, waiver of subrogation", "Bywają przewidziane, gdy wymaga ich pisemna umowa zawarta przed roszczeniem, i tylko dla roszczeń wynikających wyłącznie z Twojego działania"],
+    ["Waluta i język", "Limit tylko w PLN, polisa bez omówienia", "Limity w PLN lub USD, polisa po angielsku z omówieniem po polsku"]
+  ]}
+  note="Zestawienie opisuje mechanizmy spotykane na rynku, nie produkt konkretnego ubezpieczyciela. Pełny opis ochrony w USA i Kanadzie dla firm technologicznych: arkusz OC i cyber dla firm IT."
+/>
+
+<NoteBlock variant="warning" label="Granice ochrony w USA przy produktach AI">
+
+- **Limit.** Dla roszczeń w USA limit działa często jako jeden roczny limit łączny, a honoraria prawników zmniejszają tę samą pulę, z której płacone są odszkodowania.
+- **Odszkodowania karne** (punitive damages) tylko w zakresie, w jakim prawo dopuszcza ich ubezpieczenie.
+- **Niezamówiona komunikacja** (TCPA, CAN-SPAM), np. boty AI, które dzwonią albo wysyłają wiadomości bez zgody, jest zwykle wyłączona, z wyjątkami w części cyber, jeśli przewiduje je polisa.
+- **Dane bez zgody**, w tym biometria i tracking, są zwykle wyłączone.
+- **Reklama i prawo konsumenckie.** Przesadzone obietnice co do możliwości AI i reklama wprowadzająca w błąd są zwykle wyłączone, z wyjątkami wskazanymi w polisie.
+- **Pozwy zbiorowe.** Pozew zbiorowy też jest roszczeniem, ale o ochronie decyduje jego przedmiot. Nie obiecujemy ochrony „przed class actions”.
+- **Sankcje.** Ochrona jest zawieszona, jeśli naruszałaby sankcje, m.in. UE, USA lub Kanady.
+
+</NoteBlock>
+
+Szerzej o terytorium, jurysdykcji i wymogach umów z klientami z USA piszemy w arkuszu [OC i cyber dla firm IT](/oc-cyber-dla-it/).
+
+<SectionView label="Normy i przepisy" />
+## Co z AI Act i nową dyrektywą o produktach wadliwych?
+
+AI Act nie wprowadza ogólnego obowiązku ubezpieczenia OC, a polisa nie zapewnia zgodności z AI Act. Ubezpieczenie może natomiast sfinansować obronę, gdy organ nadzoru wszczyna postępowanie przeciwko Tobie, i odszkodowania, gdy klient lub inna osoba poniesie szkodę przez Twój system. Kary pokrywa tylko w zakresie, w jakim prawo pozwala je ubezpieczyć.
+
+<SpecTable
+  caption="AI Act a polisa: co może, a czego nie może zrobić ubezpieczenie"
+  columns={["Temat", "Co mówią przepisy", "Rola polisy"]}
+  rows={[
+    ["Obowiązek ubezpieczenia", "AI Act nie wprowadza ogólnego obowiązku ubezpieczenia OC dla dostawców ani podmiotów stosujących systemy AI", "Wymóg polisy może wynikać z umowy z klientem, przetargu lub przepisów branżowych"],
+    ["Zgodność z AI Act", "Obowiązki dostawców i podmiotów stosujących zależą od rodzaju systemu i poziomu ryzyka", "Polisa nie zapewnia zgodności ani jej nie potwierdza. Zgodność to Twoje procesy, dokumentacja i nadzór"],
+    ["Postępowanie organu nadzoru", "Państwa członkowskie wyznaczają organy nadzoru rynku, które mogą prowadzić postępowania", "Koszty obrony mogą być objęte, jeśli polisa ma sekcję postępowań regulacyjnych"],
+    ["Kary administracyjne", "Za zakazane praktyki do 35 000 000 euro lub 7% całkowitego rocznego światowego obrotu, za inne naruszenia niższe progi (art. 99)", "Tylko w zakresie, w jakim prawo pozwala je ubezpieczyć. Ubezpieczalność takich kar bywa ograniczona"],
+    ["Roszczenia poszkodowanych", "Odpowiedzialność wynika z prawa cywilnego, a od wdrożenia nowej dyrektywy także z przepisów o produktach wadliwych", "OC zawodowe i OC za produkt, zgodnie z warunkami polisy"]
+  ]}
+/>
+
+<NoteBlock variant="legal" date="2026-11-02">
+
+- **AI Act** (rozporządzenie (UE) 2024/1689) stosuje się etapami: zakazane praktyki i obowiązek dbania o kompetencje w zakresie AI od 2 lutego 2025 r., obowiązki dostawców modeli AI ogólnego przeznaczenia od 2 sierpnia 2025 r., a większość pozostałych przepisów, w tym art. 50 (przejrzystość), od 2 sierpnia 2026 r.; przesunięto tylko terminy dla systemów wysokiego ryzyka.
+- **Omnibus AI.** Rozporządzenie (UE) 2026/1744, które weszło w życie 27 lipca 2026 r., zmieniło AI Act i przesunęło obowiązki dla systemów wysokiego ryzyka: z załącznika III na 2 grudnia 2027 r., a z załącznika I na 2 sierpnia 2028 r. Przed decyzjami sprawdź aktualny tekst i terminy w źródłach urzędowych.
+- **Dyrektywa (UE) 2024/2853** o odpowiedzialności za produkty wadliwe obejmuje oprogramowanie, w tym systemy AI. Państwa członkowskie mają ją wdrożyć do 9 grudnia 2026 r., a nowe zasady obejmą produkty wprowadzone do obrotu lub oddane do użytku po 8 grudnia 2026 r. (po sprostowaniu z 7 maja 2026 r.). Producent oprogramowania może więc odpowiadać wobec poszkodowanych jak za produkt, niezależnie od umowy. OC zawodowe jest zwykle zbudowane wokół usług, dlatego warto sprawdzić, czy program obejmuje też [OC za produkt](/ubezpieczenia/oc-produktu-i-wycofanie/).
+
+</NoteBlock>
+
+<SectionView label="Mapa luk" />
+## Czego ubezpieczenie AI zwykle nie obejmuje?
+
+Rzetelna polisa ma jasne granice. Poniżej najważniejsze wyłączenia i ograniczenia przy ryzykach AI, a w ostatniej kolumnie to, co może zamknąć daną lukę.
+
+<BOM
+  caption="Wyłączenia i luki przy ryzykach AI: co może je zamknąć"
+  prefix="X"
+  headers={{ conditions: "Co może zamknąć lukę" }}
+  rows={frontmatter.coverage.filter((r) => r.module === "Wyłączenie").map((r) => ({ event: r.event, label: r.label, conditions: r.conditions }))}
+/>
+
+<NoteBlock variant="exclusion" label="Ryzyka AI, których nie obiecujemy">
+
+- **Halucynacja bez przestoju** nie jest awarią systemu. Szkodę klienta z błędnej treści rozpatruje OC zawodowe.
+- **Zatrucie danych treningowych** (data poisoning), **kradzież modelu** i **dryf modelu** zwykle nie są wymienione w polisach jako odrębne ryzyka. Ich skutki ocenia się według ogólnych zasad polisy.
+- **Dostawca API modelu** nie musi być „dostawcą usług” ani „podwykonawcą” w rozumieniu polisy. Oceniamy to w ofercie.
+- **Kryptowaluty, tokeny i portfele** nie są objęte ochroną, którą tu opisujemy.
+
+</NoteBlock>
+
+<SectionView label="Wymiarowanie" />
+## Od czego zależą składka i limit przy ryzykach AI?
+
+Składkę ustala ubezpieczyciel na podstawie wniosku i oceny ryzyka. Nie podajemy cenników, bo przy ryzykach AI dwie firmy o tym samym przychodzie mogą dostać bardzo różne warunki. Największe znaczenie mają czynniki z tabeli.
+
+<SpecTable
+  caption="Czynniki oceny ryzyka firmy tworzącej AI"
+  columns={["Czynnik", "Dlaczego ma znaczenie"]}
+  rows={[
+    ["Sposób użycia AI", "Własne modele, modele zewnętrzne czy wdrożenia u klientów: każdy wariant to inna ekspozycja"],
+    ["Zastosowanie wyników", "Decyzje o ludziach, finansach, zdrowiu lub sterowanie urządzeniami zwiększają ryzyko"],
+    ["Nadzór człowieka", "Czy ktoś sprawdza wynik, zanim trafi do klienta lub uruchomi działanie"],
+    ["Umowy z klientami", "Ograniczenie odpowiedzialności, gwarancje dokładności, kary umowne, prawo właściwe"],
+    ["Dane i prawa do nich", "Dane osobowe, medyczne i finansowe, podstawa ich przetwarzania, źródła danych treningowych"],
+    ["Zabezpieczenia", "Zarządzanie kluczami API, MFA, limity wydatków, monitoring zużycia, testy podatności na prompt injection"],
+    ["Przychód i rynki", "Skala działalności; udział przychodu z USA i Kanady oceniany jest osobno"],
+    ["Historia szkód", "Roszczenia, incydenty i znane okoliczności z ostatnich lat"]
+  ]}
+/>
+
+Sumę gwarancyjną dobieramy do najgorszego realnego scenariusza, a przy AI jest nim często jedna wada modelu wdrożonego u wielu klientów naraz. Roszczenia z tej samej przyczyny są zwykle traktowane jako jedno roszczenie, z jednym limitem i jednym udziałem własnym, więc limit musi wystarczyć dla wszystkich poszkodowanych. Rozszerzenia mają często [podlimity](/slownik/#podlimit), które w ofercie pokazujemy osobno.
+
+<SectionView label="Zespół uzupełniający" />
+## Jakie polisy uzupełniają ubezpieczenie AI?
+
+OC zawodowe i cyber nie obejmują wszystkiego. Te karty katalogu opisują ryzyka, które firmy AI zwykle ubezpieczają osobno.
+
+<CardGrid columns={3} label="Polisy uzupełniające">
+  <SheetCard href="/ubezpieczenia/oc-czlonkow-zarzadu-d-o/" sheet="K-01" title="OC członków zarządu (D&O)" summary="Osobista odpowiedzialność zarządu, także za nadzór nad wdrożeniem AI i wobec inwestorów." />
+  <SheetCard href="/ubezpieczenia/ubezpieczenie-crime/" sheet="K-02" title="Ubezpieczenie od przestępstw i nadużyć (crime)" summary="Wyłudzone przelewy, oszustwo „na prezesa”, także z użyciem deepfake'a." />
+  <SheetCard href="/ubezpieczenia/oc-produktu-i-wycofanie/" sheet="K-06" title="OC za produkt i koszty wycofania produktu" summary="Urządzenia i oprogramowanie z AI jako produkt, także koszty wycofania." />
+  <SheetCard href="/ubezpieczenia/ochrona-prawna-ip/" sheet="K-08" title="Ochrona prawna własności intelektualnej" summary="Koszty sporów o patenty i inne prawa, których OC zawodowe zwykle nie obejmuje." />
+  <SheetCard href="/ubezpieczenia/instytucje-finansowe-i-fintech/" sheet="K-03" title="Ubezpieczenia instytucji finansowych i fintech" summary="Scoring, płatności i doradztwo, w tym modele AI w finansach." />
+  <SheetCard href="/ubezpieczenia/oc-mediow/" sheet="K-04" title="OC mediów i wydawców" summary="Treści, także generowane z pomocą AI, publikowane we własnym imieniu." />
+</CardGrid>
+
+<SectionView label="Procedura" />
+## Jak wygląda droga do polisy?
+
+1. **Telefon lub e-mail.** Opisz w kilku zdaniach, co robisz i jak korzystasz z AI.
+2. **Analiza ryzyka i wniosek.** Pomagamy rzetelnie opisać wykorzystanie AI we wniosku. To ważne, bo zatajenie istotnych informacji może skutkować zmianą warunków, obniżeniem odszkodowania, a nawet brakiem ochrony. Ubezpieczyciel może poprosić o wzór umowy z klientami.
+3. **Oferty.** Analizujemy oferty z rynku krajowego i zagranicznego. Pokazujemy zakres, limity, udziały własne, terytorium (także USA i Kanadę), walutę i wyłączenia, w tym brzmienie zapisów o AI.
+4. **Polisa i wsparcie.** Polisy z rynku zagranicznego są zwykle po angielsku, a kluczowe zapisy omawiamy po polsku. Przy wykupionej części cyber zwykle masz dostęp do całodobowej linii reagowania na incydenty. W okresie ubezpieczenia pomagamy przy roszczeniach i odnowieniu.
+
+Co warto przesłać w pierwszej wiadomości:
+
+- **działalność i AI:** czym się zajmujesz i jak korzystasz z AI: własne modele, modele zewnętrzne czy wdrożenia dla klientów;
+- **wyniki AI u klientów:** czy trafiają do klientów, do czego służą i czy sprawdza je człowiek;
+- **dane:** jakie dane przetwarzasz (osobowe, medyczne, finansowe, dane kart) i na jakiej podstawie;
+- **przychód:** roczny przychód i udział USA i Kanady;
+- **umowy:** wymagania ubezpieczeniowe z umów (limit, waluta, additional insured), najlepiej fragment umowy;
+- **obecna polisa i szkody:** zakres terytorialny, limit, data retroaktywna, roszczenia i incydenty z ostatnich lat.
+
+Nie przesyłaj danych osobowych swoich klientów ani danych o zdrowiu, bo do oferty nie są potrzebne.

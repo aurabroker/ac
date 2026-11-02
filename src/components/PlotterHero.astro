@@ -1,0 +1,54 @@
+---
+/**
+ * PlotterHero — jednorazowe „rysowanie” rysunku SVG (stroke-dashoffset) przy wejściu w widok.
+ * Tylko hero strony głównej i filarów. Bez JS lub przy prefers-reduced-motion: od razu stan końcowy.
+ * Animowane są elementy z pathLength="1" (≤ 40). Klasy warstw: src/styles/figures.css.
+ */
+interface Props {
+  /** Tło: siatka kreślarska. */
+  grid?: boolean;
+  class?: string;
+}
+const { grid = true, class: cls } = Astro.props;
+---
+
+<div class:list={['plotter', grid && 'drafting-grid', cls]} data-plotter>
+  <slot />
+</div>
+
+<script>
+  const root = document.documentElement;
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-plotter]'));
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finish = (el: HTMLElement) => {
+    // Klasa na każdym animowanym elemencie wymusza przeliczenie stylu (Chromium nie zawsze
+    // unieważnia potomków [pathLength] po zmianie klasy przodka).
+    el.querySelectorAll('[pathLength]').forEach((p) => p.classList.add('is-plotted'));
+    el.classList.remove('is-drawing');
+    el.classList.add('is-done');
+  };
+  if (reduce || !('IntersectionObserver' in window)) {
+    items.forEach(finish);
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const el = e.target as HTMLElement;
+          io.unobserve(el);
+          el.classList.add('is-drawing');
+          window.setTimeout(() => finish(el), 1800);
+        }
+      },
+      { threshold: 0.25 },
+    );
+    items.forEach((el) => io.observe(el));
+  }
+  root.classList.add('plotter-ready');
+</script>
+
+<style>
+  .plotter {
+    position: relative;
+  }
+</style>

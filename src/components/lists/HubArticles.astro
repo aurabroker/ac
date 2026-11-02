@@ -1,0 +1,47 @@
+---
+/**
+ * „Arkusze szczegółowe” — artykuły przypisane do huba (frontmatter `hub`).
+ * W produkcji tylko opublikowane; w podglądzie także szkice.
+ */
+import SheetCard from '../SheetCard.astro';
+import CardGrid from '../CardGrid.astro';
+import { articlesForHub } from '../../lib/routes.ts';
+import { fmtDate } from '../../lib/format.ts';
+
+interface Props {
+  hubPath: string;
+  heading?: string;
+}
+const { hubPath, heading = 'Arkusze szczegółowe' } = Astro.props;
+const items = await articlesForHub(hubPath);
+---
+
+{
+  items.length > 0 && (
+    <section class="hub-articles" aria-labelledby="arkusze-szczegolowe">
+      <h2 id="arkusze-szczegolowe">{heading}</h2>
+      <CardGrid columns={2}>
+        {items.map((r) => (
+          <SheetCard
+            href={r.path}
+            title={r.entry.data.title}
+            sheet={r.entry.data.sheet}
+            summary={r.entry.data.description}
+            meta={`Rew. ${r.entry.data.revision} · ${fmtDate(r.entry.data.updated)}`}
+            draft={r.draft}
+          />
+        ))}
+      </CardGrid>
+    </section>
+  )
+}
+
+<style>
+  .hub-articles {
+    margin-top: var(--s-10);
+  }
+  .hub-articles h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+</style>

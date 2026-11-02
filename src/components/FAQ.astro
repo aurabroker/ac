@@ -1,0 +1,100 @@
+---
+/**
+ * FAQ na <details> (bez JS). Te same dane trafiają do FAQPage w JSON-LD — FAQ jest zawsze widoczne w HTML.
+ * Odpowiedź: inline Markdown, akapity rozdzielone pustą linią.
+ */
+import { blockMd } from '../lib/inline-md.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  items: { q: string; a: string }[];
+  heading?: string;
+  id?: string;
+}
+const { items, heading = 'Najczęściej zadawane pytania', id = 'faq' } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="faq" aria-labelledby={id}>
+      <h2 id={id}>{heading}</h2>
+      <div class="faq__list">
+        {items.map((f, i) => (
+          <details class="faq__item" open={i === 0}>
+            <summary>
+              <h3 class="faq__q">{polishText(f.q)}</h3>
+              <span class="faq__icon" aria-hidden="true" />
+            </summary>
+            <div class="faq__a" set:html={blockMd(f.a)} />
+          </details>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .faq {
+    max-width: var(--end-measure, 100%);
+    margin-top: var(--s-10);
+  }
+  .faq > h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+  .faq__list {
+    margin-top: var(--s-3);
+    border-top: 1px solid var(--ink);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--rule);
+  }
+  .faq__item summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding: var(--s-2) 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__q {
+    font-size: 1.125rem;
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .faq__icon {
+    position: relative;
+    flex: none;
+    width: 14px;
+    height: 14px;
+    margin-top: 6px;
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6.5px;
+    width: 14px;
+    border-top: 1px solid var(--ink);
+    transition: transform 160ms var(--ease);
+  }
+  .faq__icon::after {
+    transform: rotate(90deg);
+  }
+  .faq__item[open] .faq__icon::after {
+    transform: rotate(0deg);
+  }
+  .faq__a {
+    padding: 0 0 var(--s-3);
+    color: var(--ink-2);
+  }
+  .faq__a :global(p + p) {
+    margin-top: 0.8em;
+  }
+</style>

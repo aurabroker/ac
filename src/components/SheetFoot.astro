@@ -1,0 +1,29 @@
+---
+/** Stopka arkusza: autor (+ nota), rejestr zmian, pełna tabliczka rysunkowa. */
+import AuthorCard from './AuthorCard.astro';
+import RevisionLog from './RevisionLog.astro';
+import TitleBlock from './TitleBlock.astro';
+import type { PageContext } from '../lib/page.ts';
+
+interface Props {
+  ctx: PageContext;
+  author?: boolean;
+  revisions?: boolean;
+}
+const { ctx, author = true, revisions = true } = Astro.props;
+const d = ctx.route.entry.data;
+---
+
+{author && <AuthorCard person={ctx.person} aiAssistance={d.aiAssistance} />}
+{revisions && <RevisionLog items={d.changelog} published={d.published} revision={d.revision} />}
+<TitleBlock
+  variant="full"
+  title={ctx.title}
+  sheet={d.sheet}
+  revision={d.revision}
+  updated={d.updated}
+  published={d.published}
+  author={ctx.authorName}
+  mdPath={ctx.mdPath}
+  draft={ctx.draft}
+/>

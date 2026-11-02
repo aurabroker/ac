@@ -1,0 +1,143 @@
+---
+/**
+ * FigFrame — wspólny korzeń rysunków (agent „figures”).
+ * Kontrakt (CONVENTIONS §6): <svg class="fig-svg" role="img" aria-labelledby>; <title>/<desc> po polsku;
+ * całe wnętrze w <g aria-hidden="true">. Klasy linii: src/styles/figures.css. Tutaj tylko dodatki:
+ *   .ah  grot strzałki w kolorze tuszu      .t-b  etykieta główna (tusz)     .t-s  etykieta pomocnicza
+ *   .t-e / .t-m  wyrównanie do końca / środka                                 .bal  balon (kółko + numer)
+ *   .fx  elementy wypełnione (groty, kreskowanie), które w ploterze pojawiają się po liniach;
+ *        zasłony .f (papier) narastają razem z liniami obiektu
+ * Na wąskich ekranach (≤ 640 px) etykiety tekstowe znikają — zostają balony, a treść jest w legendzie HTML.
+ */
+interface Props {
+  viewBox: string;
+  labelledby?: string;
+  /** Tytuł dostępny (gdy brak labelledby — także nazwa rysunku). */
+  title: string;
+  /** Opis tego, co widać na rysunku. */
+  desc: string;
+  class?: string;
+}
+const { viewBox, labelledby, title, desc, class: cls } = Astro.props;
+---
+
+<svg
+  class:list={['fig-svg', 'fig', cls]}
+  viewBox={viewBox}
+  role="img"
+  aria-labelledby={labelledby}
+  aria-label={labelledby ? undefined : title}
+  focusable="false"
+>
+  <title>{title}</title>
+  <desc>{desc}</desc>
+  <g aria-hidden="true"><slot /></g>
+</svg>
+
+<style>
+  .fig :global(.ah) {
+    fill: var(--ink);
+    stroke: none;
+  }
+  .fig :global(.ah2) {
+    fill: var(--ink-2);
+    stroke: none;
+  }
+  .fig :global(.sig-fill) {
+    fill: var(--signal);
+    stroke: none;
+  }
+  .fig :global(.c2) {
+    fill: none;
+    stroke: var(--grid-major);
+    stroke-width: 0.75;
+  }
+  .fig :global(.dot) {
+    fill: var(--ink);
+    stroke: none;
+  }
+  .fig :global(.t-b) {
+    fill: var(--ink);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+  }
+  .fig :global(.t-s) {
+    fill: var(--ink-3);
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+  }
+  .fig :global(.t-sig) {
+    fill: var(--signal);
+    font-weight: 500;
+  }
+  .fig :global(.t-ink) {
+    fill: var(--ink);
+  }
+  .fig :global(.t-blue) {
+    fill: var(--blue);
+  }
+  .fig :global(.t-e) {
+    text-anchor: end;
+  }
+  .fig :global(.t-m) {
+    text-anchor: middle;
+  }
+  .fig :global(.t-num) {
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+
+  /* Ploter: groty i kreskowanie dochodzą po liniach obiektu (bez JS / reduced motion — od razu widoczne) */
+  @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    :global(html:not(.plotter-ready) .plotter) .fig :global(:is(.fx, .f)) {
+      opacity: 0;
+      animation: plot-fade 0.01s linear 5s forwards;
+    }
+    :global(html.plotter-ready .plotter:not(.is-drawing):not(.is-done)) .fig :global(:is(.fx, .f)) {
+      opacity: 0;
+    }
+    :global(.plotter.is-drawing) .fig :global(.fx) {
+      opacity: 0;
+      animation: plot-fade 0.35s var(--ease) 0.95s forwards;
+    }
+    /* zasłony (papier) materializują się razem z liniami obiektu, zamiast świecić pustymi plamami */
+    :global(.plotter.is-drawing) .fig :global(.f) {
+      opacity: 0;
+      animation: plot-fade 0.6s var(--ease) 0.3s forwards;
+    }
+  }
+
+  /* Wąski ekran: rysunek skaluje się ~0,4–0,6× — grubsze linie, większe balony, bez drobnych etykiet */
+  @media (max-width: 40rem) {
+    .fig :global(:is(.t, .t-dim):not(.t-keep)) {
+      display: none;
+    }
+    .fig :global(.bal) {
+      transform: scale(1.75);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .fig :global(.o),
+    .fig :global(.sig) {
+      stroke-width: 2.4;
+    }
+    .fig :global(:is(.o2, .b)) {
+      stroke-width: 1.6;
+    }
+    .fig :global(:is(.c, .l, .d, .c2)) {
+      stroke-width: 1.15;
+    }
+    .fig :global(.x) {
+      stroke-width: 0.8;
+    }
+    .fig :global(.h) {
+      stroke-width: 1.4;
+      stroke-dasharray: 8 5;
+    }
+    .fig :global(.ax) {
+      stroke-width: 1.1;
+      stroke-dasharray: 22 5 3 5;
+    }
+  }
+</style>

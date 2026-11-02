@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "salt": "aura-guard-v1:",
+  "note": "Lista skrótów SHA-256 zakazanych tokenów (sól + token): nazwy, numery ofert i numery rejestrowe z poufnych dokumentów. Nie dopisuj tu jawnych fraz. Lokalne frazy jawne: .guard/forbidden.local.txt (git-ignored).",
+  "hashes": [
+    "1bc18280f0dba6cab6bf29f433afef50caba5d95ffff08067130d442b1ea1d12",
+    "c83cabdc6cfb27d5271da23b12c42eb95ed63e3cf8a9cdfe0fec32d8dae345db",
+    "826ad3d44e43df7353315db1f9c7d403ca65b2ed1458f6d7706af6895c399c11",
+    "9503d8cbba02dd36af8fa9f6643dea5fd3b2af2dc617c36ded97c2683111e504",
+    "3a92707ef2cf54a9e76218e9a1ad3cffa19ffeaa18aa28b131ca103ade5cd264",
+    "30c0a85abf4f7d90f2e9018b5682cc4e91f6effd58b43b23d35dbbbd9d40276b",
+    "fc62a4f6c93ade43594334c9d7e323fd9a82be41b92f43daf996da1fc3657a37",
+    "26bd1daff2714c4223121b34fe33d0e6d19177a0b5ef4dac6adab3c38e242bb3",
+    "62033d99a49e7f888f47654107596b58acb2b00843eaee8067c3369e47b8dbbd",
+    "c5a1de7870b800940655e6eafda5cae4d1319145fe005810d17e954f952e8a03"
+  ]
+}

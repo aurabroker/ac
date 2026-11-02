@@ -1,0 +1,23 @@
+---
+/**
+ * Term — definicja przy pierwszej wzmiance: <dfn> + termin angielski + opcjonalny link do słownika.
+ * <Term en="claims made" href="/slownik/#claims-made">zasada zgłoszenia roszczenia</Term>
+ */
+interface Props {
+  en?: string;
+  href?: string;
+}
+const { en, href } = Astro.props;
+---
+
+<dfn class="term">{href ? <a href={href}><slot /></a> : <slot />}</dfn>{en && <span class="term__en"> (ang. <span lang="en">{en}</span>)</span>}
+
+<style>
+  .term {
+    font-style: normal;
+    font-weight: 600;
+  }
+  .term__en {
+    color: var(--ink-3);
+  }
+</style>

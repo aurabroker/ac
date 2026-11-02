@@ -1,0 +1,105 @@
+---
+/**
+ * SpecTable — prawdziwa <table> z <caption>. Pierwsza kolumna jako nagłówek wiersza.
+ * Komórki: inline Markdown.
+ *
+ * MDX:
+ * <SpecTable
+ *   caption="Od czego zależy składka"
+ *   columns={['Parametr', 'Co sprawdza ubezpieczyciel', 'Wpływ']}
+ *   rows={[['Przychód', 'Skala działalności…', 'wysoki']]}
+ * />
+ */
+import { inlineMd } from '../lib/inline-md.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  caption: string;
+  columns: string[];
+  rows: string[][];
+  /** Przypis pod tabelą. */
+  note?: string;
+  id?: string;
+  /** Pierwsza kolumna jako <th scope="row"> (domyślnie tak). */
+  rowHeaders?: boolean;
+}
+const { caption, columns, rows, note, id, rowHeaders = true } = Astro.props;
+---
+
+<div class="table-wrap spec" role="region" tabindex="0" aria-label={caption} id={id}>
+  <table>
+    <caption>{polishText(caption)}</caption>
+    <thead>
+      <tr>{columns.map((c) => <th scope="col">{polishText(c)}</th>)}</tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr>
+            {row.map((cell, i) =>
+              i === 0 && rowHeaders ? (
+                <th scope="row" set:html={inlineMd(cell)} />
+              ) : (
+                <td data-label={columns[i]} set:html={inlineMd(cell)} />
+              ),
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {note && <p class="spec__note" set:html={inlineMd(note)} />}
+</div>
+
+<style>
+  /* Telefon: tabele 3+ kolumnowe jako „karty” — wiersz pod wierszem, etykieta kolumny nad komórką */
+  @media (max-width: 560px) {
+    .spec table,
+    .spec tbody,
+    .spec tr,
+    .spec th,
+    .spec td {
+      display: block;
+      width: 100%;
+    }
+    .spec caption {
+      display: block;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .spec thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .spec tbody tr {
+      padding-block: var(--s-1) var(--s-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .spec tbody tr:first-child {
+      border-top: 1px solid var(--ink);
+    }
+    .spec tbody th,
+    .spec td {
+      padding: var(--s-1) 0 0;
+      border-bottom: 0;
+    }
+    .spec td::before {
+      content: attr(data-label);
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+  }
+  .spec__note {
+    margin-top: var(--s-1);
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+</style>

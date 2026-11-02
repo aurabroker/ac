@@ -1,0 +1,169 @@
+---
+title: "OC za produkt i koszty wycofania produktu"
+seoTitle: "OC za produkt i koszty wycofania (recall) · Aura Consulting"
+description: "OC za produkt i koszty wycofania produktu z rynku: szkody wyrządzone przez produkt, w tym urządzenia z oprogramowaniem, oraz koszty akcji recall. PLD i GPSR."
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "K-06"
+code: "K-06"
+group: "Szkody wyrządzone innym: klienci, pacjenci, odbiorcy"
+priority: "P2"
+markets:
+  - "krajowy"
+  - "zagraniczny"
+order: 50
+reviewEvery: 120
+summary: "OC za produkt pokrywa roszczenia za szkody osobowe i rzeczowe wyrządzone przez produkt wprowadzony do obrotu, zgodnie z warunkami polisy. Nie płaci zwykle za samo wycofanie produktu z rynku: powiadomienia, logistykę zwrotną i utylizację. Te koszty obejmuje osobne ubezpieczenie kosztów wycofania (recall). Dla producentów urządzeń z oprogramowaniem ważna jest nowa dyrektywa PLD."
+summaryPoints:
+  - "OC za produkt i ubezpieczenie recall to dwie różne ochrony; pierwsza nie zastępuje drugiej."
+  - "Nowa dyrektywa o odpowiedzialności za produkty (PLD) obejmuje także oprogramowanie."
+  - "Eksport do USA i Kanady wymaga zwykle osobnej oceny ryzyka."
+cardSummary: "Szkody wyrządzone przez produkt, także urządzenia z oprogramowaniem, oraz koszty wycofania produktu z rynku."
+keywords:
+  primary: "oc za produkt"
+  secondary:
+    - "ubezpieczenie wycofania produktu"
+    - "ubezpieczenie recall"
+    - "oc producenta"
+    - "oc produktu a recall"
+    - "gpsr wycofanie produktu"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu OC za produkt i recall (opis ogólny rynku; zakres potwierdzamy w ofercie)"
+coverage:
+  - event: "Szkoda osobowa wyrządzona przez wadliwy lub niebezpieczny produkt"
+    module: "OC za produkt"
+    label: typical
+    conditions: "Produkt wprowadzony do obrotu i opisany w polisie; zakres terytorialny według polisy."
+  - event: "Szkoda rzeczowa wyrządzona przez produkt w cudzym mieniu"
+    module: "OC za produkt"
+    label: typical
+    conditions: "Bez szkody w samym produkcie."
+  - event: "Koszty obrony w sporze o szkodę wyrządzoną przez produkt"
+    module: "OC za produkt"
+    label: typical
+  - event: "Koszty demontażu wadliwego elementu i montażu elementu wolnego od wad u odbiorcy"
+    module: "Rozszerzenie OC za produkt"
+    label: optional
+    conditions: "Bez kosztu samego nowego elementu."
+  - event: "Szkody wynikłe z połączenia lub zmieszania wadliwego produktu z innymi produktami"
+    module: "Rozszerzenie OC za produkt"
+    label: optional
+  - event: "Roszczenia z USA i Kanady"
+    module: "OC za produkt"
+    label: underwriting
+    conditions: "Wymaga informacji o eksporcie i dystrybutorach; często osobne warunki."
+  - event: "Koszty wycofania: powiadomienia, logistyka zwrotna, magazynowanie, utylizacja"
+    module: "Wycofanie produktu (recall)"
+    label: optional
+    conditions: "Zwykle gdy produkt może zagrażać zdrowiu lub bezpieczeństwu albo wycofanie nakazał organ."
+  - event: "Koszty poniesione przez klientów, np. sieci handlowe, przy wycofaniu"
+    module: "Wycofanie produktu (recall)"
+    label: optional
+  - event: "Utrata zysku i koszty odbudowy sprzedaży po wycofaniu"
+    module: "Wycofanie produktu (recall)"
+    label: underwriting
+  - event: "Celowe skażenie produktu i szantaż"
+    module: "Wycofanie produktu (recall)"
+    label: underwriting
+  - event: "Koszty wycofania produktu w polisie OC za produkt bez sekcji recall"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Wymaga ubezpieczenia kosztów wycofania."
+  - event: "Naprawa, wymiana lub zwrot ceny samego wadliwego produktu"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "To ryzyko gwarancji i rękojmi."
+  - event: "Wady znane przed wprowadzeniem produktu do obrotu"
+    module: "Wyłączenie"
+    label: excluded
+  - event: "Kary umowne i odszkodowania umowne ponad odpowiedzialność ustawową"
+    module: "Wyłączenie"
+    label: excluded
+  - event: "Czyste straty finansowe z błędu w oprogramowaniu bez szkody osobowej lub rzeczowej"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Należą do [OC zawodowego dla firm IT](/oc-cyber-dla-it/)."
+faq:
+  - q: "Czy OC za produkt pokrywa koszty wycofania produktu z rynku?"
+    a: "Zwykle nie. OC za produkt pokrywa roszczenia osób, którym produkt wyrządził szkodę. Koszty samej akcji wycofania, czyli powiadomień, transportu zwrotnego, magazynowania i utylizacji, obejmuje osobne ubezpieczenie kosztów wycofania albo sekcja recall, jeśli polisa ją przewiduje."
+  - q: "Czy oprogramowanie może być „produktem”?"
+    a: "Według nowej dyrektywy o odpowiedzialności za produkty wadliwe (UE) 2024/2853 tak: obejmuje ona także oprogramowanie, w tym systemy AI. Państwa członkowskie mają wdrożyć dyrektywę do 9 grudnia 2026 r., a nowe zasady obejmą produkty wprowadzone do obrotu lub oddane do użytku po 8 grudnia 2026 r. (po sprostowaniu z 7 maja 2026 r.). Stan wdrożenia w Polsce sprawdzamy przy każdej ofercie."
+  - q: "Kto potrzebuje OC za produkt?"
+    a: "Producenci, importerzy spoza UE, dystrybutorzy pod własną marką i firmy, które zmieniają lub składają produkty. Kodeks cywilny przewiduje odpowiedzialność producenta za szkodę wyrządzoną przez produkt niebezpieczny niezależnie od winy, a w określonych przypadkach odpowiada też importer lub dostawca."
+  - q: "Czy eksport do USA zmienia warunki?"
+    a: "Zwykle tak. Roszczenia za produkty w USA i Kanadzie bywają wyższe i droższe w obronie, dlatego ubezpieczyciele oceniają je osobno. Podaj udział eksportu do Ameryki Północnej i nazwy dystrybutorów już na początku."
+sources:
+  - { title: "Ustawa z dnia 23 kwietnia 1964 r. Kodeks cywilny, art. 449¹–449¹¹: odpowiedzialność za produkt niebezpieczny", url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19640160093", publisher: "ISAP — Kancelaria Sejmu", accessed: 2026-11-02, tier: T1 }
+  - { title: "Dyrektywa (UE) 2024/2853 w sprawie odpowiedzialności za produkty wadliwe (PLD)", url: "https://eur-lex.europa.eu/eli/dir/2024/2853/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rozporządzenie (UE) 2023/988 w sprawie ogólnego bezpieczeństwa produktów (GPSR)", url: "https://eur-lex.europa.eu/eli/reg/2023/988/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+related:
+  - "/ubezpieczenia/oc-dzialalnosci/"
+  - "/oc-cyber-dla-it/"
+  - "/ubezpieczenie-ai/"
+  - "/wiedza/pld-a-oc-software-house/"
+  - "/regulacje/pld/"
+changelog:
+  - { rev: "A", date: 2026-11-02, note: "Pierwsze wydanie." }
+---
+
+Ta karta łączy dwie ochrony, które często są mylone. OC za produkt pokrywa roszczenia osób, którym produkt wyrządził szkodę na osobie lub w rzeczach. Ubezpieczenie kosztów wycofania (ang. product recall) pokrywa koszty zdjęcia produktu z rynku. Producenci urządzeń z oprogramowaniem i AI powinni czytać tę kartę razem z arkuszem [OC i cyber dla firm IT](/oc-cyber-dla-it/). Opis poniżej ma charakter ogólny: zakres konkretnej polisy potwierdzamy w ofercie.
+
+<NoteBlock variant="legal" date="2026-11-02">
+
+Dyrektywa (UE) 2024/2853 (PLD) ma zostać wdrożona do 9 grudnia 2026 r. i obejmuje oprogramowanie; nowe zasady obejmą produkty wprowadzone do obrotu lub oddane do użytku po 8 grudnia 2026 r. Rozporządzenie (UE) 2023/988 (GPSR) stosuje się od 13 grudnia 2024 r. i określa m.in. obowiązki przy wycofywaniu produktów konsumenckich.
+
+</NoteBlock>
+
+<SectionView label="Zestawienie użytkowników" />
+## Kto potrzebuje OC za produkt i ubezpieczenia recall?
+
+- producenci elektroniki, urządzeń IoT i automatyki, także z oprogramowaniem wbudowanym;
+- producenci żywności, kosmetyków i suplementów oraz producenci kontraktowi;
+- dostawcy części i podzespołów dla przemysłu i motoryzacji;
+- importerzy spoza UE i marki sprzedające pod własną nazwą (private label), także w e-commerce;
+- producenci oprogramowania, które steruje urządzeniami fizycznymi.
+
+Wyroby medyczne i badania kliniczne mają własne wymogi; opisujemy je w karcie [ryzyka nietypowe i specjalistyczne](/ubezpieczenia/ryzyka-nietypowe/).
+
+<SectionView label="Szczegół A" />
+## Co zwykle obejmują te polisy?
+
+<BOM
+  id="tabela-zakresu"
+  caption={frontmatter.coverageCaption}
+  prefix="A"
+  rows={frontmatter.coverage.filter((r) => r.module !== "Wyłączenie")}
+/>
+
+<NoteBlock variant="scenario">
+
+Producent czujników do inteligentnych budynków wydaje aktualizację oprogramowania. Błąd powoduje przegrzewanie się części urządzeń, a w jednym mieszkaniu dochodzi do pożaru. Właściciel mieszkania żąda odszkodowania, a producent decyduje o wycofaniu partii czujników. Roszczenie za pożar to sprawa dla OC za produkt. Koszty powiadomień, wymiany i logistyki zwrotnej pokryje tylko ubezpieczenie kosztów wycofania, jeśli firma je ma.
+
+</NoteBlock>
+
+<SectionView label="Mapa luk" />
+## Czego te polisy zwykle nie obejmują?
+
+<BOM
+  caption="Wyłączenia OC za produkt i recall"
+  prefix="X"
+  headers={{ conditions: "Uwagi i co może zamknąć lukę" }}
+  rows={frontmatter.coverage.filter((r) => r.module === "Wyłączenie").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Tabela czynników" />
+## Od czego zależą zakres i składka?
+
+<SpecTable
+  caption="Czynniki oceny ryzyka produktu"
+  columns={["Czynnik", "Co sprawdza ubezpieczyciel"]}
+  rows={[
+    ["Rodzaj produktu i zastosowanie", "Kontakt z ludźmi, żywnością, zdrowiem; zastosowanie w pojazdach, budynkach, medycynie"],
+    ["Rynki zbytu", "Udział eksportu, zwłaszcza do USA i Kanady"],
+    ["Kontrola jakości", "Certyfikaty, testy, identyfikowalność partii, procedury aktualizacji oprogramowania"],
+    ["Umowy z odbiorcami", "Przejęte zobowiązania, kary umowne, wymogi sieci handlowych"],
+    ["Plan wycofania", "Czy firma ma procedurę wycofania i kontakt do odbiorców"],
+    ["Historia szkód i reklamacji", "Dotychczasowe roszczenia i wycofania"]
+  ]}
+/>

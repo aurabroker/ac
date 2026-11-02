@@ -1,0 +1,154 @@
+---
+title: "OC w ochronie zdrowia i e-zdrowiu"
+seoTitle: "OC w ochronie zdrowia i telemedycynie · Aura Consulting"
+description: "OC w ochronie zdrowia i e-zdrowiu: ubezpieczenie obowiązkowe i nadwyżkowe dla placówek, telemedycyny i dostawców oprogramowania medycznego. Zakres i luki."
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "K-05"
+code: "K-05"
+group: "Szkody wyrządzone innym: klienci, pacjenci, odbiorcy"
+priority: "P2"
+markets:
+  - "krajowy"
+  - "zagraniczny"
+order: 70
+reviewEvery: 120
+mandatoryOC: true
+summary: "Podmiot wykonujący działalność leczniczą musi mieć obowiązkowe OC, którego minimalny zakres i sumy określa rozporządzenie Ministra Finansów. Polisa obowiązkowa obejmuje szkody z udzielania świadczeń zdrowotnych, ale zwykle nie obejmuje błędów oprogramowania platformy, wycieku danych ani sum ponad minimum. Te luki zamyka polisa nadwyżkowa, OC technologii i cyber."
+summaryPoints:
+  - "Polisa obowiązkowa jest zawierana na rynku krajowym; program zagraniczny może być tylko nadwyżką lub uzupełnieniem."
+  - "Platforma telemedyczna to także firma technologiczna: błąd w systemie i wyciek danych pacjentów wymagają osobnej ochrony."
+  - "Dane o zdrowiu to szczególna kategoria danych w RODO, co podnosi znaczenie polisy cyber."
+cardSummary: "Placówki, telemedycyna i healthtech: OC obowiązkowe, nadwyżka, OC technologii i cyber dla danych medycznych."
+keywords:
+  primary: "oc w ochronie zdrowia"
+  secondary:
+    - "ubezpieczenie telemedycyny"
+    - "oc platformy medycznej"
+    - "ubezpieczenie e-zdrowie"
+    - "oc nadwyżkowe placówki medycznej"
+    - "ubezpieczenie healthtech"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu w ochronie zdrowia i e-zdrowiu (opis ogólny rynku; zakres potwierdzamy w ofercie)"
+coverage:
+  - event: "Szkoda pacjenta wynikła z udzielania świadczeń zdrowotnych albo niezgodnego z prawem zaniechania ich udzielenia"
+    module: "OC obowiązkowe podmiotu leczniczego"
+    label: typical
+    conditions: "W zakresie i do sum określonych w rozporządzeniu; polisa zawierana na rynku krajowym."
+  - event: "Roszczenia ponad [sumę gwarancyjną](/slownik/#suma-gwarancyjna) ubezpieczenia obowiązkowego"
+    module: "OC nadwyżkowe"
+    label: underwriting
+    conditions: "Wyłącznie jako nadwyżka ponad polisę obowiązkową, na jej warunkach lub węższych."
+  - event: "Czynności spoza obowiązkowego zakresu, np. konsultacje niemedyczne, szkolenia, doradztwo"
+    module: "OC dobrowolne"
+    label: optional
+  - event: "Błąd oprogramowania platformy: niedostępność, błędne przekierowanie pacjenta, utrata dokumentacji"
+    module: "OC technologii (OC zawodowe IT)"
+    label: underwriting
+    conditions: "Zależy od roli platformy i oceny ryzyka; zob. [OC i cyber dla firm IT](/oc-cyber-dla-it/)."
+  - event: "Wyciek lub zaszyfrowanie dokumentacji medycznej po ataku"
+    module: "Cyber"
+    label: typical
+    conditions: "W polisie cyber; zob. [ubezpieczenie cyber](/ubezpieczenie-cyber/)."
+  - event: "Narzędzia AI wspierające decyzje kliniczne"
+    module: "OC technologii / OC produktu"
+    label: underwriting
+    conditions: "Zależy od statusu narzędzia (np. wyrób medyczny) i roli lekarza w decyzji."
+  - event: "Polisa zagraniczna jako zamiennik ubezpieczenia obowiązkowego"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Polisa obowiązkowa musi spełniać polskie przepisy."
+  - event: "Kary administracyjne, np. za naruszenie ochrony danych"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Tylko w zakresie, w jakim prawo pozwala je ubezpieczyć."
+  - event: "Świadczenia wykonywane bez wymaganych uprawnień lub poza wpisem do rejestru"
+    module: "Wyłączenie"
+    label: excluded
+faq:
+  - q: "Czy platforma telemedyczna musi mieć obowiązkowe OC?"
+    a: "Jeśli platforma jest podmiotem wykonującym działalność leczniczą, tak. Jeśli tylko udostępnia technologię lekarzom lub placówkom, obowiązek dotyczy podmiotów, które udzielają świadczeń, a platforma potrzebuje OC technologii i polisy cyber. Rolę platformy ustalamy na podstawie jej modelu działania i umów."
+  - q: "Czy polisa z rynku zagranicznego może zastąpić obowiązkowe OC placówki?"
+    a: "Nie. Ubezpieczenie obowiązkowe musi spełniać polskie przepisy i jest zawierane na rynku krajowym. Program zagraniczny może działać wyłącznie jako nadwyżka ponad sumę obowiązkową albo obejmować ryzyka, których polisa obowiązkowa nie obejmuje."
+  - q: "Czy obowiązkowe OC obejmuje wyciek danych pacjentów?"
+    a: "Zwykle nie w zakresie kosztów reakcji na incydent, odtworzenia systemów i przestoju. Te koszty obejmuje polisa cyber. Roszczenie pacjenta o naruszenie prywatności może być oceniane różnie, zależnie od polisy."
+  - q: "Czy lekarz na kontrakcie B2B potrzebuje własnej polisy?"
+    a: "Lekarz wykonujący praktykę zawodową jest zwykle sam zobowiązany do posiadania obowiązkowego OC. Placówka, z którą współpracuje, ocenia, czy jej polisa obejmuje jego działania. Warto to sprawdzić w umowie i obu polisach."
+sources:
+  - { title: "Ustawa z dnia 15 kwietnia 2011 r. o działalności leczniczej, art. 25: obowiązkowe ubezpieczenie OC", url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20111120654", publisher: "ISAP — Kancelaria Sejmu", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rozporządzenie Ministra Finansów z dnia 29 kwietnia 2019 r. w sprawie obowiązkowego ubezpieczenia odpowiedzialności cywilnej podmiotu wykonującego działalność leczniczą (Dz.U. 2019 poz. 866, z późn. zm.)", url: "https://eli.gov.pl/eli/DU/2019/866/ogl", publisher: "Dziennik Ustaw (ELI)", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ustawa z dnia 22 maja 2003 r. o ubezpieczeniach obowiązkowych, Ubezpieczeniowym Funduszu Gwarancyjnym i Polskim Biurze Ubezpieczycieli Komunikacyjnych", url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20031241152", publisher: "ISAP — Kancelaria Sejmu", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rozporządzenie (UE) 2016/679 (RODO), art. 9: szczególne kategorie danych osobowych", url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rozporządzenie (UE) 2017/745 w sprawie wyrobów medycznych (MDR)", url: "https://eur-lex.europa.eu/eli/reg/2017/745/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+related:
+  - "/oc-cyber-dla-it/"
+  - "/ubezpieczenie-cyber/"
+  - "/oc-zawodowe/"
+  - "/ubezpieczenia/ryzyka-nietypowe/"
+changelog:
+  - { rev: "A", date: 2026-11-02, note: "Pierwsze wydanie." }
+---
+
+W ochronie zdrowia spotykają się dwa światy: obowiązkowe OC za świadczenia zdrowotne i ryzyka technologiczne platform, aplikacji i danych pacjentów. Pierwsze reguluje polskie prawo i zawiera się je na rynku krajowym. Drugie wymaga polis znanych z sektora IT: [OC zawodowego dla firm technologicznych i polisy cyber](/oc-cyber-dla-it/). Opis poniżej ma charakter ogólny: zakres konkretnej polisy potwierdzamy w ofercie.
+
+<NoteBlock variant="legal" date="2026-11-02">
+
+Obowiązek zawarcia umowy OC wynika z ustawy o działalności leczniczej (art. 25), a minimalne sumy gwarancyjne i zakres określa rozporządzenie Ministra Finansów z 29 kwietnia 2019 r. (Dz.U. 2019 poz. 866, z późn. zm.). Aktualne sumy sprawdzamy w tekście jednolitym przed każdą ofertą.
+
+</NoteBlock>
+
+<SectionView label="Zestawienie użytkowników" />
+## Kogo dotyczy ta karta?
+
+- placówki medyczne, przychodnie i kliniki, które potrzebują sum wyższych niż obowiązkowe;
+- platformy telemedyczne i serwisy umawiania wizyt;
+- dostawcy oprogramowania do dokumentacji medycznej, rejestracji i rozliczeń;
+- aplikacje zdrowotne i firmy rozwijające narzędzia AI wspierające diagnostykę;
+- gabinety fizjoterapii, psychoterapii i dietetyki, także działające online.
+
+Producentów wyrobów medycznych i sponsorów badań klinicznych opisujemy w karcie [ryzyka nietypowe i specjalistyczne](/ubezpieczenia/ryzyka-nietypowe/).
+
+<SectionView label="Węzeł A" />
+## Co obejmuje obowiązkowe OC, a gdzie są luki?
+
+Obowiązkowe OC podmiotu leczniczego obejmuje szkody wynikłe z udzielania świadczeń zdrowotnych albo niezgodnego z prawem zaniechania ich udzielenia, do sum z rozporządzenia. Nie jest zaprojektowane dla ryzyk technologicznych platformy ani dla incydentów cyber.
+
+<BOM
+  id="tabela-zakresu"
+  caption={frontmatter.coverageCaption}
+  prefix="A"
+  rows={frontmatter.coverage.filter((r) => r.module !== "Wyłączenie")}
+/>
+
+<NoteBlock variant="scenario">
+
+Platforma telemedyczna łączy pacjentów z lekarzami współpracującymi na umowach B2B. Po aktualizacji systemu część wyników badań trafia do niewłaściwych kont pacjentów. Pacjenci zgłaszają roszczenia, a organ ochrony danych wszczyna postępowanie. Obowiązkowe OC lekarzy nie obejmie tego zdarzenia, bo nie dotyczy ono świadczenia zdrowotnego. Koszty reakcji na incydent, obronę i roszczenia za naruszenie prywatności może pokryć polisa cyber platformy, a błąd systemu OC technologii, zgodnie z warunkami.
+
+</NoteBlock>
+
+<SectionView label="Mapa luk" />
+## Czego te polisy zwykle nie obejmują?
+
+<BOM
+  caption="Wyłączenia i ograniczenia"
+  prefix="X"
+  headers={{ conditions: "Uwagi" }}
+  rows={frontmatter.coverage.filter((r) => r.module === "Wyłączenie").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Tabela czynników" />
+## Od czego zależą zakres i składka?
+
+<SpecTable
+  caption="Czynniki oceny ryzyka w ochronie zdrowia"
+  columns={["Czynnik", "Co sprawdza ubezpieczyciel"]}
+  rows={[
+    ["Rodzaj świadczeń", "Specjalizacje, zabiegi, świadczenia zdalne, liczba pacjentów"],
+    ["Model platformy", "Czy platforma udziela świadczeń, czy tylko udostępnia technologię"],
+    ["Personel", "Zatrudnienie i współpraca B2B, polisy własne współpracowników"],
+    ["Dane i bezpieczeństwo", "Sposób przechowywania dokumentacji, dostawcy chmury, kopie zapasowe, uwierzytelnianie"],
+    ["Narzędzia AI", "Czy narzędzie jest wyrobem medycznym, kto podejmuje decyzję kliniczną"],
+    ["Historia szkód", "Roszczenia pacjentów, incydenty danych, postępowania"]
+  ]}
+/>

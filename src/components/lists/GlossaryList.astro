@@ -1,0 +1,146 @@
+---
+/**
+ * Słownik A–Z na jednej stronie: nawigacja literami + lista definicji z kotwicami (/slownik/#<id>).
+ * Dane: src/content/glossary/terms.yaml. JSON-LD DefinedTermSet buduje layout strony.
+ */
+import { getCollection } from 'astro:content';
+import { inlineMd } from '../../lib/inline-md.ts';
+import { polishText } from '../../lib/typography/polish.ts';
+import { getRoutes, shortTitle } from '../../lib/routes.ts';
+
+// „Więcej: <tytuł strony docelowej>” zamiast powtarzanego „arkusz szczegółowy”.
+// Strona docelowa spoza tego buildu (np. szkic w produkcji) → bez linku.
+const routes = await getRoutes();
+const titleOf = (path: string) => routes.find((r) => r.path === path)?.entry.data.title;
+const seeLabel = (path: string) => {
+  const t = titleOf(path);
+  return t ? polishText(shortTitle(t)) : null;
+};
+
+const terms = (await getCollection('glossary')).map((e) => e.data).sort((a, b) => a.term.localeCompare(b.term, 'pl'));
+const letterOf = (t: string) => t.trim().charAt(0).toLocaleUpperCase('pl');
+const letters = [...new Set(terms.map((t) => letterOf(t.term)))];
+---
+
+<section class="glossary" aria-label="Hasła A–Z">
+  <nav class="glossary__letters" aria-label="Litery" data-md-skip>
+    <ul>
+      {
+        letters.map((l) => (
+          <li>
+            <a href={`#litera-${l.toLowerCase()}`}>{l}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  {
+    letters.map((l) => (
+      <section class="glossary__group" aria-labelledby={`litera-${l.toLowerCase()}`}>
+        <h2 id={`litera-${l.toLowerCase()}`} class="glossary__letter">
+          {l}
+        </h2>
+        <dl>
+          {terms
+            .filter((t) => letterOf(t.term) === l)
+            .map((t) => (
+              <div class="glossary__item" id={t.id}>
+                <dt>
+                  <dfn>{polishText(t.term)}</dfn>
+                  {t.termEn && (
+                    <span class="glossary__en">
+                      {' '}
+                      (ang. <span lang="en">{t.termEn}</span>)
+                    </span>
+                  )}
+                </dt>
+                <dd>
+                  <span set:html={inlineMd(t.definition)} />
+                  {t.see && t.see !== '/slownik/' && seeLabel(t.see) && (
+                    <span class="glossary__see">
+                      {' '}
+                      Więcej: <a href={t.see}>{seeLabel(t.see)}</a>.
+                    </span>
+                  )}
+                </dd>
+              </div>
+            ))}
+        </dl>
+      </section>
+    ))
+  }
+</section>
+
+<style>
+  .glossary {
+    margin-top: var(--s-6);
+    max-width: 880px;
+  }
+  .glossary__letters ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .glossary__letters a {
+    display: inline-grid;
+    place-items: center;
+    min-width: 36px;
+    min-height: 36px;
+    border: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .glossary__letters a:hover {
+    border-color: var(--ink);
+  }
+  .glossary__group {
+    margin-top: var(--s-8);
+  }
+  .glossary__letter {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 1rem;
+    padding-bottom: var(--s-1);
+    border-bottom: 1px solid var(--ink);
+  }
+  .glossary dl {
+    margin: 0;
+  }
+  .glossary__item {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) 1fr;
+    gap: var(--s-1) var(--gutter);
+    padding-block: var(--s-2);
+    border-bottom: 1px solid var(--rule);
+    scroll-margin-top: calc(var(--header-h) + var(--s-2));
+  }
+  .glossary__item:target {
+    background: var(--blue-wash);
+  }
+  .glossary dt dfn {
+    font-style: normal;
+    font-weight: 600;
+  }
+  .glossary__en {
+    display: block;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .glossary dd {
+    margin: 0;
+    color: var(--ink-2);
+  }
+  .glossary__see {
+    color: var(--ink-3);
+  }
+  @media (max-width: 640px) {
+    .glossary__item {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

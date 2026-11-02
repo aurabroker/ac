@@ -1,0 +1,399 @@
+/* Arkusz — reset, typografia, siatka, prose. Style komponentów są lokalne (scoped). */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + var(--s-2));
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 250ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-kerning: normal;
+  font-variant-numeric: lining-nums;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  hanging-punctuation: first;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+svg {
+  overflow: visible;
+}
+
+/* ---------- nagłówki ---------- */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+  text-wrap: balance;
+  margin: 0;
+}
+h1 {
+  font-size: var(--fs-h1);
+  line-height: 1.04;
+  max-width: 22ch;
+}
+h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.15;
+}
+h3 {
+  font-size: var(--fs-h3);
+  line-height: 1.25;
+}
+h4 {
+  font-size: 1.0625rem;
+  line-height: 1.35;
+}
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+.accent,
+h1 em,
+.display em {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- linki ---------- */
+a {
+  color: var(--blue);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, var(--blue) 45%, transparent);
+  transition: color 120ms var(--ease), text-decoration-color 120ms var(--ease);
+}
+a:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
+}
+
+/* fokus: jedyne miejsce sygnału poza CTA */
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background: var(--blue-wash);
+  color: var(--ink);
+}
+
+/* ---------- etykiety (Plex Mono) ---------- */
+.label,
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 400;
+  line-height: 1.4;
+}
+.mono {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--fs-mono);
+}
+
+/* ---------- układ ---------- */
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + 2 * var(--pad-x));
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute;
+  left: var(--s-2);
+  top: -100px;
+  z-index: 100;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: var(--s-1) var(--s-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+}
+.skip-link:focus {
+  top: var(--s-1);
+}
+
+/* siatka kreślarska — tylko w hero i za rysunkami */
+.drafting-grid {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+  background-size:
+    80px 80px,
+    80px 80px,
+    16px 16px,
+    16px 16px;
+  background-position: -1px -1px;
+}
+
+/* ---------- treść (Markdown/MDX) ---------- */
+.prose {
+  max-width: var(--measure);
+}
+.prose > * + * {
+  margin-top: 1.1em;
+}
+.prose--wide {
+  max-width: none;
+}
+.prose--wide > :is(p, ul, ol, blockquote, h2, h3, h4) {
+  max-width: var(--measure);
+}
+.prose h2 {
+  margin-top: var(--s-10);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: calc(var(--header-h) + var(--s-2));
+}
+.prose h3 {
+  margin-top: var(--s-6);
+  scroll-margin-top: calc(var(--header-h) + var(--s-2));
+}
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: var(--s-2);
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.25em;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+.prose ul > li::marker {
+  content: '—  ';
+  color: var(--ink-3);
+}
+.prose ol > li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--ink-3);
+}
+.prose strong {
+  font-weight: 600;
+}
+.prose dfn {
+  font-style: normal;
+  font-weight: 600;
+}
+.prose blockquote {
+  margin-inline: 0;
+  padding-left: var(--s-3);
+  border-left: 1px solid var(--ink);
+  color: var(--ink-2);
+}
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin-block: var(--s-8);
+}
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+.prose code {
+  background: var(--paper-inset);
+  padding: 0.1em 0.35em;
+}
+.prose pre {
+  background: var(--paper-inset);
+  padding: var(--s-2);
+  overflow-x: auto;
+  line-height: 1.5;
+  border-left: 1px solid var(--rule);
+}
+
+/* ---------- tabele ---------- */
+.table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+  margin-block: var(--s-4);
+}
+.table-wrap:focus-visible {
+  outline-offset: 2px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+caption {
+  caption-side: top;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-bottom: var(--s-1);
+}
+th {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: left;
+  vertical-align: bottom;
+  padding: var(--s-1) var(--s-2) var(--s-1) 0;
+  border-bottom: 1px solid var(--ink);
+}
+td {
+  vertical-align: top;
+  padding: var(--s-2) var(--s-2) var(--s-2) 0;
+  border-bottom: 1px solid var(--rule);
+}
+tbody th {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+  font-weight: 600;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+  padding-top: var(--s-2);
+}
+
+/* ---------- przyciski / CTA ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: 44px;
+  padding: 10px 18px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 120ms var(--ease), color 120ms var(--ease), border-color 120ms var(--ease);
+}
+.btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+/* JEDNO wypełnione CTA w treści na widok */
+.btn--signal {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #fff;
+}
+.btn--signal:hover {
+  background: var(--signal-hover);
+  border-color: var(--signal-hover);
+  color: #fff;
+}
+.btn--quiet {
+  border-color: var(--rule);
+  color: var(--ink-2);
+}
+
+/* ---------- druk A4 ---------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+  body {
+    font-size: 11pt;
+  }
+  [data-print='hide'],
+  .site-header,
+  .site-nav,
+  .toc,
+  .btn {
+    display: none !important;
+  }
+  a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .prose a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: var(--ink-3);
+  }
+}

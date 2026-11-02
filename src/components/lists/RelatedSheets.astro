@@ -1,0 +1,37 @@
+---
+/** „Powiązane arkusze” — ścieżki z frontmattera `related`; nieistniejące w tym buildzie są pomijane. */
+import SheetCard from '../SheetCard.astro';
+import CardGrid from '../CardGrid.astro';
+import { getRoutes } from '../../lib/routes.ts';
+
+interface Props {
+  paths: string[];
+  heading?: string;
+}
+const { paths, heading = 'Powiązane arkusze' } = Astro.props;
+const routes = await getRoutes();
+const items = paths.map((p) => routes.find((r) => r.path === p)).filter((r) => !!r);
+---
+
+{
+  items.length > 0 && (
+    <section class="related" aria-labelledby="powiazane">
+      <h2 id="powiazane">{heading}</h2>
+      <CardGrid columns={3}>
+        {items.map((r) => (
+          <SheetCard href={r.path} title={r.entry.data.title} sheet={r.entry.data.sheet} draft={r.draft} />
+        ))}
+      </CardGrid>
+    </section>
+  )
+}
+
+<style>
+  .related {
+    margin-top: var(--s-10);
+  }
+  .related h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+</style>

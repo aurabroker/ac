@@ -1,0 +1,77 @@
+---
+/**
+ * NoteBlock — notatka na marginesie arkusza. W .md staje się cytatem („> **Etykieta** …”).
+ * Warianty:
+ *   note      UWAGA
+ *   scenario  SCENARIUSZ ILUSTRACYJNY  (obowiązkowe przy scenariuszach)
+ *   legal     STAN PRAWNY NA {date}    (tematy regulacyjne; podaj `date`)
+ *   warning   WAŻNE
+ *   exclusion CZEGO POLISA NIE OBEJMUJE
+ */
+import { fmtDateLong } from '../lib/format.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  variant?: 'note' | 'scenario' | 'legal' | 'warning' | 'exclusion';
+  /** Własna etykieta (nadpisuje domyślną). */
+  label?: string;
+  /** Dla variant="legal". */
+  date?: Date | string;
+}
+const { variant = 'note', label, date } = Astro.props;
+const defaults: Record<string, string> = {
+  note: 'Uwaga',
+  scenario: 'Scenariusz ilustracyjny',
+  legal: 'Stan prawny na',
+  warning: 'Ważne',
+  exclusion: 'Czego polisa nie obejmuje',
+};
+const d = date ? (date instanceof Date ? date : new Date(date)) : undefined;
+const text = label ?? (variant === 'legal' && d ? `${defaults.legal} ${fmtDateLong(d)}` : defaults[variant]);
+---
+
+<aside class:list={['note', `note--${variant}`]}>
+  <p class="note__label"><strong>{polishText(text)}</strong></p>
+  <div class="note__body"><slot /></div>
+</aside>
+
+<style>
+  .note {
+    position: relative;
+    max-width: var(--measure);
+    margin-block: var(--s-4);
+    padding: var(--s-2) 0 var(--s-2) var(--s-3);
+    border-left: 1px solid var(--ink);
+  }
+  .note__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 var(--s-1);
+  }
+  .note__label strong {
+    font-weight: 400;
+  }
+  .note__body > :global(* + *) {
+    margin-top: 0.8em;
+  }
+  .note--scenario {
+    border-left-style: dashed;
+  }
+  .note--legal {
+    border-left-color: var(--blue);
+  }
+  .note--legal .note__label {
+    color: var(--blue);
+  }
+  .note--warning {
+    background: var(--paper-inset);
+    padding-right: var(--s-3);
+  }
+  .note--exclusion {
+    border-left-width: 3px;
+    border-left-style: double;
+  }
+</style>

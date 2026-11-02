@@ -1,0 +1,214 @@
+---
+/**
+ * F00Home — F-00: rysunek złożeniowy w widoku rozstrzelonym. Program ubezpieczenia jako precyzyjny zespół
+ * na jednej osi: baza A (data retroaktywna), sprężyna (udział własny), tarcze OC zawodowe i cyber,
+ * podkładka (klauzula AI), pierścień (USA i Kanada), pokrywa w przekroju ćwiartkowym (wyłączenia),
+ * wymiar całkowity (suma gwarancyjna) i wymiar cząstkowy (podlimit).
+ * Właściciel: agent „figures”. Geometria liczona w buildzie (./draw.ts); etykiety w SVG są aria-hidden,
+ * treść — legenda HTML w FIGURE_META (./index.ts).
+ */
+import FigFrame from './FigFrame.astro';
+import { arc, circle, cylinder, dimV, ellipse, ep, f, hatch, helix, p, poly, seg, type Pt } from './draw.ts';
+
+interface Props {
+  labelledby?: string;
+  title?: string;
+}
+const { labelledby, title = 'Rysunek złożeniowy: program ubezpieczenia w widoku rozstrzelonym' } = Astro.props;
+const desc =
+  'Widok rozstrzelony zespołu na wspólnej osi. Od dołu: podstawa oznaczona jako baza A, sprężyna, gruba tarcza, ' +
+  'cieńsza tarcza, cienka podkładka, szeroki pierścień i pokrywa z wyciętą ćwiartką pokazującą kreskowany przekrój. ' +
+  'Po lewej wymiar całkowity zespołu i wymiar jednej tarczy, po prawej ponumerowane odnośniki 1–7, wymiar ma numer 8.';
+
+// ——— geometria ———
+const X = 236; // oś zespołu
+const K = 0.3; // spłaszczenie elips (ry = K·rx)
+const part = (rx: number, cy: number, h: number) => ({ rx, ry: rx * K, cy, h });
+
+const base = part(150, 446, 18);
+const oc = part(120, 322, 42);
+const cyber = part(120, 260, 28);
+const shim = part(108, 220, 6);
+const ring = { ...part(132, 176, 12), ri: 104 };
+const cap = part(92, 118, 26);
+
+// 1 — podstawa (baza A) z otworami mocującymi i otworem środkowym
+const baseCyl = cylinder(X, base.cy, base.rx, base.ry, base.h);
+const holes = [30, 90, 150, 210, 270, 330]
+  .map((a) => ep(X, base.cy, 134, 134 * K, a))
+  .map(([x, y]) => ellipse(x, y, 6, 6 * K))
+  .join('');
+const bore = ellipse(X, base.cy, 18, 18 * K);
+
+// 2 — sprężyna (udział własny = napięcie wstępne)
+const spring = helix(X, base.cy, 50, K, 4.5, 14);
+
+// 3, 4 — tarcze
+const ocCyl = cylinder(X, oc.cy, oc.rx, oc.ry, oc.h);
+const cyCyl = cylinder(X, cyber.cy, cyber.rx, cyber.ry, cyber.h);
+// 5 — podkładka
+const shimCyl = cylinder(X, shim.cy, shim.rx, shim.ry, shim.h);
+
+// 6 — pierścień z otworem: przez otwór widać części niżej, z tyłu ścianka otworu
+const rri = ring.ri * K;
+const sLens = (Math.asin(ring.h / (2 * rri)) * 180) / Math.PI;
+const ringOuter = cylinder(X, ring.cy, ring.rx, ring.ry, ring.h);
+const lens =
+  arc(X, ring.cy, ring.ri, rri, sLens, 180 - sLens) + arc(X, ring.cy + ring.h, ring.ri, rri, 180 + sLens, 360 - sLens, false) + 'Z';
+const ringFill = ringOuter.fill + lens;
+const ringEdges =
+  ringOuter.edges + ellipse(X, ring.cy, ring.ri, rri) + arc(X, ring.cy + ring.h, ring.ri, rri, 180 + sLens, 360 - sLens);
+
+// 7 — pokrywa z wyciętą ćwiartką (przekrój ćwiartkowy) i nieprzelotowym otworem od spodu
+const a0 = 18;
+const a1 = 132;
+const cRy = cap.rx * K;
+const boreR = 14;
+const boreD = 12;
+const C: Pt = [X, cap.cy];
+const Cup: Pt = [X, cap.cy + cap.h - boreD];
+const face = (a: number) => {
+  const top = ep(X, cap.cy, cap.rx, cRy, a);
+  const bot: Pt = [top[0], top[1] + cap.h];
+  const bb = ep(X, cap.cy + cap.h, boreR, boreR * K, a);
+  const bu: Pt = [bb[0], bb[1] - boreD];
+  return { top, bot, bb, bu, poly: [C, top, bot, bb, bu, Cup] as Pt[] };
+};
+const F0 = face(a0);
+const F1 = face(a1);
+const capFill =
+  `M${p(X - cap.rx, cap.cy)}` +
+  arc(X, cap.cy, cap.rx, cRy, 180, 360, false) +
+  `V${f(cap.cy + cap.h)}` +
+  arc(X, cap.cy + cap.h, cap.rx, cRy, 0, a0, false) +
+  poly([F0.bb, F0.bu, Cup, F1.bu, F1.bb, F1.bot]).replace(/^M/, 'L') +
+  arc(X, cap.cy + cap.h, cap.rx, cRy, a1, 180, false) +
+  'Z';
+const capEdges =
+  arc(X, cap.cy, cap.rx, cRy, a1, 360 + a0) +
+  poly([F0.top, C, F1.top]) +
+  seg([X - cap.rx, cap.cy], [X - cap.rx, cap.cy + cap.h]) +
+  seg([X + cap.rx, cap.cy], [X + cap.rx, cap.cy + cap.h]) +
+  arc(X, cap.cy + cap.h, cap.rx, cRy, 0, a0) +
+  arc(X, cap.cy + cap.h, cap.rx, cRy, a1, 180) +
+  poly([F0.top, F0.bot, F0.bb, F0.bu, Cup, C]) +
+  poly([F1.top, F1.bot, F1.bb, F1.bu, Cup]);
+const capHatch = hatch(F0.poly, 4.2, -45) + hatch(F1.poly, 4.2, -45);
+
+// ——— linie konstrukcyjne, wymiary ———
+const env = `M${p(X - 120, 70)}V${f(500)}M${p(X + 120, 70)}V${f(500)}`;
+const dimX = 52;
+const extSG = seg([X - cap.rx - 6, cap.cy], [dimX - 10, cap.cy]) + seg([X - base.rx - 6, base.cy], [dimX - 10, base.cy]);
+const sg = dimV(dimX, cap.cy, base.cy);
+const subX = 98;
+const extSub =
+  seg([X - cyber.rx - 5, cyber.cy], [subX - 7, cyber.cy]) + seg([X - cyber.rx - 5, cyber.cy + cyber.h], [subX - 7, cyber.cy + cyber.h]);
+const sub = dimV(subX, cyber.cy, cyber.cy + cyber.h, 6);
+
+// baza A: trójkąt bazy na linii pomocniczej + ramka z literą
+const dA = 68;
+const datumTri = `M${p(dA - 6, base.cy)}L${p(dA + 6, base.cy)}L${p(dA, base.cy + 9)}Z`;
+const datumBox = seg([dA, base.cy + 9], [dA, base.cy + 16]) + poly([[dA - 8, base.cy + 16], [dA + 8, base.cy + 16], [dA + 8, base.cy + 32], [dA - 8, base.cy + 32]], true);
+
+// ——— odnośniki: kropka na części → balon → etykieta ———
+const BX = 452;
+const R = 11;
+const band = (pt: { rx: number; cy: number; h: number }, a: number): Pt => {
+  const [x, y] = ep(X, pt.cy, pt.rx, pt.rx * K, a);
+  return [x, y + pt.h / 2];
+};
+const callouts: { n: number; at: Pt; y: number; main: string; sub: string }[] = [
+  { n: 7, at: band(cap, -6), y: 98, main: 'WYŁĄCZENIA', sub: 'PRZEKRÓJ ZAKRESU' },
+  { n: 6, at: band(ring, -8), y: 158, main: 'USA / KANADA', sub: 'TERYTORIUM · JURYSDYKCJA' },
+  { n: 5, at: band(shim, 12), y: 212, main: 'KLAUZULA AI', sub: 'ZAKRES WPROST' },
+  { n: 4, at: band(cyber, 14), y: 264, main: 'CYBER', sub: 'INCYDENT · DANE · PRZESTÓJ' },
+  { n: 3, at: band(oc, 12), y: 334, main: 'OC ZAWODOWE', sub: 'BŁĘDY W USŁUGACH' },
+  { n: 2, at: [X + 49, base.cy - 34], y: 398, main: 'UDZIAŁ WŁASNY', sub: 'NAPIĘCIE WSTĘPNE' },
+  { n: 1, at: band(base, 8), y: 458, main: 'BAZA A', sub: 'DATA RETROAKTYWNA' },
+];
+const leader = (at: Pt, by: number) => {
+  const dx = BX - at[0];
+  const dy = by - at[1];
+  const L = Math.hypot(dx, dy);
+  return seg(at, [BX - (dx / L) * R, by - (dy / L) * R]);
+};
+const leaders = callouts.map((c) => leader(c.at, c.y)).join('');
+const dots = callouts.map((c) => circle(c.at[0], c.at[1], 1.9)).join('');
+---
+
+<FigFrame viewBox="0 0 640 520" labelledby={labelledby} title={title} desc={desc}>
+  <!-- konstrukcja -->
+  <path class="c" d={env} pathLength="1" />
+  <path class="c" d={extSG + extSub} pathLength="1" />
+
+  <!-- 1 podstawa -->
+  <path class="f" d={baseCyl.fill} />
+  <path class="o" d={baseCyl.edges} pathLength="1" />
+  <path class="o2" d={holes + bore} pathLength="1" />
+
+  <!-- 2 sprężyna -->
+  <path class="o2" d={spring.back} pathLength="1" />
+  <path class="o" d={spring.front} pathLength="1" />
+
+  <!-- 3 OC zawodowe -->
+  <path class="f" d={ocCyl.fill} />
+  <path class="o" d={ocCyl.edges} pathLength="1" />
+
+  <!-- 4 cyber -->
+  <path class="f" d={cyCyl.fill} />
+  <path class="o" d={cyCyl.edges} pathLength="1" />
+
+  <!-- 5 podkładka: klauzula AI -->
+  <path class="f" d={shimCyl.fill} />
+  <path class="o" d={shimCyl.edges} pathLength="1" />
+
+  <!-- 6 pierścień: USA i Kanada -->
+  <path class="f" d={ringFill} fill-rule="evenodd" />
+  <path class="o" d={ringEdges} pathLength="1" />
+
+  <!-- 7 pokrywa w przekroju ćwiartkowym: wyłączenia -->
+  <path class="f" d={capFill} />
+  <path class="x fx" d={capHatch} />
+  <path class="o" d={capEdges} pathLength="1" />
+
+  <!-- oś zespołu (na wierzchu) -->
+  <line class="ax" x1={X} y1="58" x2={X} y2="516" />
+
+  <!-- 8 wymiary: suma gwarancyjna, podlimit; baza A -->
+  <path class="d" d={sg.line + sub.line} pathLength="1" />
+  <path class="d-fill fx" d={sg.heads + sub.heads} />
+  <path class="ah fx" d={datumTri} />
+  <path class="o2" d={datumBox} pathLength="1" />
+  <text class="t t-b t-m t-keep" x={dA} y={base.cy + 28}>A</text>
+  <text class="t-dim" transform={`translate(${dimX - 7} ${(cap.cy + base.cy) / 2}) rotate(-90)`}>SUMA GWARANCYJNA</text>
+  <text class="t-dim" transform={`translate(${subX - 6} ${cyber.cy + cyber.h / 2}) rotate(-90)`}>PODLIMIT</text>
+  <g class="bal">
+    <circle class="b" cx={dimX} cy="64" r={R} pathLength="1" />
+    <text class="t-num" x={dimX} y="64">8</text>
+  </g>
+  <path class="l" d={seg([dimX, 64 + R], [dimX, cap.cy - 4])} pathLength="1" />
+
+  <!-- odnośniki -->
+  <path class="l" d={leaders} pathLength="1" />
+  <path class="dot fx" d={dots} />
+  {
+    callouts.map((c) => (
+      <>
+        <g class="bal">
+          <circle class="b" cx={BX} cy={c.y} r={R} pathLength="1" />
+          <text class="t-num" x={BX} y={c.y}>
+            {c.n}
+          </text>
+        </g>
+        <text class="t t-b" x={BX + 20} y={c.y - 1}>
+          {c.main}
+        </text>
+        <text class="t t-s" x={BX + 20} y={c.y + 11}>
+          {c.sub}
+        </text>
+      </>
+    ))
+  }
+
+  <text class="t t-s" x="24" y="30">WIDOK ROZSTRZELONY · OŚ PROGRAMU</text>
+</FigFrame>

@@ -1,0 +1,239 @@
+---
+/**
+ * Nagłówek: wordmark, nawigacja główna, telefon (Plex Mono), CTA „Zleć analizę” (obrys tuszem).
+ * Mobile: „Menu” otwiera <dialog> (showModal). Bez JS link prowadzi do mapy serwisu w stopce.
+ */
+import { MAIN_NAV } from '../lib/nav.ts';
+import { SITE } from '../lib/site.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  currentPath: string;
+}
+const { currentPath } = Astro.props;
+const isCurrent = (href: string) => currentPath === href || (href !== '/' && currentPath.startsWith(href));
+---
+
+<header class="site-header" data-md-skip>
+  <div class="container site-header__inner">
+    <a class="wordmark" href="/" aria-label={`${SITE.name} — strona główna`}>
+      <span class="wordmark__name">{SITE.wordmark}</span>
+      <span class="wordmark__sub" aria-hidden="true">BROKER UBEZPIECZENIOWY · KNF {SITE.knfPermit}</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Główna">
+      <ul>
+        {
+          MAIN_NAV.map((l) => (
+            <li>
+              <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+                {polishText(l.label)}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="site-header__tel mono" href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>
+      <a class="btn site-header__cta" href="/kontakt/">Zleć analizę</a>
+      <a class="btn btn--quiet site-header__menu" href="#mapa-serwisu" data-menu-open aria-haspopup="dialog">Menu</a>
+    </div>
+  </div>
+
+  <dialog class="menu-dialog" id="menu-dialog" aria-label="Spis arkuszy">
+    <div class="menu-dialog__head">
+      <span class="label">Spis arkuszy</span>
+      <button type="button" class="btn btn--quiet" data-menu-close>Zamknij</button>
+    </div>
+    <ul class="menu-dialog__list">
+      {
+        MAIN_NAV.map((l, i) => (
+          <li>
+            <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+              <span class="mono" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              {polishText(l.label)}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="menu-dialog__contact mono">
+      <a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a> · <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    </p>
+  </dialog>
+</header>
+
+<script>
+  const dialog = document.getElementById('menu-dialog') as HTMLDialogElement | null;
+  const opener = document.querySelector<HTMLAnchorElement>('[data-menu-open]');
+  if (dialog && opener && typeof dialog.showModal === 'function') {
+    opener.addEventListener('click', (e) => {
+      e.preventDefault();
+      dialog.showModal();
+    });
+    dialog.querySelector('[data-menu-close]')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    backdrop-filter: saturate(1.2) blur(6px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    min-width: 0;
+    min-height: var(--header-h);
+  }
+  .wordmark {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    text-decoration: none;
+    color: var(--ink);
+    flex: none;
+  }
+  .wordmark__name {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+  .wordmark__sub {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+    line-height: 1;
+  }
+  .site-nav {
+    margin-left: auto;
+  }
+  .site-nav ul {
+    display: flex;
+    gap: var(--s-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .site-nav a {
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    padding-block: var(--s-1);
+    border-bottom: 1px solid transparent;
+  }
+  .site-nav a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+  .site-nav a[aria-current='page'] {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex: none;
+  }
+  .site-header__tel {
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .site-header__menu {
+    display: none;
+  }
+  .menu-dialog {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: var(--s-3) var(--pad-x);
+    border: 0;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .menu-dialog::backdrop {
+    background: var(--paper);
+  }
+  .menu-dialog__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--s-2);
+    border-bottom: 1px solid var(--ink);
+  }
+  .menu-dialog__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .menu-dialog__list a {
+    display: flex;
+    gap: var(--s-2);
+    align-items: baseline;
+    padding-block: var(--s-2);
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+  .menu-dialog__list .mono {
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+  .menu-dialog__contact {
+    margin-top: var(--s-4);
+  }
+  /* Pełna nawigacja tylko gdy cały wiersz mieści się w kontenerze 1312 px (bez poziomego przewijania). */
+  @media (max-width: 1599px) {
+    .site-header__tel {
+      display: none;
+    }
+  }
+  @media (max-width: 1439px) {
+    .site-nav {
+      display: none;
+    }
+    .site-header__actions {
+      margin-left: auto;
+    }
+    .site-header__menu {
+      display: inline-flex;
+    }
+  }
+  @media (max-width: 1439px) and (min-width: 721px) {
+    .site-header__tel {
+      display: inline;
+    }
+  }
+  @media (max-width: 720px) {
+    .site-header__tel,
+    .site-header__cta {
+      display: none;
+    }
+    .wordmark__sub {
+      display: none;
+    }
+  }
+</style>

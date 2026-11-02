@@ -1,0 +1,25 @@
+# Przekierowania 301 ze starego serwisu (GitHub Pages). Reguły dokładne przed ogólnymi.
+# Reguły zależne od publikacji (np. stary wpis o ransomware → /wiedza/ransomware-2-0/ albo /wiedza/)
+# dopisuje build na początku pliku — źródło: src/lib/redirects.ts.
+/index.html                              /                        301
+/oc-cyber.html                           /oc-cyber-dla-it/        301
+/oc-cyber                                /oc-cyber-dla-it/        301
+/oc-cyber/                               /oc-cyber-dla-it/        301
+/ubezpieczenie-ai.html                   /ubezpieczenie-ai/       301
+/cyber.html                              /ubezpieczenie-cyber/    301
+/cyber                                   /ubezpieczenie-cyber/    301
+/cyber/                                  /ubezpieczenie-cyber/    301
+/dziekujemy.html                         /kontakt/                301
+/dziekujemy                              /kontakt/                301
+/robots,txt                              /robots.txt              301
+/sitemap.xml                             /sitemap-index.xml       301
+/ubezpieczenie-ai                        /ubezpieczenie-ai/       301
+/og-oc-cyber.png                         /og/oc-cyber-dla-it.png  301
+/zespol/wlasciciel/                      /zespol/marek-ciesla/    301
+/zespol/wlasciciel                       /zespol/marek-ciesla/    301
+/zespol/                                 /zespol/marek-ciesla/    302
+/zespol                                  /zespol/marek-ciesla/    302
+/regulacje/                              /wiedza/                 302
+/regulacje                               /wiedza/                 302
+/_posts/*                                /wiedza/                 301
+# /assets/* (stare CSS/JS) celowo bez reguły: prawdziwe 404 jest bliższe 410 niż przekierowanie na stronę główną.

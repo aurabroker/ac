@@ -1,0 +1,257 @@
+---
+title: "PLD a software house: czy samo OC zawodowe wystarczy?"
+description: "Nowa dyrektywa PLD obejmuje oprogramowanie jako produkt. Co to oznacza dla software house'u i czy OC zawodowe wystarczy bez OC za produkt."
+ogTitle: "PLD a software house: czy OC zawodowe wystarczy?"
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "C3-04"
+articleId: "C3-04"
+cluster: "C3"
+hub: "/oc-cyber-dla-it/"
+draft: true
+legalStateAsOf: 2026-11-02
+reviewEvery: 90
+summary: "Często nie. Dyrektywa (UE) 2024/2853 traktuje oprogramowanie jak produkt: twórca aplikacji, SaaS czy firmware'u może odpowiadać wobec osób fizycznych bez względu na winę za szkody osobowe, w mieniu i w danych prywatnych. OC zawodowe chroni głównie przed stratami finansowymi klientów biznesowych, a szkody osobowe i rzeczowe bywają w nim wyłączone. Lukę zamyka zwykle OC za produkt."
+summaryPoints:
+  - "Nowe zasady obejmą produkty wprowadzone do obrotu lub oddane do użytku po 8 grudnia 2026 r. Polska ma wdrożyć dyrektywę do 9 grudnia 2026 r."
+  - "Software house, który pisze oprogramowanie wbudowywane w produkt klienta, może odpowiadać solidarnie jako producent części składowej i dostać od klienta roszczenie zwrotne."
+  - "Odpowiedzialności wobec poszkodowanego nie wyłączy regulamin ani licencja. W umowie z klientem biznesowym można natomiast uregulować regres, limity i ubezpieczenia."
+keywords:
+  primary: "pld oc oprogramowanie"
+  secondary:
+    - "dyrektywa pld software house"
+    - "odpowiedzialność za oprogramowanie jako produkt"
+    - "oc za produkt oprogramowanie"
+    - "pld oc zawodowe"
+    - "producent oprogramowania odpowiedzialność"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu: software house a roszczenia z PLD i z umów"
+coverage:
+  - event: "Strata finansowa klienta biznesowego po błędzie w oprogramowaniu lub wdrożeniu (poza PLD)"
+    module: "OC zawodowe"
+    label: typical
+    conditions: "Roszczenie zgłoszone w okresie ubezpieczenia, błąd po dacie retroaktywnej, usługa mieści się w opisie działalności w polisie."
+  - event: "Koszty obrony w sporze o wadliwość oprogramowania: prawnicy, biegli, przygotowanie dokumentacji technicznej"
+    module: "Obrona"
+    label: typical
+    conditions: "Gdy roszczenie mieści się w zakresie polisy. Zwykle w ramach sumy gwarancyjnej."
+  - event: "Roszczenie osoby fizycznej z PLD: śmierć, uszkodzenie ciała lub rozstrój zdrowia spowodowane przez Twoje oprogramowanie"
+    module: "OC za produkt"
+    label: underwriting
+    conditions: "Gdy polisa obejmuje szkody wyrządzone przez produkt, a opis działalności obejmuje oprogramowanie. W samym OC zawodowym bywa wyłączone lub ograniczone."
+  - event: "Roszczenie z PLD: zniszczenie lub uszkodzenie mienia osoby fizycznej"
+    module: "OC za produkt"
+    label: underwriting
+    conditions: "Jak wyżej. Zastosowania krytyczne, np. sterowanie urządzeniami, medycyna, motoryzacja: indywidualna ocena."
+  - event: "Roszczenie z PLD: zniszczenie lub uszkodzenie danych prywatnych użytkownika"
+    module: "OC za produkt"
+    label: underwriting
+    conditions: "Sprawdź, czy definicja szkody obejmuje dane. Wiele definicji szkody rzeczowej dotyczy tylko rzeczy materialnych."
+  - event: "Roszczenie zwrotne producenta, czyli Twojego klienta, za wadliwą część składową w postaci oprogramowania"
+    module: "OC zawodowe lub OC za produkt"
+    label: underwriting
+    conditions: "Zależy od tego, czy polisa obejmuje szkody osobowe i rzeczowe leżące u źródła roszczenia, oraz od zapisów umowy z klientem."
+  - event: "Wyciek danych użytkowników po ataku na Twój produkt lub infrastrukturę"
+    module: "Cyber"
+    label: typical
+    conditions: "Reakcja na incydent i roszczenia po naruszeniu prywatności, w limicie sekcji. Utrata danych przez błąd w kodzie, bez ataku, to zwykle inne zdarzenie."
+  - event: "Naprawa, poprawka lub wymiana samego wadliwego oprogramowania"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Dyrektywa też nie obejmuje szkody w samym produkcie. Koszt poprawek to ryzyko projektu i rękojmi."
+  - event: "Wycofanie produktu z rynku i masowa akcja naprawcza u użytkowników"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Rozszerzenie lub osobna polisa: [OC za produkt i koszty wycofania](/ubezpieczenia/oc-produktu-i-wycofanie/)."
+  - event: "Odpowiedzialność przyjęta w umowie ponad przepisy: gwarancje, kary umowne, zobowiązanie do zwolnienia klienta z odpowiedzialności"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Chyba że odpowiadałbyś także bez takiego zapisu. Lukę zmniejsza negocjacja umowy."
+  - event: "Wady i okoliczności znane przed zawarciem polisy, błędy sprzed daty retroaktywnej"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Przy zmianie ubezpieczyciela chroń ciągłość [daty retroaktywnej](/slownik/#data-retroaktywna)."
+  - event: "Kary administracyjne, np. za naruszenie wymogów cyberbezpieczeństwa produktu, których prawo nie pozwala ubezpieczyć"
+    module: "Wyłączenie"
+    label: excluded
+faq:
+  - q: "Czy dyrektywa PLD dotyczy SaaS i aplikacji w chmurze?"
+    a: "Tak. Dyrektywa traktuje oprogramowanie jako produkt bez względu na sposób dostarczenia: zainstalowane na urządzeniu, pobrane z sieci albo udostępniane w chmurze, także w modelu SaaS. Produktem nie jest natomiast sama informacja, np. treść plików czy kod źródłowy jako taki."
+  - q: "Czy klient firmowy może pozwać software house na podstawie PLD?"
+    a: "Co do zasady nie. Odszkodowanie z dyrektywy przysługuje osobom fizycznym, a szkody w mieniu używanym wyłącznie do celów zawodowych oraz w danych używanych do celów zawodowych są wyłączone. Spór z klientem biznesowym rozstrzyga umowa i Kodeks cywilny, a ubezpieczeniowo rozpatruje go zwykle [OC zawodowe](/slownik/#oc-zawodowe). Wyjątkiem jest roszczenie zwrotne producenta, który zapłacił poszkodowanym."
+  - q: "Czy ograniczenie odpowiedzialności w umowie chroni przed PLD?"
+    a: "Wobec poszkodowanego nie. Dyrektywa zakazuje wyłączania i ograniczania odpowiedzialności w umowie, regulaminie czy licencji. Ograniczenia w umowie B2B mają natomiast znaczenie przy roszczeniach zwrotnych między producentem a dostawcą części składowej, dlatego warto je dobrze napisać."
+  - q: "Czy OC zawodowe obejmuje szkody osobowe wyrządzone przez oprogramowanie?"
+    a: "To zależy od polisy. Część polis OC zawodowego dla firm IT wyłącza szkody osobowe i rzeczowe, inne obejmują je tylko jako bezpośredni skutek usługi i po ocenie ryzyka. Przy produktach używanych przez konsumentów lub sterujących urządzeniami warto mieć sekcję albo polisę OC za produkt."
+  - q: "Od kiedy nowe przepisy obowiązują w Polsce?"
+    a: "Polska ma wdrożyć dyrektywę do 9 grudnia 2026 r. Ministerstwo Sprawiedliwości przygotowało projekt zmian w Kodeksie cywilnym i Kodeksie postępowania cywilnego. Nowe zasady obejmą produkty wprowadzone do obrotu lub oddane do użytku po 8 grudnia 2026 r. Do wcześniejszych stosuje się dotychczasowe przepisy o produkcie niebezpiecznym."
+  - q: "Czy odpowiadam za bibliotekę open source użytą w moim produkcie?"
+    a: "Dyrektywa nie dotyczy wolnego i otwartego oprogramowania rozwijanego lub dostarczanego poza działalnością gospodarczą. Jeśli jednak włączysz taki komponent do swojego produktu komercyjnego, odpowiadasz wobec poszkodowanych za cały produkt jako jego producent. Dlatego ubezpieczyciele pytają o zarządzanie zależnościami i podatnościami."
+sources:
+  - { title: "Dyrektywa Parlamentu Europejskiego i Rady (UE) 2024/2853 w sprawie odpowiedzialności za produkty wadliwe", url: "https://eur-lex.europa.eu/eli/dir/2024/2853/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Sprostowanie dyrektywy (UE) 2024/2853 (Dz.Urz. UE L 2026/90364 z 7.5.2026): stosowanie do produktów wprowadzonych do obrotu po 8 grudnia 2026 r.", url: "https://eur-lex.europa.eu/eli/dir/2024/2853/corrigendum/2026-05-07/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Zalecenie Komisji 2003/361/WE dotyczące definicji mikroprzedsiębiorstw oraz małych i średnich przedsiębiorstw", url: "https://eur-lex.europa.eu/eli/reco/2003/361/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rozporządzenie (UE) 2024/2847 w sprawie horyzontalnych wymogów cyberbezpieczeństwa w odniesieniu do produktów z elementami cyfrowymi (akt o cyberodporności)", url: "https://eur-lex.europa.eu/eli/reg/2024/2847/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ustawa z dnia 23 kwietnia 1964 r. — Kodeks cywilny (art. 449¹–449¹¹: odpowiedzialność za produkt niebezpieczny)", url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19640160093", publisher: "ISAP, Kancelaria Sejmu", accessed: 2026-11-02, tier: T1 }
+related:
+  - "/regulacje/pld/"
+  - "/ubezpieczenia/oc-produktu-i-wycofanie/"
+  - "/oc-cyber-dla-it/"
+  - "/wiedza/ai-act-a-ubezpieczenie/"
+  - "/wiedza/tech-eo-a-oc-zawodowe/"
+changelog:
+  - { rev: "A", date: 2026-11-02, note: "Szkic: stan prawny przed upływem terminu wdrożenia dyrektywy, z uwzględnieniem sprostowania z maja 2026 r. i projektu polskiej ustawy." }
+---
+
+Od grudnia 2026 r. błąd w aplikacji może kosztować software house nie tylko spór z klientem, ale też roszczenia osób, których ten klient nigdy nie poznał. Nowa unijna dyrektywa o produktach wadliwych traktuje oprogramowanie jak produkt i pozwala poszkodowanym dochodzić odszkodowania bez wykazywania winy. Ten arkusz wyjaśnia, kiedy software house staje się producentem, gdzie kończy się [OC zawodowe](/slownik/#oc-zawodowe) i co je uzupełnia. Szerszy obraz ubezpieczeń firm technologicznych znajdziesz w przewodniku [OC i cyber dla firm IT](/oc-cyber-dla-it/).
+
+<NoteBlock variant="warning" label="To nie jest porada prawna">
+
+Opisujemy przepisy w uproszczeniu, według stanu prawnego na dzień wskazany wyżej. Polska ustawa wdrażająca może różnić się szczegółami od dyrektywy. Jesteśmy brokerem ubezpieczeniowym, nie kancelarią: kwalifikację Twojego produktu i umów oceni prawnik.
+
+</NoteBlock>
+
+<SectionView label="Definicja" />
+## Co zmienia dyrektywa PLD dla software house'u?
+
+<Term en="Product Liability Directive, PLD">Dyrektywa o odpowiedzialności za produkty wadliwe</Term>, czyli dyrektywa (UE) 2024/2853, zastępuje przepisy z 1985 r. Po raz pierwszy wprost uznaje za produkt oprogramowanie, w tym systemy AI, bez względu na to, czy działa na urządzeniu, czy w chmurze. Producent odpowiada wobec osób fizycznych bez względu na winę za trzy rodzaje szkód: śmierć lub uszkodzenie ciała, także medycznie stwierdzony uszczerbek na zdrowiu psychicznym, zniszczenie mienia oraz zniszczenie lub uszkodzenie danych, które nie służą celom zawodowym.
+
+Dla firm tworzących oprogramowanie znaczenie mają cztery zmiany:
+
+- **odpowiedzialność za aktualizacje:** producent odpowiada za wadę wynikającą z aktualizacji albo z braku aktualizacji bezpieczeństwa, dopóki produkt pozostaje pod jego kontrolą;
+- **ułatwienia dowodowe:** sąd może nakazać ujawnienie dokumentacji, a przy złożonych produktach domniemać wadliwość lub związek przyczynowy;
+- **brak progów i limitów:** dyrektywa nie przewiduje minimalnej szkody ani górnej granicy odpowiedzialności;
+- **zakaz wyłączeń:** odpowiedzialności wobec poszkodowanego nie wyłączy ani nie ograniczy regulamin, licencja czy umowa.
+
+Państwa UE mają wdrożyć dyrektywę do 9 grudnia 2026 r. Po sprostowaniu z maja 2026 r. dyrektywa obejmie produkty wprowadzone do obrotu lub oddane do użytku po 8 grudnia 2026 r. W Polsce Ministerstwo Sprawiedliwości przygotowało projekt zmian w Kodeksie cywilnym i Kodeksie postępowania cywilnego. W dniu aktualizacji arkusza ustawa nie została jeszcze ogłoszona, dlatego jej ostateczne brzmienie sprawdź przed decyzjami.
+
+<SectionView label="Rzut ról" />
+## Czy software house jest producentem w rozumieniu PLD?
+
+To zależy od tego, co i pod czyją nazwą trafia do użytkowników. Ten sam software house może być producentem jednego produktu, dostawcą części składowej drugiego i zwykłym usługodawcą przy trzecim projekcie.
+
+<SpecTable
+  caption="Rola software house'u a odpowiedzialność z PLD"
+  columns={["Sytuacja", "Rola w PLD", "Co to oznacza"]}
+  rows={[
+    ["Własny produkt pod własną nazwą: aplikacja, SaaS, wtyczka sprzedawana w sklepie z aplikacjami", "Producent", "Odpowiadasz bezpośrednio wobec poszkodowanych osób fizycznych"],
+    ["Oprogramowanie lub firmware na zamówienie, które klient wbudowuje w swój produkt i sprzedaje pod swoją marką", "Producent części składowej", "Klient odpowiada jako producent produktu. Ty odpowiadasz solidarnie, jeśli wada Twojego komponentu spowodowała wadliwość. Klient, który zapłacił, może żądać od Ciebie zwrotu"],
+    ["Usługa cyfrowa niezbędna do działania produktu klienta, np. serwer, z którym łączy się urządzenie", "Producent części składowej (usługa powiązana)", "Jak wyżej, gdy usługa jest pod kontrolą producenta produktu"],
+    ["System na zamówienie do wewnętrznego użytku firmy: ERP, CRM, system magazynowy", "Zwykle poza praktycznym zasięgiem PLD", "Szkody w mieniu i danych używanych zawodowo są wyłączone. Spór opiera się na umowie i Kodeksie cywilnym"],
+    ["Doradztwo, wdrożenie, utrzymanie, praca zespołu u klienta", "Usługodawca", "Usługa nie jest produktem. Wyjątek: istotna zmiana produktu już wprowadzonego do obrotu, dokonana poza kontrolą producenta"]
+  ]}
+  note="Zestawienie uproszczone. Kwalifikacja zależy od umowy i faktów konkretnego projektu."
+/>
+
+Komponenty open source rozwijane poza działalnością gospodarczą nie podlegają dyrektywie. Jeśli jednak włączasz je do produktu komercyjnego, odpowiadasz za cały produkt jako jego producent.
+
+<SectionView label="Przekrój A–A" />
+## Dlaczego samo OC zawodowe może nie wystarczyć?
+
+Bo OC zawodowe i dyrektywa PLD dotyczą innych szkód. OC zawodowe firmy IT jest zwykle zbudowane wokół czystych strat finansowych klientów biznesowych: utraconego zysku, kosztów przestoju, nienależytego wykonania umowy. Dyrektywa dotyczy szkód osobowych, rzeczowych i utraty danych prywatnych osób fizycznych, czyli dokładnie tych, które w części polis OC zawodowego są wyłączone albo objęte tylko po ocenie ryzyka.
+
+<SpecTable
+  caption="Trzy polisy a roszczenia związane z oprogramowaniem"
+  columns={["Polisa", "Kto zwykle żąda zapłaty", "Za co", "Rola przy PLD"]}
+  rows={[
+    ["OC zawodowe (Tech E&O)", "Klient biznesowy", "Strata finansowa z błędu w usłudze lub oprogramowaniu", "Pomocnicza: roszczenia B2B i część roszczeń zwrotnych, jeśli polisa nie wyłącza szkód osobowych i rzeczowych"],
+    ["OC za produkt", "Osoba fizyczna, także konsument, albo producent w regresie", "Szkoda osobowa, w mieniu, w danych, jeśli definicja je obejmuje", "Podstawowa, gdy polisa obejmuje oprogramowanie jako produkt"],
+    ["Cyber", "Osoby, których dane wyciekły, organy, sama firma", "Naruszenie bezpieczeństwa i prywatności, koszty reakcji", "Pomocnicza: wyciek danych po ataku, a nie utrata danych przez błąd w kodzie"]
+  ]}
+  note="Formuły i definicje różnią się między polisami. O ochronie decyduje treść konkretnej polisy."
+/>
+
+Przy porównaniu ofert sprawdzamy przede wszystkim pięć zapisów:
+
+1. **Szkody osobowe i rzeczowe w OC zawodowym:** wyłączone, objęte tylko jako bezpośredni skutek usługi, czy objęte w osobnej sekcji.
+2. **Definicja szkody:** czy obejmuje zniszczenie lub uszkodzenie danych, czy tylko rzeczy materialne.
+3. **Opis działalności:** czy wymienia produkty, a nie tylko usługi: aplikacje, SaaS, firmware, systemy AI.
+4. **Roszczenia konsumentów i odpowiedzialność za produkt:** czy nie są wyłączone w sekcji, która ma odpowiadać.
+5. **Limit przy serii szkód:** jedna wadliwa aktualizacja u wielu użytkowników to zwykle jedno roszczenie, z jednym limitem i jednym [udziałem własnym](/slownik/#udzial-wlasny).
+
+Wiele polis dla firm technologicznych ma budowę modułową: OC zawodowe jest rdzeniem, a OC za produkt, cyber i OC działalności to osobne sekcje z własnymi limitami. Jeden program u jednego ubezpieczyciela ogranicza spór o to, która sekcja ma zapłacić, gdy błąd w kodzie wywoła jednocześnie stratę klienta i szkodę u jego użytkowników.
+
+<SectionView label="Szczegół B" />
+## Co zrobić z umowami, aktualizacjami i długim ogonem roszczeń?
+
+Polisa to jedna część odpowiedzi. Druga to umowy z klientami i procesy wytwarzania oprogramowania, o które ubezpieczyciele pytają coraz częściej.
+
+- **Regres w umowie.** Dyrektywa pozwala mikro- i małym przedsiębiorstwom, które dostarczają część składową w postaci oprogramowania, umówić się z producentem produktu, że ten zrzeka się wobec nich roszczenia zwrotnego (art. 12 ust. 2). Mikro- i małe przedsiębiorstwo określa się według zalecenia Komisji 2003/361/WE. Warto o tym rozmawiać przy nowych umowach.
+- **Ograniczenie odpowiedzialności.** Limit w umowie B2B nie działa wobec poszkodowanego konsumenta, ale ma znaczenie przy roszczeniu zwrotnym klienta. Porównaj go z [sumą gwarancyjną](/slownik/#suma-gwarancyjna).
+- **Zapis o ubezpieczeniu.** Ustal z klientem, kto ubezpiecza odpowiedzialność za produkt. Jeśli klient wymaga od Ciebie OC za produkt, sprawdź, czy Twoja polisa je w ogóle przewiduje.
+- **Aktualizacje bezpieczeństwa.** Brak poprawki, która była potrzebna do utrzymania bezpieczeństwa, może oznaczać wadliwość produktu. Od 11 grudnia 2027 r. producentów produktów z elementami cyfrowymi obowiązują też wymogi aktu o cyberodporności (CRA), a niespełnienie obowiązkowych wymogów bezpieczeństwa ułatwia poszkodowanemu wykazanie wady.
+- **Długi ogon.** Odpowiedzialność z dyrektywy wygasa co do zasady po 10 latach od wprowadzenia produktu do obrotu lub jego istotnej zmiany, a przy uszczerbku na zdrowiu ujawniającym się z opóźnieniem po 25 latach. OC zawodowe działa zwykle w zasadzie [claims made](/slownik/#claims-made), więc liczy się ciągłość ochrony, zachowanie [daty retroaktywnej](/slownik/#data-retroaktywna), a przy zamknięciu firmy [okres dodatkowego zgłaszania roszczeń](/slownik/#okres-dodatkowego-zgloszenia).
+
+<SectionView label="Przypadki P-1…P-3" />
+## Jak to wygląda w praktyce?
+
+Trzy scenariusze pokazują, która polisa może zadziałać i gdzie przebiega granica. To scenariusze ilustracyjne, nie opisy prawdziwych szkód.
+
+<NoteBlock variant="scenario" label="P-1 · Scenariusz ilustracyjny · firmware na zamówienie">
+
+Software house pisze dla producenta rowerów elektrycznych oprogramowanie sterownika silnika. Rowery są sprzedawane pod marką producenta od 2027 r. Po aktualizacji silnik w części rowerów nagle przyspiesza, a jeden z rowerzystów doznaje złamania. Poszkodowany pozywa producenta roweru bez wykazywania winy. Producent płaci i żąda zwrotu od software house'u jako dostawcy wadliwej części składowej.
+
+**Co może zadziałać:** OC za produkt, jeśli obejmuje oprogramowanie jako produkt, wraz z kosztami obrony. OC zawodowe tylko wtedy, gdy nie wyłącza szkód osobowych leżących u źródła roszczenia.
+
+**Gdzie granica:** koszt poprawionej wersji oprogramowania i akcji serwisowej u użytkowników nie mieści się w OC bez rozszerzenia o koszty wycofania. Znaczenie mają zapisy umowy z producentem o regresie i limicie.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="P-2 · Scenariusz ilustracyjny · własny SaaS dla konsumentów">
+
+Firma prowadzi pod własną marką aplikację do przechowywania rodzinnych zdjęć. Błąd w aktualizacji synchronizacji usuwa część plików u tysięcy użytkowników. To dane prywatne, więc poszkodowani mogą powołać się na nowe przepisy.
+
+**Co może zadziałać:** OC za produkt, jeśli definicja szkody obejmuje dane i polisa nie wyłącza roszczeń konsumentów. Polisa cyber zwykle nie, bo nie doszło do ataku ani naruszenia bezpieczeństwa.
+
+**Gdzie granica:** wszystkie roszczenia z jednej wadliwej aktualizacji są zwykle traktowane jak jedno roszczenie, z jednym limitem. Limit warto dobrać do liczby użytkowników, a nie do wartości jednego kontraktu.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="P-3 · Scenariusz ilustracyjny · dla porównania: system B2B">
+
+Software house wdraża system zarządzania magazynem w firmie logistycznej. Błąd w integracji powoduje przez tydzień błędne wysyłki, a klient traci zamówienia. To strata finansowa firmy z umowy, więc dyrektywa PLD nie ma zastosowania.
+
+**Co może zadziałać:** OC zawodowe, zgodnie z warunkami polisy: obrona i odszkodowanie za stratę klienta.
+
+**Gdzie granica:** kary umowne za opóźnienie są zwykle wyłączone ponad to, za co firma odpowiadałaby bez takiego zapisu.
+
+</NoteBlock>
+
+<SectionView label="Zestawienie elementów" />
+## Która polisa odpowie na które roszczenie?
+
+Roszczenia klientów biznesowych zwykle obsługuje OC zawodowe, roszczenia osób fizycznych z PLD wymagają sekcji lub polisy OC za produkt, a wyciek danych po ataku trafia do części cyber. Etykiety poniżej są warunkowe: zakres potwierdzamy w ofercie.
+
+<BOM
+  id="tabela-zakresu"
+  caption="Tabela zakresu: software house a roszczenia z PLD i z umów"
+  prefix="P"
+  rows={frontmatter.coverage.filter((r) => r.module !== "Wyłączenie")}
+/>
+
+<SectionView label="Mapa luk" />
+## Czego polisa zwykle nie obejmuje?
+
+Najczęstsze luki to koszt poprawienia własnego produktu, akcje wycofania i odpowiedzialność przyjęta w umowach ponad przepisy.
+
+<BOM
+  caption="Wyłączenia i ograniczenia przy roszczeniach związanych z oprogramowaniem"
+  prefix="X"
+  headers={{ conditions: "Uwagi" }}
+  rows={frontmatter.coverage.filter((r) => r.module === "Wyłączenie").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Wymiarowanie" />
+## Od czego zależy składka za OC za produkt dla software house'u?
+
+Składkę ustala ubezpieczyciel na podstawie wniosku i oceny ryzyka. Nie podajemy cenników. Przy oprogramowaniu jako produkcie liczą się zwłaszcza:
+
+- **rodzaj produktu:** czy steruje urządzeniami, wpływa na zdrowie lub bezpieczeństwo, czy przechowuje dane prywatne;
+- **użytkownicy:** konsumenci czy firmy, ich liczba i kraje, w których działają;
+- **rola w łańcuchu:** własny produkt czy część składowa produktu klienta;
+- **procesy:** testy, kontrola wydań, zarządzanie podatnościami i zależnościami, możliwość szybkiego wycofania aktualizacji;
+- **umowy:** ograniczenie odpowiedzialności, zapisy o regresie i ubezpieczeniu;
+- **historia:** roszczenia, incydenty i znane wady z ostatnich lat.
+
+Przed rozmową przygotuj listę produktów z rynkami i liczbą użytkowników, wzory umów z klientami oraz informacje o obecnej polisie: zakres, limity i [datę retroaktywną](/slownik/#data-retroaktywna).

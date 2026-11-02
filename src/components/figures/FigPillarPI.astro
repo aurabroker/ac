@@ -1,0 +1,139 @@
+---
+/**
+ * FigPillarPI — F-OZ: wykres czasowy polisy claims made. Podziałka czasu, bazy: data retroaktywna,
+ * początek i koniec okresu, koniec ERP; dwa tory (błąd, roszczenie) i trzy przypadki powiązane łukami:
+ * objęty, poza ochroną (błąd przed datą retro — linia ukryta, jedyny redline ×), tylko z ERP.
+ * Właściciel: agent „figures”. Treść merytoryczna: legenda HTML w FIGURE_META (./index.ts).
+ */
+import FigFrame from './FigFrame.astro';
+import { circle, dimH, hatch, head, p, poly, seg, type Pt } from './draw.ts';
+
+interface Props {
+  labelledby?: string;
+  title?: string;
+}
+const { labelledby, title = 'Wykres czasowy: data retroaktywna, okres ubezpieczenia i zgłoszenie roszczenia' } = Astro.props;
+const desc =
+  'Pozioma podziałka czasu i dwa tory pod nią: błąd i roszczenie. Pionowe linie bazowe oznaczają datę retroaktywną, ' +
+  'początek i koniec okresu ubezpieczenia oraz koniec okresu dodatkowego. Trzy łuki łączą błąd z roszczeniem: ' +
+  'pierwszy ciągły w obrębie okresu, drugi przerywany od błędu sprzed daty retroaktywnej oznaczonego czerwonym krzyżykiem, ' +
+  'trzeci do roszczenia w okresie dodatkowym. U góry niebieskie wymiary okresów.';
+
+const XL = 110;
+const XR = 762;
+const RET = 200;
+const S = 360;
+const E = 600;
+const ERP = 700;
+const datums = [
+  { x: RET, label: 'DATA RETRO' },
+  { x: S, label: 'POCZĄTEK' },
+  { x: E, label: 'KONIEC' },
+  { x: ERP, label: 'KONIEC ERP' },
+];
+
+// podziałka
+const yr0 = 96;
+const yr1 = 106;
+const ruler = poly([[XL, yr0], [XR, yr0], [XR, yr1], [XL, yr1]], true);
+let ticks = '';
+for (let x = XL + 10; x < XR; x += 10) ticks += seg([x, yr1], [x, yr1 - ((x - XL) % 50 === 0 ? 7 : 3.5)]);
+const datumMarks = datums.map((d) => `M${p(d.x - 5, yr0 - 1)}L${p(d.x + 5, yr0 - 1)}L${p(d.x, yr0 + 7)}Z`).join('');
+
+// tory
+const yE = 152;
+const yC = 232;
+const tracks = seg([XL, yE], [XR, yE]) + seg([XL, yC], [XR, yC]);
+const band = (x0: number, x1: number, y: number): Pt[] => [[x0, y - 6], [x1, y - 6], [x1, y + 6], [x0, y + 6]];
+const offZones = [band(XL, RET, yE), band(XL, S, yC), band(ERP, XR, yC)];
+const offOutline = offZones.map((b) => poly(b, true)).join('');
+const offHatch = offZones.map((b) => hatch(b, 4, 45)).join('');
+const erpZone = poly(band(E, ERP, yC), true);
+
+// przypadki: błąd → roszczenie
+type Case = { n: number; e: number; c: number; kind: 'ok' | 'off' | 'erp'; note: string };
+const cases: Case[] = [
+  { n: 4, e: 150, c: 404, kind: 'off', note: 'ZWYKLE POZA OCHRONĄ' },
+  { n: 5, e: 282, c: 524, kind: 'ok', note: 'MOŻE ZADZIAŁAĆ' },
+  { n: 6, e: 566, c: 664, kind: 'erp', note: 'TYLKO Z ERP' },
+];
+const curve = (k: Case) => `M${p(k.e, yE + 5)}C${p(k.e, yE + 48)} ${p(k.c, yC - 52)} ${p(k.c, yC - 13)}`;
+const errMarks = cases.filter((k) => k.kind !== 'off').map((k) => circle(k.e, yE, 4.5)).join('');
+const claimMarks = cases.map((k) => `M${p(k.c, yC - 6)}L${p(k.c + 6, yC)}L${p(k.c, yC + 6)}L${p(k.c - 6, yC)}Z`).join('');
+const off = cases.find((k) => k.kind === 'off')!;
+const cross = seg([off.e - 7, yE - 7], [off.e + 7, yE + 7]) + seg([off.e - 7, yE + 7], [off.e + 7, yE - 7]);
+
+// wymiary okresów
+const y1 = 46;
+const y2 = 72;
+const dRetro = dimH(RET, E, y1);
+const dPol = dimH(S, E, y2);
+const dErp = dimH(E, ERP, y2);
+const datumLines = datums.map((d) => seg([d.x, 26], [d.x, 252])).join('');
+
+// odnośniki
+const R = 11;
+const yB = 270;
+const top = [
+  { n: 1, x: RET - 30, y: 124, from: [RET, 124] as Pt },
+  { n: 2, x: S - 30, y: y2, from: [S - 2, y2] as Pt },
+  { n: 3, x: ERP + 30, y: y2, from: [ERP + 2, y2] as Pt },
+];
+const leaders =
+  top.map((b) => seg(b.from, [b.x + (b.from[0] > b.x ? R : -R), b.y])).join('') +
+  cases.map((k) => seg([k.c, yC + 8], [k.c, yB - R])).join('');
+---
+
+<FigFrame viewBox="0 0 800 310" labelledby={labelledby} title={title} desc={desc}>
+  <!-- konstrukcja: linie baz -->
+  <path class="c" d={datumLines} pathLength="1" />
+
+  <!-- podziałka czasu -->
+  <path class="f" d={ruler} />
+  <path class="o" d={ruler} pathLength="1" />
+  <path class="o2" d={ticks} pathLength="1" />
+  <path class="ah fx" d={datumMarks} />
+  <path class="ah2 fx" d={head(XR + 16, (yr0 + yr1) / 2, 0, 8, 2.3)} />
+  <path class="o2" d={seg([XR, (yr0 + yr1) / 2], [XR + 10, (yr0 + yr1) / 2])} pathLength="1" />
+  <text class="t t-s" x="24" y={yr1 - 1}>CZAS</text>
+  {datums.map((d) => <text class="t t-b t-m" x={d.x} y="18">{d.label}</text>)}
+
+  <!-- tory: błąd, roszczenie; strefy poza ochroną kreskowane, ERP linią ukrytą -->
+  <path class="o2" d={tracks} pathLength="1" />
+  <path class="f" d={offOutline} />
+  <path class="x fx" d={offHatch} />
+  <path class="o2" d={offOutline} pathLength="1" />
+  <path class="h" d={erpZone} />
+  <text class="t t-b" x="24" y={yE + 4}>BŁĄD</text>
+  <text class="t t-b" x="24" y={yC + 4}>ROSZCZENIE</text>
+
+  <!-- przypadki -->
+  <path class="o" d={cases.filter((k) => k.kind === 'ok').map(curve).join('')} pathLength="1" />
+  <path class="o2" d={cases.filter((k) => k.kind === 'erp').map(curve).join('')} pathLength="1" />
+  <path class="h" d={curve(off)} />
+  <path class="ah fx" d={cases.map((k) => head(k.c, yC - 7, 90, 8, 2.3)).join('')} />
+  <path class="b" d={errMarks} pathLength="1" />
+  <path class="ah fx" d={claimMarks} />
+  <path class="sig" d={cross} pathLength="1" />
+
+  <!-- wymiary -->
+  <path class="d" d={dRetro.line + dPol.line + dErp.line} pathLength="1" />
+  <path class="d-fill fx" d={dRetro.heads + dPol.heads + dErp.heads} />
+  <text class="t-dim" x={(RET + E) / 2} y={y1 - 5}>BŁĄD PO DACIE RETRO</text>
+  <text class="t-dim" x={(S + E) / 2} y={y2 - 5}>ROSZCZENIE W OKRESIE UBEZPIECZENIA</text>
+  <text class="t-dim" x={(E + ERP) / 2} y={y2 - 5}>ERP · OPCJA</text>
+
+  <!-- odnośniki -->
+  <path class="l" d={leaders} pathLength="1" />
+  {
+    [...top, ...cases.map((k) => ({ n: k.n, x: k.c, y: yB }))].map((b) => (
+      <g class="bal">
+        <circle class="b" cx={b.x} cy={b.y} r={R} pathLength="1" />
+        <text class="t-num" x={b.x} y={b.y}>
+          {b.n}
+        </text>
+      </g>
+    ))
+  }
+  {cases.map((k) => <text class:list={['t t-s t-m']} x={k.c} y={yB + 26}>{k.note}</text>)}
+</FigFrame>

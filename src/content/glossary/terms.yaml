@@ -1,0 +1,189 @@
+# Słownik (/slownik/). Właściciel: agent „glossary”. 30 haseł.
+# Pola: id (kotwica, a-z0-9-), term, termEn (opcjonalnie), definition (≤ 35 słów, inline Markdown),
+#       see (opcjonalnie: ścieżka OPUBLIKOWANEJ strony, która rozwija hasło), related (id innych haseł).
+# Kolejność w pliku nie ma znaczenia: strona sortuje hasła alfabetycznie (pl).
+# Kotwic (id) nie zmieniaj — linkują do nich filary i artykuły.
+
+# — Mechanika polisy —
+- id: claims-made
+  term: "Claims made"
+  definition: "Zasada zgłoszenia roszczenia: polisa odpowiada za roszczenia postawione po raz pierwszy w okresie ubezpieczenia, jeśli błąd popełniono po dacie retroaktywnej. Typowa dla OC zawodowego i D&O, spotykana też w polisach cyber."
+  see: "/oc-zawodowe/"
+  related: [data-retroaktywna, okres-dodatkowego-zgloszenia]
+- id: data-retroaktywna
+  term: "Data retroaktywna"
+  termEn: "retroactive date"
+  definition: "Najwcześniejsza data błędu objętego polisą w zasadzie *claims made*. Błędy sprzed tej daty zwykle pozostają poza zakresem, nawet gdy roszczenie przyjdzie w okresie ubezpieczenia. Przy zmianie ubezpieczyciela warto ją zachować."
+  see: "/oc-zawodowe/"
+  related: [claims-made]
+- id: okres-dodatkowego-zgloszenia
+  term: "Okres dodatkowego zgłaszania roszczeń"
+  termEn: "extended reporting period, ERP"
+  definition: "Wykupiony po wygaśnięciu polisy *claims made* okres, w którym można zgłaszać nowe roszczenia za błędy sprzed końca ochrony. To co innego niż krótki automatyczny okres na zgłoszenie roszczeń postawionych jeszcze w trakcie polisy."
+  see: "/oc-zawodowe/"
+  related: [claims-made, data-retroaktywna]
+- id: suma-gwarancyjna
+  term: "Suma gwarancyjna"
+  termEn: "limit of liability"
+  definition: "Górna granica wypłat z polisy OC: na jedno roszczenie (*any one claim*) i łącznie za cały okres ubezpieczenia (limit zagregowany, *aggregate*). Koszty obrony często mieszczą się w tej samej sumie."
+  see: "/oc-zawodowe/"
+  related: [podlimit, udzial-wlasny]
+- id: podlimit
+  term: "Podlimit"
+  termEn: "sublimit"
+  definition: "Niższy limit wydzielony z sumy gwarancyjnej dla określonego ryzyka lub kosztu, np. kar organizacji kartowych albo wyłudzonych przelewów. Wypłata z podlimitu zwykle zmniejsza też limit główny."
+  see: "/ubezpieczenie-cyber/"
+  related: [suma-gwarancyjna]
+- id: udzial-wlasny
+  term: "Udział własny"
+  termEn: "deductible, retention"
+  definition: "Część szkody, którą ubezpieczony pokrywa sam: kwota lub procent. Stała kwota odejmowana od każdego odszkodowania to franszyza redukcyjna. Roszczenia z jednej przyczyny obciąża zwykle jeden udział własny."
+  see: "/oc-cyber-dla-it/"
+  related: [suma-gwarancyjna]
+- id: wording
+  term: "Wording"
+  termEn: "policy wording"
+  definition: "Pełny tekst warunków ubezpieczenia: definicje, zakres, wyłączenia i obowiązki stron. Na rynku polskim to ogólne warunki ubezpieczenia (OWU). O ochronie decydują wording, polisa i aneksy, a nie streszczenia."
+  see: "/rynek-lloyds/"
+  related: [ipid]
+- id: ipid
+  term: "IPID"
+  termEn: "Insurance Product Information Document"
+  definition: "Karta produktu: krótki dokument w ujednoliconym formacie, opisujący produkt ubezpieczenia innego niż na życie, przekazywany przed zawarciem umowy. Streszcza zakres, wyłączenia i obowiązki, ale nie zastępuje pełnych warunków ubezpieczenia."
+  see: "/informacje-o-brokerze/"
+  related: [wording]
+- id: subrogacja
+  term: "Subrogacja"
+  termEn: "subrogation"
+  definition: "Regres ubezpieczeniowy: przejście na ubezpieczyciela, z chwilą wypłaty odszkodowania, roszczeń wobec sprawcy szkody (art. 828 Kodeksu cywilnego). Klienci, zwłaszcza z USA, wymagają czasem, by ubezpieczyciel zrzekł się regresu wobec nich (*waiver of subrogation*)."
+  see: "/oc-cyber-dla-it/"
+  related: [ubezpieczony-dodatkowy]
+- id: ubezpieczony-dodatkowy
+  term: "Ubezpieczony dodatkowy"
+  termEn: "additional insured"
+  definition: "Podmiot spoza polisy, najczęściej klient, który dostaje ochronę z Twojej polisy, zwykle tylko przy roszczeniach wynikających wyłącznie z Twojego działania; to on musi to wykazać i dotrzymać warunków zgłoszenia szkody. Wymagają tego często umowy z klientami z USA."
+  see: "/oc-cyber-dla-it/"
+  related: [subrogacja]
+- id: terytorium-i-jurysdykcja
+  term: "Terytorium i jurysdykcja"
+  termEn: "territorial limits, jurisdiction"
+  definition: "Dwa parametry zasięgu polisy: gdzie można Cię pozwać, żeby ochrona zadziałała, oraz gdzie może być prowadzona objęta działalność. Polisy nazywają je różnie, dlatego przy USA i Kanadzie czytamy oba zapisy."
+  see: "/oc-cyber-dla-it/"
+  related: [odszkodowanie-karne]
+- id: odszkodowanie-karne
+  term: "Odszkodowanie karne"
+  termEn: "punitive damages"
+  definition: "Kwota zasądzana ponad wysokość szkody jako kara za rażące zachowanie, znana zwłaszcza z sądów w USA. Polisy pokrywają ją zwykle tylko w zakresie, w jakim prawo pozwala ją ubezpieczyć."
+  see: "/oc-cyber-dla-it/"
+  related: [terytorium-i-jurysdykcja]
+- id: klauzula-sankcyjna
+  term: "Klauzula sankcyjna"
+  termEn: "sanctions clause"
+  definition: "Zapis, który zawiesza ochronę i wypłaty, jeśli naruszałyby sankcje, np. ONZ, UE lub USA. Ma znaczenie m.in. przy okupie: zapłaty na rzecz podmiotu objętego sankcjami polisa nie pokryje."
+  see: "/ubezpieczenie-cyber/"
+  related: [ransomware]
+
+# — Rodzaje ochrony —
+- id: oc-zawodowe
+  term: "OC zawodowe"
+  termEn: "professional indemnity, PI"
+  definition: "Ubezpieczenie odpowiedzialności za szkody klientów wynikłe z błędu, zaniechania lub nienależytego wykonania usługi. Zwykle pokrywa odszkodowania i koszty obrony. W części zawodów jest obowiązkowe z mocy ustawy."
+  see: "/oc-zawodowe/"
+  related: [e-and-o, claims-made]
+- id: e-and-o
+  term: "E&O i Tech E&O"
+  termEn: "errors and omissions"
+  definition: "Anglosaska nazwa OC zawodowego za błędy i zaniechania w usługach. Tech E&O to odmiana dla firm technologicznych, często łączona w jednej polisie z ubezpieczeniem cyber."
+  see: "/oc-cyber-dla-it/"
+  related: [oc-zawodowe]
+- id: szkody-wlasne-i-oc-cyber
+  term: "Szkody własne i OC w polisie cyber"
+  termEn: "first-party / third-party cover"
+  definition: "Dwie strony polisy cyber. Szkody własne to koszty i straty firmy: reakcja na incydent, odtworzenie danych, przestój, wymuszenie. OC obejmuje roszczenia innych osób i postępowania organów, np. po wycieku danych."
+  see: "/ubezpieczenie-cyber/"
+  related: [reakcja-na-incydent, przerwa-w-dzialalnosci]
+- id: reakcja-na-incydent
+  term: "Reakcja na incydent"
+  termEn: "incident response"
+  definition: "Działania w pierwszych godzinach i dniach po incydencie cyber: całodobowa linia, informatyka śledcza, prawnik, powiadomienia i komunikacja kryzysowa. Polisa cyber zwykle pokrywa ich koszty, często u usługodawców wskazanych przez ubezpieczyciela."
+  see: "/ubezpieczenie-cyber/"
+  related: [szkody-wlasne-i-oc-cyber, ransomware]
+- id: przerwa-w-dzialalnosci
+  term: "Przerwa w działalności"
+  termEn: "business interruption, BI"
+  definition: "Utracony dochód i dodatkowe koszty działania z powodu przestoju systemów po incydencie cyber. Ochrona zaczyna się po franszyzie czasowej, czyli określonej liczbie godzin przestoju, i trwa najdłużej przez okres odszkodowawczy."
+  see: "/ubezpieczenie-cyber/"
+  related: [blad-operatora, szkody-wlasne-i-oc-cyber]
+
+# — Zagrożenia —
+- id: ransomware
+  term: "Ransomware"
+  definition: "Złośliwe oprogramowanie, które szyfruje dane lub blokuje systemy, a przestępcy żądają okupu. Często grożą też publikacją wykradzionych danych. Polisa cyber zwykle finansuje reakcję i odtworzenie, okup tylko w granicach prawa."
+  see: "/ubezpieczenie-cyber/"
+  related: [reakcja-na-incydent, klauzula-sankcyjna]
+- id: socjotechnika
+  term: "Socjotechnika"
+  termEn: "social engineering"
+  definition: "Manipulacja pracownikiem, żeby wykonał przelew lub ujawnił dane: fałszywa faktura „od dostawcy”, pilne polecenie „od prezesa”, podrobiony głos. Stratę z wyłudzonego przelewu pokrywa zwykle moduł cyberprzestępstw lub polisa crime."
+  see: "/ubezpieczenia/ubezpieczenie-crime/"
+  related: [podlimit]
+- id: pci-dss
+  term: "PCI DSS"
+  termEn: "Payment Card Industry Data Security Standard"
+  definition: "Standard bezpieczeństwa danych kart płatniczych. Po wycieku danych kart organizacje kartowe mogą obciążyć firmę karami i kosztami, zwykle przez agenta rozliczeniowego. W części polis cyber to rozszerzenie z osobnym limitem."
+  see: "/ubezpieczenie-cyber/"
+  related: [podlimit]
+- id: llmjacking
+  term: "LLMjacking"
+  definition: "Przejęcie dostępu do modelu językowego firmy, np. przez skradziony klucz API lub dane logowania do chmury, i korzystanie z niego na jej koszt. Skutkiem są wysokie rachunki za tokeny i moc obliczeniową."
+  see: "/ubezpieczenie-ai/"
+  related: [halucynacja-ai]
+- id: halucynacja-ai
+  term: "Halucynacja AI"
+  termEn: "AI hallucination"
+  definition: "Odpowiedź modelu AI, która brzmi wiarygodnie, ale jest nieprawdziwa. Szkodę klienta z tego powodu rozpatruje zwykle OC zawodowe, a przestój systemów — część cyber, jeśli polisa zalicza halucynację do awarii systemu."
+  see: "/ubezpieczenie-ai/"
+  related: [blad-operatora, oc-zawodowe]
+- id: blad-operatora
+  term: "Błąd operatora"
+  termEn: "operator error"
+  definition: "Nieumyślny błąd człowieka przy wprowadzaniu danych, aktualizacji lub konfiguracji systemów, który powoduje przestój. Czy mieści się tu nieumyślna zmiana konfiguracji systemu AI, zależy od definicji w polisie. Błąd w projekcie systemu zwykle się nie mieści."
+  see: "/ubezpieczenie-ai/"
+  related: [przerwa-w-dzialalnosci, halucynacja-ai]
+
+# — Rynek i pośrednicy —
+- id: mga
+  term: "MGA"
+  termEn: "managing general agent"
+  definition: "Agencja underwritingowa: firma, która na podstawie pełnomocnictwa ubezpieczycieli ocenia ryzyka, ustala warunki i wystawia polisy w ich imieniu. Ryzyko ponosi ubezpieczyciel wskazany w polisie, a nie sama agencja."
+  see: "/rynek-lloyds/"
+  related: [coverholder, syndykat-lloyds]
+- id: syndykat-lloyds
+  term: "Syndykat Lloyd’s"
+  termEn: "Lloyd’s syndicate"
+  definition: "Grupa członków rynku Lloyd’s, którzy wspólnie zapewniają kapitał i przyjmują ryzyka. Syndykatem kieruje agent zarządzający (*managing agent*). Jedno ryzyko często dzieli kilka syndykatów, każdy w swoim udziale."
+  see: "/rynek-lloyds/"
+  related: [coverholder, mga]
+- id: coverholder
+  term: "Coverholder"
+  definition: "Firma upoważniona przez agenta zarządzającego syndykatem Lloyd’s do przyjmowania ryzyk i wystawiania dokumentów ubezpieczenia w imieniu syndykatu, na podstawie umowy *binding authority*. W tej roli działa dla ubezpieczycieli, nie dla klienta."
+  see: "/rynek-lloyds/"
+  related: [syndykat-lloyds, mga]
+- id: broker-a-agent
+  term: "Broker a agent ubezpieczeniowy"
+  termEn: "broker, agent"
+  definition: "Broker działa w imieniu lub na rzecz klienta i potrzebuje zezwolenia KNF. Agent działa w imieniu lub na rzecz jednego albo kilku ubezpieczycieli. Status pośrednika sprawdzisz w rejestrze prowadzonym przez KNF."
+  see: "/informacje-o-brokerze/"
+  related: [knf]
+- id: knf
+  term: "KNF"
+  termEn: "Polish Financial Supervision Authority"
+  definition: "Komisja Nadzoru Finansowego: organ nadzoru nad rynkiem finansowym w Polsce, w tym nad ubezpieczycielami i pośrednikami ubezpieczeniowymi. Wydaje zezwolenia brokerom i prowadzi rejestr pośredników."
+  see: "/informacje-o-brokerze/"
+  related: [broker-a-agent, rzecznik-finansowy]
+- id: rzecznik-finansowy
+  term: "Rzecznik Finansowy"
+  termEn: "Financial Ombudsman"
+  definition: "Organ, który pomaga klientom w sporach z podmiotami rynku finansowego, w tym z ubezpieczycielami i pośrednikami. Po nieuwzględnionej reklamacji można złożyć wniosek o rozpatrzenie sprawy lub o polubowne rozwiązanie sporu."
+  see: "/reklamacje/"
+  related: [knf]

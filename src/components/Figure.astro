@@ -1,0 +1,17 @@
+---
+/** Renderuje rysunek z rejestru src/components/figures/index.ts po id (np. „FigPillarIT”). */
+import { FIGURES, isFigureId } from './figures/index.ts';
+
+interface Props {
+  id: string;
+  labelledby?: string;
+  title?: string;
+}
+const { id, labelledby, title } = Astro.props;
+if (!isFigureId(id)) {
+  throw new Error(`Figure: nieznany rysunek „${id}”. Dostępne: ${Object.keys(FIGURES).join(', ')}`);
+}
+const Cmp = FIGURES[id];
+---
+
+<Cmp labelledby={labelledby} title={title} />

@@ -1,0 +1,10 @@
+# Osoby (autorzy). PLIK WSPÓŁDZIELONY — zmiany przez build-notes.
+# Zabezpieczenie: gdyby `name` zaczynało się od „TODO”, strony pokażą „Zespół Aura Consulting”,
+# a JSON-LD użyje Organization jako autora (Person tylko dla osób z prawdziwymi danymi).
+- id: marek-ciesla
+  name: "Marek Cieśla"
+  role: "Aura Consulting sp. z o.o. — broker ubezpieczeniowy"
+  linkedin: ""
+  photo: null
+  sameAs: []
+  path: "/zespol/marek-ciesla/"

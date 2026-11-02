@@ -1,0 +1,64 @@
+---
+/** Numerowane źródła z datą dostępu (T1–T3). */
+import { fmtDate, isoDate } from '../lib/format.ts';
+
+interface Source {
+  title: string;
+  url: string;
+  publisher?: string;
+  accessed: Date;
+  tier?: 'T1' | 'T2' | 'T3';
+}
+interface Props {
+  items: Source[];
+  heading?: string;
+}
+const { items, heading = 'Źródła' } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="sources" aria-labelledby="zrodla">
+      <h2 id="zrodla">{heading}</h2>
+      <ol>
+        {items.map((s) => (
+          <li>
+            {/* bez łamania linii wewnątrz elementów — inaczej w HTML i .md pojawiają się zbędne spacje */}
+            <a href={s.url} rel="noopener">{s.title}</a>{s.publisher && <span>, {s.publisher}</span>}{' '}
+            <span class="sources__meta">(dostęp: <time datetime={isoDate(s.accessed)}>{fmtDate(s.accessed)}</time>{s.tier && <span>, {s.tier}</span>})</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+<style>
+  .sources {
+    max-width: var(--end-measure, 100%);
+    margin-top: var(--s-10);
+    font-size: var(--fs-small);
+  }
+  .sources h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+  .sources ol {
+    margin: var(--s-3) 0 0;
+    padding-left: 1.6em;
+  }
+  .sources li + li {
+    margin-top: var(--s-1);
+  }
+  .sources li::marker {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--ink-3);
+  }
+  .sources a {
+    overflow-wrap: anywhere;
+  }
+  .sources__meta {
+    color: var(--ink-3);
+  }
+</style>

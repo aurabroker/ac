@@ -1,0 +1,144 @@
+---
+/**
+ * Strona główna (AC-000): hero (H1 display z akcentem, lead, CTA, F-00 z ploterem) → tabliczka
+ * → „W skrócie” → sekcje z MDX (Ścieżki, Jak pracujemy, Program vs polisa z półki, Rynki, Wiedza)
+ * → FAQ → kontakt → pełna tabliczka. LCP = H1.
+ */
+import Sheet from './Sheet.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import TitleBlock from '../components/TitleBlock.astro';
+import AnswerBox from '../components/AnswerBox.astro';
+import AnnotatedFigure from '../components/AnnotatedFigure.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactChannels from '../components/ContactChannels.astro';
+import Disclosure from '../components/Disclosure.astro';
+import SheetFoot from '../components/SheetFoot.astro';
+import { polishText } from '../lib/typography/polish.ts';
+import type { PageContext } from '../lib/page.ts';
+import type { PageEntry } from '../lib/routes.ts';
+
+interface Props {
+  ctx: PageContext;
+}
+const { ctx } = Astro.props;
+const d = (ctx.route.entry as PageEntry).data;
+const title = polishText(d.title);
+const accent = d.titleAccent ? polishText(d.titleAccent) : undefined;
+const at = accent ? title.indexOf(accent) : -1;
+---
+
+<Sheet ctx={ctx} kind="home">
+  <section class="hero container" aria-labelledby="h1">
+    <Breadcrumbs items={ctx.crumbs} />
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <p class="label hero__kicker" data-md-skip>Broker ubezpieczeniowy · OC zawodowe · cyber · AI</p>
+        <h1 id="h1" class="hero__title">
+          {
+            accent && at >= 0 ? (
+              <>
+                {title.slice(0, at)}
+                <em class="accent">{accent}</em>
+                {title.slice(at + accent.length)}
+              </>
+            ) : (
+              title
+            )
+          }
+        </h1>
+        {d.lead && <p class="hero__lead">{polishText(d.lead)}</p>}
+        <p class="hero__cta" data-md-skip>
+          <a class="btn btn--signal" href="#kontakt">Zleć analizę ryzyka</a>
+          <a class="btn" href="/ubezpieczenia/">Zobacz rozwiązania</a>
+        </p>
+      </div>
+      <div class="hero__figure">
+        {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} plotter />}
+      </div>
+    </div>
+    <TitleBlock
+      sheet={d.sheet}
+      revision={d.revision}
+      updated={d.updated}
+      published={d.published}
+      author={ctx.authorName}
+      mdPath={ctx.mdPath}
+      draft={ctx.draft}
+    />
+  </section>
+
+  <div class="container home-sheet">
+    <AnswerBox summary={d.summary} points={d.summaryPoints} />
+    <div class="home-body prose prose--wide"><slot /></div>
+    <FAQ items={d.faq} />
+    <ContactChannels sheet={d.sheet} signal={false} />
+    <Disclosure show={['d', 'c']} />
+    <SheetFoot ctx={ctx} author={false} />
+  </div>
+</Sheet>
+
+<style>
+  /* jedna miara dla bloków końca arkusza (FAQ, kontakt, formuły, rejestr zmian, tabliczka) */
+  .home-sheet {
+    --end-measure: 880px;
+  }
+  .hero {
+    padding-top: var(--s-2);
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: center;
+    margin-top: var(--s-6);
+  }
+  .hero__copy {
+    grid-column: 1 / span 6;
+  }
+  .hero__figure {
+    grid-column: 7 / span 6;
+  }
+  .hero__kicker {
+    margin-bottom: var(--s-3);
+  }
+  .hero__title {
+    font-size: var(--fs-display);
+    line-height: 0.98;
+    max-width: 14ch;
+  }
+  .hero__lead {
+    margin-top: var(--s-4);
+    max-width: 52ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-5);
+  }
+  .home-body {
+    margin-top: var(--s-8);
+  }
+  /* legenda rysunku hero (8 odnośników) w dwóch kolumnach na szerokich ekranach — krótsze hero */
+  @media (min-width: 1280px) {
+    .hero__figure :global(.afig__legend) {
+      columns: 2;
+      column-gap: var(--s-4);
+    }
+    .hero__figure :global(.afig__legend li) {
+      break-inside: avoid;
+    }
+  }
+  @media (max-width: 1024px) {
+    .hero__copy,
+    .hero__figure {
+      grid-column: 1 / -1;
+    }
+    .hero__figure {
+      margin-top: var(--s-4);
+    }
+  }
+</style>

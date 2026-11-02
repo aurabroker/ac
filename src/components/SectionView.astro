@@ -1,0 +1,73 @@
+---
+/**
+ * SectionView — dekoracyjna nadetykieta inżynierska („PRZEKRÓJ A–A”) + sekcja z H2-pytaniem.
+ * Nadetykieta ma aria-hidden i nie trafia do .md. H2 zawsze jako pytanie prostym językiem.
+ *
+ * Dwa sposoby użycia:
+ *  1) W .astro: <SectionView label="Przekrój A–A" title="Co obejmuje OC zawodowe?" id="co-obejmuje">…</SectionView>
+ *  2) W MDX (H2 z Markdown trafia do spisu treści):
+ *       <SectionView label="Przekrój A–A" />
+ *       ## Co obejmuje OC zawodowe?
+ */
+import { slugify } from '../lib/typography/slug.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  label: string;
+  title?: string;
+  id?: string;
+}
+const { label, title, id } = Astro.props;
+// ta sama reguła co kotwice nagłówków Markdown (ASCII, bez polskich znaków)
+const hid = id ?? (title ? slugify(title) : undefined);
+---
+
+{
+  title ? (
+    <section class="section-view" aria-labelledby={hid}>
+      <p class="section-view__label" aria-hidden="true">
+        {polishText(label)}
+      </p>
+      <h2 id={hid}>{title}</h2>
+      <slot />
+    </section>
+  ) : (
+    <p class="section-view__label section-view__label--solo" aria-hidden="true">
+      {polishText(label)}
+    </p>
+  )
+}
+
+<style>
+  .section-view {
+    margin-top: var(--s-10);
+  }
+  .section-view h2 {
+    margin-top: var(--s-1);
+  }
+  .section-view__label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+  }
+  .section-view__label::before {
+    content: '';
+    width: 24px;
+    border-top: 1px solid var(--ink);
+  }
+  /* w .prose: etykieta przyklejona do następującego H2 */
+  :global(.prose) .section-view__label--solo {
+    margin-top: var(--s-10);
+    margin-bottom: 0;
+  }
+  :global(.prose) .section-view__label--solo + :global(h2) {
+    margin-top: var(--s-1);
+    border-top: 0;
+    padding-top: 0;
+  }
+</style>

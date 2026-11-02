@@ -1,0 +1,203 @@
+/*
+ * Rysunki SVG — klasy linii wg ISO 128 (wariant B: konstrukcja w tonie grafitu).
+ * Używaj klas zamiast atrybutów style (CSP bez 'unsafe-inline').
+ *
+ *   .c   konstrukcyjna (grafit, cienka)          .o   obiektu (tusz, 1,5 px)
+ *   .h   ukryta (kreskowa)                       .ax  osiowa (kreska-kropka)
+ *   .d   wymiarowa (niebieska)                   .l   odnośnik (leader)
+ *   .x   kreskowanie przekroju                   .t   etykieta tekstowa (Plex Mono, aria-hidden)
+ *   .b   kółko odnośnika (balon)                 .f   wypełnienie papierem (zasłanianie)
+ *   .sig sygnał (redline) — maks. 1 element na rysunek
+ *
+ * Rysowanie „ploter” (tylko hero, przez <PlotterHero>): animowane są elementy
+ * z atrybutem pathLength="1" (≤ 40 na rysunek). Kolejność warstw: .c → .o → .l/.d → .t.
+ * Linii kreskowych (.h, .ax) nie oznaczaj pathLength — animacja nadpisałaby kreskowanie.
+ */
+.fig-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+.fig-svg .c {
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 0.75;
+}
+.fig-svg .o {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fig-svg .o2 {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fig-svg .h {
+  fill: none;
+  stroke: var(--ink-4);
+  stroke-width: 1;
+  stroke-dasharray: 5 3;
+}
+.fig-svg .ax {
+  fill: none;
+  stroke: var(--ink-4);
+  stroke-width: 0.75;
+  stroke-dasharray: 14 3 2 3;
+}
+.fig-svg .d {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 0.75;
+}
+.fig-svg .d-fill {
+  fill: var(--blue);
+  stroke: none;
+}
+.fig-svg .l {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 0.75;
+}
+.fig-svg .x {
+  fill: none;
+  stroke: var(--ink-4);
+  stroke-width: 0.5;
+}
+.fig-svg .b {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+.fig-svg .f {
+  fill: var(--paper);
+  stroke: none;
+}
+.fig-svg .sig {
+  fill: none;
+  stroke: var(--signal);
+  stroke-width: 1.5;
+}
+.fig-svg .t {
+  fill: var(--ink-2);
+  stroke: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.fig-svg .t-num {
+  fill: var(--ink);
+  stroke: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.fig-svg .t-dim {
+  fill: var(--blue);
+  stroke: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+/* ---------- Ploter: jednorazowe rysowanie ---------- */
+@keyframes plot-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes plot-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  /*
+   * Selektory zawsze z jawną klasą warstwy (.c, .o, .o2, .sig, .l, .d, .b) — sam [pathLength]
+   * w potomku nie był unieważniany przez Chromium przy zmianie klasy przodka (elementy zostawały
+   * z dasharray 1). Dodatkowo finish() w PlotterHero nadaje każdemu elementowi klasę .is-plotted.
+   */
+  /* zanim skrypt wystartuje: ukryte; zabezpieczenie — po 5 s rysunek pojawia się sam */
+  html:not(.plotter-ready) .plotter .c[pathLength],
+  html:not(.plotter-ready) .plotter .o[pathLength],
+  html:not(.plotter-ready) .plotter .o2[pathLength],
+  html:not(.plotter-ready) .plotter .sig[pathLength],
+  html:not(.plotter-ready) .plotter .l[pathLength],
+  html:not(.plotter-ready) .plotter .d[pathLength],
+  html:not(.plotter-ready) .plotter .b[pathLength] {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: plot-draw 0.01s linear 5s forwards;
+  }
+  html:not(.plotter-ready) .plotter .t,
+  html:not(.plotter-ready) .plotter .t-num,
+  html:not(.plotter-ready) .plotter .t-dim {
+    opacity: 0;
+    animation: plot-fade 0.01s linear 5s forwards;
+  }
+  html:not(.plotter-ready) .plotter .b[pathLength] {
+    opacity: 0;
+    animation:
+      plot-draw 0.01s linear 5s forwards,
+      plot-fade 0.01s linear 5s forwards;
+  }
+  /* czeka na wejście w widok */
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .c[pathLength]:not(.is-plotted),
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .o[pathLength]:not(.is-plotted),
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .o2[pathLength]:not(.is-plotted),
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .sig[pathLength]:not(.is-plotted),
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .l[pathLength]:not(.is-plotted),
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .d[pathLength]:not(.is-plotted),
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .b[pathLength]:not(.is-plotted) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .b[pathLength]:not(.is-plotted),
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .t,
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .t-num,
+  html.plotter-ready .plotter:not(.is-drawing):not(.is-done) .t-dim {
+    opacity: 0;
+  }
+  /* rysowanie: konstrukcja → obiekt → odnośniki/wymiary → etykiety (≤ 1,6 s) */
+  .plotter.is-drawing .c[pathLength]:not(.is-plotted) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: plot-draw 0.5s var(--ease) 0s forwards;
+  }
+  .plotter.is-drawing .o[pathLength]:not(.is-plotted),
+  .plotter.is-drawing .o2[pathLength]:not(.is-plotted),
+  .plotter.is-drawing .sig[pathLength]:not(.is-plotted) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: plot-draw 0.7s var(--ease) 0.3s forwards;
+  }
+  .plotter.is-drawing .l[pathLength]:not(.is-plotted),
+  .plotter.is-drawing .d[pathLength]:not(.is-plotted) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: plot-draw 0.4s var(--ease) 0.9s forwards;
+  }
+  /* balon: papierowe wypełnienie pojawia się razem z obrysem (bez pustych krążków nad siatką) */
+  .plotter.is-drawing .b[pathLength]:not(.is-plotted) {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+    animation:
+      plot-draw 0.4s var(--ease) 0.9s forwards,
+      plot-fade 0.2s var(--ease) 0.9s forwards;
+  }
+  .plotter.is-drawing .t,
+  .plotter.is-drawing .t-num,
+  .plotter.is-drawing .t-dim {
+    opacity: 0;
+    animation: plot-fade 0.3s var(--ease) 1.25s forwards;
+  }
+}

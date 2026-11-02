@@ -1,0 +1,103 @@
+---
+/**
+ * <head>: title, description, canonical, robots, OG/Twitter, alternate .md, RSS, JSON-LD.
+ * Strony z noindex (drafty, PREVIEW, strony poniżej progu) nie linkują bliźniaka .md.
+ */
+import { SITE, absoluteUrl, mdPathFor } from '../../lib/site.ts';
+import archivo400 from '@fontsource/archivo/files/archivo-latin-400-normal.woff2?url';
+import archivo600 from '@fontsource/archivo/files/archivo-latin-600-normal.woff2?url';
+import archivoExt400 from '@fontsource/archivo/files/archivo-latin-ext-400-normal.woff2?url';
+import archivoExt600 from '@fontsource/archivo/files/archivo-latin-ext-600-normal.woff2?url';
+import { getRoutes } from '../../lib/routes.ts';
+
+interface Props {
+  /** Pełny <title>. */
+  title: string;
+  description: string;
+  /** Ścieżka kanoniczna, np. „/oc-cyber-dla-it/”. */
+  path: string;
+  ogTitle?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  noindex?: boolean;
+  published?: Date;
+  updated?: Date;
+  author?: string;
+  jsonld?: Record<string, unknown> | null;
+  /** false dla 404 (bez canonical). */
+  canonical?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  ogTitle,
+  ogImage,
+  ogImageAlt,
+  ogType = 'website',
+  noindex = false,
+  published,
+  updated,
+  author,
+  jsonld,
+  canonical: withCanonical = true,
+} = Astro.props;
+
+const canonical = absoluteUrl(path);
+const mdUrl = absoluteUrl(mdPathFor(path));
+const robots = noindex
+  ? 'noindex, nofollow'
+  : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+const ld = jsonld ? JSON.stringify(jsonld).replace(/</g, '\\u003c') : null;
+// RSS reklamujemy dopiero, gdy kanał ma choć jeden arkusz (dziś wszystkie artykuły są szkicami)
+const hasFeed = (await getRoutes()).some((r) => (r.kind === 'article' || r.kind === 'regulation') && r.indexable);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+{withCanonical && <link rel="canonical" href={canonical} />}
+<meta name="robots" content={robots} />
+{author && <meta name="author" content={author} />}
+<meta name="theme-color" content="#ffffff" />
+<meta name="color-scheme" content="light" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="preload" href={archivo600} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={archivo400} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={archivoExt400} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={archivoExt600} as="font" type="font/woff2" crossorigin />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+{!noindex && <link rel="alternate" type="text/markdown" href={mdUrl} title="Wersja Markdown" />}
+<link rel="describedby" href="/llms.txt" type="text/plain" />
+{hasFeed && <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — Wiedza`} href="/rss.xml" />}
+<link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={ogTitle ?? title} />
+<meta property="og:description" content={description} />
+{withCanonical && <meta property="og:url" content={canonical} />}
+{
+  ogImage && (
+    <>
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:alt" content={ogImageAlt ?? ogTitle ?? title} />
+      <meta name="twitter:image" content={ogImage} />
+    </>
+  )
+}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={ogTitle ?? title} />
+<meta name="twitter:description" content={description} />
+{ogType === 'article' && published && <meta property="article:published_time" content={published.toISOString()} />}
+{ogType === 'article' && updated && <meta property="article:modified_time" content={updated.toISOString()} />}
+{ld && <script is:inline type="application/ld+json" set:html={ld} />}

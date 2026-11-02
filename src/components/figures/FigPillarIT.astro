@@ -1,0 +1,168 @@
+---
+/**
+ * FigPillarIT — F-IT: schemat obciążeń. Firma IT jako belka na podporach: OC zawodowe (A), cyber (B),
+ * OC działalności (C). Siły: błąd w usłudze, wyciek danych (obciążenie ciągłe w strefie styku OC i cyber),
+ * incydent, szkoda rzeczowa; wspornik (linią ukrytą) — USA i Kanada, tylko gdy obejmuje je polisa.
+ * Właściciel: agent „figures”. Treść merytoryczna: legenda HTML w FIGURE_META (./index.ts).
+ */
+import FigFrame from './FigFrame.astro';
+import { circle, dimH, f, hatch, head, p, poly, seg, type Pt } from './draw.ts';
+
+interface Props {
+  labelledby?: string;
+  title?: string;
+}
+const { labelledby, title = 'Schemat obciążeń: program OC i cyber firmy IT' } = Astro.props;
+const desc =
+  'Belka oparta na trzech podporach, obciążona z góry strzałkami sił: pojedynczymi i jednym obciążeniem ciągłym ' +
+  'pośrodku. Po prawej belka przechodzi we wspornik narysowany linią przerywaną. Pod podporami ponumerowane odnośniki, ' +
+  'u dołu niebieski wymiar obejmujący całą belkę.';
+
+// belka
+const L0 = 50;
+const L1 = 660; // koniec części ciągłej
+const L2 = 760; // koniec wspornika
+const yT = 176;
+const yB = 198;
+const yAxis = (yT + yB) / 2;
+const beam = poly([[L0, yT], [L1, yT], [L1, yB], [L0, yB]], true);
+const overhang = `M${p(L1, yT)}H${f(L2)}V${f(yB)}H${f(L1)}`;
+
+// podpory: C (OC działalności), A (OC zawodowe), B (cyber)
+type Sup = { key: string; x: number; n: number; main: string; sub: string; roller: boolean };
+const sups: Sup[] = [
+  { key: 'C', x: 120, n: 4, main: 'OC DZIAŁALNOŚCI', sub: 'SZKODY OSOBOWE I RZECZOWE', roller: true },
+  { key: 'A', x: 280, n: 1, main: 'OC ZAWODOWE', sub: 'TECH E&O', roller: false },
+  { key: 'B', x: 560, n: 2, main: 'CYBER', sub: 'KOSZTY · OSOBY TRZECIE', roller: true },
+];
+const TH = 26; // wysokość trójkąta
+const supPath = (s: Sup) => {
+  const tri = poly([[s.x, yB], [s.x + 15, yB + TH], [s.x - 15, yB + TH]], true);
+  const g = s.roller ? yB + TH + 9 : yB + TH;
+  const rollers = s.roller ? circle(s.x - 7, yB + TH + 4.5, 4.5) + circle(s.x + 7, yB + TH + 4.5, 4.5) : '';
+  return { tri, rollers, ground: `M${p(s.x - 26, g)}H${f(s.x + 26)}`, g };
+};
+const supGeo = sups.map((s) => ({ s, ...supPath(s) }));
+const pins = supGeo.filter((g) => !g.s.roller).map((g) => circle(g.s.x, yB + 1, 3)).join('');
+const groundHatch = supGeo
+  .map((g) => hatch([[g.s.x - 26, g.g], [g.s.x + 26, g.g], [g.s.x + 26, g.g + 9], [g.s.x - 26, g.g + 9]], 5, 135))
+  .join('');
+
+// siły skupione
+type Load = { x: number; main: string; sub: string; light?: boolean };
+const loads: Load[] = [
+  { x: 132, main: 'SZKODA RZECZOWA', sub: 'LUB OSOBOWA' },
+  { x: 262, main: 'BŁĄD W USŁUDZE', sub: 'ROSZCZENIE KLIENTA' },
+  { x: 590, main: 'INCYDENT CYBER', sub: 'KOSZTY · PRZESTÓJ' },
+  { x: 736, main: 'POZEW W USA', sub: 'JURYSDYKCJA', light: true },
+];
+const yArrow0 = 96;
+const shafts = loads.filter((l) => !l.light).map((l) => seg([l.x, yArrow0], [l.x, yT - 8])).join('');
+const shaftsLight = loads.filter((l) => l.light).map((l) => seg([l.x, yArrow0], [l.x, yT - 8])).join('');
+const heads = loads.filter((l) => !l.light).map((l) => head(l.x, yT - 1, 90, 9, 2.6)).join('');
+const headsLight = loads.filter((l) => l.light).map((l) => head(l.x, yT - 1, 90, 9, 2.6)).join('');
+
+// obciążenie ciągłe: wyciek danych w strefie styku
+const q0 = 340;
+const q1 = 480;
+const yq = 128;
+const qXs = Array.from({ length: 8 }, (_, i) => q0 + (i * (q1 - q0)) / 7);
+const qLines = `M${p(q0, yq)}H${f(q1)}` + qXs.map((x) => seg([x, yq], [x, yT - 6])).join('');
+const qHeads = qXs.map((x) => head(x, yT - 1, 90, 6, 1.9)).join('');
+const qMid = (q0 + q1) / 2;
+
+// wymiary
+const zone = dimH(q0, q1, 222, 6);
+const zoneExt = seg([q0, yB + 4], [q0, 228]) + seg([q1, yB + 4], [q1, 228]);
+const yAll = 30;
+const all = dimH(L0, L1, yAll);
+const allExt = seg([L0, yT - 4], [L0, yAll - 6]) + seg([L1, yT - 4], [L1, yAll - 6]);
+
+// odnośniki
+const yBal = 268;
+const R = 11;
+type Bal = { n: number; x: number; from: Pt };
+const bals: Bal[] = [
+  ...supGeo.map((g) => ({ n: g.s.n, x: g.s.x, from: [g.s.x, g.g + 12] as Pt })),
+  { n: 3, x: qMid, from: [qMid, 226] },
+  { n: 5, x: 712, from: [712, yB + 3] },
+];
+const leaders = bals.map((b) => seg(b.from, [b.x, yBal - R])).join('');
+---
+
+<FigFrame viewBox="0 0 800 326" labelledby={labelledby} title={title} desc={desc}>
+  <!-- konstrukcja: linie działania sił, osie podpór -->
+  <path class="c" d={loads.map((l) => seg([l.x, 86], [l.x, yArrow0])).join('') + seg([q0, 118], [q0, yq]) + seg([q1, 118], [q1, yq])} pathLength="1" />
+  <path class="c" d={allExt + zoneExt} pathLength="1" />
+  <line class="ax" x1="30" y1={yAxis} x2="782" y2={yAxis} />
+  {supGeo.map((g) => <line class="ax" x1={g.s.x} y1={yB + 4} x2={g.s.x} y2={g.g + 12} />)}
+
+  <!-- belka i wspornik -->
+  <path class="f" d={beam} />
+  <path class="o" d={beam} pathLength="1" />
+  <path class="h" d={overhang} />
+  <text class="t t-s" x={L0 + 14} y={yAxis + 3.5}>FIRMA IT</text>
+
+  <!-- podpory -->
+  {supGeo.map((g) => <path class="f" d={g.tri} />)}
+  <path class="o" d={supGeo.map((g) => g.tri + g.rollers).join('')} pathLength="1" />
+  <path class="o" d={supGeo.map((g) => g.ground).join('')} pathLength="1" />
+  <path class="x fx" d={groundHatch} />
+  <path class="b" d={pins} />
+  {supGeo.map((g) => <text class="t t-b t-m" x={g.s.x + 22} y={yB + 18}>{g.s.key}</text>)}
+
+  <!-- siły -->
+  <path class="o" d={shafts} pathLength="1" />
+  <path class="ah fx" d={heads} />
+  <path class="o2" d={shaftsLight} pathLength="1" />
+  <path class="ah2 fx" d={headsLight} />
+  <path class="o2" d={qLines} pathLength="1" />
+  <path class="ah2 fx" d={qHeads} />
+  {
+    loads.map((l) => (
+      <>
+        <text class="t t-b t-m" x={l.x} y="64">
+          {l.main}
+        </text>
+        <text class="t t-s t-m" x={l.x} y="78">
+          {l.sub}
+        </text>
+      </>
+    ))
+  }
+  <text class="t t-b t-m" x={qMid} y="96">WYCIEK DANYCH KLIENTA</text>
+  <text class="t t-s t-m" x={qMid} y="110">OBCIĄŻENIE CIĄGŁE</text>
+
+  <!-- wymiary -->
+  <path class="d" d={zone.line + all.line} pathLength="1" />
+  <path class="d-fill fx" d={zone.heads + all.heads} />
+  <text class="t-dim" x={qMid} y="217">STYK OC / CYBER</text>
+  <text class="t-dim" x={(L0 + L1) / 2} y={yAll - 5}>OC I CYBER · LIMITY WG POLISY</text>
+
+  <!-- odnośniki -->
+  <path class="l" d={leaders} pathLength="1" />
+  {
+    bals.map((b) => (
+      <g class="bal">
+        <circle class="b" cx={b.x} cy={yBal} r={R} pathLength="1" />
+        <text class="t-num" x={b.x} y={yBal}>
+          {b.n}
+        </text>
+      </g>
+    ))
+  }
+  {
+    supGeo.map((g) => (
+      <>
+        <text class="t t-b t-m" x={g.s.x} y={yBal + 30}>
+          {g.s.main}
+        </text>
+        <text class="t t-s t-m" x={g.s.x} y={yBal + 43}>
+          {g.s.sub}
+        </text>
+      </>
+    ))
+  }
+  <text class="t t-b t-m" x="712" y={yBal + 30}>USA / KANADA</text>
+  <text class="t t-s t-m" x="712" y={yBal + 43}>GDY OBEJMUJE JE POLISA</text>
+</FigFrame>

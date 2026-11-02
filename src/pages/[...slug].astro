@@ -1,0 +1,87 @@
+---
+/**
+ * Jedyna trasa treści: każda strona pochodzi z kolekcji (pages, pillars, solutions, wiedza, regulations).
+ * Dzięki temu HTML, bliźniak .md, OG, sitemap, llms.txt i RSS korzystają z tych samych danych.
+ * PLIK WSPÓŁDZIELONY (zamrożony) — zmiany przez build-notes.
+ */
+import { render, getCollection } from 'astro:content';
+import { getRoutes, existingPaths, type SiteRoute, type PageEntry } from '../lib/routes.ts';
+import { pageContext } from '../lib/page.ts';
+import { getPerson } from '../lib/people.ts';
+import { definedTermSetNode, personId, personNode, type JsonLdNode } from '../lib/seo/jsonld.ts';
+import { isKnownPerson } from '../lib/people.ts';
+import { absoluteUrl } from '../lib/site.ts';
+import { mdxComponents } from '../components/mdx.ts';
+import Home from '../layouts/Home.astro';
+import Pillar from '../layouts/Pillar.astro';
+import Card from '../layouts/Card.astro';
+import Article from '../layouts/Article.astro';
+import Legal from '../layouts/Legal.astro';
+import CatalogueIndex from '../components/lists/CatalogueIndex.astro';
+import WiedzaRegister from '../components/lists/WiedzaRegister.astro';
+import GlossaryList from '../components/lists/GlossaryList.astro';
+import PersonProfile from '../components/lists/PersonProfile.astro';
+
+export async function getStaticPaths() {
+  const routes = await getRoutes();
+  return routes.map((route) => ({
+    params: { slug: route.path === '/' ? undefined : route.path.replace(/^\/|\/$/g, '') },
+    props: { route },
+  }));
+}
+
+interface Props {
+  route: SiteRoute;
+}
+const { route } = Astro.props;
+const { Content, headings } = await render(route.entry);
+
+const layout = route.kind === 'page' ? (route.entry as PageEntry).data.template : route.kind;
+const extra: (JsonLdNode | null)[] = [];
+if (layout === 'glossary') {
+  // `see` wskazujące stronę spoza tego buildu (np. szkic w produkcji) pomijamy — jak na liście haseł
+  const paths = await existingPaths();
+  const terms = (await getCollection('glossary')).map((e) => ({ ...e.data, see: e.data.see && paths.has(e.data.see) ? e.data.see : undefined }));
+  extra.push(definedTermSetNode(absoluteUrl(route.path), 'Słownik ubezpieczeń — Aura Consulting', terms));
+}
+const person = layout === 'person' ? await getPerson((route.entry as PageEntry).data.person ?? route.entry.data.author) : null;
+const ctx = await pageContext(route, extra);
+if (person && isKnownPerson(person)) {
+  // ProfilePage.mainEntity → Person
+  const g = ctx.jsonld['@graph'] as JsonLdNode[];
+  if (!g.some((n) => n['@id'] === personId(person))) {
+    const node = personNode(person);
+    if (node) g.push(node);
+  }
+  const page = g.find((n) => n['@id'] === `${ctx.url}#webpage`);
+  if (page) page.mainEntity = { '@id': personId(person) };
+}
+---
+
+{
+  layout === 'home' ? (
+    <Home ctx={ctx}>
+      <Content components={mdxComponents} />
+    </Home>
+  ) : layout === 'pillar' ? (
+    <Pillar ctx={ctx} headings={headings}>
+      <Content components={mdxComponents} />
+    </Pillar>
+  ) : layout === 'solution' ? (
+    <Card ctx={ctx} headings={headings}>
+      <Content components={mdxComponents} />
+    </Card>
+  ) : layout === 'article' || layout === 'regulation' ? (
+    <Article ctx={ctx} headings={headings}>
+      <Content components={mdxComponents} />
+    </Article>
+  ) : (
+    <Legal ctx={ctx} headings={headings} disclosure={layout === 'hub' || layout === 'catalogue-index'} toc={layout === 'glossary' ? false : undefined}>
+      <Content components={mdxComponents} />
+      {layout === 'catalogue-index' && <CatalogueIndex slot="listing" />}
+      {layout === 'wiedza-index' && <WiedzaRegister slot="listing" />}
+      {layout === 'glossary' && <GlossaryList slot="listing" />}
+      {layout === 'person' && person && <PersonProfile slot="listing" person={person} />}
+    </Legal>
+  )
+}

@@ -1,0 +1,204 @@
+---
+/**
+ * Kanały kontaktu: telefon, mailto (z tematem z numerem arkusza), „Kopiuj adres”,
+ * „Kopiuj szablon wiadomości”. Bez formularzy. Przyciski kopiowania pojawiają się tylko z JS.
+ * signal=true → przycisk e-mail jest JEDYNYM wypełnionym CTA (redline) w widoku.
+ */
+import { SITE } from '../lib/site.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  /** Numer arkusza do tematu wiadomości, np. „IT-000”. */
+  sheet?: string;
+  heading?: string;
+  lead?: string;
+  signal?: boolean;
+  /** Pokaż listę „Co przygotować”. */
+  checklist?: boolean;
+  id?: string;
+}
+const {
+  sheet,
+  heading = 'Zleć analizę ryzyka',
+  lead = 'Napisz lub zadzwoń. Odpowiadamy w dni robocze. Analiza i porównanie ofert nie zobowiązują do zakupu polisy.',
+  signal = true,
+  checklist = true,
+  id = 'kontakt',
+} = Astro.props;
+
+const subject = `${sheet ? `[${sheet}] ` : ''}Analiza ryzyka — prośba o kontakt`;
+const template = [
+  'Dzień dobry,',
+  '',
+  'proszę o analizę ryzyka i porównanie ofert ubezpieczenia.',
+  '',
+  'Firma (nazwa, NIP):',
+  'Czym się zajmujemy:',
+  'Przychód roczny (rząd wielkości):',
+  'Klienci lub przychody spoza Polski (np. USA, Kanada, UK):',
+  'Obecna polisa i termin odnowienia (jeśli jest):',
+  'Wymóg ubezpieczenia z umowy lub przetargu (jeśli jest):',
+  'Telefon kontaktowy:',
+  '',
+  'Pozdrawiam',
+].join('\n');
+const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(template)}`;
+---
+
+<section class="contact" aria-labelledby={id} data-contact>
+  <h2 id={id}>{polishText(heading)}</h2>
+  <p class="contact__lead">{polishText(lead)}</p>
+
+  <div class="contact__channels">
+    <div class="contact__channel">
+      <p class="label">Telefon</p>
+      <a class="contact__value" href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>
+    </div>
+    <div class="contact__channel">
+      <p class="label">E-mail</p>
+      <a class="contact__value" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    </div>
+  </div>
+
+  <div class="contact__actions">
+    <a class:list={['btn', signal && 'btn--signal']} href={mailto} data-md-skip>Napisz e-mail</a>
+    <button type="button" class="btn btn--quiet" data-copy={SITE.email} hidden>Kopiuj adres</button>
+    <button type="button" class="btn btn--quiet" data-copy-template hidden>Kopiuj szablon wiadomości</button>
+    <span class="contact__status mono" role="status" aria-live="polite"></span>
+  </div>
+
+  <p class="contact__privacy" data-md-skip>
+    Administratorem danych z korespondencji jest {SITE.legalName} —{' '}
+    <a href="/polityka-prywatnosci/">polityka prywatności</a>.
+  </p>
+
+  <details class="contact__template">
+    <summary>Szablon wiadomości (temat: {subject})</summary>
+    <pre data-template>{template}</pre>
+  </details>
+
+  {
+    checklist && (
+      <div class="contact__prep">
+        <p class="label">Co przygotować</p>
+        <ul>
+          <li>krótki opis działalności i głównych usług lub produktów,</li>
+          <li>przychód (rząd wielkości) i strukturę klientów, w tym zagranicznych,</li>
+          <li>obecną polisę lub ofertę (jeśli jest) i termin odnowienia,</li>
+          <li>zapisy umów, które wymagają ubezpieczenia (limit, zakres, certyfikat).</li>
+        </ul>
+      </div>
+    )
+  }
+</section>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-contact]')) {
+    const status = root.querySelector<HTMLElement>('.contact__status');
+    const say = (msg: string) => {
+      if (!status) return;
+      status.textContent = msg;
+      window.setTimeout(() => (status.textContent = ''), 2500);
+    };
+    const copy = async (text: string) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        say('Skopiowano do schowka.');
+      } catch {
+        say('Nie udało się skopiować — zaznacz tekst ręcznie.');
+      }
+    };
+    if (!navigator.clipboard) continue;
+    root.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+      b.hidden = false;
+      b.addEventListener('click', () => copy(b.dataset.copy ?? ''));
+    });
+    root.querySelectorAll<HTMLButtonElement>('[data-copy-template]').forEach((b) => {
+      b.hidden = false;
+      b.addEventListener('click', () => copy(root.querySelector('[data-template]')?.textContent ?? ''));
+    });
+  }
+</script>
+
+<style>
+  .contact {
+    max-width: var(--end-measure, 100%);
+    margin-top: var(--s-10);
+    padding: var(--s-4);
+    border: 1px solid var(--ink);
+  }
+  .contact__lead {
+    margin-top: var(--s-1);
+    color: var(--ink-2);
+    max-width: 60ch;
+  }
+  .contact__channels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3);
+    margin-top: var(--s-3);
+    padding-block: var(--s-2);
+    border-block: 1px solid var(--rule);
+  }
+  .contact__value {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+    color: var(--ink);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .contact__value:hover {
+    text-decoration: underline;
+  }
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-2);
+    margin-top: var(--s-3);
+  }
+  .contact__status {
+    color: var(--ink-3);
+  }
+  .contact__privacy {
+    margin-top: var(--s-2);
+    margin-bottom: 0;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .contact__template {
+    margin-top: var(--s-3);
+    font-size: var(--fs-small);
+  }
+  .contact__template summary {
+    cursor: pointer;
+    color: var(--ink-2);
+  }
+  .contact__template pre {
+    margin: var(--s-2) 0 0;
+    padding: var(--s-2);
+    background: var(--paper-inset);
+    border-left: 1px solid var(--rule);
+    white-space: pre-wrap;
+    font-size: var(--fs-mono);
+  }
+  .contact__prep {
+    margin-top: var(--s-3);
+  }
+  .contact__prep ul {
+    margin: var(--s-1) 0 0;
+    padding-left: 1.2em;
+    color: var(--ink-2);
+    font-size: var(--fs-small);
+  }
+  @media (max-width: 640px) {
+    .contact {
+      padding: var(--s-3) var(--s-2);
+    }
+    .contact__channels {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+/**
+ * Strony firmowe, prawne i huby (pages): okruszki → H1 → tabliczka → „W skrócie” → treść
+ * → [slot „listing”: katalog / rejestr / słownik / profil] → FAQ → kontakt (opcjonalnie)
+ * → rejestr zmian → pełna tabliczka.
+ */
+import Sheet from './Sheet.astro';
+import SheetHead from '../components/SheetHead.astro';
+import SheetFoot from '../components/SheetFoot.astro';
+import DocBody from '../components/DocBody.astro';
+import AnnotatedFigure from '../components/AnnotatedFigure.astro';
+import BOM from '../components/BOM.astro';
+import FAQ from '../components/FAQ.astro';
+import Sources from '../components/Sources.astro';
+import Disclosure from '../components/Disclosure.astro';
+import ContactChannels from '../components/ContactChannels.astro';
+import RelatedSheets from '../components/lists/RelatedSheets.astro';
+import type { PageContext } from '../lib/page.ts';
+import type { PageEntry } from '../lib/routes.ts';
+
+interface Props {
+  ctx: PageContext;
+  headings: { depth: number; slug: string; text: string }[];
+  /** Spis treści (domyślnie: tak, gdy ≥ 2 nagłówki H2). */
+  toc?: boolean;
+  /** Formuła (c) pod treścią (strony o ubezpieczeniach). */
+  disclosure?: boolean;
+}
+const { ctx, headings, disclosure = false } = Astro.props;
+const d = (ctx.route.entry as PageEntry).data;
+const kind = d.template;
+const toc = Astro.props.toc ?? headings.filter((h) => h.depth === 2).length >= 2;
+const contact = d.showContact || kind === 'contact';
+---
+
+<Sheet ctx={ctx} kind={kind}>
+  <div class="container">
+    <SheetHead ctx={ctx} lead={d.lead} titleAccent={d.titleAccent} />
+    {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} />}
+    <DocBody headings={headings} toc={toc}>
+      {/* /kontakt/ ma własną, szczegółową sekcję „Co przygotować…” — bez krótkiej listy z komponentu */}
+      {
+        kind === 'contact' && (
+          <ContactChannels
+            heading="Napisz lub zadzwoń"
+            checklist={false}
+            lead="Odpowiadamy w dni robocze, zwykle w ciągu jednego dnia roboczego. Analiza i porównanie ofert nie zobowiązują do zakupu polisy."
+          />
+        )
+      }
+      <div class="prose"><slot /></div>
+      <slot name="listing" />
+      {
+        d.coverage.length > 0 && d.coveragePlacement === 'auto' && (
+          <BOM id="tabela-zakresu" caption={d.coverageCaption ?? 'Tabela zakresu'} rows={d.coverage} />
+        )
+      }
+      <FAQ items={d.faq} />
+      {contact && kind !== 'contact' && <ContactChannels />}
+      <RelatedSheets paths={d.related} />
+      <Sources items={d.sources} />
+      {disclosure && <Disclosure show={['d', 'c']} />}
+      <SheetFoot ctx={ctx} author={kind === 'hub'} />
+    </DocBody>
+  </div>
+</Sheet>

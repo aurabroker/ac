@@ -1,0 +1,149 @@
+---
+/**
+ * 404 — noindex, bez bliźniaka .md. Właściciel treści: agent „home”.
+ * Cloudflare (not_found_handling: "404-page") serwuje ten plik dla nieistniejących adresów.
+ */
+import '../styles/global.css';
+import Seo from '../components/seo/Seo.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { FOOTER_NAV } from '../lib/nav.ts';
+import { SITE } from '../lib/site.ts';
+---
+
+<!doctype html>
+<html lang="pl" dir="ltr">
+  <head>
+    <Seo
+      title={`Nie znaleziono strony · ${SITE.name}`}
+      description="Ten adres nie istnieje lub został przeniesiony. Wybierz arkusz z listy albo skontaktuj się z nami."
+      path="/404/"
+      canonical={false}
+      noindex
+    />
+  </head>
+  <body data-kind="404">
+    <a class="skip-link" href="#tresc">Przejdź do treści</a>
+    <SiteHeader currentPath="/404/" />
+    <main id="tresc" class="container nf" tabindex="-1">
+      <p class="label">Arkusz nr 404 · brak w rejestrze</p>
+      <h1>Nie znaleźliśmy tego arkusza</h1>
+      <p class="nf__lead">
+        Adres mógł się zmienić po przebudowie serwisu albo zawiera literówkę. Stare adresy (na przykład z końcówką
+        „.html”) przekierowujemy na nowe strony. Jeśli ten adres pochodzi z zakładki lub linku, wybierz arkusz z listy
+        poniżej albo napisz do nas, a wskażemy właściwą stronę.
+      </p>
+
+      <div class="nf__dim" aria-hidden="true">
+        <span class="nf__dim-line"></span>
+        <span class="nf__dim-label">BRAK WYMIARU · ARKUSZ NIEZNANY</span>
+        <span class="nf__dim-line"></span>
+      </div>
+
+      <nav class="nf__nav" aria-label="Spis arkuszy">
+        <section>
+          <h2 class="label">Start</h2>
+          <ul>
+            <li><a href="/">Strona główna</a></li>
+          </ul>
+        </section>
+        {
+          FOOTER_NAV.map((group) => (
+            <section>
+              <h2 class="label">{group.title}</h2>
+              <ul>
+                {group.links.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </nav>
+
+      <p class="nf__contact">
+        <span class="label">Kontakt</span>
+        <a class="mono" href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>
+        <span aria-hidden="true">·</span>
+        <a class="mono" href={`mailto:${SITE.email}?subject=${encodeURIComponent('[404] Nie znalazłem strony')}`}>{SITE.email}</a>
+      </p>
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .nf {
+    padding-top: var(--s-10);
+    padding-bottom: var(--s-10);
+  }
+  .nf h1 {
+    margin-top: var(--s-2);
+  }
+  .nf__lead {
+    margin-top: var(--s-3);
+    max-width: 60ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .nf__dim {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    max-width: 720px;
+    margin-block: var(--s-6) var(--s-4);
+  }
+  .nf__dim-line {
+    flex: 1;
+    border-top: 1px dashed var(--ink-4);
+  }
+  .nf__dim-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-label);
+    color: var(--blue);
+    white-space: nowrap;
+  }
+  .nf__nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: var(--s-4) var(--gutter);
+    max-width: 1040px;
+  }
+  .nf__nav h2 {
+    margin-bottom: var(--s-1);
+    padding-bottom: var(--s-1);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nf__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nf__nav li {
+    padding-block: 4px;
+  }
+  .nf__contact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--s-1) var(--s-2);
+    margin-top: var(--s-8);
+    padding-top: var(--s-2);
+    border-top: 1px solid var(--rule);
+  }
+  .nf__contact .mono {
+    font-size: 1rem;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 480px) {
+    .nf__dim-label {
+      white-space: normal;
+      text-align: center;
+    }
+  }
+</style>

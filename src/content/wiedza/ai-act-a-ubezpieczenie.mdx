@@ -1,0 +1,265 @@
+---
+title: "AI Act a ubezpieczenie: czy AI Act wymaga polisy?"
+description: "Czy AI Act nakłada obowiązek ubezpieczenia? Jak obowiązki dostawców i podmiotów stosujących systemy AI przekładają się na OC i cyber."
+ogTitle: "AI Act a ubezpieczenie: czy AI Act wymaga polisy?"
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "C3-01"
+articleId: "C3-01"
+cluster: "C3"
+hub: "/ubezpieczenie-ai/"
+draft: true
+legalStateAsOf: 2026-11-02
+reviewEvery: 90
+summary: "Nie. AI Act nie nakłada na dostawców ani na firmy korzystające z AI obowiązku ubezpieczenia OC. Wymóg ubezpieczenia dotyczy jednostek notyfikowanych, które oceniają zgodność systemów wysokiego ryzyka. AI Act zmienia jednak ryzyko: jego wymogi stają się miarą staranności w sporach i umowach. Polisa nie zapewnia zgodności, ale może sfinansować roszczenia i koszty obrony."
+summaryPoints:
+  - "Wymóg polisy przy projektach AI wynika zwykle z umowy z klientem, przetargu albo z ryzyka produktu, a nie z samego AI Act."
+  - "Karę z AI Act polisa pokryje najwyżej w zakresie, w jakim prawo pozwala ją ubezpieczyć. Koszty obrony w postępowaniu mogą być objęte, jeśli polisa ma taką sekcję."
+  - "Unijną dyrektywę o odpowiedzialności za AI wycofano w 2025 r. Szkody wyrządzone przez AI ocenia się według prawa krajowego, a dla nowych produktów także według nowej dyrektywy o produktach wadliwych."
+keywords:
+  primary: "ai act ubezpieczenie"
+  secondary:
+    - "czy ai act wymaga ubezpieczenia"
+    - "ai act polisa oc"
+    - "ai act kary ubezpieczenie"
+    - "odpowiedzialność za ai ubezpieczenie"
+    - "ubezpieczenie dostawcy systemu ai"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu: AI Act a polisa"
+coverage:
+  - event: "Roszczenie klienta za błędny wynik systemu AI, który dostarczasz lub wdrażasz"
+    module: "OC zawodowe"
+    label: underwriting
+    conditions: "Polisa nie wyłącza ani nie ogranicza AI, usługa mieści się w opisie działalności, roszczenie zgłoszone w okresie ubezpieczenia, błąd po dacie retroaktywnej."
+  - event: "Koszty obrony przed roszczeniem związanym z AI, także biegli oceniający działanie modelu"
+    module: "OC zawodowe"
+    label: typical
+    conditions: "Gdy roszczenie mieści się w zakresie polisy. Zwykle w ramach sumy gwarancyjnej i za zgodą ubezpieczyciela."
+  - event: "Naruszenie dóbr osobistych lub praw autorskich w treściach tworzonych z pomocą AI dla klienta"
+    module: "OC zawodowe"
+    label: optional
+    conditions: "Rozszerzenie lub część zakresu OC zawodowego. Roszczeń dotyczących danych treningowych modelu nie obiecujemy objąć ochroną."
+  - event: "Postępowanie organu nadzoru rynku AI wszczęte przeciwko Twojej firmie: koszty obrony"
+    module: "Postępowania"
+    label: optional
+    conditions: "Gdy polisa ma sekcję postępowań regulacyjnych. Postępowania dotyczące całej branży zwykle poza zakresem."
+  - event: "Kara administracyjna nałożona na podstawie AI Act"
+    module: "Postępowania"
+    label: underwriting
+    conditions: "Tylko w zakresie, w jakim prawo pozwala ją ubezpieczyć. Traktuj tę ochronę jako niepewną."
+  - event: "Szkoda osobowa lub rzeczowa wyrządzona przez produkt z systemem AI"
+    module: "OC za produkt"
+    label: underwriting
+    conditions: "Dla produktów wprowadzonych do obrotu po 8 grudnia 2026 r. także odpowiedzialność według przepisów wdrażających dyrektywę o produktach wadliwych. Zastosowania krytyczne: indywidualna ocena."
+  - event: "Wyciek danych przez chatbota lub agenta AI, także po ataku typu prompt injection"
+    module: "Cyber"
+    label: underwriting
+    conditions: "Zależy od definicji naruszenia prywatności w polisie. Kary tylko w zakresie, w jakim prawo pozwala je ubezpieczyć."
+  - event: "Roszczenie wobec członków zarządu o zaniedbanie nadzoru nad wdrożeniem AI"
+    module: "D&O"
+    label: underwriting
+    conditions: "W polisie [OC członków zarządu](/ubezpieczenia/oc-czlonkow-zarzadu-d-o/), zgodnie z jej warunkami."
+  - event: "Zobowiązania z umowy ponad przepisy: gwarancja zgodności z AI Act, gwarantowana dokładność modelu, kary umowne"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Chyba że odpowiadałbyś także bez takiego zapisu. Lukę zmniejsza negocjacja umowy."
+  - event: "Koszty dostosowania do AI Act: dokumentacja, ocena zgodności, szkolenia, audyty"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "To koszt prowadzenia działalności, a nie szkoda."
+  - event: "Umyślne naruszenie przepisów, np. świadome stosowanie zakazanej praktyki"
+    module: "Wyłączenie"
+    label: excluded
+  - event: "Przetwarzanie danych osobowych bez podstawy prawnej, w tym trenowanie modeli na takich danych"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Podstawa prawna przetwarzania to warunek wstępny, nie przedmiot ochrony."
+  - event: "Spory pracownicze, w tym zarzuty dyskryminacji przez system rekrutacyjny"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Ryzyko omawiamy indywidualnie."
+  - event: "Kary i grzywny, których prawo nie pozwala ubezpieczyć"
+    module: "Wyłączenie"
+    label: excluded
+faq:
+  - q: "Czy AI Act wymaga ubezpieczenia od firmy, która korzysta z ChatGPT albo Copilota?"
+    a: "Nie. Firma, która używa gotowych narzędzi AI, jest w AI Act podmiotem stosującym. Jej obowiązki dotyczą głównie kompetencji pracowników w zakresie AI i przejrzystości przy publikowaniu treści. Warto natomiast sprawdzić, czy polisa OC lub cyber nie wyłącza szkód związanych z AI. Więcej: [AI w firmie](/ubezpieczenie-ai/ai-w-firmie/)."
+  - q: "Kto według AI Act musi mieć ubezpieczenie OC?"
+    a: "Jednostki notyfikowane, czyli niezależne podmioty oceniające zgodność systemów wysokiego ryzyka. Muszą mieć odpowiednie ubezpieczenie odpowiedzialności za swoją działalność, chyba że odpowiedzialność przejmuje państwo członkowskie, w którym mają siedzibę (art. 31). Dla dostawców i podmiotów stosujących AI Act takiego wymogu nie przewiduje."
+  - q: "Czy polisa potwierdza zgodność z AI Act?"
+    a: "Nie. Zgodność to procesy, dokumentacja, nadzór człowieka i rejestrowanie zdarzeń po stronie firmy. Polisa ich nie zastępuje i ich nie potwierdza. Może natomiast sfinansować skutki zdarzeń: roszczenia, koszty obrony, reakcję na incydent, zgodnie ze swoimi warunkami."
+  - q: "Czy ubezpieczenie pokryje karę nałożoną na podstawie AI Act?"
+    a: "Tylko w zakresie, w jakim prawo pozwala taką karę ubezpieczyć, i zgodnie z warunkami polisy. Ubezpieczalność kar administracyjnych bywa ograniczona, więc bezpieczniej założyć, że kara zostanie po stronie firmy. Polisa może natomiast pokryć koszty obrony w postępowaniu, jeśli ma sekcję postępowań regulacyjnych."
+  - q: "Co zmienia wycofanie dyrektywy o odpowiedzialności za AI?"
+    a: "Nie powstały osobne unijne zasady odpowiedzialności cywilnej za AI. Poszkodowany korzysta z prawa krajowego, w Polsce z Kodeksu cywilnego, a przy produktach wprowadzonych do obrotu po 8 grudnia 2026 r. także z przepisów wdrażających nową dyrektywę o produktach wadliwych, która obejmuje systemy AI i ułatwia dowodzenie."
+  - q: "Czy przesunięcie terminów AI Act zmienia coś w polisie?"
+    a: "Polisa nie zależy od dat AI Act. Rozporządzenie (UE) 2026/1744 przesunęło obowiązki dla systemów wysokiego ryzyka na 2 grudnia 2027 r. i 2 sierpnia 2028 r., ale roszczenia za błędy AI mogą pojawić się już dziś na podstawie umów i prawa cywilnego. Przegląd polisy warto zrobić przed wdrożeniem systemu, a nie przed terminem z rozporządzenia."
+sources:
+  - { title: "Rozporządzenie (UE) 2024/1689 (akt w sprawie sztucznej inteligencji), m.in. art. 4, 25, 31, 50 i 99", url: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rozporządzenie (UE) 2026/1744 zmieniające rozporządzenie (UE) 2024/1689 (omnibus AI)", url: "https://eur-lex.europa.eu/eli/reg/2026/1744/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Article 31: Requirements relating to notified bodies", url: "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-31", publisher: "Komisja Europejska, AI Act Service Desk", accessed: 2026-11-02, tier: T1 }
+  - { title: "AI liability directive (Legislative Train Schedule): wycofanie wniosku, Dz.Urz. UE C/2025/5423", url: "https://www.europarl.europa.eu/legislative-train/theme-a-europe-fit-for-the-digital-age/file-ai-liability-directive", publisher: "Parlament Europejski", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rezolucja Parlamentu Europejskiego z 20 października 2020 r. w sprawie systemu odpowiedzialności cywilnej za sztuczną inteligencję (P9_TA(2020)0276)", url: "https://www.europarl.europa.eu/doceo/document/TA-9-2020-0276_EN.html", publisher: "Parlament Europejski", accessed: 2026-11-02, tier: T1 }
+  - { title: "Dyrektywa (UE) 2024/2853 w sprawie odpowiedzialności za produkty wadliwe", url: "https://eur-lex.europa.eu/eli/dir/2024/2853/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ustawa z dnia 3 lipca 2026 r. o systemach sztucznej inteligencji (Dz.U. 2026 poz. 1003)", url: "https://eli.gov.pl/eli/DU/2026/1003/ogl", publisher: "Dziennik Ustaw RP", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ustawa z dnia 23 kwietnia 1964 r. — Kodeks cywilny", url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19640160093", publisher: "ISAP, Kancelaria Sejmu", accessed: 2026-11-02, tier: T1 }
+related:
+  - "/regulacje/ai-act/"
+  - "/ubezpieczenie-ai/ai-w-firmie/"
+  - "/wiedza/pld-a-oc-software-house/"
+  - "/regulacje/pld/"
+  - "/wiedza/llmjacking/"
+changelog:
+  - { rev: "A", date: 2026-11-02, note: "Szkic: stan prawny po zmianach wprowadzonych rozporządzeniem (UE) 2026/1744, po wycofaniu wniosku w sprawie dyrektywy o odpowiedzialności za AI i przed wdrożeniem dyrektywy o produktach wadliwych." }
+---
+
+Krótko: AI Act nie każe kupować polisy. Nie znaczy to jednak, że nie ma znaczenia dla ubezpieczenia. Rozporządzenie wyznacza, czego można oczekiwać od firmy, która tworzy lub stosuje system AI, a te oczekiwania szybko trafiają do umów, przetargów i sporów sądowych. Ten arkusz wyjaśnia, gdzie AI Act styka się z polisą OC, cyber i D&O, i gdzie ubezpieczenie się kończy. Jak polisy traktują ryzyka AI, opisujemy szerzej w przewodniku [ubezpieczenie AI](/ubezpieczenie-ai/), a firmom, które tylko korzystają z gotowych narzędzi, poświęcamy arkusz [AI w firmie](/ubezpieczenie-ai/ai-w-firmie/).
+
+<NoteBlock variant="warning" label="To nie jest porada prawna">
+
+Opisujemy przepisy w uproszczeniu, według stanu prawnego na dzień wskazany wyżej. Jesteśmy brokerem ubezpieczeniowym, nie kancelarią. To, w jakiej roli Twoja firma występuje w AI Act i jakie ma obowiązki, oceni prawnik.
+
+</NoteBlock>
+
+<SectionView label="Definicja" />
+## Czy AI Act nakłada obowiązek ubezpieczenia OC?
+
+Nie. <Term en="Artificial Intelligence Act, AI Act">Akt w sprawie sztucznej inteligencji</Term>, czyli rozporządzenie (UE) 2024/1689, nie wymaga polisy OC od dostawców systemów AI ani od podmiotów, które je stosują. Ubezpieczenia odpowiedzialności rozporządzenie wymaga od jednostek notyfikowanych, czyli niezależnych podmiotów oceniających zgodność systemów wysokiego ryzyka. Muszą one mieć odpowiednie ubezpieczenie odpowiedzialności za swoją działalność, chyba że odpowiedzialność przejmuje państwo członkowskie (art. 31).
+
+Obowiązkowe ubezpieczenie było w unijnej dyskusji. Parlament Europejski w rezolucji z 20 października 2020 r. proponował obowiązkowe OC dla operatorów systemów AI wysokiego ryzyka, na wzór OC komunikacyjnego. Pomysł nie wszedł do AI Act. Komisja Europejska zaproponowała później osobną dyrektywę o odpowiedzialności za AI, ale wycofała wniosek, a zawiadomienie o tym opublikowano w Dzienniku Urzędowym UE w październiku 2025 r.
+
+W Polsce ustawa z dnia 3 lipca 2026 r. o systemach sztucznej inteligencji wyznacza organy nadzoru i zasady postępowań. Za szkody wyrządzone przez AI odpowiada się więc według ogólnych przepisów: z umowy i z czynu niedozwolonego według Kodeksu cywilnego, a przy produktach wprowadzonych do obrotu po 8 grudnia 2026 r. także według przepisów wdrażających nową dyrektywę o produktach wadliwych, która wprost obejmuje systemy AI.
+
+<SectionView label="Źródła wymagań" />
+## Skąd w takim razie wymaganie polisy przy projektach AI?
+
+Najczęściej z umowy. Klient, który kupuje system AI albo usługę opartą na AI, przenosi część ryzyka na dostawcę i chce mieć pewność, że dostawca je udźwignie. Wymaganie polisy pojawia się też w przetargach, w procedurach zakupowych dużych firm i w rozmowach z inwestorami.
+
+<SpecTable
+  caption="Skąd biorą się wymagania ubezpieczeniowe przy AI"
+  columns={["Źródło", "Typowy wymóg", "Na co uważać"]}
+  rows={[
+    ["Umowa z klientem", "OC zawodowe z określonym limitem, czasem także cyber", "Zapisy o zgodności z AI Act jako gwarancji wyniku, a nie staranności"],
+    ["Przetarg lub zakupy dużej firmy", "Polisa na czas umowy i kilka lat po jej zakończeniu", "Ciągłość ochrony przy polisach w zasadzie [claims made](/slownik/#claims-made)"],
+    ["Inwestorzy", "OC zawodowe, cyber, OC członków zarządu", "Opis działalności w polisie musi obejmować AI"],
+    ["Produkt fizyczny z AI", "OC za produkt", "Odpowiedzialność wobec osób fizycznych bez winy według nowych przepisów o produktach wadliwych"]
+  ]}
+  note="Zestawienie ilustracyjne. Wymagania zależą od umowy i branży."
+/>
+
+<SectionView label="Przekrój A–A" />
+## Jak AI Act zmienia ryzyko odpowiedzialności firmy?
+
+AI Act nie daje poszkodowanym nowej podstawy do odszkodowania, ale zmienia przebieg sporu. Wymogi rozporządzenia, takie jak zarządzanie ryzykiem, nadzór człowieka czy rejestrowanie zdarzeń, stają się punktem odniesienia przy ocenie, czy firma działała starannie. Dokumentacja wymagana przez AI Act jest jednocześnie materiałem dowodowym, z którego mogą korzystać obie strony.
+
+Przy produktach wadliwych niespełnienie obowiązkowych wymogów bezpieczeństwa z prawa UE może prowadzić do domniemania wadliwości produktu. To dodatkowy argument, żeby rozmowę o polisie połączyć z przeglądem, jakie systemy AI firma tworzy lub stosuje i w jakiej roli.
+
+<SpecTable
+  caption="Role w AI Act a ryzyko ubezpieczeniowe"
+  columns={["Rola w AI Act", "Typowe roszczenie lub postępowanie", "Część programu, która może odpowiadać"]}
+  rows={[
+    ["Dostawca systemu AI", "Klient traci pieniądze przez błędny wynik systemu. Organ nadzoru sprawdza dokumentację systemu", "OC zawodowe, koszty obrony w postępowaniu, OC za produkt przy szkodach osobowych i rzeczowych"],
+    ["Podmiot stosujący AI", "Klient lub kontrahent zarzuca błąd w usłudze wykonanej z pomocą AI. Wyciek danych przez narzędzie AI", "OC zawodowe lub OC działalności, cyber"],
+    ["Firma, która sprzedaje cudzy system wysokiego ryzyka pod własną nazwą lub istotnie go zmienia", "Może zostać uznana za dostawcę w rozumieniu AI Act (art. 25) i przejąć jego obowiązki", "Jak u dostawcy: opis działalności w polisie trzeba wtedy zaktualizować"],
+    ["Zarząd spółki", "Zarzut zaniedbania nadzoru nad ryzykiem AI", "OC członków zarządu (D&O)"]
+  ]}
+  note="Zestawienie uproszczone. O zakresie decydują warunki konkretnej polisy."
+/>
+
+<SectionView label="Węzeł K" />
+## Czy polisa pokryje karę z AI Act?
+
+Najwyżej w zakresie, w jakim prawo pozwala taką karę ubezpieczyć, i tylko zgodnie z warunkami polisy. Ubezpieczalność kar administracyjnych bywa ograniczona, więc bezpieczniej założyć, że kara zostanie po stronie firmy.
+
+AI Act przewiduje wysokie górne granice kar: do 35 000 000 euro lub 7% światowego rocznego obrotu za stosowanie zakazanych praktyk, do 15 000 000 euro lub 3% obrotu za naruszenie innych obowiązków operatorów i do 7 500 000 euro lub 1% obrotu za podanie organom nieprawdziwych lub niepełnych informacji (art. 99). Dla małych i średnich firm granicą jest niższa z dwóch kwot.
+
+Realniejszą wartość ma ochrona kosztów obrony. Jeśli polisa ma sekcję postępowań regulacyjnych, może pokryć prawników i ekspertów w postępowaniu wszczętym przeciwko Twojej firmie. Postępowania dotyczące całej branży, np. przeglądy sektorowe, są zwykle poza zakresem.
+
+<SectionView label="Warunki brzegowe" />
+## Które zapisy umowy o AI Act mogą wyjść poza polisę?
+
+Te, w których firma obiecuje więcej, niż wymaga od niej prawo. OC zawodowe obejmuje zwykle odpowiedzialność, którą firma ponosi z mocy przepisów. Zobowiązania przyjęte ponad nią są w wielu polisach wyłączone.
+
+Przed podpisaniem umowy zwróć uwagę na:
+
+- **gwarancję zgodności z AI Act** jako zobowiązanie do rezultatu, zamiast zobowiązania do starannego działania zgodnie z przepisami;
+- **gwarantowaną dokładność modelu** albo wskaźniki skuteczności z karą za ich nieosiągnięcie;
+- **zwolnienie klienta z wszelkiej odpowiedzialności** (*indemnity*) bez limitu, także za kary nałożone na klienta;
+- **kary umowne** za opóźnienia we wdrożeniu lub w dokumentacji;
+- **brak ograniczenia odpowiedzialności** lub limit wyższy niż [suma gwarancyjna](/slownik/#suma-gwarancyjna) w polisie.
+
+Prześlij nam fragment umowy przed podpisaniem. Porównamy go z warunkami polisy i wskażemy zapisy, które zostaną bez ochrony.
+
+<SectionView label="Przypadki A-1…A-3" />
+## Jak to wygląda w praktyce?
+
+Trzy scenariusze pokazują, która część programu może zadziałać i gdzie przebiega granica. To scenariusze ilustracyjne, nie opisy prawdziwych szkód.
+
+<NoteBlock variant="scenario" label="A-1 · Scenariusz ilustracyjny · dostawca systemu AI">
+
+Software house dostarcza firmie pożyczkowej system oceny zdolności kredytowej klientów, czyli system wysokiego ryzyka w rozumieniu AI Act. W 2028 r. błąd w danych wejściowych powoduje masowe błędne odmowy. Firma pożyczkowa traci przychody i żąda odszkodowania, a organ nadzoru wszczyna postępowanie wobec dostawcy.
+
+**Co może zadziałać:** OC zawodowe, jeśli polisa nie wyłącza AI, a opis działalności obejmuje dostarczanie systemów AI. Koszty obrony w postępowaniu, jeśli polisa ma sekcję postępowań regulacyjnych.
+
+**Gdzie granica:** kara tylko w zakresie, w jakim prawo pozwala ją ubezpieczyć. Jeśli umowa gwarantowała zgodność z AI Act jako rezultat, część roszczenia może wyjść poza polisę.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="A-2 · Scenariusz ilustracyjny · dział HR">
+
+W 2028 r. firma produkcyjna używa w rekrutacji gotowego narzędzia AI, które ocenia kandydatów. Kandydat zarzuca dyskryminację i żąda odszkodowania, a pracownicy pytają, dlaczego nie poinformowano ich o wdrożeniu systemu.
+
+**Co może zadziałać:** w ograniczonym zakresie. Polisy OC zawodowego i cyber zwykle wyłączają spory pracownicze i zarzuty dyskryminacji. Część programów D&O lub osobnych polis może obejmować roszczenia związane z praktykami zatrudnienia, po ocenie ryzyka.
+
+**Gdzie granica:** obowiązki podmiotu stosującego system wysokiego ryzyka w rekrutacji, m.in. nadzór człowieka i informowanie pracowników, firma musi spełnić sama. Polisa ich nie zastąpi.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="A-3 · Scenariusz ilustracyjny · agencja marketingowa">
+
+Agencja publikuje w kampanii klienta wygenerowany przez AI wizerunek rozpoznawalnej osoby, bez jej zgody i bez oznaczenia, że to treść wygenerowana. Osoba żąda zadośćuczynienia za naruszenie dóbr osobistych.
+
+**Co może zadziałać:** OC zawodowe agencji, jeśli obejmuje naruszenie dóbr osobistych w treściach tworzonych dla klientów, wraz z kosztami obrony.
+
+**Gdzie granica:** kara za brak oznaczenia treści typu deepfake tylko w zakresie, w jakim prawo pozwala ją ubezpieczyć. Treści, które agencja publikuje we własnym imieniu jako wydawca, mogą wymagać [OC mediów](/ubezpieczenia/oc-mediow/).
+
+</NoteBlock>
+
+<SectionView label="Zestawienie elementów" />
+## Co polisa może sfinansować przy ryzykach związanych z AI Act?
+
+Polisa nie płaci za zgodność, ale za skutki zdarzeń: roszczenia klientów i osób trzecich, koszty obrony, reakcję na incydent. Pozycje związane z AI mają częściej etykietę „zależy od oceny ryzyka”, bo wiele polis o AI milczy albo ją ogranicza.
+
+<BOM
+  id="tabela-zakresu"
+  caption="Tabela zakresu: AI Act a polisa"
+  prefix="A"
+  rows={frontmatter.coverage.filter((r) => r.module !== "Wyłączenie")}
+/>
+
+<SectionView label="Mapa luk" />
+## Czego polisa nie obejmuje?
+
+Najważniejsze granice to koszty dostosowania do przepisów, zobowiązania przyjęte w umowach i kary, których prawo nie pozwala ubezpieczyć.
+
+<BOM
+  caption="Wyłączenia i ograniczenia przy ryzykach związanych z AI Act"
+  prefix="X"
+  headers={{ conditions: "Uwagi" }}
+  rows={frontmatter.coverage.filter((r) => r.module === "Wyłączenie").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Wymiarowanie" />
+## Od czego zależą składka i dostępność ochrony przy AI?
+
+Składkę ustala ubezpieczyciel na podstawie wniosku. Nie podajemy cenników. We wnioskach coraz częściej pojawiają się pytania o AI, a odpowiedzi muszą być prawdziwe: zatajenie istotnych informacji może ograniczyć wypłatę. Ubezpieczyciel patrzy zwykle na:
+
+- **rolę firmy:** czy tworzy systemy AI, wdraża je u klientów, czy tylko z nich korzysta;
+- **zastosowania:** czy system decyduje o ludziach, np. w kredytach, rekrutacji, zdrowiu, albo steruje urządzeniami;
+- **nadzór i dokumentację:** kto sprawdza wyniki, czy zdarzenia są rejestrowane, jak testuje się model;
+- **dane:** skąd pochodzą dane treningowe i wejściowe, czy są wśród nich dane osobowe;
+- **umowy:** limity odpowiedzialności, zapisy o zgodności z przepisami, rynki klientów, zwłaszcza USA;
+- **historię:** roszczenia i incydenty związane z AI.
+
+Do pierwszej rozmowy wystarczy krótki opis systemów AI w firmie, ich zastosowań i klientów, wzór umowy oraz informacja o obecnej polisie.

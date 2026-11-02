@@ -1,0 +1,75 @@
+/*
+ * Design system „Arkusz” — tokeny (PLAN §5.2–5.3, kierunek B: precyzyjny szkicownik).
+ * Kolor tylko jako tusz na białym papierze. Jeden kolor sygnałowy (--signal):
+ * wypełniony wyłącznie w jednym CTA w treści na widok i w pierścieniu fokusu.
+ */
+:root {
+  /* papier */
+  --paper: #ffffff;
+  --paper-inset: #f7f8fa;
+  /* siatka i hairline'y (nigdy tekst) */
+  --grid-minor: #f0f2f5;
+  --grid-major: #e3e7ec;
+  --rule: #c9d0d8;
+  /* tusz */
+  --ink: #16191d; /* 17,6:1 */
+  --ink-2: #3b424c;
+  --ink-3: #5e6672; /* 5,8:1 — najjaśniejszy tekst */
+  --ink-4: #8a919c; /* linie ukryte, kreskowanie — nie tekst */
+  --graphite: #9aa0a8; /* warstwa konstrukcji (wariant B) */
+  /* niebieski: linki i wymiary */
+  --blue: #1f4bc2; /* 7,4:1 */
+  --blue-construct: #9db4e6;
+  --blue-wash: #eef3fc;
+  /* sygnał (redline) */
+  --signal: #cc3d0a; /* 4,95:1 */
+  --signal-hover: #b83a0b;
+  --signal-wash: #fdf1ec;
+
+  /* typografia */
+  --font-sans: 'Archivo', 'Archivo Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-accent: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  --fs-body: 1.125rem; /* 18px */
+  --lh-body: 1.65;
+  --fs-lead: clamp(1.1875rem, 1.05rem + 0.5vw, 1.375rem);
+  --fs-small: 0.9375rem; /* 15px */
+  --fs-mono: 0.8125rem; /* 13px */
+  --fs-label: 0.75rem; /* 12px */
+  --fs-h1: clamp(2.125rem, 1.6rem + 2.4vw, 3.75rem); /* 34–60px */
+  --fs-display: clamp(3rem, 2rem + 4.4vw, 6rem); /* 48–96px */
+  --fs-h2: clamp(1.625rem, 1.35rem + 1.1vw, 2.25rem);
+  --fs-h3: clamp(1.25rem, 1.15rem + 0.4vw, 1.4375rem);
+  --tracking-tight: -0.018em;
+  --tracking-label: 0.08em;
+
+  /* skala odstępów 8 px */
+  --s-0: 4px;
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-5: 40px;
+  --s-6: 48px;
+  --s-7: 56px;
+  --s-8: 64px;
+  --s-10: 80px;
+  --s-12: 96px;
+  --s-16: 128px;
+
+  /* siatka 12 kolumn */
+  --container: 1312px;
+  --gutter: 24px;
+  --pad-x: clamp(16px, 4vw, 48px);
+  --measure: 68ch;
+
+  /* linie (ISO 128) */
+  --line-object: 1.5px;
+  --line-thin: 1px;
+  --line-hair: 0.75px;
+
+  --radius: 0;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --header-h: 72px;
+}

@@ -1,0 +1,52 @@
+---
+/**
+ * Odznaka zakresu — 4 etykiety warunkowe (PLAN §5.3). Bez kolorów: różnicuje styl linii.
+ *   typical       ZWYKLE W ZAKRESIE – ZALEŻY OD POLISY      (linia ciągła)
+ *   optional      ROZSZERZENIE OPCJONALNE                    (linia kreskowa)
+ *   underwriting  ZALEŻY OD OCENY RYZYKA                     (linia kropkowa)
+ *   excluded      ZWYKLE WYŁĄCZONE – ZALEŻY OD POLISY        (kreskowanie)
+ */
+import { COVERAGE_LABELS, type CoverageKey } from '../lib/coverage.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  label: CoverageKey;
+}
+const { label } = Astro.props;
+const text = COVERAGE_LABELS[label];
+if (!text) throw new Error(`CoverageBadge: nieznana etykieta „${label}”`);
+---
+
+<span class:list={['badge', `badge--${label}`]}>{polishText(text)}</span>
+
+<style>
+  .badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 3px 7px 2px;
+    border: 1px solid var(--ink);
+    white-space: normal;
+    max-width: 26ch;
+  }
+  .badge--optional {
+    border-style: dashed;
+  }
+  .badge--underwriting {
+    border-style: dotted;
+    border-width: 1.5px;
+  }
+  .badge--excluded {
+    color: var(--ink-2);
+    border-color: var(--ink-3);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent 0 5px,
+      var(--grid-major) 5px 6px
+    );
+  }
+</style>

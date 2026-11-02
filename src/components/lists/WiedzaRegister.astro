@@ -1,0 +1,115 @@
+---
+/**
+ * Rejestr arkuszy (/wiedza/): tabela Nr · Tytuł · Hub · Rew. · [.md].
+ * Gdy brak opublikowanych artykułów: komunikat „Pierwsze arkusze w przygotowaniu” + lista filarów.
+ */
+import { getRoutes, type ArticleEntry, type PillarEntry } from '../../lib/routes.ts';
+import { fmtDate, isoDate } from '../../lib/format.ts';
+import { mdPathFor } from '../../lib/site.ts';
+import { polishText } from '../../lib/typography/polish.ts';
+
+const routes = await getRoutes();
+const articles = routes
+  .filter((r) => r.kind === 'article' || r.kind === 'regulation')
+  .sort((a, b) => b.entry.data.updated.getTime() - a.entry.data.updated.getTime());
+const byOrder = (a: (typeof routes)[number], b: (typeof routes)[number]) =>
+  (a.entry as PillarEntry).data.order - (b.entry as PillarEntry).data.order;
+// filary; segmenty i pod-huby (id z „/”) jako podpunkty filaru-rodzica
+const pillars = routes.filter((r) => r.kind === 'pillar' && !r.entry.id.includes('/')).sort(byOrder);
+const childrenOf = (parent: (typeof routes)[number]) =>
+  routes.filter((r) => r.kind === 'pillar' && r.entry.id.startsWith(parent.entry.id + '/')).sort(byOrder);
+const titleOf = (path: string) => routes.find((r) => r.path === path)?.entry.data.title ?? path;
+---
+
+{
+  articles.length > 0 ? (
+    <div class="table-wrap register" role="region" tabindex="0" aria-label="Rejestr arkuszy">
+      <table>
+        <caption>Rejestr arkuszy</caption>
+        <thead>
+          <tr>
+            <th scope="col">Nr</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Hub</th>
+            <th scope="col">Rew.</th>
+            <th scope="col">Data</th>
+            <th scope="col" data-md-skip>Format</th>
+          </tr>
+        </thead>
+        <tbody>
+          {articles.map((r) => {
+            const hub = r.kind === 'article' ? (r.entry as ArticleEntry).data.hub : '/regulacje/';
+            return (
+              <tr>
+                <td class="mono">{r.entry.data.sheet}</td>
+                <th scope="row">
+                  <a href={r.path}>{polishText(r.entry.data.title)}</a>
+                  {r.draft && <span class="mono register__draft"> · SZKIC</span>}
+                </th>
+                <td>{r.kind === 'article' ? <a href={hub}>{titleOf(hub)}</a> : 'Regulacje'}</td>
+                <td class="mono">{r.entry.data.revision}</td>
+                <td class="mono">
+                  <time datetime={isoDate(r.entry.data.updated)}>{fmtDate(r.entry.data.updated)}</time>
+                </td>
+                <td class="mono" data-md-skip>
+                  {r.indexable ? <a href={mdPathFor(r.path)} type="text/markdown">[.md]</a> : '—'}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <section class="register-empty" aria-labelledby="w-przygotowaniu">
+      <h2 id="w-przygotowaniu">Pierwsze arkusze w przygotowaniu</h2>
+      <p>Artykuły publikujemy po weryfikacji źródeł i akceptacji autora. Do tego czasu najważniejsze odpowiedzi znajdziesz na stronach głównych obszarów:</p>
+      <ul>
+        {pillars.map((r) => (
+          <li>
+            <a href={r.path}>{polishText(r.entry.data.title)}</a>
+            {childrenOf(r).length > 0 && (
+              <ul>
+                {childrenOf(r).map((c) => (
+                  <li>
+                    <a href={c.path}>{polishText(c.entry.data.title)}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+        <li>
+          <a href="/slownik/">Słownik pojęć ubezpieczeniowych</a>
+        </li>
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .register {
+    margin-top: var(--s-6);
+  }
+  .register__draft {
+    color: var(--signal);
+  }
+  .register-empty {
+    max-width: var(--measure);
+    margin-top: var(--s-8);
+  }
+  .register-empty h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+  .register-empty p,
+  .register-empty ul {
+    margin-top: var(--s-2);
+  }
+  .register-empty ul {
+    padding-left: 1.2em;
+  }
+  .register-empty ul ul {
+    margin-top: var(--s-1);
+  }
+</style>

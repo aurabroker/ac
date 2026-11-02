@@ -1,0 +1,74 @@
+---
+/**
+ * Artykuł / regulacja (PLAN §6.4): okruszki → H1 → tabliczka → „W skrócie” → „Stan prawny na”
+ * → treść (definicja, H2-pytania, scenariusze, „Czego polisa nie obejmuje”, „Od czego zależy składka”)
+ * → tabela zakresu → kontakt (mailto z numerem arkusza) → FAQ → źródła → autor + nota → rejestr zmian
+ * → powiązane arkusze → pełna tabliczka → formuła (c).
+ */
+import Sheet from './Sheet.astro';
+import SheetHead from '../components/SheetHead.astro';
+import SheetFoot from '../components/SheetFoot.astro';
+import DocBody from '../components/DocBody.astro';
+import AnnotatedFigure from '../components/AnnotatedFigure.astro';
+import BOM from '../components/BOM.astro';
+import FAQ from '../components/FAQ.astro';
+import Sources from '../components/Sources.astro';
+import Disclosure from '../components/Disclosure.astro';
+import ContactChannels from '../components/ContactChannels.astro';
+import RelatedSheets from '../components/lists/RelatedSheets.astro';
+import { getRoute, type ArticleEntry, type RegulationEntry } from '../lib/routes.ts';
+import { polishText } from '../lib/typography/polish.ts';
+import type { PageContext } from '../lib/page.ts';
+
+interface Props {
+  ctx: PageContext;
+  headings: { depth: number; slug: string; text: string }[];
+}
+const { ctx, headings } = Astro.props;
+const entry = ctx.route.entry as ArticleEntry | RegulationEntry;
+const d = entry.data;
+const hubPath = 'hub' in d ? d.hub : undefined;
+const hub = hubPath ? await getRoute(hubPath) : undefined;
+const tocExtra = [
+  ...(d.coverage.length && d.coveragePlacement === 'auto' ? [{ slug: 'tabela-zakresu', text: 'Tabela zakresu' }] : []),
+  ...(d.faq.length ? [{ slug: 'faq', text: 'Najczęściej zadawane pytania' }] : []),
+  ...(d.sources.length ? [{ slug: 'zrodla', text: 'Źródła' }] : []),
+];
+---
+
+<Sheet ctx={ctx} kind={ctx.route.kind} ogType="article">
+  <div class="container">
+    <SheetHead ctx={ctx} />
+    <DocBody headings={headings} tocExtra={tocExtra}>
+      {
+        hub && (
+          <p class="hub-link">
+            Ten arkusz jest częścią przewodnika: <a href={hub.path}>{polishText(hub.entry.data.title)}</a>.
+          </p>
+        )
+      }
+      {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} />}
+      <div class="prose"><slot /></div>
+      {
+        d.coverage.length > 0 && d.coveragePlacement === 'auto' && (
+          <BOM id="tabela-zakresu" caption={d.coverageCaption ?? 'Tabela zakresu'} rows={d.coverage} />
+        )
+      }
+      <ContactChannels sheet={d.sheet} checklist={false} />
+      <FAQ items={d.faq} />
+      <Sources items={d.sources} />
+      <SheetFoot ctx={ctx} />
+      <RelatedSheets paths={d.related} />
+      <Disclosure show={['c']} />
+    </DocBody>
+  </div>
+</Sheet>
+
+<style>
+  .hub-link {
+    max-width: var(--measure);
+    margin-bottom: var(--s-4);
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+</style>

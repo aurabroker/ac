@@ -1,0 +1,191 @@
+---
+/**
+ * FigPillarCyber — F-CY: rzut firmy (ściany w przekroju) z drogą incydentu jako jedyną linią redline:
+ * zdarzenie z zewnątrz → stanowisko → drzwi serwerowni → szafa z danymi. Wokół: reakcja na incydent,
+ * odtworzenie z kopii poza firmą, roszczenia osób trzecich, opcjonalnie wyłudzony przelew (linia ukryta).
+ * U dołu oś czasu przestoju: franszyza czasowa i okres odszkodowawczy (wymiary).
+ * Właściciel: agent „figures”. Treść merytoryczna: legenda HTML w FIGURE_META (./index.ts).
+ */
+import FigFrame from './FigFrame.astro';
+import { arc, dimH, hatch, head, p, poly, seg, type Pt } from './draw.ts';
+
+interface Props {
+  labelledby?: string;
+  title?: string;
+}
+const { labelledby, title = 'Rzut: droga incydentu cyber przez firmę i oś czasu przestoju' } = Astro.props;
+const desc =
+  'Rzut budynku firmy z kreskowanymi ścianami: po lewej biuro z czterema biurkami, po prawej serwerownia z trzema szafami. ' +
+  'Czerwona linia biegnie od punktu zdarzenia na zewnątrz przez otwór w ścianie, obok biurka, przez drzwi do szafy serwerowej. ' +
+  'Na zewnątrz prostokąty: zespół reagowania, kopia zapasowa ze strzałką odtworzenia, osoby trzecie i przelew połączony linią przerywaną. ' +
+  'U dołu oś czasu z odcinkiem kreskowanym i dwoma niebieskimi wymiarami.';
+
+// budynek (ściany w przekroju)
+const B0 = 170;
+const B1 = 590;
+const T0 = 64;
+const T1 = 264;
+const W = 8;
+const gapA = [104, 134]; // otwór w lewej ścianie (łącze)
+const PX = 416; // ściana działowa
+const door = [196, 232];
+const wallPolys: Pt[][] = [
+  [[B0, T0], [B1, T0], [B1, T0 + W], [B0, T0 + W]],
+  [[B0, T1 - W], [B1, T1 - W], [B1, T1], [B0, T1]],
+  [[B0, T0 + W], [B0 + W, T0 + W], [B0 + W, gapA[0]], [B0, gapA[0]]],
+  [[B0, gapA[1]], [B0 + W, gapA[1]], [B0 + W, T1 - W], [B0, T1 - W]],
+  [[B1 - W, T0 + W], [B1, T0 + W], [B1, T1 - W], [B1 - W, T1 - W]],
+  [[PX, T0 + W], [PX + W, T0 + W], [PX + W, door[0]], [PX, door[0]]],
+  [[PX, door[1]], [PX + W, door[1]], [PX + W, T1 - W], [PX, T1 - W]],
+];
+const walls = wallPolys.map((w) => poly(w, true)).join('');
+const wallHatch = wallPolys.map((w) => hatch(w, 4, 45)).join('');
+const winSym = seg([B0 + 2.5, gapA[0]], [B0 + 2.5, gapA[1]]) + seg([B0 + 5.5, gapA[0]], [B0 + 5.5, gapA[1]]);
+const doorLeaf = seg([PX + W, door[0]], [PX + W + 36, door[0]]) + arc(PX + W, door[0], 36, 36, 0, 90);
+
+// wyposażenie: biurka i szafy serwerowe
+const desks: Pt[] = [[200, 92], [300, 92], [200, 198], [300, 198]];
+const deskPath = desks
+  .map(([x, y]) => poly([[x, y], [x + 56, y], [x + 56, y + 26], [x, y + 26]], true) + seg([x + 16, y + 6], [x + 40, y + 6]))
+  .join('');
+const racks = [442, 480, 518].map((x) => ({ x, y: 86 }));
+const rackPath = racks
+  .map(({ x, y }) => poly([[x, y], [x + 28, y], [x + 28, y + 52], [x, y + 52]], true) + [10, 18, 26, 34, 42].map((d) => seg([x + 5, y + d], [x + 23, y + d])).join(''))
+  .join('');
+
+// droga incydentu (jedyny redline: łamana + grot w jednej ścieżce)
+const route: Pt[] = [[60, 119], [184, 119], [232, 132], [PX + 4, 214], [470, 214], [494, 146]];
+const [ax, ay] = route[route.length - 2];
+const [bx, by] = route[route.length - 1];
+const ang = (Math.atan2(by - ay, bx - ax) * 180) / Math.PI;
+const tipX = bx + 3 * Math.cos((ang * Math.PI) / 180);
+const tipY = by + 3 * Math.sin((ang * Math.PI) / 180);
+const chev = (() => {
+  const a = (ang * Math.PI) / 180;
+  const L = 10;
+  const s = 0.42;
+  const l: Pt = [tipX - L * Math.cos(a - s), tipY - L * Math.sin(a - s)];
+  const r: Pt = [tipX - L * Math.cos(a + s), tipY - L * Math.sin(a + s)];
+  return `M${p(l[0], l[1])}L${p(tipX, tipY)}L${p(r[0], r[1])}`;
+})();
+const incident = poly(route) + `L${p(tipX, tipY)}` + chev;
+const origin = seg([52, 111], [68, 127]) + seg([52, 127], [68, 111]);
+
+// otoczenie: zespół reagowania, kopia zapasowa, osoby trzecie, przelew
+const box = (x0: number, y0: number, x1: number, y1: number) => poly([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], true);
+const ir = box(250, 14, 400, 42);
+const backup = box(650, 100, 768, 164);
+const disks = [664, 690].map((x) => box(x, 112, x + 18, 140)).join('');
+const third = box(650, 212, 768, 252);
+const bank = box(36, 212, 120, 244);
+const irArrow = seg([325, 42], [325, 80]);
+const restore = seg([650, 124], [B1 + 8, 124]);
+const claims = seg([B1 + 2, 232], [642, 232]);
+const crime = poly([[200, 211], [150, 211], [128, 228]]);
+
+// oś czasu przestoju
+const tl0 = 200;
+const tlF = 280;
+const tl1 = 560;
+const yT = 322;
+const axis = seg([B0, yT], [602, yT]);
+const bar = box(tl0, yT - 7, tl1, yT + 7);
+const barHatch = hatch([[tl0, yT - 7], [tlF, yT - 7], [tlF, yT + 7], [tl0, yT + 7]], 4, 45);
+const dimY = 296;
+const dF = dimH(tl0, tlF, dimY, 6);
+const dP = dimH(tlF, tl1, dimY, 6);
+const ext = [tl0, tlF, tl1].map((x) => seg([x, yT - 10], [x, dimY - 6])).join('');
+
+// odnośniki
+const R = 11;
+type Bal = { n: number; x: number; y: number; from?: Pt; main?: string; sub?: string };
+const bals: Bal[] = [
+  { n: 1, x: 40, y: 40, from: [56, 110], main: 'INCYDENT', sub: 'ATAK · NARUSZENIE DANYCH' },
+  { n: 2, x: 420, y: 28, from: [400, 28], main: 'REAKCJA NA INCYDENT', sub: 'IR · PRAWNIK · POWIADOMIENIA' },
+  { n: 3, x: 709, y: 82, from: [709, 100] },
+  { n: 4, x: 40, y: yT, main: 'PRZESTÓJ', sub: 'CZAS' },
+  { n: 5, x: 709, y: 274, from: [709, 252] },
+  { n: 6, x: 78, y: 266, from: [78, 244] },
+];
+const leader = (b: Bal) => {
+  if (!b.from) return '';
+  const dx = b.x - b.from[0];
+  const dy = b.y - b.from[1];
+  const L = Math.hypot(dx, dy);
+  return seg(b.from, [b.x - (dx / L) * R, b.y - (dy / L) * R]);
+};
+const leaders = bals.map(leader).join('');
+---
+
+<FigFrame viewBox="0 0 800 352" labelledby={labelledby} title={title} desc={desc}>
+  <!-- konstrukcja: osie modułu, linie wymiarowe pomocnicze -->
+  <path class="c" d={ext} pathLength="1" />
+
+  <!-- rzut: ściany w przekroju, otwór, drzwi -->
+  <path class="f" d={box(B0, T0, B1, T1)} />
+  <path class="x fx" d={wallHatch} />
+  <path class="o" d={walls} pathLength="1" />
+  <path class="o2" d={winSym + doorLeaf} pathLength="1" />
+  <path class="o2" d={deskPath} pathLength="1" />
+  <path class="o2" d={rackPath} pathLength="1" />
+  <text class="t t-s" x={B0 + W + 10} y={T1 - W - 10}>BIURO</text>
+  <text class="t t-s" x={PX + W + 12} y={T1 - W - 10}>SERWEROWNIA</text>
+  <text class="t t-s" x={210} y={190}>KSIĘGOWOŚĆ</text>
+
+  <!-- otoczenie -->
+  <path class="f" d={ir + backup + third + bank} />
+  <path class="o2" d={ir + backup + third} pathLength="1" />
+  <path class="h" d={bank + crime} />
+  <path class="o2" d={disks} pathLength="1" />
+  <path class="o2" d={irArrow + restore + claims} pathLength="1" />
+  <path class="ah2 fx" d={head(325, 86, 90, 8, 2.3) + head(B1 + 2, 124, 180, 8, 2.3) + head(650, 232, 0, 8, 2.3) + head(124, 225, 140, 8, 2.3)} />
+  <text class="t t-s t-m" x="325" y="32">ZESPÓŁ IR</text>
+  <text class="t t-s t-m" x="709" y="154">KOPIA ZAPASOWA</text>
+  <text class="t t-s t-m" x="709" y="229">OSOBY TRZECIE</text>
+  <text class="t t-s t-m" x="709" y="242">ROSZCZENIA</text>
+  <text class="t t-s t-m" x="78" y="226">PRZELEW</text>
+  <text class="t t-s t-m" x="78" y="238">OPCJA</text>
+  <text class="t t-s" x="74" y="106">ŁĄCZE · POCZTA</text>
+
+  <!-- droga incydentu: jedyny redline -->
+  <path class="o2" d={origin} pathLength="1" />
+  <path class="sig" d={incident} pathLength="1" />
+
+  <!-- oś czasu przestoju -->
+  <path class="o2" d={axis} pathLength="1" />
+  <path class="ah2 fx" d={head(608, yT, 0, 8, 2.3)} />
+  <path class="f" d={bar} />
+  <path class="x fx" d={barHatch} />
+  <path class="o" d={bar + seg([tlF, yT - 7], [tlF, yT + 7])} pathLength="1" />
+  <path class="d" d={dF.line + dP.line} pathLength="1" />
+  <path class="d-fill fx" d={dF.heads + dP.heads} />
+  <text class="t-dim" x={(tl0 + tlF) / 2} y={dimY - 5}>FRANSZYZA</text>
+  <text class="t-dim" x={(tlF + tl1) / 2} y={dimY - 5}>OKRES ODSZKODOWAWCZY</text>
+  <text class="t t-s t-m" x={tl0} y={yT + 22}>T0 · INCYDENT</text>
+  <text class="t t-s" x="616" y={yT + 4}>t</text>
+
+  <!-- odnośniki -->
+  <path class="l" d={leaders} pathLength="1" />
+  {
+    bals.map((b) => (
+      <>
+        <g class="bal">
+          <circle class="b" cx={b.x} cy={b.y} r={R} pathLength="1" />
+          <text class="t-num" x={b.x} y={b.y}>
+            {b.n}
+          </text>
+        </g>
+        {b.main && (
+          <text class="t t-b" x={b.x + 18} y={b.y - 1}>
+            {b.main}
+          </text>
+        )}
+        {b.sub && (
+          <text class="t t-s" x={b.x + 18} y={b.y + 11}>
+            {b.sub}
+          </text>
+        )}
+      </>
+    ))
+  }
+</FigFrame>

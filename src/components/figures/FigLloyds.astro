@@ -1,0 +1,156 @@
+---
+/**
+ * FigLloyds — F-LL: droga ryzyka na rynek. Łańcuch: klient → broker klienta → pośrednik lub partner underwritingowy
+ * (zwykłe, obowiązkowe ogniwo — broker klienta nie plasuje bezpośrednio w sali) → rzut abstrakcyjnej sali
+ * underwritingowej (stanowiska, trasa plasowania: prowadzący i współubezpieczyciele) → pasek udziałów w polisie (100%).
+ * Bez logo i nazw własnych.
+ * Właściciel: agent „figures”. Treść merytoryczna: legenda HTML w FIGURE_META (./index.ts).
+ */
+import FigFrame from './FigFrame.astro';
+import { circle, dimH, f, hatch, head, p, poly, seg, type Pt } from './draw.ts';
+
+interface Props {
+  labelledby?: string;
+  title?: string;
+}
+const { labelledby, title = 'Schemat: droga ryzyka od klienta przez brokera do ubezpieczycieli' } = Astro.props;
+const desc =
+  'Po lewej trzy prostokąty połączone strzałkami w jednym łańcuchu: klient, broker klienta oraz pośrednik lub partner ' +
+  'underwritingowy. Dopiero od pośrednika strzałka prowadzi do rzutu sali z dwunastoma stanowiskami; trasa przechodzi ' +
+  'przejściami i zatrzymuje się przy trzech stanowiskach, z których pierwsze jest kreskowane. Pod salą pasek ' +
+  'podzielony na trzy udziały, które razem dają sto procent.';
+
+const box = (x0: number, y0: number, x1: number, y1: number) => poly([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], true);
+
+// łańcuch plasowania
+const yc = 185;
+const chain = [
+  { x0: 20, x1: 100, a: 'KLIENT', b: 'RYZYKO', n: 1, dashed: false },
+  { x0: 132, x1: 262, a: 'BROKER KLIENTA', b: 'ANALIZA · OFERTY', n: 2, dashed: false },
+  { x0: 296, x1: 398, a: 'POŚREDNIK', b: 'LUB PARTNER UW', n: 3, dashed: false },
+];
+const chainBoxes = chain.map((c) => ({ ...c, d: box(c.x0, yc - 20, c.x1, yc + 20) }));
+const arrows = seg([100, yc], [124, yc]) + seg([262, yc], [288, yc]) + seg([398, yc], [424, yc]);
+const arrowHeads = head(131, yc, 0, 8, 2.3) + head(295, yc, 0, 8, 2.3) + head(431, yc, 0, 8, 2.3);
+
+// sala: ściana z wejściem, stanowiska 3 × 4
+const RX0 = 432;
+const RX1 = 748;
+const RY0 = 44;
+const RY1 = 250;
+const room = `M${p(RX0, yc - 18)}V${f(RY0)}H${f(RX1)}V${f(RY1)}H${f(RX0)}V${f(yc + 18)}`;
+const cols = [470, 540, 610, 680];
+const rows = [80, 140, 200];
+const BW = 46;
+const BH = 30;
+const isLead = (c: number, r: number) => c === 0 && r === 0;
+const isFollow = (c: number, r: number) => (c === 2 && r === 0) || (c === 3 && r === 2);
+const desks: { d: string; lead: boolean; follow: boolean; x: number; y: number }[] = [];
+cols.forEach((x, ci) =>
+  rows.forEach((y, ri) =>
+    desks.push({
+      d: box(x, y, x + BW, y + BH) + seg([x + 6, y + BH - 7], [x + BW - 6, y + BH - 7]),
+      lead: isLead(ci, ri),
+      follow: isFollow(ci, ri),
+      x,
+      y,
+    }),
+  ),
+);
+const lead = desks.find((d) => d.lead)!;
+const leadHatch = hatch([[lead.x, lead.y], [lead.x + BW, lead.y], [lead.x + BW, lead.y + BH - 7], [lead.x, lead.y + BH - 7]], 4, 45);
+
+// trasa plasowania przejściami + odgałęzienia do stanowisk
+const route = poly([[RX0, yc], [451, yc], [451, 125], [668, 125], [668, yc], [703, yc]]);
+const spurs = seg([493, 125], [493, 116]) + seg([633, 125], [633, 116]) + seg([703, yc], [703, 194]);
+const spurHeads = head(493, 111, 270, 6, 1.9) + head(633, 111, 270, 6, 1.9) + head(703, 199, 90, 6, 1.9);
+const stops = circle(493, 125, 2.6) + circle(633, 125, 2.6) + circle(703, yc, 2.6);
+
+// udziały w polisie (100%)
+const S0 = 470;
+const S1 = 726;
+const yS = 292;
+const shares = [0.4, 0.35, 0.25];
+const edges = shares.reduce<number[]>((acc, s) => [...acc, acc[acc.length - 1] + s * (S1 - S0)], [S0]);
+const bar = box(S0, yS, S1, yS + 14) + edges.slice(1, -1).map((x) => seg([x, yS], [x, yS + 14])).join('');
+const barHatch = hatch([[edges[0], yS], [edges[1], yS], [edges[1], yS + 14], [edges[0], yS + 14]], 4, 45);
+const dimY = 326;
+const shareDims = shares.map((_, i) => dimH(edges[i], edges[i + 1], dimY, 6));
+const shareExt = edges.map((x) => seg([x, yS + 17], [x, dimY + 5])).join('');
+const shareLabels = ['PROWADZĄCY', 'UDZIAŁ', 'UDZIAŁ'];
+
+// odnośniki
+const R = 11;
+type Bal = { n: number; x: number; y: number; from: Pt };
+const bals: Bal[] = [
+  ...chain.map((c) => ({ n: c.n, x: (c.x0 + c.x1) / 2, y: 244, from: [(c.x0 + c.x1) / 2, yc + 20] as Pt })),
+  { n: 4, x: 493, y: 22, from: [493, 80] },
+  { n: 5, x: 633, y: 22, from: [633, 80] },
+  { n: 6, x: 772, y: yS + 7, from: [S1 + 2, yS + 7] },
+];
+const leaders = bals
+  .map((b) => {
+    const dx = b.x - b.from[0];
+    const dy = b.y - b.from[1];
+    const L = Math.hypot(dx, dy);
+    return seg(b.from, [b.x - (dx / L) * R, b.y - (dy / L) * R]);
+  })
+  .join('');
+---
+
+<FigFrame viewBox="0 0 800 340" labelledby={labelledby} title={title} desc={desc}>
+  <!-- konstrukcja: oś przepływu, rzutowanie udziałów -->
+  <line class="ax" x1="16" y1={yc} x2={RX0 - 4} y2={yc} />
+  <path class="c" d={shareExt} pathLength="1" />
+
+  <!-- łańcuch plasowania -->
+  {chainBoxes.map((c) => <path class="f" d={c.d} />)}
+  <path class="o" d={chainBoxes.filter((c) => !c.dashed).map((c) => c.d).join('')} pathLength="1" />
+  <path class="o" d={arrows} pathLength="1" />
+  <path class="ah fx" d={arrowHeads} />
+  {
+    chainBoxes.map((c) => (
+      <>
+        <text class="t t-b t-m" x={(c.x0 + c.x1) / 2} y={yc - 2}>
+          {c.a}
+        </text>
+        <text class="t t-s t-m" x={(c.x0 + c.x1) / 2} y={yc + 11}>
+          {c.b}
+        </text>
+      </>
+    ))
+  }
+
+  <!-- sala: stanowiska, trasa plasowania -->
+  <path class="o" d={room} pathLength="1" />
+  <path class="o2" d={desks.filter((d) => !d.lead && !d.follow).map((d) => d.d).join('')} pathLength="1" />
+  <path class="f" d={desks.filter((d) => d.lead || d.follow).map((d) => box(d.x, d.y, d.x + BW, d.y + BH)).join('')} />
+  <path class="x fx" d={leadHatch} />
+  <path class="o" d={desks.filter((d) => d.lead || d.follow).map((d) => d.d).join('')} pathLength="1" />
+  <path class="o2" d={route + spurs} pathLength="1" />
+  <path class="ah2 fx" d={spurHeads} />
+  <path class="dot fx" d={stops} />
+  <text class="t t-s" x={RX0} y={RY1 + 16}>SALA UNDERWRITINGOWA · RZUT</text>
+
+  <!-- udziały -->
+  <path class="f" d={box(S0, yS, S1, yS + 14)} />
+  <path class="x fx" d={barHatch} />
+  <path class="o" d={bar} pathLength="1" />
+  <path class="d" d={shareDims.map((d) => d.line).join('')} pathLength="1" />
+  <path class="d-fill fx" d={shareDims.map((d) => d.heads).join('')} />
+  {shareLabels.map((s, i) => <text class="t-dim" x={(edges[i] + edges[i + 1]) / 2} y={dimY - 5}>{s}</text>)}
+  <text class="t t-b t-e" x={S0 - 10} y={yS + 11}>POLISA · 100%</text>
+
+  <!-- odnośniki -->
+  <path class="l" d={leaders} pathLength="1" />
+  {
+    bals.map((b) => (
+      <g class="bal">
+        <circle class="b" cx={b.x} cy={b.y} r={R} pathLength="1" />
+        <text class="t-num" x={b.x} y={b.y}>
+          {b.n}
+        </text>
+      </g>
+    ))
+  }
+</FigFrame>

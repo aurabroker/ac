@@ -1,0 +1,164 @@
+---
+/**
+ * BOM („lista elementów”) / tabela zakresu: Poz. · Zdarzenie · Moduł · Status · Warunki · Podstawa.
+ * Kolumny bez danych są pomijane. Komórki przyjmują inline Markdown.
+ *
+ * MDX: <BOM caption="Tabela zakresu" rows={frontmatter.coverage} />
+ */
+import CoverageBadge from './CoverageBadge.astro';
+import { inlineMd } from '../lib/inline-md.ts';
+import type { CoverageRow } from '../lib/coverage.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  caption: string;
+  rows: CoverageRow[];
+  /** Nagłówki kolumn (nadpisanie domyślnych). */
+  headers?: Partial<Record<'pos' | 'event' | 'module' | 'label' | 'conditions' | 'basis', string>>;
+  /** Prefiks numeru pozycji (np. „A” → A1, A2). */
+  prefix?: string;
+  /** id tabeli (kotwica). */
+  id?: string;
+}
+const { caption, rows = [], headers = {}, prefix = '', id } = Astro.props;
+const h = {
+  pos: 'Poz.',
+  event: 'Zdarzenie / element',
+  module: 'Moduł',
+  label: 'Status',
+  conditions: 'Warunki',
+  basis: 'Podstawa',
+  ...headers,
+};
+const has = {
+  module: rows.some((r) => r.module),
+  conditions: rows.some((r) => r.conditions),
+  basis: rows.some((r) => r.basis),
+};
+---
+
+{
+  rows.length > 0 && (
+    <div class="table-wrap bom" role="region" tabindex="0" aria-label={caption} id={id}>
+      <table>
+        <caption>{polishText(caption)}</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="bom__pos">{h.pos}</th>
+            <th scope="col">{h.event}</th>
+            {has.module && <th scope="col">{h.module}</th>}
+            <th scope="col" class="bom__status-col">{h.label}</th>
+            {has.conditions && <th scope="col">{h.conditions}</th>}
+            {has.basis && <th scope="col">{h.basis}</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr>
+              <td class="bom__pos mono">{`${prefix}${String(i + 1).padStart(2, '0')}`}</td>
+              <th scope="row" set:html={inlineMd(r.event)} />
+              {has.module && (
+                <td class:list={[!r.module && 'bom__empty']} data-label={h.module} set:html={inlineMd(r.module ?? '—')} />
+              )}
+              <td class="bom__status" data-label={h.label}>
+                <CoverageBadge label={r.label} />
+              </td>
+              {has.conditions && (
+                <td
+                  class:list={['bom__small', !r.conditions && 'bom__empty']}
+                  data-label={h.conditions}
+                  set:html={inlineMd(r.conditions ?? '—')}
+                />
+              )}
+              {has.basis && (
+                <td
+                  class:list={['bom__small', !r.basis && 'bom__empty']}
+                  data-label={h.basis}
+                  set:html={inlineMd(r.basis ?? '—')}
+                />
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+<style>
+  .bom .bom__pos {
+    width: 3.5em;
+    color: var(--ink-3);
+  }
+  /* Status: odznaka mieści się w 2 wierszach (bez „schodków” po 4 linie) */
+  .bom th.bom__status-col,
+  .bom td.bom__status {
+    min-width: 19ch;
+  }
+  .bom td.bom__status :global(.badge) {
+    max-width: none;
+  }
+  /* Telefon: wiersz jako „karta” — etykieta kolumny nad komórką, bez poziomego przewijania */
+  @media (max-width: 560px) {
+    .bom table,
+    .bom tbody,
+    .bom tr,
+    .bom th,
+    .bom td {
+      display: block;
+      width: 100%;
+    }
+    .bom caption {
+      display: block;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    .bom thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .bom tbody tr {
+      position: relative;
+      padding-block: var(--s-1) var(--s-2);
+      border-bottom: 1px solid var(--rule);
+    }
+    .bom tbody tr:first-child {
+      border-top: 1px solid var(--ink);
+    }
+    .bom tbody th,
+    .bom td {
+      padding: var(--s-1) 0 0;
+      border-bottom: 0;
+    }
+    .bom td.bom__pos {
+      padding-top: var(--s-1);
+    }
+    .bom td.bom__status {
+      min-width: 0;
+    }
+    /* puste komórki („—”) w układzie kart nie niosą informacji */
+    .bom td.bom__empty {
+      display: none;
+    }
+    .bom td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+  }
+  .bom td.bom__pos {
+    font-size: var(--fs-mono);
+  }
+  .bom .bom__small {
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+</style>

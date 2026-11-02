@@ -1,0 +1,68 @@
+---
+/**
+ * Sheet — bazowy layout arkusza: <head> (Seo), nagłówek, <main data-md-root>, stopka.
+ * Wszystko wewnątrz <main> (poza [data-md-skip]) trafia do bliźniaka .md.
+ */
+import '../styles/global.css';
+import Seo from '../components/seo/Seo.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import type { PageContext } from '../lib/page.ts';
+
+interface Props {
+  ctx: PageContext;
+  /** Rodzaj strony (data-kind na <body>, używany przez walidatory i CSS). */
+  kind: string;
+  ogType?: 'website' | 'article' | 'profile';
+}
+const { ctx, kind, ogType = 'website' } = Astro.props;
+const d = ctx.route.entry.data;
+---
+
+<!doctype html>
+<html lang="pl" dir="ltr">
+  <head>
+    <Seo
+      title={ctx.seoTitle}
+      description={ctx.description}
+      path={ctx.path}
+      ogTitle={ctx.ogTitle}
+      ogImage={ctx.ogImage}
+      ogType={ogType}
+      noindex={ctx.noindex}
+      published={d.published}
+      updated={d.updated}
+      author={ctx.authorName}
+      jsonld={ctx.jsonld}
+    />
+  </head>
+  <body data-kind={kind}>
+    <a class="skip-link" href="#tresc">Przejdź do treści</a>
+    <SiteHeader currentPath={ctx.path} />
+    {
+      ctx.draft && (
+        <p class="draft-banner mono" data-md-skip>
+          SZKIC — strona niepublikowana (podgląd, noindex)
+        </p>
+      )
+    }
+    <main id="tresc" class="sheet" data-md-root tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter mdPath={ctx.mdPath} />
+  </body>
+</html>
+
+<style>
+  .draft-banner {
+    margin: 0;
+    padding: var(--s-1) var(--pad-x);
+    background: var(--signal-wash);
+    color: var(--signal-hover);
+    border-bottom: 1px solid var(--signal);
+    text-align: center;
+  }
+  .sheet:focus {
+    outline: none;
+  }
+</style>

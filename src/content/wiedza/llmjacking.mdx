@@ -1,0 +1,311 @@
+---
+title: "LLMjacking: kradzież kluczy API i rachunek za tokeny"
+description: "LLMjacking to kradzież kluczy API do modeli AI i nabijanie rachunku za tokeny. Jak do niego dochodzi, jak się chronić i co może pokryć polisa cyber."
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "C4-01"
+articleId: "C4-01"
+cluster: "C4"
+hub: "/ubezpieczenie-ai/"
+draft: true
+reviewEvery: 180
+summary: "LLMjacking to przejęcie dostępu do modelu językowego firmy, zwykle przez wykradziony klucz API lub dane logowania do chmury, i korzystanie z niego na jej koszt. Skutkiem jest rachunek za tokeny, którego nikt nie planował. Część polis cyber zwraca takie dodatkowe opłaty w opcjonalnym module cyberprzestępstw. Zakres potwierdzamy w ofercie."
+summaryPoints:
+  - "Klucze wyciekają m.in. przez kod i repozytoria, aplikacje po stronie klienta oraz przejęte konta chmurowe."
+  - "Polisa nie zastąpi limitów wydatków, alertów, rotacji kluczy i monitoringu zużycia. Te zabezpieczenia ograniczają szkodę od pierwszej godziny."
+  - "W polisie sprawdź, czy nieuprawnione użycie zasobów obejmuje klucze do modeli u zewnętrznego dostawcy i jaki ma podlimit."
+keywords:
+  primary: "llmjacking"
+  secondary:
+    - "kradzież klucza api"
+    - "rachunek za tokeny"
+    - "denial of wallet"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu: LLMjacking w polisie cyber"
+coverage:
+  - event: "Dodatkowe opłaty za tokeny i moc obliczeniową po nieuprawnionym użyciu modelu"
+    module: "Cyberprzestępstwa"
+    label: optional
+    conditions: "Część polis wymienia LLMjacking wprost. Liczy się wykrycie w okresie ubezpieczenia; zwykle podlimit."
+  - event: "Dodatkowe opłaty po cryptojackingu lub użyciu Twoich systemów w botnecie"
+    module: "Cyberprzestępstwa"
+    label: optional
+    conditions: "W tym samym module co LLMjacking, jeśli polisa go przewiduje."
+  - event: "Klucze do modeli u zewnętrznego dostawcy: konto API, chmura"
+    module: "Cyberprzestępstwa"
+    label: underwriting
+    conditions: "Zależy od definicji systemów i zasobów w polisie. Potwierdzamy w ofercie."
+  - event: "Reakcja na incydent i informatyka śledcza po przejęciu konta lub klucza"
+    module: "Cyber: koszty własne"
+    label: typical
+    conditions: "Jeśli zdarzenie jest incydentem cyber w rozumieniu polisy; także przy podejrzeniu. Pierwsze działania zwykle przez zespół wskazany przez ubezpieczyciela."
+  - event: "Porada prawna i powiadomienia, gdy przestępca miał dostęp do danych osobowych"
+    module: "Cyber: koszty własne"
+    label: typical
+  - event: "Roszczenia osób trzecich i postępowanie organu ochrony danych po wycieku"
+    module: "Cyber: odpowiedzialność"
+    label: typical
+    conditions: "Kary administracyjne tylko w zakresie, w jakim prawo pozwala je ubezpieczyć."
+  - event: "Przestój usługi AI po zablokowaniu konta przez dostawcę"
+    module: "Cyber: koszty własne"
+    label: underwriting
+    conditions: "Zależy od definicji przerwy w działalności i od przyczyny blokady. Po upływie franszyzy czasowej."
+  - event: "Roszczenie klienta, którego klucz wyciekł przez Twój błąd, np. z kodu, który dla niego tworzysz"
+    module: "OC zawodowe / cyber"
+    label: underwriting
+    conditions: "Zgodnie z warunkami OC zawodowego lub części cyber dotyczącej odpowiedzialności."
+  - event: "Zużycie wygenerowane przez uprawnionych użytkowników aplikacji bez limitów (denial of wallet)"
+    module: "Cyberprzestępstwa"
+    label: underwriting
+    conditions: "Bez nieuprawnionego dostępu trudno wykazać nieuprawnione użycie. Zależy od definicji w polisie."
+  - event: "Rachunek za tokeny, gdy polisa nie ma modułu cyberprzestępstw"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Moduł wybiera się zwykle osobno, przy zakupie lub odnowieniu polisy."
+  - event: "Rachunek za tokeny w ramach OC zawodowego"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "OC dotyczy roszczeń innych osób, nie Twoich strat. Potrzebny moduł cyberprzestępstw."
+  - event: "Nadużycie wykryte przed początkiem ochrony lub znane wcześniej"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Zgłaszaj znane incydenty we wniosku. Nowa polisa ich nie obejmie."
+  - event: "Ulepszenie zabezpieczeń i architektury po incydencie"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Chyba że polisa to przewiduje, zwykle w podlimicie."
+  - event: "Opłaty za zużycie zgodne z Twoją umową z dostawcą, bez nadużycia"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Limity wydatków i alerty budżetowe u dostawcy."
+faq:
+  - q: "Czy LLMjacking to to samo co kradzież modelu?"
+    a: "Nie. LLMjacking polega na korzystaniu z cudzego dostępu do modelu na koszt właściciela konta. Kradzież modelu to wyniesienie samego modelu albo jego parametrów, czyli utrata własności intelektualnej. Oba zdarzenia mogą wystąpić razem, ale w polisie to różne ryzyka, które sprawdzamy osobno."
+  - q: "Czy dostawca modelu zwróci mi pieniądze za nadużycie?"
+    a: "To zależy od jego warunków i oceny sytuacji. Regulaminy usług API często czynią właściciela konta odpowiedzialnym za klucze i zużycie, dlatego nie warto liczyć na zwrot z góry. Zgłoś nadużycie od razu i zachowaj korespondencję, bo przyda się przy likwidacji szkody."
+  - q: "Czy OC zawodowe obejmuje LLMjacking?"
+    a: "Nie w zakresie Twojego rachunku: OC zawodowe dotyczy roszczeń innych osób. Może jednak zadziałać, gdy przez Twój błąd wyciekł klucz klienta i klient wystąpi z roszczeniem, zgodnie z warunkami polisy. Więcej o OC zawodowym w IT: [OC zawodowe i cyber dla firm IT](/oc-cyber-dla-it/)."
+  - q: "Czy polisa obejmuje klucze do modeli u zewnętrznego dostawcy?"
+    a: "Zależy od definicji w polisie. Część polis mówi o nieuprawnionym użyciu Twoich zasobów lub systemów komputerowych. Czy obejmuje to konto API u dostawcy modelu albo konto chmurowe, potwierdzamy w ofercie."
+  - q: "Czy nadużycie klucza przez byłego pracownika jest objęte?"
+    a: "Może być, ale zależy to od tego, czy polisa traktuje pracownika jako osobę trzecią i czy w tej sekcji nie wyłącza nieuczciwych działań pracowników. Przy odejściu pracownika warto od razu unieważnić klucze, do których miał dostęp."
+  - q: "Jak szybko trzeba zgłosić LLMjacking?"
+    a: "Jak najszybciej po wykryciu. W wielu polisach liczy się pierwsze wykrycie w okresie ubezpieczenia, a polisa określa termin zgłoszenia. Szybka reakcja ogranicza też szkodę, bo każda godzina nadużycia zwiększa rachunek."
+sources:
+  - title: "LLMjacking: Stolen Cloud Credentials Used in New AI Attack"
+    url: "https://sysdig.com/blog/llmjacking-stolen-cloud-credentials-used-in-new-ai-attack/"
+    publisher: "Sysdig"
+    accessed: 2026-11-02
+    tier: T3
+  - title: "The Growing Dangers of LLMjacking: Evolving Tactics and Evading Sanctions"
+    url: "https://www.sysdig.com/blog/growing-dangers-of-llmjacking"
+    publisher: "Sysdig"
+    accessed: 2026-11-02
+    tier: T3
+  - title: "LLMjacking evolved: Attackers are using stolen AI compute to build offensive agentic tools"
+    url: "https://www.sysdig.com/blog/llmjacking-evolved-attackers-are-using-stolen-ai-compute-to-build-offensive-agentic-tools"
+    publisher: "Sysdig"
+    accessed: 2026-11-02
+    tier: T3
+  - title: "LLM10:2025 Unbounded Consumption (OWASP Top 10 for LLM Applications)"
+    url: "https://genai.owasp.org/llmrisk/llm102025-unbounded-consumption/"
+    publisher: "OWASP GenAI Security Project"
+    accessed: 2026-11-02
+    tier: T2
+  - title: "Taking legal action to protect the public from abusive AI-generated content"
+    url: "https://blogs.microsoft.com/on-the-issues/2025/01/10/taking-legal-action-to-protect-the-public-from-abusive-ai-generated-content/"
+    publisher: "Microsoft On the Issues"
+    accessed: 2026-11-02
+    tier: T2
+  - title: "Best Practices for API Key Safety"
+    url: "https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety"
+    publisher: "OpenAI Help Center"
+    accessed: 2026-11-02
+    tier: T2
+  - title: "Rozporządzenie (UE) 2016/679 (RODO), art. 33: zgłaszanie naruszenia ochrony danych"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Ustawa z dnia 6 czerwca 1997 r. Kodeks karny, art. 267: nielegalny dostęp do informacji i systemu informatycznego"
+    url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19970880553"
+    publisher: "ISAP — Kancelaria Sejmu"
+    accessed: 2026-11-02
+    tier: T1
+related:
+  - "/ubezpieczenie-ai/ai-w-firmie/"
+  - "/ubezpieczenie-cyber/"
+  - "/ubezpieczenia/ubezpieczenie-crime/"
+  - "/oc-cyber-dla-it/"
+  - "/wiedza/ransomware-2-0/"
+changelog:
+  - rev: "A"
+    date: 2026-11-02
+    note: "Pierwsze wydanie: definicja i drogi wycieku kluczy, szacunki kosztów ze źródeł, zabezpieczenia, pierwsze kroki po wykryciu, LLMjacking w polisie cyber, scenariusze, tabela zakresu i wyłączeń."
+---
+
+<Term href="/slownik/#llmjacking">LLMjacking</Term> to nowa nazwa na znane zjawisko: ktoś korzysta z Twoich zasobów IT na Twój koszt. Tym razem nie chodzi o moc procesora do kopania kryptowalut, tylko o dostęp do dużego modelu językowego (LLM), za który płacisz od liczby tokenów. Ten arkusz wyjaśnia, jak dochodzi do takiego nadużycia, jak ograniczyć ryzyko i w jakim zakresie może pomóc polisa. Jest częścią przewodnika [ubezpieczenie AI](/ubezpieczenie-ai/), który opisuje ryzyka firm tworzących i wdrażających sztuczną inteligencję.
+
+Opisy zakresu są warunkowe. Moduł, który obejmuje takie straty, występuje tylko w części polis i trzeba go zwykle wybrać osobno. Wiążące są oferta, polisa i ogólne warunki ubezpieczenia.
+
+<SectionView label="Definicja" />
+## Czym jest LLMjacking?
+
+To przejęcie dostępu do modelu językowego lub innego systemu AI firmy i wykorzystanie go bez jej zgody, które kończy się nadmiernym zużyciem tokenów i mocy obliczeniowej. Termin pojawił się w analizie zespołu badawczego firmy Sysdig z maja 2024 r. Opisany tam atak zaczął się od wykradzionych danych logowania do chmury. Przestępcy sprawdzali, do których modeli dostępnych w chmurze ma dostęp konto ofiary, a dostęp mogli odsprzedawać innym przez serwer pośredniczący (*reverse proxy*).
+
+Mechanizm przypomina cryptojacking, czyli kopanie kryptowalut na cudzej infrastrukturze. Różni się sposobem naliczania kosztów: zamiast obciążenia serwerów przychodzi faktura od dostawcy modelu lub chmury, liczona od zużytych tokenów.
+
+Do LLMjacking zalicza się zwykle trzy sytuacje:
+
+- kradzież klucza API do modelu udostępnianego przez zewnętrznego dostawcę;
+- przejęcie konta chmurowego, na którym firma korzysta z modeli, albo włączenie na nim przez przestępców nowych modeli;
+- wykorzystanie źle skonfigurowanego serwera z modelem uruchomionym przez firmę, dostępnego z internetu bez uwierzytelnienia.
+
+Pokrewnym ryzykiem jest to, co OWASP opisuje jako nieograniczone zużycie (*unbounded consumption*), w tym ataki nazywane *denial of wallet*: aplikacja bez limitów pozwala użytkownikom generować koszty ponad rozsądną miarę. Granica między tymi sytuacjami ma znaczenie dla polisy, o czym piszemy niżej.
+
+<SectionView label="Szczegół A" />
+## Jak dochodzi do kradzieży kluczy API?
+
+Często przez błąd w obsłudze sekretów, a nie przez wyrafinowany atak na sam model. Typowe drogi wycieku to:
+
+- **Klucz w kodzie lub repozytorium.** Klucz zapisany w kodzie albo w pliku konfiguracyjnym trafia do publicznego repozytorium, historii zmian albo logów potoku CI. Dostawcy modeli wskazują to jako częstą drogę przejęcia klucza.
+- **Klucz w aplikacji po stronie klienta.** Klucz osadzony w aplikacji mobilnej lub w kodzie strony da się z niej wydobyć. Zapytania do modelu powinny przechodzić przez Twój serwer.
+- **Przejęte konto chmurowe.** W przypadku opisanym przez Sysdig dane logowania do chmury wykradziono przez podatną, niezałataną aplikację. Z takim dostępem przestępca może korzystać z modeli i włączać nowe.
+- **Dane dostępowe opublikowane w internecie.** Microsoft opisał w styczniu 2025 r. grupę, która wykorzystywała dane uwierzytelniające klientów zebrane z publicznie dostępnych stron, żeby korzystać z usług generatywnej AI i odsprzedawać ten dostęp.
+- **Wspólne klucze bez rotacji.** Jeden klucz używany przez cały zespół i kilka aplikacji utrudnia ustalenie, skąd wyciekł, i zablokowanie go bez przestoju.
+
+<SectionView label="Wymiar" />
+## Ile może kosztować LLMjacking?
+
+Tyle, ile przestępca zdąży zużyć, zanim go zauważysz, w granicach limitów konta. O skali decydują ceny modelu, limity zapytań ustawione u dostawcy i czas do wykrycia.
+
+Sysdig oszacował w 2024 r., że w najgorszym scenariuszu ofiara mogła płacić ponad 46 000 USD dziennie za zużycie jednego z popularnych wtedy modeli. W późniejszej analizie, przy najdroższych modelach, mowa była o ponad 100 000 USD dziennie. To szacunki najgorszego scenariusza oparte na cennikach i limitach, a nie średnie straty z rzeczywistych szkód. Pokazują jednak, dlaczego czas do wykrycia ma tak duże znaczenie.
+
+Do opłat za tokeny dochodzą koszty reakcji: ustalenie, jak doszło do wycieku, sprawdzenie, czy przestępca miał dostęp do danych, wymiana kluczy i zabezpieczenie kont.
+
+<SectionView label="Zabezpieczenia" />
+## Jak ograniczyć ryzyko LLMjacking?
+
+Najskuteczniej przez zarządzanie kluczami i limity kosztów. Polisa przydaje się dopiero wtedy, gdy te zabezpieczenia zawiodą, a ubezpieczyciel i tak zapyta o nie we wniosku.
+
+<SpecTable
+  caption="Zabezpieczenia przed LLMjacking"
+  columns={["Zabezpieczenie", "Co daje"]}
+  rows={[
+    ["Osobny klucz dla każdej aplikacji, środowiska i osoby", "Łatwiej ustalić źródło wycieku i zablokować jeden klucz bez zatrzymywania reszty"],
+    ["Klucze tylko po stronie serwera, w menedżerze sekretów", "Klucza nie da się wydobyć z aplikacji mobilnej ani z kodu strony"],
+    ["Skanowanie repozytoriów i logów pod kątem sekretów", "Wyciek wychodzi na jaw, zanim klucz znajdzie ktoś inny"],
+    ["Wygasanie i rotacja kluczy", "Skradziony klucz działa krócej"],
+    ["Limity wydatków i alerty budżetowe u dostawcy modelu i chmury", "Ograniczają maksymalną szkodę i skracają czas do wykrycia"],
+    ["Monitoring zużycia: pory, regiony, modele, nietypowe skoki", "Nadużycie widać w danych o zużyciu, zanim przyjdzie faktura"],
+    ["MFA i minimalne uprawnienia na kontach chmurowych, wyłączenie nieużywanych modeli i regionów", "Przejęte konto daje przestępcy mniej możliwości"],
+    ["Limity zapytań na użytkownika we własnej aplikacji", "Chronią przed nieograniczonym zużyciem (*denial of wallet*)"],
+    ["Lista dozwolonych adresów IP dla API, jeśli dostawca ją oferuje", "Skradziony klucz nie zadziała spoza Twojej infrastruktury"]
+  ]}
+  note="Zestawienie opiera się na zaleceniach dostawców modeli i OWASP. Dobór zabezpieczeń zależy od architektury Twojej aplikacji."
+/>
+
+<SectionView label="Procedura awaryjna" />
+## Co zrobić, gdy widzisz nagły skok zużycia tokenów?
+
+Działaj od razu, bo każda godzina zwiększa rachunek. Kolejność kroków:
+
+1. **Unieważnij klucze i wydaj nowe.** Zacznij od kluczy z nietypowym zużyciem. Przy przejętym koncie chmurowym zmień też hasła i dane dostępowe.
+2. **Zabezpiecz dowody.** Zachowaj logi zużycia, logi dostępu i dane rozliczeniowe, zanim wygasną albo zostaną nadpisane.
+3. **Zgłoś incydent ubezpieczycielowi.** Jeśli masz polisę cyber, zadzwoń na linię wskazaną w polisie; w wielu polisach to jednocześnie zgłoszenie szkody. Zanim zlecisz pracę zewnętrznym firmom, sprawdź, czy polisa nie wymaga zgody ubezpieczyciela lub korzystania z jego usługodawców.
+4. **Skontaktuj się z dostawcą modelu lub chmury.** Zgłoś nadużycie i zapytaj o procedurę. Nie zakładaj, że dostawca skoryguje rachunek: zależy to od jego warunków.
+5. **Sprawdź, czy doszło do dostępu do danych.** Jeśli przestępca mógł zobaczyć dane osobowe, np. w historii zapytań lub plikach na koncie, oceń obowiązek zgłoszenia naruszenia do Prezesa UODO. RODO przewiduje na to co do zasady 72 godziny od stwierdzenia naruszenia (art. 33).
+6. **Rozważ zawiadomienie o przestępstwie.** Uzyskanie bez uprawnienia dostępu do systemu informatycznego jest przestępstwem (art. 267 § 2 Kodeksu karnego). Ubezpieczyciel może też zapytać o zawiadomienie przy likwidacji szkody.
+
+<SectionView label="Przekrój przez polisę" />
+## Czy polisa cyber pokryje rachunek za tokeny?
+
+Może, jeśli ma moduł obejmujący nieuprawnione użycie zasobów IT. Część polis cyber wymienia wprost cryptojacking, botnety i LLMjacking i zwraca wynikające z nich dodatkowe opłaty, jeśli nadużycie wykryto w okresie ubezpieczenia. Taki moduł należy zwykle do części cyberprzestępstw i trzeba go wybrać osobno.
+
+W warunkach polisy sprawdzamy:
+
+<SpecTable
+  caption="LLMjacking w polisie: co sprawdzić"
+  columns={["Pytanie", "Dlaczego ma znaczenie"]}
+  rows={[
+    ["Czy polisa wymienia LLMjacking albo nieuprawnione użycie zasobów IT?", "Bez takiego zapisu dodatkowe opłaty za tokeny mogą nie mieścić się w żadnej sekcji"],
+    ["Czy Twoje zasoby w rozumieniu polisy obejmują konto u zewnętrznego dostawcy modelu lub chmury?", "Wiele firm nie ma własnego modelu, tylko klucz do cudzego. Definicję systemu komputerowego porównujemy w ofercie"],
+    ["Czy ochrona wymaga nieuprawnionego dostępu?", "Nadużycie przez uprawnionego użytkownika aplikacji bez limitów (*denial of wallet*) może nie zostać uznane za nieuprawnione użycie"],
+    ["Kiedy liczy się wykrycie?", "Zwykle decyduje pierwsze wykrycie w okresie ubezpieczenia. Nadużycie znane przed zakupem polisy nie będzie objęte"],
+    ["Jaki jest podlimit i udział własny?", "Rozszerzenia w części cyberprzestępstw mają często [podlimity](/slownik/#podlimit) niższe niż suma gwarancyjna polisy"],
+    ["Czy koszty reakcji na incydent są w części cyber?", "Informatyka śledcza i porada prawna po przejęciu konta należą zwykle do kosztów własnych w części cyber, a nie do modułu cyberprzestępstw"],
+    ["Czy nadużycie przez pracownika jest objęte?", "Zależy od definicji osoby trzeciej i wyłączeń dotyczących pracowników"]
+  ]}
+  note="Takie zapisy spotykamy w części warunków, które analizujemy. Brzmienie definicji w konkretnej polisie potwierdzamy w ofercie."
+/>
+
+OC zawodowe tu nie pomoże, bo dotyczy roszczeń innych osób, a rachunek za tokeny to Twoja własna strata. Inaczej jest, gdy przez Twój błąd wycieknie klucz klienta, np. zapisany w kodzie, który dla niego tworzysz. Roszczenie klienta może wtedy rozpatrywać OC zawodowe albo część cyber dotycząca odpowiedzialności, zgodnie z warunkami polisy.
+
+<SectionView label="Przypadki obciążenia" />
+## Jak to wygląda w praktyce?
+
+Dwie sytuacje pokazują, które części polisy mogą zadziałać. To scenariusze ilustracyjne, nie opisy prawdziwych szkód.
+
+<NoteBlock variant="scenario" label="Scenariusz ilustracyjny · klucz w aplikacji mobilnej">
+
+Start-up rozwija aplikację mobilną z asystentem AI. Dla wygody klucz API do modelu trafia do kodu aplikacji. Ktoś wydobywa go z opublikowanej wersji i przez weekend korzysta z modelu do własnych celów. W poniedziałek alert budżetowy, ustawiony zbyt wysoko, pokazuje kilkukrotne przekroczenie miesięcznego budżetu.
+
+**Co może zadziałać:** moduł cyberprzestępstw, jeśli obejmuje nieuprawnione użycie zasobów i klucze do modeli u zewnętrznego dostawcy. Część cyber w zakresie kosztów ustalenia, jak doszło do wycieku.
+
+**Gdzie granica:** podlimit modułu i udział własny. Ubezpieczyciel zapyta też, jak klucz trafił do aplikacji, bo zabezpieczenia bywają warunkiem oferty.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="Scenariusz ilustracyjny · przejęte konto chmurowe">
+
+Software house trzyma dane dostępowe do konta chmurowego w zmiennych potoku CI. Po wycieku logów przestępcy logują się na konto, włączają modele w regionie, którego firma nie używa, i odsprzedają dostęp. Nadużycie wychodzi na jaw przy rozliczeniu miesiąca.
+
+**Co może zadziałać:** część cyber, czyli reakcja na incydent, informatyka śledcza i ocena, czy doszło do dostępu do danych klientów. Moduł cyberprzestępstw w zakresie dodatkowych opłat, jeśli nadużycie wykryto w okresie ubezpieczenia.
+
+**Gdzie granica:** jeśli na koncie były dane klientów, dochodzą obowiązki z RODO i możliwe roszczenia, które rozpatruje część cyber dotycząca odpowiedzialności. Przebudowa architektury na bezpieczniejszą zwykle nie jest objęta, chyba że polisa to przewiduje.
+
+</NoteBlock>
+
+<SectionView label="Lista elementów" />
+## Co obejmuje polisa przy LLMjacking? Tabela zakresu
+
+Tabela łączy elementy z kilku części polisy, bo LLMjacking dotyka zwykle więcej niż jednej z nich. Etykiety mówią, czy element jest zwykle w zakresie, czy zależy od rozszerzenia albo od oceny ryzyka.
+
+<BOM
+  id="tabela-zakresu"
+  caption={frontmatter.coverageCaption}
+  rows={frontmatter.coverage.filter((r) => r.label !== "excluded")}
+/>
+
+<SectionView label="Mapa luk" />
+## Czego polisa zwykle nie obejmuje przy LLMjacking?
+
+Najważniejsze granice zebraliśmy poniżej. W ostatniej kolumnie wskazujemy, co może zamknąć lukę albo ją zmniejszyć.
+
+<BOM
+  caption="Wyłączenia i luki przy LLMjacking"
+  prefix="X"
+  headers={{ conditions: "Co może zamknąć lukę" }}
+  rows={frontmatter.coverage.filter((r) => r.label === "excluded").map((r) => ({ event: r.event, label: r.label, conditions: r.conditions }))}
+/>
+
+Polisa nie obejmuje też utraty klucza jako takiej ani kosztów, które poniósłbyś bez nadużycia. Chroni przed skutkami zdarzenia, a nie przed zwykłym rachunkiem za korzystanie z modelu.
+
+<SectionView label="Parametry oceny" />
+## Od czego zależy składka?
+
+W ocenie ryzyka cyber dla firm korzystających z AI ubezpieczyciel pyta zwykle o zarządzanie kluczami API, MFA, limity wydatków, monitoring zużycia i testy podatności. Znaczenie mają też skala wydatków na modele i chmurę, liczba aplikacji i środowisk, przetwarzane dane oraz historia incydentów. Nie podajemy cenników, bo warunki zależą od oceny konkretnej firmy.
+
+<SectionView label="Procedura" />
+## Co przygotować przed rozmową?
+
+Prześlij nam:
+
+- opis, z jakich modeli i dostawców korzystasz i w jakich aplikacjach;
+- sposób przechowywania kluczy i danych dostępowych do chmury;
+- informację o limitach wydatków, alertach i monitoringu zużycia;
+- obecną polisę cyber, jeśli ją masz, z opisem modułu cyberprzestępstw;
+- informacje o incydentach z ostatnich lat.
+
+Przycisk „Napisz e-mail” poniżej wstawi numer tego arkusza do tematu wiadomości. Nie przesyłaj nam kluczy API ani haseł, nawet unieważnionych.

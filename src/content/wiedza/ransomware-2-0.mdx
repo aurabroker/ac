@@ -1,0 +1,287 @@
+---
+title: "Ransomware 2.0: wymuszenia, pierwsze 24 godziny i rola polisy"
+description: "Ransomware 2.0 to szyfrowanie i wymuszenie publikacją danych. Co zrobić w pierwszych 24 godzinach i jak w tym pomaga ubezpieczenie cyber."
+ogTitle: "Ransomware 2.0: pierwsze 24 godziny i rola polisy cyber"
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "B2-06"
+articleId: "B2-06"
+cluster: "B2"
+hub: "/ubezpieczenie-cyber/"
+draft: true
+legalStateAsOf: 2026-11-02
+reviewEvery: 180
+summary: "Ransomware 2.0 to atak, w którym przestępcy najpierw wykradają dane, a potem szyfrują systemy i grożą publikacją. W pierwszych 24 godzinach liczą się izolacja systemów, zabezpieczenie śladów, telefon na linię z polisy i ocena obowiązków z RODO. Polisa cyber zwykle finansuje reakcję, odtworzenie i przestój, a okup tylko w granicach prawa."
+summaryPoints:
+  - "Nie kontaktuj się z przestępcami i nie płać na własną rękę. Koszty i decyzje poniesione bez zgody ubezpieczyciela mogą nie zostać zwrócone."
+  - "Kradzież danych zmienia rachunek: kopia zapasowa przywróci systemy, ale nie usunie groźby publikacji ani obowiązków wobec osób, których dane dotyczą."
+  - "Okup to decyzja prawna, nie tylko biznesowa: zapłata nie może naruszać sankcji, a polisa uzależnia ją od uprzedniej zgody ubezpieczyciela."
+keywords:
+  primary: "ransomware 2.0"
+  secondary:
+    - "atak ransomware co robić"
+    - "podwójne wymuszenie ransomware"
+    - "ubezpieczenie od ransomware"
+    - "czy ubezpieczenie pokrywa okup"
+    - "ransomware pierwsze 24 godziny"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu: atak ransomware a polisa cyber"
+coverage:
+  - event: "Całodobowa linia, koordynator szkody i informatyka śledcza po wykryciu ataku"
+    module: "Reakcja na incydent"
+    label: typical
+    conditions: "Także przy samym podejrzeniu. Zwykle przez usługodawców wskazanych przez ubezpieczyciela."
+  - event: "Porada prawna: ocena naruszenia ochrony danych, zgłoszenie do Prezesa UODO, zawiadomienie osób"
+    module: "Reakcja na incydent"
+    label: typical
+    conditions: "Treść i sposób powiadomień zwykle uzgadnia się z ubezpieczycielem."
+  - event: "Doradca ds. komunikacji kryzysowej, gdy przestępcy grożą publikacją danych"
+    module: "Reakcja na incydent"
+    label: typical
+  - event: "Odtworzenie danych, aplikacji i systemów zaszyfrowanych przez ransomware"
+    module: "Odtworzenie i przestój"
+    label: typical
+    conditions: "Do stanu sprzed ataku. Bezpieczniejsza wersja systemu tylko wtedy, gdy przewiduje to polisa, zwykle w podlimicie."
+  - event: "Utracony dochód i dodatkowe koszty działalności w czasie przestoju po ataku"
+    module: "Odtworzenie i przestój"
+    label: typical
+    conditions: "Po upływie franszyzy czasowej i najdłużej przez okres odszkodowawczy. Stratę trzeba udokumentować."
+  - event: "Przestój po ataku ransomware na dostawcę chmury, hostingu lub systemu, z którego korzystasz"
+    module: "Odtworzenie i przestój"
+    label: optional
+    conditions: "Rozszerzenie o zależną przerwę w działalności. Zwykle trzeba wykazać przyczynę i czas przestoju raportem dostawcy."
+  - event: "Wymiana sprzętu trwale unieruchomionego przez atak"
+    module: "Odtworzenie i przestój"
+    label: optional
+    conditions: "Zwykle gdy wymiana jest tańsza niż ponowna instalacja oprogramowania."
+  - event: "Obsługa wymuszenia: ocena żądania, negocjacje, sprawdzenie deklaracji przestępców"
+    module: "Wymuszenie"
+    label: typical
+    conditions: "Za uprzednią zgodą ubezpieczyciela. Sprawdź, czy definicja wymuszenia obejmuje samą groźbę publikacji danych, bez szyfrowania."
+  - event: "Zapłata okupu"
+    module: "Wymuszenie"
+    label: underwriting
+    conditions: "Tylko w granicach prawa, w tym przepisów sankcyjnych, po uprzedniej pisemnej zgodzie ubezpieczyciela i zwykle po zawiadomieniu organów ścigania."
+  - event: "Roszczenia klientów, kontrahentów i pracowników, których dane wykradli przestępcy"
+    module: "Odpowiedzialność i postępowania"
+    label: typical
+    conditions: "Wraz z kosztami obrony, w limicie sekcji."
+  - event: "Postępowanie organu ochrony danych lub innego organu po ataku: koszty obrony"
+    module: "Odpowiedzialność i postępowania"
+    label: typical
+  - event: "Kary administracyjne, np. za naruszenie RODO lub przepisów o cyberbezpieczeństwie"
+    module: "Odpowiedzialność i postępowania"
+    label: underwriting
+    conditions: "Tylko w zakresie, w jakim prawo pozwala je ubezpieczyć. Traktuj tę ochronę jako niepewną."
+  - event: "Kary umowne od odbiorców i service credits za opóźnienia spowodowane atakiem"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Chyba że odpowiadałbyś także bez takiego zapisu w umowie. Lukę zmniejsza negocjacja umów."
+  - event: "Ulepszenie systemów ponad stan sprzed ataku"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Część polis przewiduje wyjątek w podlimicie."
+  - event: "Ataki i okoliczności znane przed zawarciem umowy"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Ujawnij je we wniosku. Przy zmianie polisy zgłoś okoliczności dotychczasowemu ubezpieczycielowi."
+  - event: "Wojna i działania cybernetyczne państw, rozległe awarie infrastruktury"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Na zasadach z polisy. Definicje różnią się między polisami i warto je porównać."
+  - event: "Okup lub inna płatność, która naruszałaby sankcje"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[Klauzula sankcyjna](/slownik/#klauzula-sankcyjna) zawiesza ochronę i wypłatę."
+faq:
+  - q: "Czym ransomware 2.0 różni się od zwykłego ransomware?"
+    a: "Klasyczny atak polegał na zaszyfrowaniu danych i żądaniu okupu za klucz. W ransomware 2.0 przestępcy najpierw wykradają dane, a dopiero potem szyfrują systemy. Grożą publikacją danych na stronie wycieków, czasem także atakiem DDoS albo kontaktem z klientami ofiary. Dlatego kopia zapasowa nie zamyka sprawy."
+  - q: "Czy po ataku ransomware muszę zawiadomić Prezesa UODO?"
+    a: "Jeśli doszło do naruszenia ochrony danych osobowych, RODO wymaga zgłoszenia bez zbędnej zwłoki, w miarę możliwości w ciągu 72 godzin od stwierdzenia naruszenia, chyba że jest mało prawdopodobne, by naruszenie skutkowało ryzykiem naruszenia praw lub wolności osób. Zaszyfrowanie danych bez ich wycieku też może być naruszeniem, bo dotyczy ich dostępności. Ocenę zostaw prawnikowi, którego zwykle zapewnia polisa cyber."
+  - q: "Czy ubezpieczenie cyber pokryje okup?"
+    a: "Tylko jeśli polisa to przewiduje, zapłata nie narusza prawa, w tym sankcji, a ubezpieczyciel wcześniej wyrazi zgodę na piśmie. Częstym warunkiem jest też zawiadomienie organów ścigania. Polisy cyber zwykle finansują natomiast negocjacje, informatykę śledczą, odtworzenie systemów i przestój. Więcej: [ubezpieczenie cyber](/ubezpieczenie-cyber/)."
+  - q: "Czy mogę sam zatrudnić firmę do obsługi incydentu?"
+    a: "Możesz, ale koszty firm spoza listy ubezpieczyciela albo poniesione bez jego zgody mogą nie zostać zwrócone. W części polis przez krótki czas po wykryciu incydentu można korzystać z usługodawców z listy bez czekania na zgodę. Jeśli masz zaufanego dostawcę IT, zapytaj przed zakupem polisy, czy może zostać dopuszczony."
+  - q: "Czy polisa zadziała, jeśli atak zaczął się od kliknięcia pracownika w link?"
+    a: "Zwykle tak. Phishing to typowy początek ataku, a polisa cyber odpowiada za jego skutki na swoich zasadach. Znaczenie mają natomiast odpowiedzi we wniosku: jeśli firma zadeklarowała zabezpieczenia, których nie miała, ubezpieczyciel może kwestionować zakres ochrony lub wysokość odszkodowania."
+  - q: "Czy po zapłacie okupu odzyskam dane?"
+    a: "Nie ma takiej pewności. Przestępcy mogą nie przekazać działającego klucza, klucz może odtworzyć tylko część danych, a wykradzione dane mogą i tak trafić do sieci lub zostać użyte do kolejnego wymuszenia. Dlatego decyzję o okupie podejmuje się wspólnie z ubezpieczycielem, prawnikiem i specjalistami od reakcji na incydenty."
+sources:
+  - { title: "Rozporządzenie (UE) 2016/679 (RODO), art. 33 i 34: zgłaszanie naruszeń i zawiadamianie osób", url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Dyrektywa (UE) 2022/2555 (NIS2), art. 23: obowiązki zgłaszania incydentów", url: "https://eur-lex.europa.eu/eli/dir/2022/2555/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ustawa z dnia 23 stycznia 2026 r. o zmianie ustawy o krajowym systemie cyberbezpieczeństwa oraz niektórych innych ustaw (Dz.U. 2026 poz. 252)", url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20260000252", publisher: "ISAP, Kancelaria Sejmu", accessed: 2026-11-02, tier: T1 }
+  - { title: "Nowelizacja ustawy o krajowym systemie cyberbezpieczeństwa: obowiązki podmiotów kluczowych i ważnych", url: "https://www.gov.pl/web/cyfryzacja/nowelizacja-ustawy-o-krajowym-systemie-cyberbezpieczenstwa-ksc---obowiazki-podmiotow-kluczowych-i-waznych", publisher: "Ministerstwo Cyfryzacji", accessed: 2026-11-02, tier: T1 }
+  - { title: "Rozporządzenie Rady (UE) 2019/796 w sprawie środków ograniczających w celu zwalczania cyberataków zagrażających Unii lub jej państwom członkowskim", url: "https://eur-lex.europa.eu/eli/reg/2019/796/oj", publisher: "EUR-Lex", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ustawa z dnia 13 kwietnia 2022 r. o szczególnych rozwiązaniach w zakresie przeciwdziałania wspieraniu agresji na Ukrainę oraz służących ochronie bezpieczeństwa narodowego", url: "https://eli.gov.pl/eli/DU/2022/835/ogl", publisher: "Dziennik Ustaw RP", accessed: 2026-11-02, tier: T1 }
+  - { title: "Updated Advisory on Potential Sanctions Risks for Facilitating Ransomware Payments (21.09.2021)", url: "https://ofac.treasury.gov/media/912981/download", publisher: "U.S. Department of the Treasury, OFAC", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ransomware: jedno z najpoważniejszych zagrożeń w cyberprzestrzeni", url: "https://www.gov.pl/web/baza-wiedzy/ransomware--jedno-z-najpowazniejszych-zagrozen-w-cyberprzestrzeni", publisher: "gov.pl, Baza wiedzy", accessed: 2026-11-02, tier: T1 }
+  - { title: "Ransomware: jak się uchronić i nie płacić okupu", url: "https://www.gov.pl/web/cyfryzacja/ransomware--jak-sie-uchronic-i-nie-placic-okupu", publisher: "Ministerstwo Cyfryzacji", accessed: 2026-11-02, tier: T1 }
+  - { title: "Zgłoś incydent", url: "https://incydent.cert.pl/", publisher: "CERT Polska (NASK)", accessed: 2026-11-02, tier: T1 }
+  - { title: "ENISA Threat Landscape 2025: EU consistently targeted by diverse yet convergent threat groups", url: "https://www.enisa.europa.eu/news/etl-2025-eu-consistently-targeted-by-diverse-yet-convergent-threat-groups", publisher: "ENISA", accessed: 2026-11-02, tier: T1 }
+  - { title: "No More Ransom: narzędzia do odszyfrowania danych", url: "https://www.nomoreransom.org/pl/index.html", publisher: "Europol i partnerzy projektu No More Ransom", accessed: 2026-11-02, tier: T2 }
+related:
+  - "/ubezpieczenie-cyber/"
+  - "/oc-cyber-dla-it/"
+  - "/ubezpieczenia/ubezpieczenie-crime/"
+  - "/ubezpieczenia/oc-czlonkow-zarzadu-d-o/"
+  - "/slownik/"
+changelog:
+  - { rev: "A", date: 2026-11-02, note: "Szkic. Tekst napisany od nowa w miejsce wpisu „Ransomware 2.0” z marca 2026 r. ze starej strony: pierwsze 24 godziny, okup i sankcje, obowiązki z RODO i NIS2, tabela zakresu, źródła." }
+---
+
+Atak ransomware nie kończy się już na zaszyfrowanych dyskach. Przestępcy najpierw po cichu kopiują dane, a dopiero potem blokują systemy i żądają zapłaty za klucz oraz za milczenie. Ten arkusz opisuje, jak działa takie wymuszenie, co zrobić w pierwszych 24 godzinach i za co może zapłacić polisa. Pełny przegląd zakresu znajdziesz w przewodniku [ubezpieczenie cyber dla firm](/ubezpieczenie-cyber/), a firmy IT, u których atak łączy się z roszczeniami klientów, w arkuszu [OC i cyber dla firm IT](/oc-cyber-dla-it/).
+
+Opisy zakresu są warunkowe. Wiążące są oferta, polisa i warunki ubezpieczenia.
+
+<SectionView label="Definicja" />
+## Czym jest ransomware 2.0?
+
+<Term href="/slownik/#ransomware">Ransomware</Term> to złośliwe oprogramowanie, które szyfruje dane lub blokuje systemy, a przestępcy żądają okupu za ich odblokowanie. Nazwą „ransomware 2.0” określa się odmianę, w której szyfrowanie jest tylko jednym z narzędzi nacisku. Podstawą jest <Term en="double extortion">podwójne wymuszenie</Term>: przestępcy wykradają dane przed zaszyfrowaniem systemów i grożą ich publikacją na stronie wycieków (*data leak site*), jeśli firma nie zapłaci.
+
+Zdarzają się też dalsze formy nacisku, nazywane potrójnym wymuszeniem: atak DDoS na stronę firmy, telefony i e-maile do jej klientów albo groźba zawiadomienia organów i mediów. Bywają ataki bez szyfrowania, w których przestępcy poprzestają na kradzieży danych i szantażu.
+
+ENISA, unijna agencja ds. cyberbezpieczeństwa, wskazuje ransomware jako zagrożenie o największym wpływie na organizacje w UE. Za atakami często stoją grupy działające w modelu <Term en="ransomware-as-a-service, RaaS">ransomware jako usługa</Term>: jedni tworzą narzędzia, inni kupują od pośredników gotowy dostęp do sieci ofiary i przeprowadzają atak.
+
+<SpecTable
+  caption="Klasyczny ransomware a ransomware 2.0"
+  columns={["Element", "Klasyczny atak", "Ransomware 2.0"]}
+  rows={[
+    ["Cel", "Zablokowanie dostępu do danych", "Zablokowanie danych i przejęcie ich kopii"],
+    ["Nacisk", "Klucz do odszyfrowania", "Klucz, obietnica usunięcia danych, groźba publikacji, nacisk na klientów"],
+    ["Rola kopii zapasowej", "Często wystarcza do powrotu do pracy", "Przywraca systemy, ale nie usuwa groźby publikacji"],
+    ["Obowiązki prawne", "Zależą od tego, czy doszło do naruszenia ochrony danych", "Wyciek danych zwykle uruchamia obowiązki z RODO wobec organu i osób"]
+  ]}
+  note="Zestawienie uproszczone. Przebieg konkretnego ataku ustala informatyka śledcza."
+/>
+
+<SectionView label="Oś czasu 0–24 h" />
+## Co zrobić w pierwszych 24 godzinach po ataku?
+
+Najpierw odetnij atak od reszty sieci i zadzwoń na linię wskazaną w polisie. Potem zabezpiecz ślady, ustal, czy wyciekły dane, i policz terminy zgłoszeń. Kolejność ma znaczenie, bo pochopne działania niszczą dowody i mogą ograniczyć wypłatę.
+
+1. **Pierwsza godzina: izolacja.** Odłącz zainfekowane komputery i serwery od sieci, także od Wi-Fi i VPN. Nie wyłączaj ich i nie formatuj bez decyzji specjalistów, bo w pamięci i logach są ślady potrzebne do ustalenia, którędy weszli przestępcy. Odłącz od sieci kopie zapasowe, które jeszcze nie zostały zaszyfrowane.
+2. **Telefon na linię z polisy.** W wielu polisach to połączenie jest jednocześnie zgłoszeniem szkody. Koordynator uruchamia informatyków śledczych i prawnika. Dzwoń także przy samym podejrzeniu ataku. Jeśli nie masz polisy cyber, zgłoś incydent do CERT Polska.
+3. **Bez kontaktu z przestępcami.** Nie odpowiadaj na żądanie, nie wchodź na ich stronę do negocjacji i nie płać na własną rękę. Negocjacje, jeśli w ogóle są potrzebne, prowadzą specjaliści za zgodą ubezpieczyciela.
+4. **Zabezpieczenie śladów.** Zachowaj logi systemów, poczty i zapory, notatkę z okupem, zrzuty ekranu i listę zdarzeń z godzinami. Zapisuj, kto co zrobił i kiedy. Ta dokumentacja jest potrzebna śledczym, organom i ubezpieczycielowi.
+5. **Hasła i dostęp.** Z czystego urządzenia zmień hasła do kont administratorów, poczty, bankowości i usług w chmurze. Przestępcy często mają dostęp do więcej niż jednego konta.
+6. **Ocena wycieku i terminów.** Prawnik ocenia, czy doszło do naruszenia ochrony danych osobowych. Jeśli tak, RODO wymaga zgłoszenia do Prezesa UODO bez zbędnej zwłoki, w miarę możliwości w ciągu 72 godzin od stwierdzenia naruszenia (art. 33). Przy wysokim ryzyku dla osób trzeba je też zawiadomić (art. 34). Podmioty kluczowe i ważne w rozumieniu ustawy o krajowym systemie cyberbezpieczeństwa mają osobne terminy, a pierwszy z nich to wczesne ostrzeżenie w ciągu 24 godzin.
+7. **Komunikacja.** Przygotuj krótką informację dla pracowników: co się stało, czego nie robić, kto jest kontaktem. Komunikat do klientów uzgodnij z doradcą i ubezpieczycielem, zanim przestępcy zaczną do nich pisać.
+8. **Zawiadomienie organów ścigania.** Zgłoś przestępstwo policji. Część polis wymaga takiego zawiadomienia jako warunku zwrotu okupu.
+9. **Licznik przestoju i kosztów.** Od pierwszej godziny zapisuj, co nie działa, jakie zamówienia przepadły i jakie koszty ponosisz. Zachowuj faktury. Przerwę w działalności liczy się dopiero po upływie franszyzy czasowej, ale stratę trzeba udokumentować od początku.
+
+Zanim zapadnie decyzja o odtworzeniu, warto sprawdzić, czy dla danej rodziny ransomware istnieje bezpłatne narzędzie do odszyfrowania. Zbiera je projekt No More Ransom prowadzony m.in. przez Europol. Decyzję o jego użyciu podejmują jednak śledczy, bo nieudana próba może uszkodzić dane.
+
+<NoteBlock variant="warning" label="Czego nie robić">
+
+Nie kasuj logów i nie reinstaluj systemów przed decyzją śledczych. Nie przywracaj kopii zapasowej, dopóki nie wiadomo, czy nie jest zainfekowana. Nie kontaktuj się z przestępcami i nie płać okupu na własną rękę. Nie przyznawaj odpowiedzialności wobec klientów i nie obiecuj im odszkodowań bez uzgodnienia z ubezpieczycielem.
+
+</NoteBlock>
+
+<SectionView label="Węzeł W" />
+## Czy zapłata okupu jest legalna i czy polisa ją zwróci?
+
+Zapłata okupu niesie ryzyko prawne, a polisa zwraca ją tylko na ścisłych warunkach. Zapłata może naruszać przepisy sankcyjne, jeśli pieniądze trafią do osoby lub grupy objętej sankcjami. Unia Europejska ma osobny reżim sankcji za cyberataki (rozporządzenie Rady (UE) 2019/796), Polska prowadzi własną listę sankcyjną, a przy płatnościach powiązanych z USA znaczenie mają też sankcje amerykańskie. Amerykański urząd ds. sankcji (OFAC) zdecydowanie odradza płacenie okupu i przypomina, że za naruszenie sankcji można odpowiadać nawet bez wiedzy o tym, kim jest odbiorca.
+
+Polskie instytucje państwowe również zalecają, by okupu nie płacić. Zapłata nie daje pewności, że klucz zadziała, a wykradzione dane zostaną usunięte. Firma, która raz zapłaciła, może też stać się celem kolejnego ataku.
+
+Polisa cyber może przewidywać zwrot okupu, ale wyłącznie na ścisłych warunkach:
+
+- zapłata nie narusza prawa, w tym przepisów sankcyjnych, a [klauzula sankcyjna](/slownik/#klauzula-sankcyjna) jej nie blokuje;
+- ubezpieczyciel wyraził uprzednią pisemną zgodę;
+- sprawę zgłoszono organom ścigania, jeśli polisa tego wymaga;
+- decyzję poprzedziła ocena specjalistów: czy dane da się odtworzyć z kopii, czy przestępcy dotrzymują deklaracji, kto może stać za atakiem.
+
+Bez spełnienia tych warunków zapłacony okup zostaje po stronie firmy. Koszty obsługi wymuszenia, czyli ekspertów, negocjacji i odtworzenia systemów, polisa cyber zwykle finansuje niezależnie od tego, czy okup zostanie zapłacony.
+
+<SectionView label="Przypadki R-1…R-3" />
+## Jak to wygląda w praktyce?
+
+Trzy scenariusze pokazują, która część polisy może zadziałać i gdzie przebiega granica. To scenariusze ilustracyjne, nie opisy prawdziwych szkód.
+
+<NoteBlock variant="scenario" label="R-1 · Scenariusz ilustracyjny · biuro rachunkowe">
+
+W sobotę w nocy ransomware szyfruje serwer biura rachunkowego. W poniedziałek rano na drukarkach jest żądanie okupu i link do strony, na której przestępcy pokazują próbkę dokumentów klientów. Biuro dzwoni na linię z polisy. Śledczy ustalają, że wejście nastąpiło przez konto zdalnego dostępu bez uwierzytelniania wieloskładnikowego.
+
+**Co może zadziałać:** reakcja na incydent, porada prawna i zgłoszenie naruszenia do Prezesa UODO, powiadomienie klientów, odtworzenie danych z kopii, przerwa w działalności po franszyzie czasowej, obsługa wymuszenia.
+
+**Gdzie granica:** jeśli we wniosku biuro zadeklarowało uwierzytelnianie wieloskładnikowe dla dostępu zdalnego, a go nie miało, ubezpieczyciel może kwestionować zakres ochrony. Kara administracyjna tylko wtedy, gdy prawo pozwala ją ubezpieczyć.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="R-2 · Scenariusz ilustracyjny · zakład produkcyjny">
+
+Atak zatrzymuje system planowania produkcji. Kopie zapasowe są sprawne, ale odtworzenie i sprawdzenie, czy przestępcy nie zostawili furtki, trwa pięć dni. Odbiorcy naliczają kary umowne za opóźnione dostawy.
+
+**Co może zadziałać:** informatyka śledcza, odtworzenie systemów, utracony dochód i dodatkowe koszty, np. nadgodziny przy nadrabianiu zamówień, po upływie franszyzy czasowej.
+
+**Gdzie granica:** kary umowne od odbiorców są zwykle wyłączone. Okres odszkodowawczy powinien obejmować nie tylko uruchomienie systemów, ale też czas powrotu do normalnej sprzedaży.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="R-3 · Scenariusz ilustracyjny · dostawca oprogramowania">
+
+Przestępcy wykradają z firmy tworzącej oprogramowanie kod źródłowy i dane klientów, ale niczego nie szyfrują. Żądają zapłaty za nieujawnienie danych. Dwóch klientów zapowiada roszczenia.
+
+**Co może zadziałać:** obsługa wymuszenia, jeśli definicja w polisie obejmuje samą groźbę publikacji, porada prawna, powiadomienia, roszczenia klientów po wycieku. Przy firmie IT znaczenie ma też [OC zawodowe](/slownik/#oc-zawodowe), jeśli klient zarzuca błąd w usłudze.
+
+**Gdzie granica:** spadek wartości własnego kodu i tajemnic firmy po wycieku jest zwykle wyłączony. Polisa, która definiuje wymuszenie tylko jako szyfrowanie, może nie objąć samego szantażu.
+
+</NoteBlock>
+
+<SectionView label="Zestawienie elementów" />
+## Za co może zapłacić polisa cyber po ataku ransomware?
+
+Polisa cyber finansuje zwykle cztery grupy kosztów: reakcję w pierwszych godzinach, odtworzenie systemów i przestój, obsługę wymuszenia oraz roszczenia i postępowania po wycieku. Każda grupa może mieć własny limit, [podlimit](/slownik/#podlimit) i [udział własny](/slownik/#udzial-wlasny).
+
+<BOM
+  id="tabela-zakresu"
+  caption="Tabela zakresu: atak ransomware a polisa cyber"
+  prefix="R"
+  rows={frontmatter.coverage.filter((r) => r.module !== "Wyłączenie")}
+/>
+
+Polisa cyber działa zwykle w formule wykrycia: liczy się atak po raz pierwszy wykryty w okresie ubezpieczenia. Ataki i okoliczności znane przed zawarciem umowy są wyłączone. Dlatego każdy niepokojący sygnał, np. nieznane konto administratora czy alert systemu ochrony, warto zgłosić od razu.
+
+<SectionView label="Mapa luk" />
+## Czego polisa nie obejmuje przy ataku ransomware?
+
+Najczęstsze luki to kary umowne, ulepszenia systemów i okup, który naruszałby sankcje. Oto wyłączenia, które warto znać przed atakiem, a nie po nim.
+
+<BOM
+  caption="Wyłączenia i ograniczenia przy ataku ransomware"
+  prefix="X"
+  headers={{ conditions: "Uwagi" }}
+  rows={frontmatter.coverage.filter((r) => r.module === "Wyłączenie").map(({ module, ...r }) => r)}
+/>
+
+Wyłudzone przelewy, np. gdy przestępcy przy okazji ataku podszyją się pod firmę i wyślą klientom fałszywe faktury, wymagają zwykle modułu cyberprzestępstw albo [ubezpieczenia crime](/ubezpieczenia/ubezpieczenie-crime/). Osobista odpowiedzialność członków zarządu za zaniedbania w bezpieczeństwie to z kolei temat dla [OC członków zarządu (D&O)](/ubezpieczenia/oc-czlonkow-zarzadu-d-o/).
+
+<SectionView label="Warunki brzegowe" />
+## Od czego zależy składka i dostęp do ochrony przed ransomware?
+
+Ubezpieczyciel wycenia ryzyko na podstawie wniosku, a pytania o ransomware należą do najważniejszych. Nie podajemy cen, bo dwie firmy o podobnym przychodzie mogą dostać bardzo różne warunki. Najczęściej liczą się:
+
+- **uwierzytelnianie wieloskładnikowe** dla poczty, dostępu zdalnego i kont administratorów;
+- **kopie zapasowe** odseparowane od sieci, odporne na usunięcie i regularnie testowane przez próbne odtworzenie;
+- **ochrona komputerów i serwerów** klasy EDR oraz to, czy ktoś reaguje na alerty, także w nocy i w weekendy;
+- **aktualizacje**, zwłaszcza systemów wystawionych do internetu;
+- **plan reagowania na incydent**: kto dzwoni na linię ubezpieczyciela, kto decyduje o odłączeniu systemów;
+- **szkolenia z phishingu** i procedury weryfikacji nietypowych poleceń;
+- **zależność od systemów**, czyli ile dni firma przetrwa bez nich, oraz liczba i rodzaj przetwarzanych danych.
+
+Odpowiedzi we wniosku muszą być prawdziwe i aktualne. Zadeklarowane zabezpieczenie, którego w dniu ataku nie było, to częsty powód sporów o wypłatę. Braki nie zawsze przekreślają ochronę, ale mogą oznaczać wyższy udział własny, niższy limit dla wymuszeń albo odmowę. Lepiej omówić je z brokerem przed złożeniem wniosku.
+
+<SectionView label="Lista kontrolna" />
+## Co przygotować przed rozmową o polisie cyber?
+
+Wystarczy kilka informacji, żeby ocenić ryzyko i dobrać limity pod realny scenariusz ataku:
+
+- opis działalności, przychód i systemy, bez których firma nie pracuje;
+- szacunkowa liczba osób, których dane przetwarzasz, oraz rodzaj danych;
+- stan zabezpieczeń z listy powyżej, także to, czego jeszcze brakuje;
+- incydenty i próby ataków z ostatnich lat;
+- obecna polisa i data jej wygaśnięcia, jeśli ją masz;
+- czy firma podlega przepisom o krajowym systemie cyberbezpieczeństwa.
+
+Nie przesyłaj haseł ani danych osobowych klientów, bo do oferty nie są potrzebne.

@@ -1,0 +1,49 @@
+---
+/**
+ * Siatka kart. Dzieci: <SheetCard>.
+ *  - columns={3} (domyślnie): tyle kolumn ≥ 300 px, ile się zmieści,
+ *  - columns={2}: zawsze dwie kolumny (jedna < 720 px),
+ *  - columns={4}: cztery kolumny (dwie < 1024 px, jedna < 640 px).
+ */
+interface Props {
+  columns?: 2 | 3 | 4;
+  label?: string;
+}
+const { columns = 3, label } = Astro.props;
+---
+
+<div class:list={['card-grid', `card-grid--${columns}`]} role={label ? 'group' : undefined} aria-label={label}>
+  <slot />
+</div>
+
+<style>
+  .card-grid {
+    display: grid;
+    gap: var(--gutter);
+    margin-block: var(--s-4);
+  }
+  .card-grid--3 {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  }
+  .card-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .card-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @media (max-width: 1023px) {
+    .card-grid--4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 720px) {
+    .card-grid--2 {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 639px) {
+    .card-grid--4 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

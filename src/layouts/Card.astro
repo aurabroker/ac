@@ -1,0 +1,107 @@
+---
+/**
+ * Karta katalogu (PLAN §5.5): definicja („W skrócie”), rysunek, treść (SpecTable, moduły, kto kupuje,
+ * scenariusze, wyłączenia), tabela zakresu, „Rynki” (krajowy / zagraniczny) + formuła (b),
+ * FAQ, artykuły, formuły (d), (c), kontakt. Lloyd's tylko przy securityConfirmed (linia tekstowa, bez odznaki).
+ */
+import Sheet from './Sheet.astro';
+import SheetHead from '../components/SheetHead.astro';
+import SheetFoot from '../components/SheetFoot.astro';
+import DocBody from '../components/DocBody.astro';
+import AnnotatedFigure from '../components/AnnotatedFigure.astro';
+import BOM from '../components/BOM.astro';
+import FAQ from '../components/FAQ.astro';
+import Sources from '../components/Sources.astro';
+import Disclosure from '../components/Disclosure.astro';
+import ContactChannels from '../components/ContactChannels.astro';
+import NoteBlock from '../components/NoteBlock.astro';
+import HubArticles from '../components/lists/HubArticles.astro';
+import RelatedSheets from '../components/lists/RelatedSheets.astro';
+import { formulaB } from '../lib/compliance.ts';
+import type { PageContext } from '../lib/page.ts';
+import type { SolutionEntry } from '../lib/routes.ts';
+
+interface Props {
+  ctx: PageContext;
+  headings: { depth: number; slug: string; text: string }[];
+}
+const { ctx, headings } = Astro.props;
+const d = (ctx.route.entry as SolutionEntry).data;
+const marketLabel = { krajowy: 'Rynek krajowy', zagraniczny: 'Rynek zagraniczny, w tym londyński' } as const;
+const tocExtra = [
+  ...(d.coverage.length && d.coveragePlacement === 'auto' ? [{ slug: 'tabela-zakresu', text: 'Tabela zakresu' }] : []),
+  { slug: 'rynki', text: 'Gdzie szukamy ochrony?' },
+  ...(d.faq.length ? [{ slug: 'faq', text: 'Najczęściej zadawane pytania' }] : []),
+  { slug: 'kontakt', text: 'Zleć analizę ryzyka' },
+];
+---
+
+<Sheet ctx={ctx} kind="solution">
+  <div class="container">
+    <SheetHead ctx={ctx} />
+    {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} />}
+    <DocBody headings={headings} tocExtra={tocExtra}>
+      <div class="prose"><slot /></div>
+      {
+        d.coverage.length > 0 && d.coveragePlacement === 'auto' && (
+          <BOM id="tabela-zakresu" caption={d.coverageCaption ?? 'Tabela zakresu'} rows={d.coverage} />
+        )
+      }
+      {
+        d.mandatoryOC && (
+          <NoteBlock variant="warning" label="Ubezpieczenie obowiązkowe a nadwyżka">
+            <p>
+              Jeśli zawód wymaga obowiązkowego OC, polisa obowiązkowa jest zawierana na rynku krajowym. Program
+              zagraniczny może uzupełniać ją wyłącznie jako ochrona nadwyżkowa lub w zakresie, którego polisa
+              obowiązkowa nie obejmuje.
+            </p>
+          </NoteBlock>
+        )
+      }
+      <section class="markets" aria-labelledby="rynki">
+        <h2 id="rynki">Gdzie szukamy ochrony?</h2>
+        <ul class="markets__list">
+          {d.markets.map((m) => <li>{marketLabel[m]}</li>)}
+        </ul>
+        {formulaB({ securityConfirmed: d.securityConfirmed, lloydsShare: d.lloydsShare }).map((t) => <p>{t}</p>)}
+        <p>Kartę produktu (IPID) i ogólne warunki ubezpieczenia przekazujemy razem z ofertą.</p>
+      </section>
+      <FAQ items={d.faq} />
+      <HubArticles hubPath={ctx.path} />
+      <Disclosure show={['d', 'c']} />
+      <ContactChannels sheet={d.code} />
+      <RelatedSheets paths={d.related} />
+      <Sources items={d.sources} />
+      <SheetFoot ctx={ctx} />
+    </DocBody>
+  </div>
+</Sheet>
+
+<style>
+  .markets {
+    max-width: var(--measure);
+    margin-top: var(--s-10);
+  }
+  .markets h2 {
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+  }
+  .markets__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+    list-style: none;
+    margin: var(--s-2) 0;
+    padding: 0;
+  }
+  .markets__list li {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    padding: 4px 10px;
+    border: 1px solid var(--ink);
+  }
+  .markets p {
+    margin-top: var(--s-1);
+    color: var(--ink-2);
+  }
+</style>

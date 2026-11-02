@@ -1,0 +1,183 @@
+---
+/**
+ * Stopka: mapa serwisu (kolumny linków), tabliczka z danymi spółki (KSH art. 206, KNF),
+ * linki dla maszyn ([.md], llms.txt, RSS, sitemap) i formuła (c).
+ */
+import { FOOTER_NAV } from '../lib/nav.ts';
+import { SITE, ADDRESS_LINE } from '../lib/site.ts';
+import { FORMULA_C } from '../lib/compliance.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  /** Ścieżka bliźniaka .md bieżącej strony (gdy indeksowalna). */
+  mdPath?: string | null;
+}
+const { mdPath } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" data-md-skip>
+  <div class="container">
+    <nav class="site-footer__map" id="mapa-serwisu" aria-label="Mapa serwisu">
+      {
+        FOOTER_NAV.map((col) => (
+          <div class="site-footer__col">
+            <p class="label">{col.title}</p>
+            <ul>
+              {col.links.map((l) => (
+                <li>
+                  <a href={l.href}>{polishText(l.label)}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+      <div class="site-footer__col">
+        <p class="label">Kontakt</p>
+        <ul>
+          <li><a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a></li>
+          {/* <wbr> po „@”: na 320 px adres łamie się w kolumnie zamiast poszerzać stronę */}
+          <li><a href={`mailto:${SITE.email}`}>{SITE.email.split('@')[0]}@<wbr />{SITE.email.split('@')[1]}</a></li>
+          <li class="site-footer__muted">{ADDRESS_LINE}</li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="site-footer__block" role="group" aria-label="Dane spółki">
+      <dl class="tb">
+        <div class="tb__cell tb__cell--wide">
+          <dt>Firma</dt>
+          <dd>{SITE.legalName} — broker ubezpieczeniowy</dd>
+        </div>
+        <div class="tb__cell tb__cell--wide">
+          <dt>Siedziba</dt>
+          <dd>{ADDRESS_LINE}</dd>
+        </div>
+        <div class="tb__cell"><dt>KRS</dt><dd>{SITE.krs}</dd></div>
+        <div class="tb__cell"><dt>NIP</dt><dd>{SITE.nip}</dd></div>
+        <div class="tb__cell"><dt>REGON</dt><dd>{SITE.regon}</dd></div>
+        <div class="tb__cell"><dt>Zezwolenie KNF</dt><dd>nr {SITE.knfPermit}</dd></div>
+        <div class="tb__cell"><dt>Rejestr brokerów</dt><dd>{SITE.brokerRegister}</dd></div>
+        <div class="tb__cell"><dt>Telefon</dt><dd>{SITE.phone}</dd></div>
+        <div class="tb__cell tb__cell--wide"><dt>Sąd rejestrowy</dt><dd>{SITE.registryCourt}</dd></div>
+        <div class="tb__cell tb__cell--wide"><dt>Kapitał zakładowy</dt><dd>{SITE.shareCapital}</dd></div>
+      </dl>
+    </div>
+
+    <p class="site-footer__formula">{polishText(FORMULA_C)}</p>
+
+    <div class="site-footer__bottom mono">
+      <span>© {year} {SITE.legalName}</span>
+      <span class="site-footer__machines">
+        {mdPath && <a href={mdPath} type="text/markdown">[.md]</a>}
+        <a href="/llms.txt" type="text/plain">llms.txt</a>
+        <a href="/rss.xml" type="application/rss+xml">RSS</a>
+        <a href="/sitemap-index.xml" type="application/xml">sitemap</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--s-16);
+    border-top: 1px solid var(--ink);
+    padding-block: var(--s-8) var(--s-4);
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .site-footer__map {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--s-4) var(--gutter);
+  }
+  .site-footer__col ul {
+    list-style: none;
+    margin: var(--s-2) 0 0;
+    padding: 0;
+  }
+  .site-footer__col li + li {
+    margin-top: var(--s-1);
+  }
+  .site-footer__col a {
+    color: var(--ink-2);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .site-footer__col a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  .site-footer__muted {
+    color: var(--ink-3);
+  }
+  .site-footer__block {
+    margin-top: var(--s-8);
+  }
+  .tb {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--ink);
+    border-left: 1px solid var(--ink);
+  }
+  .tb__cell {
+    border-right: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: var(--s-1) var(--s-2) var(--s-1) 12px;
+    min-width: 0;
+  }
+  .tb__cell--wide {
+    grid-column: span 3;
+  }
+  .tb dt {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .tb dd {
+    margin: 2px 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .site-footer__formula {
+    margin-top: var(--s-4);
+    max-width: 90ch;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--ink-3);
+  }
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-2);
+    margin-top: var(--s-4);
+    padding-top: var(--s-2);
+    border-top: 1px solid var(--rule);
+    color: var(--ink-3);
+  }
+  .site-footer__machines {
+    display: flex;
+    gap: var(--s-2);
+  }
+  .site-footer__machines a {
+    color: var(--ink-3);
+  }
+  @media (max-width: 900px) {
+    .site-footer__map {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .tb {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .tb__cell--wide {
+      grid-column: span 2;
+    }
+  }
+</style>

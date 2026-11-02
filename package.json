@@ -1,0 +1,50 @@
+{
+  "name": "aura-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Serwis www.auraconsulting.pl — Astro, statyczny build na Cloudflare Workers Static Assets.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "guard": "node scripts/guard.mjs",
+    "validate:twins": "node scripts/validate-twins.mjs",
+    "validate:jsonld": "node scripts/validate-jsonld.mjs",
+    "validate:csp": "node scripts/validate-csp.mjs",
+    "links": "node scripts/check-links.mjs",
+    "validate": "npm run validate:twins && npm run validate:jsonld && npm run validate:csp && npm run links",
+    "ci": "npm run guard && npm run check && npm run build && npm run guard && npm run validate"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "7.3.5",
+    "@astrojs/mdx": "8.1.2",
+    "@astrojs/rss": "4.0.19",
+    "@fontsource/archivo": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/newsreader": "5.3.0",
+    "@resvg/resvg-js": "2.6.2",
+    "astro": "7.4.1",
+    "hast-util-from-html": "2.0.3",
+    "hast-util-select": "6.0.4",
+    "hast-util-to-mdast": "10.1.2",
+    "hast-util-to-string": "3.0.1",
+    "mdast-util-gfm": "3.1.0",
+    "mdast-util-to-markdown": "2.2.1",
+    "satori": "0.63.2",
+    "unist-util-visit": "5.2.0",
+    "unist-util-visit-parents": "6.1.0",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@types/hast": "3.0.5",
+    "@types/mdast": "4.0.4",
+    "@types/node": "22.20.5",
+    "typescript": "6.0.3"
+  }
+}

@@ -1,0 +1,30 @@
+name: guard-history
+
+# Strażnik poufności na PEŁNEJ historii git (wszystkie gałęzie i commity).
+# Zwykłe CI sprawdza tylko bieżące drzewo i dist/ — tu wychodzą dane, które zostały w starych commitach.
+# W obecnym repozytorium ten job będzie czerwony, dopóki właściciel nie przeprowadzi czyszczenia
+# historii (docs/TODO-wlasciciel.md §5, nowe prywatne repo z czystą historią). W nowym repo ma być zielony.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * 1' # poniedziałki, 05:17 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  history:
+    name: Strażnik poufności — historia git
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Pobierz wszystkie gałęzie
+        run: git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Skan historii (wypisuje tylko plik:linia i numer reguły)
+        run: node scripts/guard.mjs --git-history

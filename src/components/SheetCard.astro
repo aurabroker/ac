@@ -1,0 +1,76 @@
+---
+/**
+ * Karta arkusza w indeksach (katalog, rejestr wiedzy, „Arkusze szczegółowe”, „Powiązane”).
+ * Cała karta jest linkiem przez tytuł (jeden <a>), numer arkusza w Plex Mono.
+ */
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  href: string;
+  title: string;
+  sheet?: string;
+  summary?: string;
+  meta?: string;
+  /** Poziom nagłówka tytułu. */
+  level?: 2 | 3 | 4;
+  draft?: boolean;
+}
+const { href, title, sheet, summary, meta, level = 3, draft } = Astro.props;
+const H = `h${level}` as 'h2' | 'h3' | 'h4';
+---
+
+<article class="sheet-card">
+  {sheet && <p class="sheet-card__sheet mono">{sheet}{draft && ' · SZKIC'}</p>}
+  <H class="sheet-card__title"><a href={href}>{polishText(title)}</a></H>
+  {summary && <p class="sheet-card__summary">{polishText(summary)}</p>}
+  {meta && <p class="sheet-card__meta mono">{meta}</p>}
+</article>
+
+<style>
+  .sheet-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    padding: var(--s-3);
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    transition: border-color 120ms var(--ease);
+    height: 100%;
+  }
+  .sheet-card:hover {
+    border-color: var(--ink);
+  }
+  .sheet-card__sheet {
+    color: var(--ink-3);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+  }
+  .sheet-card__title {
+    /* scoped (.sheet-card__title[data-astro-cid]) wygrywa z `.prose h3 { margin-top }` */
+    margin: 0;
+    font-size: 1.1875rem;
+    line-height: 1.3;
+  }
+  .sheet-card__title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .sheet-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .sheet-card__title a:hover {
+    text-decoration: underline;
+  }
+  .sheet-card__summary {
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .sheet-card__meta {
+    margin-top: auto;
+    padding-top: var(--s-1);
+    color: var(--ink-3);
+  }
+</style>

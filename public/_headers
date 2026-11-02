@@ -1,0 +1,53 @@
+# Nagłówki Cloudflare Workers Static Assets (limit: 100 reguł; build dopisuje reguły canonical dla .md).
+# Uwaga: nagłówki z tego pliku NIE dotyczą odpowiedzi generowanych przez kod Workera (MVP: brak Workera).
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; manifest-src 'self'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), browsing-topics=()
+  X-Frame-Options: DENY
+  Cross-Origin-Opener-Policy: same-origin
+  Speculation-Rules: "/speculation-rules.json"
+
+# HTML: link do bliźniaka .md (rel=alternate) — reguły dla każdej strony z bliźniakiem dopisuje build
+# (src/integrations/aura.ts); bez reguł ogólnych, żeby 404 i strony noindex nie wskazywały nieistniejącego .md.
+
+# Adresy *.workers.dev (podglądy wersji i ewentualny workers_dev) nigdy w indeksie — także gdy Access nie działa.
+https://:version.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
+
+# Bliźniaki Markdown: typ, noindex, CORS (canonical: reguły poniżej i wygenerowane w buildzie)
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+  X-Robots-Tag: noindex
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=0, must-revalidate
+/wiedza/*.md
+  Link: <https://www.auraconsulting.pl/wiedza/:splat/>; rel="canonical"
+/ubezpieczenia/*.md
+  Link: <https://www.auraconsulting.pl/ubezpieczenia/:splat/>; rel="canonical"
+/regulacje/*.md
+  Link: <https://www.auraconsulting.pl/regulacje/:splat/>; rel="canonical"
+/zespol/*.md
+  Link: <https://www.auraconsulting.pl/zespol/:splat/>; rel="canonical"
+
+# Pliki dla maszyn
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+/speculation-rules.json
+  Content-Type: application/speculationrules+json
+
+# Cache
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+/og/*
+  Cache-Control: public, max-age=86400
+/favicon.svg
+  Cache-Control: public, max-age=86400

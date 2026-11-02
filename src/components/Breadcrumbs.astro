@@ -1,0 +1,73 @@
+---
+/** Okruszki: Start › Sekcja › Arkusz. Dane te same co BreadcrumbList w JSON-LD. */
+import type { Crumb } from '../lib/seo/jsonld.ts';
+
+interface Props {
+  items: Crumb[];
+}
+const { items } = Astro.props;
+---
+
+{
+  items.length > 1 && (
+    <nav class="breadcrumbs" aria-label="Okruszki" data-md-skip>
+      <ol>
+        {items.map((c, i) => (
+          <li>
+            {i < items.length - 1 ? (
+              <a href={c.href}>{c.label}</a>
+            ) : (
+              <span aria-current="page">{c.label}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .breadcrumbs {
+    margin-top: var(--s-4);
+  }
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .breadcrumbs li + li::before {
+    content: '›';
+    margin-right: var(--s-1);
+    color: var(--ink-4);
+  }
+  .breadcrumbs a {
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+  .breadcrumbs a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  /* długi tytuł arkusza: wielokropek zamiast poziomego przewijania na telefonie */
+  .breadcrumbs li:last-child {
+    display: flex;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .breadcrumbs [aria-current] {
+    min-width: 0;
+    color: var(--ink-2);
+    max-width: 48ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

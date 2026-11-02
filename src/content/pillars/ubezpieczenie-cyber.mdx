@@ -1,0 +1,550 @@
+---
+title: "Ubezpieczenie cyber dla firm"
+seoTitle: "Ubezpieczenie cyber dla firm: zakres · Aura Consulting"
+ogTitle: "Ubezpieczenie cyber dla firm: co obejmuje polisa"
+description: "Ubezpieczenie cyber dla firm: reakcja na incydent, odtworzenie danych, przerwa w działalności, wyciek danych i RODO, okup, wyłudzone przelewy i wyłączenia."
+titleAccent: "cyber"
+lead: "Dla firm handlowych, produkcyjnych, usługowych i biur, które nie zajmują się informatyką zawodowo, ale bez systemów nie pracują. Co pokrywa polisa cyber po ataku lub wycieku danych, jak wygląda pomoc w pierwszych godzinach, czego oczekuje ubezpieczyciel i gdzie ochrona ma granice."
+published: 2026-11-02
+updated: 2026-11-02
+legalStateAsOf: 2026-11-02
+revision: "A"
+sheet: "CY-000"
+pillar: "cyber"
+order: 3
+figure: "FigPillarCyber"
+reviewEvery: 90
+markets:
+  - "krajowy"
+  - "zagraniczny"
+summary: "Ubezpieczenie cyber pokrywa zwykle koszty reakcji na incydent, odtworzenia danych i systemów, przerwy w działalności oraz roszczeń osób trzecich po wycieku danych. Okup, kary administracyjne i wyłudzone przelewy wymagają osobnej oceny lub modułu. Zakres, limity, franszyzy i wyłączenia zależą od polisy i potwierdzamy je w ofercie."
+summaryPoints:
+  - "Pierwsze godziny po ataku organizuje zwykle całodobowa linia wskazana w polisie: informatycy śledczy, prawnik, powiadomienia i komunikacja, w limitach i na zasadach z polisy."
+  - "Przestój jest pokrywany dopiero po upływie franszyzy czasowej i tylko przez okres odszkodowawczy. Awaria systemu bez ataku i przestój u dostawcy chmury to zwykle rozszerzenia."
+  - "Wyłudzony przelew wymaga modułu cyberprzestępstw. Okup tylko w granicach prawa i za uprzednią zgodą ubezpieczyciela, kary administracyjne tylko wtedy, gdy prawo pozwala je ubezpieczyć."
+cardSummary: "Firmy spoza IT: ransomware, wyciek danych, przerwa w działalności, wyłudzone przelewy i roszczenia osób trzecich."
+keywords:
+  primary: "ubezpieczenie cyber dla firm"
+  secondary:
+    - "polisa cyber"
+    - "ubezpieczenie cybernetyczne"
+    - "ubezpieczenie od cyberataku"
+    - "ubezpieczenie od wycieku danych"
+    - "ubezpieczenie cyber dla małych firm"
+    - "cyber ubezpieczenie przerwa w działalności"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu: ubezpieczenie cyber dla firm"
+coverage:
+  # Reakcja na incydent
+  - event: "Całodobowa linia pomocy, koordynator szkody i pierwsze doradztwo, także przy samym podejrzeniu incydentu"
+    module: "Reakcja na incydent"
+    label: typical
+    conditions: "Zwykle przez zespół lub usługodawców wskazanych przez ubezpieczyciela. W wielu polisach telefon na linię jest jednocześnie zgłoszeniem szkody."
+  - event: "Informatyka śledcza: ustalenie źródła i zakresu ataku, usunięcie złośliwego oprogramowania"
+    module: "Reakcja na incydent"
+    label: typical
+    conditions: "Także badanie wymagane przez organ lub organizację kartową, jeśli przewiduje to polisa."
+  - event: "Porada prawna po naruszeniu ochrony danych i obsługa zgłoszenia do organu nadzorczego (np. Prezesa UODO)"
+    module: "Reakcja na incydent"
+    label: typical
+  - event: "Powiadomienie osób, których dane dotyczą, i infolinia dla nich"
+    module: "Reakcja na incydent"
+    label: typical
+    conditions: "Treść i sposób powiadomień zwykle uzgadnia się z ubezpieczycielem."
+  - event: "Doradca ds. komunikacji kryzysowej w związku z incydentem"
+    module: "Reakcja na incydent"
+    label: typical
+  - event: "Monitoring tożsamości lub historii kredytowej dla poszkodowanych"
+    module: "Reakcja na incydent"
+    label: optional
+  # Odtworzenie i przestój
+  - event: "Odtworzenie danych, aplikacji i systemów do stanu sprzed incydentu: specjaliści, nadgodziny, ponowne wprowadzenie danych"
+    module: "Odtworzenie i przestój"
+    label: typical
+    conditions: "Bez ulepszeń ponad stan sprzed szkody. Bezpieczniejsza wersja systemu tylko wtedy, gdy przewiduje to polisa, zwykle w podlimicie."
+  - event: "Przerwa w działalności po ataku: utracony dochód i zwiększone koszty działalności"
+    module: "Odtworzenie i przestój"
+    label: typical
+    conditions: "Po upływie franszyzy czasowej i w okresie odszkodowawczym z polisy. Stratę trzeba udokumentować."
+  - event: "Przerwa w działalności po awarii systemu lub błędzie pracownika, bez ataku"
+    module: "Odtworzenie i przestój"
+    label: optional
+    conditions: "Zależy od definicji w polisie. Chodzi zwykle o nagły przestój, a nie o błąd w projekcie systemu."
+  - event: "Przestój u dostawcy chmury, hostingu lub systemu, z którego korzystasz (zależna przerwa w działalności)"
+    module: "Odtworzenie i przestój"
+    label: optional
+    conditions: "Zwykle trzeba wykazać przyczynę i czas przestoju, np. raportem dostawcy. Innych dostawców wskazuje się w polisie."
+  - event: "Wymiana sprzętu trwale unieruchomionego przez atak"
+    module: "Odtworzenie i przestój"
+    label: optional
+    conditions: "Gdy wymiana jest tańsza niż ponowna instalacja oprogramowania."
+  - event: "Koszty eksperta, który wyliczy stratę z przestoju"
+    module: "Odtworzenie i przestój"
+    label: optional
+    conditions: "Zwykle tylko z ekspertem wskazanym przez ubezpieczyciela lub likwidatora szkody."
+  - event: "Utrata klientów po incydencie (szkoda reputacyjna)"
+    module: "Odtworzenie i przestój"
+    label: optional
+    conditions: "W okresie wskazanym w polisie."
+  # Wymuszenie
+  - event: "Obsługa wymuszenia: ocena żądania, negocjacje, eksperci, także przy groźbie publikacji danych"
+    module: "Wymuszenie"
+    label: typical
+    conditions: "Za uprzednią zgodą ubezpieczyciela. Definicję wymuszenia warto porównać w ofertach."
+  - event: "Zapłata okupu"
+    module: "Wymuszenie"
+    label: underwriting
+    conditions: "Tylko w granicach prawa, w tym przepisów sankcyjnych, po uprzedniej pisemnej zgodzie ubezpieczyciela i zwykle po zgłoszeniu sprawy organom ścigania."
+  # Odpowiedzialność i postępowania
+  - event: "Roszczenia osób trzecich po wycieku danych, nieuprawnionym dostępie do systemów, przeniesieniu złośliwego oprogramowania albo użyciu Twoich systemów do ataku na innych"
+    module: "Odpowiedzialność i postępowania"
+    label: typical
+    conditions: "Wraz z kosztami obrony, w limicie sekcji."
+  - event: "Postępowanie organu ochrony danych lub innego organu po incydencie: koszty obrony"
+    module: "Odpowiedzialność i postępowania"
+    label: typical
+  - event: "Kary administracyjne za naruszenie ochrony danych"
+    module: "Odpowiedzialność i postępowania"
+    label: underwriting
+    conditions: "Tylko w zakresie, w jakim prawo pozwala je ubezpieczyć. Traktuj tę ochronę jako niepewną."
+  - event: "Kary i opłaty organizacji kartowych po wycieku danych kart (PCI DSS)"
+    module: "Odpowiedzialność i postępowania"
+    label: optional
+    conditions: "Dla firm, które przyjmują płatności kartą, zwłaszcza w internecie."
+  # Cyberprzestępstwa
+  - event: "Wyłudzony przelew: phishing, fałszywa faktura, podszycie się pod prezesa lub dostawcę, także z użyciem deepfake'a głosu"
+    module: "Cyberprzestępstwa"
+    label: optional
+    conditions: "Tylko w wykupionym module, zwykle w podlimicie. Ubezpieczyciel pyta o procedury weryfikacji płatności."
+  - event: "Nieuprawniony przelew z rachunku firmy lub obciążenie firmowej karty po przejęciu dostępu"
+    module: "Cyberprzestępstwa"
+    label: optional
+  - event: "Fałszywe faktury lub strony podszywające się pod Twoją firmę wobec klientów"
+    module: "Cyberprzestępstwa"
+    label: optional
+    conditions: "Także koszty komunikatu do klientów i usunięcia fałszywych stron, jeśli przewiduje to polisa."
+  - event: "Kradzież środków klientów z rachunku prowadzonego przez Twoją firmę w ich imieniu"
+    module: "Cyberprzestępstwa"
+    label: optional
+    conditions: "Kradzież przez osobę trzecią drogą elektroniczną, także socjotechnika. Ważne m.in. dla biur rachunkowych, zarządców nieruchomości i pośredników."
+  - event: "Włamanie do centrali telefonicznej i rachunek za połączenia"
+    module: "Cyberprzestępstwa"
+    label: optional
+  - event: "Nieuprawnione użycie zasobów IT: koparki kryptowalut, botnety, nadużycie kluczy API"
+    module: "Cyberprzestępstwa"
+    label: optional
+  # Wyłączenia i luki
+  - event: "Incydenty i okoliczności znane przed zawarciem umowy"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Ujawnij je we wniosku. Przy zmianie polisy zgłoś okoliczności dotychczasowemu ubezpieczycielowi."
+  - event: "Ulepszenie systemów ponad stan sprzed incydentu"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Część polis przewiduje wyjątek w podlimicie, np. bezpieczniejszą wersję systemu po ataku."
+  - event: "Wojna i cyberwojna państwowa, rozległe awarie internetu, DNS, telekomunikacji i zasilania"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Na zasadach z polisy. Wyjątki, np. dla kosztów wstępnej reakcji na incydent, bywają przewidziane."
+  - event: "Pożar, zalanie, kradzież sprzętu i inne szkody fizyczne w mieniu"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[Mienie, sprzęt elektroniczny i przerwa w działalności](/ubezpieczenia/mienie-i-sprzet-elektroniczny/)"
+  - event: "Wyłudzony przelew, gdy nie wykupiono modułu cyberprzestępstw"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Moduł cyberprzestępstw lub [ubezpieczenie crime](/ubezpieczenia/ubezpieczenie-crime/)"
+  - event: "Błędy w usługach świadczonych klientom (ich czyste straty finansowe)"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[OC zawodowe](/oc-zawodowe/); firmy IT: [OC i cyber dla firm IT](/oc-cyber-dla-it/)"
+  - event: "Osobista odpowiedzialność członków zarządu"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[OC członków zarządu (D&O)](/ubezpieczenia/oc-czlonkow-zarzadu-d-o/)"
+  - event: "Kary umowne i zobowiązania przyjęte w umowach ponad odpowiedzialność wynikającą z przepisów"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Lukę zmniejsza negocjacja limitów odpowiedzialności w umowach."
+  - event: "Zbieranie danych bez wymaganej zgody, śledzenie i profilowanie użytkowników, nielegalne nagrywanie, niezamówiona komunikacja (spam)"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Z wyjątkami wskazanymi w polisie."
+  - event: "Spadek wartości własności intelektualnej i tajemnic firmy po wycieku"
+    module: "Wyłączenie"
+    label: excluded
+  - event: "Umyślne, przestępcze lub nieuczciwe działania kadry zarządzającej"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Zwykle stosowane po stwierdzeniu prawomocnym orzeczeniem albo pisemnym przyznaniu."
+  - event: "Kary i grzywny, których prawo nie pozwala ubezpieczyć"
+    module: "Wyłączenie"
+    label: excluded
+  - event: "Zwroty transakcji kartowych (chargebacki) i niewypłacalność"
+    module: "Wyłączenie"
+    label: excluded
+  - event: "Działania, których ubezpieczenie naruszałoby sankcje"
+    module: "Wyłączenie"
+    label: excluded
+faq:
+  - q: "Czy mała firma potrzebuje ubezpieczenia cyber?"
+    a: "Warto je rozważyć, jeśli firma nie może pracować bez poczty, systemu sprzedaży lub księgowości albo przechowuje dane klientów i pracowników. Mała firma rzadko ma własny zespół bezpieczeństwa, więc po ataku sama musiałaby szybko znaleźć informatyków śledczych, prawnika i sfinansować przestój. Polisa daje dostęp do takiej pomocy i pokrywa koszty w limitach z polisy."
+  - q: "Czym ubezpieczenie cyber różni się od ubezpieczenia mienia?"
+    a: "Ubezpieczenie mienia dotyczy zwykle szkód fizycznych: pożaru, zalania, kradzieży sprzętu. Ubezpieczenie cyber obejmuje skutki incydentu w danych i systemach: koszty reakcji, odtworzenie danych, przestój po ataku i roszczenia po wycieku danych. Zaszyfrowane dane czy koszty powiadomienia osób po wycieku często zostają poza polisą majątkową. Więcej: [mienie, sprzęt elektroniczny i przerwa w działalności](/ubezpieczenia/mienie-i-sprzet-elektroniczny/)."
+  - q: "Czy polisa cyber pokryje karę z RODO?"
+    a: "Pokryje koszty obrony w postępowaniu przed organem ochrony danych, zgodnie z warunkami polisy. Samą karę administracyjną tylko w zakresie, w jakim prawo pozwala ją ubezpieczyć, a ubezpieczalność takich kar bywa ograniczona. Bezpieczniej założyć, że kara może zostać po stronie firmy, a polisa sfinansuje prawników, powiadomienia i roszczenia osób, których dane wyciekły."
+  - q: "Czy ubezpieczenie cyber pokrywa wyłudzony przelew?"
+    a: "Tylko jeśli wykupisz moduł cyberprzestępstw, zwykle w osobnym podlimicie. Obejmuje on m.in. przelewy wyłudzone metodą „na fałszywą fakturę”, podszycie się pod prezesa lub dostawcę, także z użyciem podrobionego głosu. Ubezpieczyciel może pytać o procedury weryfikacji płatności. Szerszą ochronę przed nadużyciami daje [ubezpieczenie crime](/ubezpieczenia/ubezpieczenie-crime/)."
+  - q: "Czy polisa zadziała, jeśli atak był skutkiem błędu pracownika?"
+    a: "Zwykle tak. Kliknięcie w złośliwy link czy otwarcie zainfekowanego załącznika to typowy początek ataku, a polisa cyber odpowiada za jego skutki na swoich zasadach. Inną sprawą jest przestój bez ataku, np. po błędnej aktualizacji: to zwykle rozszerzenie zależne od definicji błędu operatora w polisie. Umyślne działania kadry zarządzającej są wyłączone."
+  - q: "Czy polisa obejmuje przestój u dostawcy chmury?"
+    a: "Może, jeśli ma rozszerzenie o zależną przerwę w działalności. Zwykle obejmuje ono dostawców usług chmurowych i hostingu oraz innych dostawców wskazanych w polisie. Trzeba wykazać przyczynę i czas przestoju, np. raportem dostawcy, a ochrona zaczyna się po upływie franszyzy czasowej. Rozległe awarie internetu czy zasilania są zwykle wyłączone."
+  - q: "Czy po ataku muszę korzystać z ekspertów wskazanych przez ubezpieczyciela?"
+    a: "W wielu polisach tak, przynajmniej na początku. Ubezpieczyciel ma listę sprawdzonych usługodawców: informatyków śledczych, kancelarii i doradców ds. komunikacji. Koszty firm spoza tej listy albo poniesione bez zgody ubezpieczyciela mogą nie zostać zwrócone. Jeśli współpracujesz z zaufanym dostawcą IT, zapytaj przed zakupem, czy może zostać dopuszczony."
+  - q: "Czy polisa obejmuje atak, który zaczął się przed zawarciem umowy?"
+    a: "Część kosztowa polisy cyber działa zwykle w formule wykrycia: liczy się incydent po raz pierwszy wykryty w okresie ubezpieczenia. Incydenty i okoliczności znane przed zawarciem umowy są jednak wyłączone, a niektóre polisy mają też datę retroaktywną. Jeśli coś już się wydarzyło, ujawnij to we wniosku."
+  - q: "Czy ubezpieczenie cyber spełnia wymagania NIS2 lub przepisów o cyberbezpieczeństwie?"
+    a: "Nie. Polisa nie zastępuje obowiązków z przepisów, takich jak zarządzanie ryzykiem czy zgłaszanie incydentów. Może natomiast sfinansować skutki incydentu: reakcję, odtworzenie systemów, obronę w postępowaniu i roszczenia osób trzecich. Kary administracyjne pokrywa tylko w zakresie, w jakim prawo pozwala je ubezpieczyć."
+  - q: "Czy ubezpieczenie cyber obejmuje dane w chmurze i telefony pracowników?"
+    a: "To zależy od definicji systemów komputerowych w polisie. Część polis obejmuje dane przechowywane u dostawców usług chmurowych, kopie zapasowe i urządzenia przenośne używane do pracy. Jeśli pracownicy korzystają z prywatnych telefonów lub laptopów, sprawdź, czy definicja je obejmuje."
+  - q: "Jak zgłosić incydent cyber?"
+    a: "Zadzwoń na całodobową linię wskazaną w polisie, także przy samym podejrzeniu. W wielu polisach ten telefon jest zgłoszeniem szkody. Nie kasuj logów, nie kontaktuj się z przestępcami i nie płać okupu na własną rękę. Daj nam znać, a pomożemy przejść przez proces."
+  - q: "Ile trwa przygotowanie oferty?"
+    a: "Po otrzymaniu kompletnego wniosku zwykle kilka dni roboczych. Przy dużej liczbie danych osobowych, płatnościach kartą albo braku podstawowych zabezpieczeń ubezpieczyciel może zadać dodatkowe pytania, co wydłuża proces."
+sources:
+  - title: "Rozporządzenie (UE) 2016/679 (RODO), art. 33 i 34: zgłaszanie naruszeń i zawiadamianie osób"
+    url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Dyrektywa (UE) 2022/2555 (NIS2) w sprawie środków na rzecz wysokiego wspólnego poziomu cyberbezpieczeństwa"
+    url: "https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Ustawa z dnia 5 lipca 2018 r. o krajowym systemie cyberbezpieczeństwa"
+    url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20180001560"
+    publisher: "ISAP, Kancelaria Sejmu"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Prezes Urzędu Ochrony Danych Osobowych: naruszenia ochrony danych"
+    url: "https://uodo.gov.pl/"
+    publisher: "UODO"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "CERT Polska: zgłaszanie incydentów"
+    url: "https://incydent.cert.pl/"
+    publisher: "CERT Polska (NASK)"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "PCI Security Standards Council: standard PCI DSS"
+    url: "https://www.pcisecuritystandards.org/"
+    publisher: "PCI SSC"
+    accessed: 2026-11-02
+    tier: T2
+related:
+  - "/wiedza/ransomware-2-0/"
+  - "/ubezpieczenia/"
+  - "/slownik/"
+  - "/rynek-lloyds/"
+changelog:
+  - rev: "A"
+    date: 2026-11-02
+    note: "Pierwsze wydanie: zakres polisy cyber dla firm spoza IT z etykietami warunkowymi, pomoc po incydencie, przerwa w działalności, wymuszenia, RODO, cyberprzestępstwa, scenariusze i mapa luk."
+---
+
+Ten arkusz jest przewodnikiem po ubezpieczeniu cyber dla firm, które nie zajmują się informatyką zawodowo, ale bez poczty, systemu sprzedaży, księgowości czy bankowości elektronicznej nie mogą pracować: handlu, produkcji, logistyki, biur usługowych, gabinetów i firm z branży nieruchomości. Opisuje, co pokrywa <Term en="cyber insurance">ubezpieczenie cyber</Term>, jak wygląda pomoc po incydencie, czego oczekuje ubezpieczyciel i gdzie ochrona się kończy. Jeśli Twoja firma świadczy usługi IT albo sprzedaje oprogramowanie, przejdź do arkusza [OC i cyber dla firm IT](/oc-cyber-dla-it/), bo tam ryzyko błędu w usłudze łączy się z cyber w jednym programie. Jak polisa traktuje narzędzia AI używane w codziennej pracy, wyjaśniamy w arkuszu [AI w firmie](/ubezpieczenie-ai/ai-w-firmie/).
+
+Wszystkie opisy zakresu są warunkowe: konkretna polisa może wyglądać inaczej, a wiążące są oferta, polisa i ogólne warunki ubezpieczenia.
+
+<SectionView label="Rzut główny" />
+## Czym jest ubezpieczenie cyber i kto go potrzebuje?
+
+Ubezpieczenie cyber finansuje skutki incydentu w danych i systemach firmy: koszty reakcji i odtworzenia, utracony dochód z przestoju oraz roszczenia osób trzecich, np. po wycieku danych. Warto je rozważyć w każdej firmie, której praca zatrzymuje się bez komputerów albo która przetwarza dane klientów i pracowników.
+
+Ubezpieczenie mienia dotyczy zwykle szkód fizycznych, a OC działalności szkód osobowych i rzeczowych. Zaszyfrowane dane, przestój systemu czy koszty powiadomienia osób po wycieku często zostają poza tymi polisami. Tę lukę wypełnia właśnie polisa cyber.
+
+<SpecTable
+  caption="Gdzie firma spoza IT jest najbardziej narażona"
+  columns={["Rodzaj firmy", "Typowy scenariusz", "Na co zwrócić uwagę w polisie"]}
+  rows={[
+    ["Handel i sklepy internetowe", "Atak na sklep, wyciek danych klientów lub kart, przestój w szczycie sprzedaży", "Przerwa w działalności, kary organizacji kartowych (PCI DSS), fałszywe strony podszywające się pod sklep"],
+    ["Produkcja i dystrybucja", "Ransomware zatrzymuje system ERP, magazyn i wysyłki", "Franszyza czasowa i okres odszkodowawczy dopasowane do realnego czasu powrotu do pracy"],
+    ["Logistyka i transport", "Zaszyfrowane systemy planowania tras i dokumenty przewozowe", "Przestój u dostawcy systemu jako rozszerzenie"],
+    ["Biura usługowe: rachunkowe, doradcze, kadrowe", "Przejęta skrzynka pocztowa, fałszywe dyspozycje, wyciek danych klientów", "Moduł cyberprzestępstw. Roszczenia klientów za błąd w usłudze obejmuje [OC zawodowe](/oc-zawodowe/)"],
+    ["Gabinety i placówki medyczne · *indywidualna ocena*", "Wyciek dokumentacji medycznej, niedostępny system rejestracji", "Dane o zdrowiu zwiększają skutki wycieku. OC placówki to osobna polisa, zob. [OC w ochronie zdrowia](/ubezpieczenia/oc-ochrona-zdrowia/)"],
+    ["Nieruchomości: zarządcy i pośrednicy", "Fałszywy numer rachunku w korespondencji z najemcami, kradzież środków z rachunku prowadzonego dla klientów", "Podszywanie się pod firmę i środki klientów tylko w module cyberprzestępstw"],
+    ["Hotele, gastronomia, turystyka", "Wyciek danych gości i kart, atak na system rezerwacji w sezonie", "PCI DSS, zależna przerwa w działalności"],
+    ["Edukacja i szkolenia", "Wyciek danych uczestników, niedostępna platforma kursów", "Przetwarzanie danych bez wymaganej zgody zwykle wyłączone"],
+    ["Podmioty objęte przepisami o cyberbezpieczeństwie · *indywidualna ocena*", "Obowiązek zgłoszenia incydentu i wymogi bezpieczeństwa z przepisów", "Polisa nie zastępuje spełnienia obowiązków. Kary tylko wtedy, gdy prawo pozwala je ubezpieczyć"]
+  ]}
+  note="Zestawienie ilustracyjne. Zakres zależy od opisu działalności w polisie i oceny ryzyka przez ubezpieczyciela. *Indywidualna ocena*: warunki ustalane przypadek po przypadku."
+/>
+
+<SectionView label="Widok A" />
+## Co obejmuje ubezpieczenie cyber?
+
+Polisa cyber ma zwykle cztery części: pomoc i koszty po incydencie, odtworzenie systemów wraz z przestojem, odpowiedzialność wobec innych oraz, jako opcję, cyberprzestępstwa finansowe. Sekcje mają często osobne limity, [podlimity](/slownik/#podlimit) i udziały własne, dlatego w ofercie pokazujemy je osobno.
+
+<SpecTable
+  caption="Cztery części polisy cyber"
+  columns={["Część", "Co finansuje", "Przykład"]}
+  rows={[
+    ["Reakcja na incydent", "Linia całodobowa, informatyka śledcza, prawnik, powiadomienia, komunikacja kryzysowa", "Pracownik zgłasza w piątek wieczorem, że pliki na serwerze mają dziwne rozszerzenia"],
+    ["Odtworzenie i przestój", "Odtworzenie danych i systemów, utracony dochód i dodatkowe koszty działania, obsługa wymuszenia", "Magazyn przez trzy dni nie wysyła towaru"],
+    ["Odpowiedzialność wobec innych", "Roszczenia osób, których dane wyciekły, obrona w postępowaniu organu, kary kartowe w rozszerzeniu", "Klienci żądają odszkodowania po wycieku danych"],
+    ["Cyberprzestępstwa (opcja)", "Wyłudzone przelewy, podszywanie się pod firmę, nadużycie zasobów IT", "Księgowość płaci fałszywą fakturę „od dostawcy”"]
+  ]}
+/>
+
+W polisie cyber liczy się <Term en="cyber event">incydent cyber</Term>, czyli rzeczywisty lub podejrzewany atak na systemy albo naruszenie ochrony danych. W wielu polisach definicja naruszenia danych obejmuje nie tylko atak, ale też przypadkowe ujawnienie danych, kradzież nośnika czy działanie nieuczciwego pracownika, czasem także w dokumentach papierowych. Ta definicja decyduje o zakresie całej polisy, więc porównujemy ją w ofertach w pierwszej kolejności.
+
+<SectionView label="Szczegół B" />
+## Jak wygląda pomoc w pierwszych godzinach po ataku?
+
+Dzwonisz na całodobową linię wskazaną w polisie. W wielu polisach to połączenie jest jednocześnie zgłoszeniem szkody, a koordynator po stronie ubezpieczyciela uruchamia informatyków śledczych, prawnika i w razie potrzeby doradcę ds. komunikacji. Możesz zadzwonić już przy samym podejrzeniu incydentu.
+
+Co zwykle dzieje się po zgłoszeniu:
+
+1. **Pierwsza rozmowa.** Koordynator ocenia sytuację i mówi, co odłączyć od sieci, a czego nie robić: nie kasować logów, nie przywracać systemów na ślepo, nie kontaktować się z przestępcami.
+2. <Term en="digital forensics">Informatyka śledcza</Term>. Specjaliści ustalają, którędy weszli przestępcy, co zaszyfrowali, czy wynieśli dane i czy nadal mają dostęp.
+3. **Prawnik.** Ocenia, czy doszło do naruszenia ochrony danych osobowych i czy trzeba je zgłosić. RODO wymaga zgłoszenia do organu nadzorczego, w Polsce Prezesa UODO, bez zbędnej zwłoki, w miarę możliwości w ciągu 72 godzin od stwierdzenia naruszenia (art. 33). Przy wysokim ryzyku dla osób trzeba też zawiadomić te osoby (art. 34).
+4. **Komunikacja.** Doradca pomaga przygotować informację dla klientów, partnerów i pracowników.
+5. **Odtworzenie i powrót do pracy.** Systemy są przywracane z kopii lub odbudowywane, a równolegle liczy się stratę z przestoju.
+
+Koszty usługodawców spoza listy ubezpieczyciela albo poniesione bez jego zgody mogą nie zostać zwrócone. W części polis przez krótki czas po wykryciu incydentu można korzystać z usługodawców z listy ubezpieczyciela bez czekania na jego zgodę. Sprawdź to przed szkodą, a nie w jej trakcie. Jeśli Twoja firma podlega przepisom o krajowym systemie cyberbezpieczeństwa, mogą Cię obowiązywać także osobne terminy zgłaszania incydentów. Polisa nie zastępuje tych obowiązków.
+
+<BOM
+  caption="Reakcja na incydent: elementy zakresu"
+  prefix="A"
+  rows={frontmatter.coverage.filter((r) => r.module === "Reakcja na incydent").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Wykres obciążenia w czasie" />
+## Jak polisa liczy szkodę z przestoju?
+
+<Term en="business interruption">Przerwa w działalności</Term> po incydencie cyber jest zwykle pokrywana dopiero po upływie <Term en="waiting period, time franchise">franszyzy czasowej</Term>, czyli określonej w polisie liczby godzin przestoju, i tylko przez <Term en="indemnity period">okres odszkodowawczy</Term>. Odszkodowanie to utracony dochód, czyli to, co firma zarobiłaby bez incydentu, pomniejszone o faktyczny dochód i zaoszczędzone koszty, oraz rozsądne dodatkowe koszty utrzymania działalności.
+
+<SpecTable
+  caption="Parametry przerwy w działalności: co sprawdzić w ofercie"
+  columns={["Parametr", "Co oznacza", "Na co uważać"]}
+  rows={[
+    ["Franszyza czasowa", "Liczba godzin przestoju, po której zaczyna się ochrona", "Krótsze przestoje nie są objęte. Sprawdź, czy kilka przerw z jednej przyczyny się sumuje"],
+    ["Okres odszkodowawczy", "Maksymalny czas, za który polisa liczy stratę", "Powinien odpowiadać realnemu czasowi powrotu do pełnej sprzedaży, nie tylko uruchomienia systemów"],
+    ["Utracony dochód", "Dochód, który byłby osiągnięty bez incydentu, minus dochód faktyczny i zaoszczędzone koszty", "Potrzebne są dane: wyniki z poprzednich okresów, prognozy, faktury"],
+    ["Zwiększone koszty działalności", "Wydatki ponad zwykłe koszty, żeby utrzymać działalność, np. praca w nadgodzinach, wynajem sprzętu", "Zwykle tylko wtedy, gdy są niższe niż strata, której pozwoliły uniknąć"],
+    ["Przyczyna przestoju", "Atak, a w rozszerzeniu także awaria systemu lub błąd pracownika", "Błąd w projekcie lub architekturze systemu zwykle nie jest błędem operatora"],
+    ["Przestój u dostawcy", "Chmura, hosting, system rezerwacji lub sprzedaży u zewnętrznego dostawcy", "Zwykle trzeba wykazać przyczynę i czas przestoju, np. raportem dostawcy"]
+  ]}
+  note="Długość franszyzy czasowej i okresu odszkodowawczego określa polisa. Dobieramy je do tego, ile dni firma może pracować bez systemów."
+/>
+
+Po przestoju trzeba przedstawić wyliczenie straty: jak ją policzono, jakie przyjęto założenia i na jakich dokumentach się opiera. Część polis pokrywa koszty eksperta, który pomoże przygotować to wyliczenie.
+
+<BOM
+  caption="Odtworzenie i przestój: elementy zakresu"
+  prefix="B"
+  rows={frontmatter.coverage.filter((r) => r.module === "Odtworzenie i przestój").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Węzeł C" />
+## Czy ubezpieczenie cyber pokrywa okup?
+
+Może, ale tylko w granicach prawa i na warunkach polisy. Polisy cyber zwykle finansują obsługę wymuszenia: ekspertów, ocenę żądania, negocjacje i odtworzenie systemów. Sam okup, jeśli polisa go przewiduje, wyłącznie wtedy, gdy zapłata nie narusza przepisów, w tym sankcyjnych, i po uprzedniej pisemnej zgodzie ubezpieczyciela. Często warunkiem jest też zgłoszenie sprawy organom ścigania.
+
+Wymuszenie nie musi oznaczać zaszyfrowania danych. Przestępcy grożą też publikacją wykradzionych informacji, blokadą dostępu do systemów albo szkodzeniem reputacji firmy w mediach społecznościowych. Część polis obejmuje te odmiany wprost, inne tylko szyfrowanie, dlatego definicję wymuszenia porównujemy w ofertach. Zapłata okupu nie daje pewności, że dane wrócą albo nie zostaną opublikowane. Decyzję podejmuje się wspólnie z ubezpieczycielem i doradcami.
+
+<BOM
+  caption="Wymuszenie: elementy zakresu"
+  prefix="C"
+  rows={frontmatter.coverage.filter((r) => r.module === "Wymuszenie").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Szczegół D" />
+## Wyciek danych i RODO: co pokryje polisa?
+
+Po wycieku danych osobowych polisa cyber zwykle pokrywa poradę prawną, obsługę zgłoszenia do organu, powiadomienie osób i obronę w postępowaniu, a także roszczenia osób, których dane wyciekły. Kary administracyjne pokrywa tylko w zakresie, w jakim prawo pozwala je ubezpieczyć.
+
+Obowiązki firmy po naruszeniu wynikają z RODO, niezależnie od tego, czy ma polisę:
+
+- **zgłoszenie do organu nadzorczego:** bez zbędnej zwłoki, w miarę możliwości w ciągu 72 godzin od stwierdzenia naruszenia, chyba że jest mało prawdopodobne, by naruszenie skutkowało ryzykiem naruszenia praw lub wolności osób;
+- **zawiadomienie osób:** gdy naruszenie może powodować wysokie ryzyko dla ich praw lub wolności;
+- **dokumentacja:** każde naruszenie trzeba udokumentować, także takie, którego nie zgłasza się do organu.
+
+Polisa pomaga przejść przez te kroki szybko i poprawnie. Sposób i treść powiadomień zwykle uzgadnia się z ubezpieczycielem, bo koszty poniesione bez jego zgody mogą nie zostać zwrócone w pełnej wysokości.
+
+Jeśli przyjmujesz płatności kartą, osobnym ryzykiem są kary i opłaty, którymi organizacje kartowe obciążają firmę po wycieku danych kart, zwykle za pośrednictwem agenta rozliczeniowego. W części polis to rozszerzenie z osobnym limitem. Warunkiem bywa badanie przez informatyka śledczego wymaganego przez organizacje kartowe.
+
+<BOM
+  caption="Odpowiedzialność i postępowania: elementy zakresu"
+  prefix="D"
+  rows={frontmatter.coverage.filter((r) => r.module === "Odpowiedzialność i postępowania").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Szczegół E" />
+## Wyłudzony przelew: ubezpieczenie cyber czy crime?
+
+Wyłudzony przelew to częsta luka w ochronie firm. Podstawowy zakres polisy cyber zwykle go nie obejmuje: potrzebny jest moduł cyberprzestępstw albo osobne [ubezpieczenie crime](/ubezpieczenia/ubezpieczenie-crime/). Moduł w polisie cyber bywa wystarczający dla mniejszych firm, a osobna polisa crime obejmuje szerzej także nadużycia pracowników.
+
+Typowe metody to <Term en="social engineering">socjotechnika</Term>: e-mail od „dostawcy” o zmianie numeru rachunku, pilne polecenie przelewu „od prezesa”, telefon z podrobionym głosem przełożonego. Osobnym zdarzeniem jest podszywanie się pod Twoją firmę wobec klientów, gdy przestępcy wysyłają im faktury z fałszywym numerem rachunku.
+
+<SpecTable
+  caption="Moduł cyberprzestępstw: pytania do oferty"
+  columns={["Pytanie", "Dlaczego to ważne"]}
+  rows={[
+    ["Czy moduł obejmuje przelew wykonany przez Twojego pracownika, który dał się oszukać?", "To co innego niż włamanie do bankowości. Bywają zapisy, które obejmują tylko przelew bez udziału pracownika"],
+    ["Jaki jest podlimit i udział własny?", "Moduł ma często niższy limit niż reszta polisy"],
+    ["Czy ubezpieczyciel wymaga procedur weryfikacji płatności?", "Może pytać o nie we wniosku, np. o potwierdzanie zmiany rachunku telefonem na znany numer"],
+    ["Czy objęte są straty klientów, którzy zapłacili na fałszywy rachunek w Twoim imieniu?", "To osobne zdarzenie: podszywanie się pod firmę"],
+    ["Czy objęte są środki klientów na rachunku prowadzonym przez Twoją firmę?", "Ważne dla biur rachunkowych, zarządców nieruchomości i pośredników"],
+    ["Kiedy trzeba zawiadomić bank i policję?", "Szybka reakcja zwiększa szansę na zatrzymanie środków, a zawiadomienie organów ścigania bywa warunkiem wypłaty"]
+  ]}
+/>
+
+<BOM
+  caption="Cyberprzestępstwa: elementy zakresu"
+  prefix="E"
+  rows={frontmatter.coverage.filter((r) => r.module === "Cyberprzestępstwa").map(({ module, ...r }) => r)}
+/>
+
+<SectionView label="Przypadki obciążenia LC-1…LC-5" />
+## Jak to wygląda w praktyce?
+
+Pięć typowych przypadków pokazuje, która część polisy może zadziałać i gdzie przebiega granica. To scenariusze ilustracyjne, nie opisy prawdziwych szkód.
+
+<NoteBlock variant="scenario" label="LC-1 · Scenariusz ilustracyjny · hurtownia">
+
+W poniedziałek rano ransomware szyfruje serwer z systemem ERP hurtowni. Magazyn przez trzy dni nie wysyła towaru, a przestępcy grożą publikacją danych kontrahentów.
+
+**Co może zadziałać:** reakcja na incydent, odtworzenie danych i systemów, przerwa w działalności po upływie franszyzy czasowej, obsługa wymuszenia, a jeśli dane wyciekły, także powiadomienia i roszczenia osób trzecich.
+
+**Gdzie granica:** okup tylko w granicach prawa i za uprzednią zgodą ubezpieczyciela. Kary umowne od odbiorców za opóźnione dostawy są zwykle poza zakresem.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-2 · Scenariusz ilustracyjny · sklep internetowy">
+
+Przez kilka tygodni złośliwy skrypt na stronie płatności przechwytuje dane kart klientów sklepu internetowego. Agent rozliczeniowy przekazuje sklepowi obciążenia od organizacji kartowych, a klienci zgłaszają nieuprawnione transakcje.
+
+**Co może zadziałać:** informatyka śledcza, porada prawna i powiadomienia, roszczenia klientów oraz, w rozszerzeniu, kary i opłaty organizacji kartowych.
+
+**Gdzie granica:** zwroty transakcji (chargebacki) są zwykle wyłączone. Rozszerzenie kartowe ma często osobny, niższy limit.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-3 · Scenariusz ilustracyjny · zakład produkcyjny">
+
+Księgowość zakładu dostaje e-mail od stałego dostawcy z nowym numerem rachunku. Wiadomość przyszła z przejętej skrzynki dostawcy, więc wygląda wiarygodnie. Dwie faktury trafiają na rachunek przestępców.
+
+**Co może zadziałać:** moduł cyberprzestępstw, jeśli obejmuje przelew wykonany przez oszukanego pracownika.
+
+**Gdzie granica:** bez tego modułu polisa cyber nie zwróci przelewu. Wypłata mieści się w podlimicie, a ubezpieczyciel sprawdzi, czy firma stosowała zadeklarowane procedury weryfikacji.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-4 · Scenariusz ilustracyjny · biuro nieruchomości">
+
+Pracownik biura nieruchomości zostawia w pociągu niezaszyfrowany laptop z umowami i danymi klientów.
+
+**Co może zadziałać:** porada prawna co do zgłoszenia naruszenia do Prezesa UODO, powiadomienie klientów i obrona przed ewentualnymi roszczeniami, jeśli definicja naruszenia danych w polisie obejmuje kradzież lub zgubienie nośnika.
+
+**Gdzie granica:** sam laptop to szkoda w mieniu, objęta ubezpieczeniem sprzętu. Kara administracyjna tylko wtedy, gdy prawo pozwala ją ubezpieczyć.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="LC-5 · Scenariusz ilustracyjny · hotel">
+
+Dostawca chmurowego systemu rezerwacji pada na dwa dni w szczycie sezonu. Hotel nie przyjmuje rezerwacji online, a część gości odwołuje pobyt.
+
+**Co może zadziałać:** rozszerzenie o zależną przerwę w działalności, jeśli dostawca mieści się w definicji z polisy, a przestój przekroczył franszyzę czasową.
+
+**Gdzie granica:** potrzebny jest raport dostawcy o przyczynie i czasie przestoju. Rozległe awarie internetu, telekomunikacji czy zasilania są zwykle wyłączone.
+
+</NoteBlock>
+
+<SectionView label="Oś czasu" />
+## Jak polisa cyber działa w czasie?
+
+Sekcje kosztów własnych działają zwykle w formule wykrycia: liczy się incydent po raz pierwszy wykryty w okresie ubezpieczenia. Incydenty i okoliczności znane przed zawarciem umowy są wyłączone, a niektóre polisy mają też [datę retroaktywną](/slownik/#data-retroaktywna). Dlatego zgłaszaj incydent od razu, także samo podejrzenie.
+
+Wiele polis daje krótki okres po wygaśnięciu na zgłoszenie zdarzeń wykrytych jeszcze w trakcie ochrony, a dłuższy, płatny okres bywa dostępny, gdy polisa nie zostaje odnowiona. Mechanikę takich okresów wyjaśniamy dokładnie w arkuszu [OC zawodowe](/oc-zawodowe/).
+
+<SectionView label="Warunki brzegowe" />
+## Czego ubezpieczyciel oczekuje od firmy?
+
+Przed ofertą ubezpieczyciel ocenia zabezpieczenia na podstawie wniosku. Odpowiedzi muszą być prawdziwe i aktualne: nieprawdziwe lub niepełne informacje mogą zmienić warunki ochrony, obniżyć odszkodowanie, a w skrajnym przypadku ją podważyć. Brak podstawowych zabezpieczeń może też oznaczać wyższą składkę, niższe limity albo odmowę.
+
+<SpecTable
+  caption="Zabezpieczenia, o które zwykle pyta ubezpieczyciel"
+  columns={["Obszar", "Pytanie we wniosku", "Dlaczego to ważne"]}
+  rows={[
+    ["Logowanie", "Czy poczta, dostęp zdalny i konta administratorów mają uwierzytelnianie wieloskładnikowe (MFA)?", "Przejęte hasło to jedna z najczęstszych dróg ataku"],
+    ["Kopie zapasowe", "Czy kopie są odseparowane od sieci i czy odtwarzanie jest testowane?", "Od nich zależy czas przestoju i presja na zapłatę okupu"],
+    ["Ochrona komputerów i serwerów", "Czy działa oprogramowanie klasy EDR i czy ktoś reaguje na alerty?", "Wczesne wykrycie ogranicza szkodę"],
+    ["Aktualizacje", "Jak szybko instalowane są poprawki krytyczne?", "Przestępcy wykorzystują znane luki"],
+    ["Uprawnienia", "Kto ma konta administracyjne i czy są oddzielone od codziennej pracy?", "Ograniczają skalę ataku"],
+    ["Ludzie i płatności", "Czy są szkolenia z phishingu i procedura weryfikacji zmian rachunków?", "Socjotechnika omija zabezpieczenia techniczne"],
+    ["Plan reagowania", "Kto dzwoni na linię ubezpieczyciela i kto decyduje o odłączeniu systemów?", "Pierwsze godziny decydują o kosztach"],
+    ["Dane", "Ile rekordów danych osobowych przetwarzasz i czy są wśród nich dane o zdrowiu albo dane kart?", "Od tego zależy skala skutków wycieku"]
+  ]}
+  note="Lista przykładowa. Zakres pytań zależy od ubezpieczyciela i wielkości firmy."
+/>
+
+<SectionView label="Wymiarowanie" />
+## Od czego zależą składka i limity?
+
+Składkę ustala ubezpieczyciel na podstawie wniosku i oceny ryzyka. Nie podajemy cenników, bo dwie firmy o podobnym przychodzie mogą dostać bardzo różne warunki. Liczą się przede wszystkim: przychód i branża, liczba i rodzaj przetwarzanych danych, zabezpieczenia, zależność od systemów i dostawców, historia incydentów oraz wybrane moduły i rozszerzenia.
+
+Sumę ubezpieczenia dobieramy do najgorszego realnego scenariusza: ile dni firma przetrwa bez systemów, ile może kosztować odtworzenie i informatyka śledcza, ilu osobom trzeba by wysłać powiadomienia po wycieku. Udział własny to kwota, którą firma pokrywa sama przy każdej szkodzie. W przerwie w działalności dochodzi franszyza czasowa. Ustalamy je świadomie, bo niższa składka przy długiej franszyzie może oznaczać brak ochrony przy typowym, kilkudniowym przestoju.
+
+<SectionView label="Mapa luk" />
+## Czego ubezpieczenie cyber zwykle nie obejmuje?
+
+Dobra polisa ma jasne granice. Poniżej najważniejsze wyłączenia i ograniczenia spotykane w polisach cyber, a w ostatniej kolumnie to, co może zamknąć daną lukę.
+
+<BOM
+  caption="Wyłączenia i luki: co może je zamknąć"
+  prefix="X"
+  headers={{ conditions: "Co może zamknąć lukę" }}
+  rows={frontmatter.coverage.filter((r) => r.module === "Wyłączenie").map((r) => ({ event: r.event, label: r.label, conditions: r.conditions }))}
+/>
+
+Warto też wiedzieć:
+
+- poszczególne sekcje mają często własne podlimity, niższe niż główna suma ubezpieczenia;
+- jedna przyczyna, która wywołała kilka szkód, jest zwykle traktowana jak jedna szkoda, z jednym limitem i jednym udziałem własnym;
+- dla niektórych branż ubezpieczyciel może dodać wyłączenia sektorowe;
+- przed zawarciem umowy dostajesz pełne warunki ubezpieczenia i dokument z informacjami o produkcie (IPID), a my omawiamy z Tobą istotne ograniczenia.
+
+<SectionView label="Zespół uzupełniający" />
+## Jakie polisy uzupełniają ubezpieczenie cyber?
+
+Polisa cyber nie obejmuje wszystkiego. Te arkusze opisują ryzyka, które zwykle trzeba ubezpieczyć osobno lub w innym programie.
+
+<CardGrid columns={3} label="Polisy uzupełniające">
+  <SheetCard href="/oc-zawodowe/" sheet="OZ-000" title="OC zawodowe dla firm usługowych i doradców" summary="Roszczenia klientów za błędy w usługach: doradztwo, księgowość, marketing, HR." />
+  <SheetCard href="/oc-cyber-dla-it/" sheet="IT-000" title="OC zawodowe i ubezpieczenie cyber dla firm IT" summary="Software house, SaaS i dostawcy usług IT: błąd w usłudze i cyber w jednym programie." />
+  <SheetCard href="/ubezpieczenia/ubezpieczenie-crime/" sheet="K-02" title="Ubezpieczenie od przestępstw i nadużyć (crime)" summary="Wyłudzone przelewy, oszustwo „na prezesa” i nadużycia pracowników." />
+  <SheetCard href="/ubezpieczenia/mienie-i-sprzet-elektroniczny/" sheet="K-11" title="Mienie, sprzęt elektroniczny i przerwa w działalności" summary="Sprzęt, biuro i magazyn po pożarze, zalaniu lub kradzieży." />
+  <SheetCard href="/ubezpieczenia/oc-czlonkow-zarzadu-d-o/" sheet="K-01" title="OC członków zarządu (D&O)" summary="Osobista odpowiedzialność zarządu, także za decyzje dotyczące bezpieczeństwa firmy." />
+  <SheetCard href="/ubezpieczenie-ai/ai-w-firmie/" sheet="AI-100" title="AI w firmie a ubezpieczenie" summary="Asystenci AI, chatboty i agenci w codziennej pracy: co obejmuje OC i cyber." />
+</CardGrid>
+
+<SectionView label="Procedura" />
+## Jak wygląda droga do polisy?
+
+1. **Telefon lub e-mail.** Wystarczy kilka zdań o firmie, przychodach, systemach, od których zależy praca, i danych, które przetwarzasz.
+2. **Analiza ryzyka i wniosek.** Omawiamy zakres i limity, pomagamy wypełnić wniosek i przygotować opis zabezpieczeń.
+3. **Oferty.** Analizujemy oferty z rynku krajowego i zagranicznego, w tym londyńskiego. Pokazujemy zakres, limity, podlimity, udziały własne, franszyzę czasową i wyłączenia.
+4. **Zawarcie polisy i wsparcie.** Po akceptacji wiążemy ochronę i przekazujemy dokumenty, w tym numer linii do zgłaszania incydentów. W okresie ubezpieczenia pomagamy przy zmianach, szkodach i odnowieniu.
+
+Co warto przesłać w pierwszej wiadomości:
+
+- **działalność:** czym się zajmujesz, w jakich krajach sprzedajesz, czy przyjmujesz płatności kartą;
+- **przychód:** ostatni rok i plan, w tym udział sprzedaży internetowej;
+- **systemy i dostawcy:** od jakich systemów zależy praca, kto je utrzymuje, czy korzystasz z chmury;
+- **dane:** szacunkowa liczba osób, których dane przetwarzasz, i czy są wśród nich dane o zdrowiu;
+- **zabezpieczenia:** MFA, kopie zapasowe, ochrona komputerów, szkolenia, procedury płatności;
+- **historia:** incydenty i próby ataków z ostatnich lat, obecna polisa i data jej wygaśnięcia.
+
+Nie musisz mieć wszystkiego, brakujące informacje uzupełnimy w rozmowie. Nie przesyłaj danych osobowych klientów ani haseł, bo do oferty nie są potrzebne.

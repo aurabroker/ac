@@ -1,0 +1,75 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ASTRO_TELEMETRY_DISABLED: 1
+
+jobs:
+  guard:
+    name: Strażnik poufności
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Skan repozytorium (bez zależności)
+        run: node scripts/guard.mjs
+
+  build:
+    name: Build + walidacja
+    needs: guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: astro check (TypeScript, schematy treści)
+        run: npm run check
+      - name: Build (produkcja — bez szkiców)
+        run: npm run build
+      - name: Strażnik poufności na dist/
+        run: node scripts/guard.mjs
+      - name: Bliźniaki .md
+        run: npm run validate:twins
+      - name: JSON-LD
+        run: npm run validate:jsonld
+      - name: CSP i nagłówki
+        run: npm run validate:csp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          include-hidden-files: true
+          retention-days: 7
+
+  links:
+    name: Linki wewnętrzne
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - run: npm run links

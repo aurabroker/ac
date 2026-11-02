@@ -1,0 +1,161 @@
+---
+/**
+ * FigCatalogue — F-KT: zestawienie elementów (BOM) katalogu. Wiersze = filary i grupy ryzyka, w wierszach
+ * arkusze kart (kody K-xx). Siatka budowana z kolekcji treści w buildzie, więc zawsze odpowiada katalogowi;
+ * karta „R-00” (ryzyka nietypowe) rysowana linią ukrytą — ocena indywidualna.
+ * Właściciel: agent „figures”. Treść merytoryczna: legenda HTML w FIGURE_META (./index.ts) — przy zmianie
+ * nazw grup zaktualizuj legendę.
+ */
+import { getCollection } from 'astro:content';
+import FigFrame from './FigFrame.astro';
+import { circle, f, p, poly, seg } from './draw.ts';
+import { showDrafts } from '../../lib/routes.ts';
+
+interface Props {
+  labelledby?: string;
+  title?: string;
+}
+const { labelledby, title = 'Zestawienie elementów: katalog arkuszy według ryzyka klienta' } = Astro.props;
+
+const visible = (e: { data: { draft: boolean } }) => showDrafts || !e.data.draft;
+const pillars = (await getCollection('pillars', visible)).filter((e) => !e.id.includes('/')).sort((a, b) => a.data.order - b.data.order);
+const cards = (await getCollection('solutions', visible)).sort((a, b) => a.data.order - b.data.order);
+
+type Row = { main: string[]; sub?: string; codes: { code: string; special: boolean }[] };
+const wrap = (s: string, max = 40): string[] => {
+  const out: string[] = [];
+  let line = '';
+  for (const w of s.split(' ')) {
+    if (line && (line + ' ' + w).length > max) {
+      out.push(line);
+      line = w;
+    } else line = line ? line + ' ' + w : w;
+  }
+  if (line) out.push(line);
+  return out.slice(0, 2);
+};
+const groups = new Map<string, Row>();
+for (const c of cards) {
+  const g = c.data.group;
+  if (!groups.has(g)) {
+    const [head, tail] = g.split(':').map((s) => s.trim());
+    groups.set(g, { main: wrap(head.toUpperCase()), sub: tail?.toUpperCase(), codes: [] });
+  }
+  groups.get(g)!.codes.push({ code: c.data.code, special: c.data.code.startsWith('R') });
+}
+const rows: Row[] = [
+  { main: ['FILARY'], sub: 'OC · CYBER · AI', codes: pillars.map((e) => ({ code: e.data.sheet, special: false })) },
+  ...groups.values(),
+];
+
+// geometria tabeli: POZ. | arkusze | nazwa grupy (bez pionowej linii — na wąskim ekranie nazwy znikają)
+const X0 = 24;
+const XP = 68; // koniec kolumny „POZ.”
+const TW = 62;
+const TH = 38;
+const TG = 14;
+const maxTiles = Math.max(4, ...rows.map((r) => r.codes.length));
+const XT = XP + 16; // początek arkuszy
+const XG = XT + maxTiles * (TW + TG) + 18; // początek nazw grup
+const X1 = 776;
+const Y0 = 24;
+const HH = 26;
+const RH = 54;
+const Y1 = Y0 + HH + rows.length * RH;
+const frame = poly([[X0, Y0], [X1, Y0], [X1, Y1], [X0, Y1]], true);
+const inner =
+  seg([X0, Y0 + HH], [X1, Y0 + HH]) +
+  rows.slice(1).map((_, i) => seg([X0, Y0 + HH + (i + 1) * RH], [X1, Y0 + HH + (i + 1) * RH])).join('') +
+  seg([XP, Y0], [XP, Y1]);
+const rowY = (i: number) => Y0 + HH + i * RH;
+
+// arkusze: prostokąt z zagiętym rogiem, pasek tabliczki, znak środka
+const tiles = rows.flatMap((r, i) =>
+  r.codes.map((c, j) => ({ ...c, x: XT + j * (TW + TG), y: rowY(i) + (RH - TH) / 2 })),
+);
+const tile = (x: number, y: number) =>
+  poly([[x, y], [x + TW - 9, y], [x + TW, y + 9], [x + TW, y + TH], [x, y + TH]], true) +
+  `M${p(x + TW - 9, y)}V${f(y + 9)}H${f(x + TW)}` +
+  seg([x, y + TH - 12], [x + TW, y + TH - 12]);
+const glyph = (x: number, y: number) => {
+  const cx = x + 22;
+  const cy = y + 13;
+  return circle(cx, cy, 6) + seg([cx - 10, cy], [cx + 10, cy]) + seg([cx, cy - 9], [cx, cy + 9]);
+};
+const solid = tiles.filter((t) => !t.special);
+const special = tiles.filter((t) => t.special);
+const desc =
+  `Tabela zestawienia elementów z kolumnami: pozycja, grupa ryzyka i arkusze. W ${rows.length} wierszach ` +
+  `stoją miniatury arkuszy z kodami (${tiles.map((t) => t.code).join(', ')}). ` +
+  'Arkusz ryzyk nietypowych narysowany linią przerywaną.';
+
+// odnośniki: numery pozycji w kolumnie „POZ.”
+const R = 11;
+const xBal = (X0 + XP) / 2;
+const last = special[0];
+---
+
+<FigFrame viewBox={`0 0 800 ${Y1 + 24}`} labelledby={labelledby} title={title} desc={desc}>
+  <!-- konstrukcja: oś kolumny nazw -->
+  <path class="c" d={seg([XG - 9, Y0 + HH + 8], [XG - 9, Y1 - 8])} pathLength="1" />
+
+  <!-- tabela -->
+  <path class="o" d={frame} pathLength="1" />
+  <path class="o2" d={inner} pathLength="1" />
+  <text class="t t-s" x={X0 + 8} y={Y0 + 17}>POZ.</text>
+  <text class="t t-s" x={XG} y={Y0 + 17}>GRUPA RYZYKA</text>
+  <text class="t t-s" x={XT} y={Y0 + 17}>ARKUSZE</text>
+
+  <!-- wiersze -->
+  {
+    rows.map((r, i) => (
+      <>
+        {r.main.map((line, k) => (
+          <text class="t t-b" x={XG} y={rowY(i) + (r.main.length === 1 ? 24 : 20) + k * 14}>
+            {line}
+          </text>
+        ))}
+        {r.sub && r.main.length === 1 && (
+          <text class="t t-s" x={XG} y={rowY(i) + 38}>
+            {r.sub}
+          </text>
+        )}
+      </>
+    ))
+  }
+
+  <!-- arkusze -->
+  {tiles.map((t) => <path class="f" d={tile(t.x, t.y)} />)}
+  <path class="o" d={solid.map((t) => tile(t.x, t.y)).join('')} pathLength="1" />
+  <path class="h" d={special.map((t) => tile(t.x, t.y)).join('')} />
+  <path class="c" d={tiles.map((t) => glyph(t.x, t.y)).join('')} pathLength="1" />
+  {tiles.map((t) => <text class="t t-s t-ink" x={t.x + 5} y={t.y + TH - 3}>{t.code}</text>)}
+
+  <!-- odnośniki -->
+  {
+    rows.map((_, i) => (
+      <g class="bal">
+        <circle class="b" cx={xBal} cy={rowY(i) + RH / 2} r={R} pathLength="1" />
+        <text class="t-num" x={xBal} y={rowY(i) + RH / 2}>
+          {i + 1}
+        </text>
+      </g>
+    ))
+  }
+  {
+    last && (
+      <>
+        <path class="l" d={seg([last.x + TW + 2, last.y + TH / 2], [last.x + TW + 26 - R, last.y + TH / 2])} pathLength="1" />
+        <g class="bal">
+          <circle class="b" cx={last.x + TW + 26} cy={last.y + TH / 2} r={R} pathLength="1" />
+          <text class="t-num" x={last.x + TW + 26} y={last.y + TH / 2}>
+            {rows.length + 1}
+          </text>
+        </g>
+        <text class="t t-s" x={last.x + TW + 43} y={last.y + TH / 2 + 3.5}>
+          OCENA INDYWIDUALNA
+        </text>
+      </>
+    )
+  }
+</FigFrame>

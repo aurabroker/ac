@@ -1,0 +1,47 @@
+---
+/**
+ * Formuły compliance (src/lib/compliance.ts):
+ *  b — ubezpieczyciel (Lloyd's tylko przy securityConfirmed + lloydsShare),
+ *  c — materiał informacyjny,
+ *  d — podstawa porady i wynagrodzenie (link do /informacje-o-brokerze/).
+ */
+import { FORMULA_C, FORMULA_D_LINK, FORMULA_D_TEXT, formulaB } from '../lib/compliance.ts';
+import { polishText } from '../lib/typography/polish.ts';
+
+interface Props {
+  show?: ('b' | 'c' | 'd')[];
+  securityConfirmed?: boolean;
+  lloydsShare?: 'full' | 'partial';
+}
+const { show = ['d', 'c'], securityConfirmed = false, lloydsShare } = Astro.props;
+---
+
+<section class="disclosure" aria-label="Informacje o brokerze i zastrzeżenia">
+  {show.includes('b') && formulaB({ securityConfirmed, lloydsShare }).map((t) => <p>{t}</p>)}
+  {
+    show.includes('d') && (
+      <p>
+        {polishText(FORMULA_D_TEXT)} <a href={FORMULA_D_LINK.href}>{FORMULA_D_LINK.label}</a>.
+      </p>
+    )
+  }
+  {show.includes('c') && <p class="disclosure__c">{polishText(FORMULA_C)}</p>}
+</section>
+
+<style>
+  .disclosure {
+    max-width: var(--end-measure, 100%);
+    margin-top: var(--s-8);
+    padding-top: var(--s-2);
+    border-top: 1px dashed var(--rule);
+    font-size: var(--fs-small);
+    color: var(--ink-2);
+  }
+  .disclosure p + p {
+    margin-top: var(--s-1);
+  }
+  .disclosure__c {
+    color: var(--ink-3);
+    font-size: 0.8125rem;
+  }
+</style>

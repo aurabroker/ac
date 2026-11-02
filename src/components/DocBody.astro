@@ -1,0 +1,63 @@
+---
+/**
+ * Układ dokumentu na siatce 12 kolumn: ≥ 1280 px spis treści w kolumnach 1–3 (sticky),
+ * treść w kolumnach 4–10. Poniżej — jedna kolumna bez spisu treści.
+ */
+import TOC from './TOC.astro';
+
+interface Props {
+  headings?: { depth: number; slug: string; text: string }[];
+  tocExtra?: { slug: string; text: string }[];
+  toc?: boolean;
+}
+const { headings = [], tocExtra = [], toc = true } = Astro.props;
+---
+
+<div class:list={['doc', !toc && 'doc--no-toc']}>
+  {
+    toc && (
+      <aside class="doc__toc" data-md-skip>
+        <div class="doc__toc-inner">
+          <TOC headings={headings} extra={tocExtra} />
+        </div>
+      </aside>
+    )
+  }
+  <div class="doc__main">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .doc {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+  .doc__toc {
+    grid-column: 1 / span 3;
+    display: none;
+  }
+  .doc__main {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+  @media (min-width: 1280px) {
+    .doc__toc {
+      display: block;
+    }
+    .doc__toc-inner {
+      position: sticky;
+      top: calc(var(--header-h) + var(--s-4));
+      max-height: calc(100vh - var(--header-h) - var(--s-8));
+      overflow: auto;
+      padding-top: var(--s-6);
+    }
+    .doc__main {
+      grid-column: 4 / span 7;
+    }
+    .doc--no-toc .doc__main {
+      grid-column: 1 / span 8;
+    }
+  }
+</style>

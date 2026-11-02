@@ -1,0 +1,22 @@
+# build
+dist/
+build-*/
+cache-*/
+.astro/
+.wrangler/
+
+# zależności
+node_modules/
+
+# strażnik poufności — lokalne frazy jawne (NIGDY nie commituj)
+.guard/
+
+# środowisko
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+npm-debug.log*
+.vscode/
+.idea/

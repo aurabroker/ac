@@ -1,0 +1,259 @@
+---
+title: "Klient wymaga OC od kontraktora B2B: czy musisz je mieć?"
+description: "Klient wymaga od kontraktora B2B polisy OC? Kiedy to obowiązek z umowy, jak czytać zapis o ubezpieczeniu i jaki limit ma sens."
+published: 2026-11-02
+updated: 2026-11-02
+revision: "A"
+sheet: "A1-02"
+articleId: "A1-02"
+cluster: "A1"
+hub: "/oc-cyber-dla-it/"
+draft: true
+reviewEvery: 365
+legalStateAsOf: 2026-11-02
+summary: "Przepisy co do zasady nie nakładają na programistę ani innego kontraktora IT na B2B obowiązku posiadania OC. Obowiązek może jednak wynikać z umowy: jeśli klient go wpisał, brak polisy bywa naruszeniem kontraktu. Przed zakupem sprawdź w zapisie rodzaj polisy, limit, terytorium, okres utrzymania ochrony i formę potwierdzenia."
+summaryPoints:
+  - "OC działalności gospodarczej zwykle nie spełni wymogu, jeśli klient chce ochrony za błędy w Twojej pracy. Do tego służy OC zawodowe."
+  - "Suma gwarancyjna ma sens, gdy pasuje do ograniczenia odpowiedzialności w umowie. Bez takiego ograniczenia polisa nie zamknie ryzyka."
+  - "Przy zasadzie claims made klient może wymagać utrzymania polisy także po zakończeniu projektu."
+keywords:
+  primary: "czy programista musi mieć oc"
+  secondary:
+    - "klient wymaga oc kontraktor b2b"
+    - "oc w umowie b2b"
+    - "zapis o ubezpieczeniu oc w umowie"
+coveragePlacement: "manual"
+coverageCaption: "Tabela zakresu: OC zawodowe kontraktora B2B"
+coverage:
+  - event: "Błąd lub przeoczenie w pracy dla klienta: kod, konfiguracja, testy, dokumentacja"
+    module: "OC zawodowe"
+    label: typical
+    conditions: "Roszczenie zgłoszone po raz pierwszy w okresie ubezpieczenia, błąd po dacie retroaktywnej, usługa mieści się w opisie działalności w polisie."
+  - event: "Niezamierzone niewykonanie lub nienależyte wykonanie umowy B2B"
+    module: "OC zawodowe"
+    label: typical
+    conditions: "W granicach odpowiedzialności, którą ponosisz z mocy prawa; bez kar umownych."
+  - event: "Koszty obrony, także gdy roszczenie okaże się bezzasadne"
+    module: "OC zawodowe"
+    label: typical
+    conditions: "Zwykle w ramach sumy gwarancyjnej, czyli pomniejszają limit."
+  - event: "Roszczenie zwrotne (regres) ubezpieczyciela klienta po wypłacie odszkodowania za Twój błąd"
+    module: "OC zawodowe"
+    label: underwriting
+    conditions: "Rozpatrywane jak inne roszczenia, w granicach Twojej odpowiedzialności i warunków polisy."
+  - event: "Naruszenie cudzych praw autorskich w dostarczonym kodzie"
+    module: "OC zawodowe"
+    label: optional
+    conditions: "W zakresie podstawowym albo jako rozszerzenie. Naruszenie patentów zwykle wyłączone."
+  - event: "Ujawnienie poufnych informacji lub danych klienta"
+    module: "OC zawodowe / cyber"
+    label: underwriting
+    conditions: "Zależy od zakresu OC zawodowego i od tego, czy polisa ma część cyber."
+  - event: "Szkoda osobowa lub rzeczowa u klienta, np. zniszczony sprzęt w jego biurze"
+    module: "OC działalności"
+    label: typical
+    conditions: "Osobna polisa lub moduł. Formuła zdarzenia: liczy się szkoda zaistniała w okresie ubezpieczenia."
+  - event: "Kary umowne i zryczałtowane odszkodowania z umowy B2B"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Chyba że odpowiadałbyś także bez takiego zapisu. Lukę zmniejsza negocjacja umowy."
+  - event: "Usługi spoza opisu działalności w polisie"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Rozszerz opis działalności, zanim zaczniesz nowy rodzaj prac."
+  - event: "Błędy sprzed daty retroaktywnej i okoliczności znane przed zawarciem polisy"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Kup polisę przed rozpoczęciem prac albo negocjuj wcześniejszą [datę retroaktywną](/slownik/#data-retroaktywna)."
+  - event: "Szkody wyrządzone umyślnie"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Tej luki nie zamyka żadna polisa. Odpowiedzialności za szkodę umyślną nie można też wyłączyć w umowie (art. 473 § 2 Kodeksu cywilnego)."
+  - event: "Naruszenie patentów"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "[Ochrona prawna własności intelektualnej](/ubezpieczenia/ochrona-prawna-ip/)"
+  - event: "Wyłudzony przelew z Twojego rachunku, np. po fałszywej fakturze"
+    module: "Wyłączenie"
+    label: excluded
+    conditions: "Moduł cyberprzestępstw lub [ubezpieczenie crime](/ubezpieczenia/ubezpieczenie-crime/)"
+faq:
+  - q: "Czy mogę podpisać umowę i kupić OC później?"
+    a: "Możesz, jeśli umowa na to pozwala, np. daje termin na przedstawienie polisy. Nowa polisa w zasadzie claims made zwykle nie obejmuje jednak błędów sprzed daty retroaktywnej, a ta często pokrywa się z początkiem ochrony. Najbezpieczniej mieć polisę przed rozpoczęciem prac."
+  - q: "Czy polisa software house'u obejmuje mnie jako kontraktora?"
+    a: "Zwykle nie. Polisa firmy obejmuje jej odpowiedzialność wobec klienta, także za błędy podwykonawców, ale nie chroni samego podwykonawcy. Ubezpieczyciel firmy może po wypłacie dochodzić zwrotu od Ciebie. Jeśli firma chce objąć kontraktorów swoją polisą, musi to wynikać z jej warunków."
+  - q: "Czy OC działalności wystarczy, jeśli klient pisze tylko „ubezpieczenie OC”?"
+    a: "To zależy, czego klient oczekuje. Ogólny zapis bywa spełniony polisą OC działalności, ale jeśli ryzykiem są błędy w Twojej pracy, taka polisa zwykle ich nie obejmie. Zapytaj klienta, o jakie szkody mu chodzi, i poproś o doprecyzowanie zapisu. Różnicę opisujemy na karcie [OC działalności](/ubezpieczenia/oc-dzialalnosci/)."
+  - q: "Klient wymaga limitu wyższego niż wartość kontraktu. Czy to normalne?"
+    a: "Zdarza się, zwłaszcza gdy klient przenosi wymagania ze swojej umowy z klientem końcowym albo z przetargu. Warto zapytać o źródło wymogu i porównać go z ograniczeniem odpowiedzialności w umowie. Czasem lepszym rozwiązaniem jest negocjacja zapisu niż zakup wysokiej sumy gwarancyjnej."
+  - q: "Czy klient może wymagać polisy od konkretnego ubezpieczyciela?"
+    a: "Umowa może tak stanowić, ale częściej spotykamy zapisy, które określają rodzaj ochrony, sumę gwarancyjną i okres, a nie ubezpieczyciela. Jeśli zapis wskazuje konkretny podmiot, zapytaj, czy dopuszczalna jest polisa o równoważnym zakresie."
+  - q: "Czy jako programista na B2B muszę mieć OC, żeby wystawiać faktury?"
+    a: "Nie. Prowadzenie działalności i wystawianie faktur nie wymaga OC z mocy prawa. Polisa staje się obowiązkowa dopiero wtedy, gdy wymaga jej umowa z klientem albo warunki zamówienia, w którym uczestniczysz. Co obejmuje OC programisty, opisujemy w przewodniku [OC zawodowe i cyber dla firm IT](/oc-cyber-dla-it/)."
+sources:
+  - title: "Ustawa z dnia 23 kwietnia 1964 r. Kodeks cywilny, art. 361, 471, 473, 484 i 828"
+    url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19640160093"
+    publisher: "ISAP — Kancelaria Sejmu"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Ustawa z dnia 22 maja 2003 r. o ubezpieczeniach obowiązkowych, Ubezpieczeniowym Funduszu Gwarancyjnym i Polskim Biurze Ubezpieczycieli Komunikacyjnych"
+    url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20031241152"
+    publisher: "ISAP — Kancelaria Sejmu"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Ustawa z dnia 11 września 2019 r. Prawo zamówień publicznych, art. 112 i 115: warunki udziału dotyczące sytuacji ekonomicznej lub finansowej"
+    url: "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20190002019"
+    publisher: "ISAP — Kancelaria Sejmu"
+    accessed: 2026-11-02
+    tier: T1
+  - title: "Dyrektywa (UE) 2015/2366 (PSD2), art. 5 ust. 2 i 3: ubezpieczenie OC dla usług inicjowania płatności i dostępu do informacji o rachunku"
+    url: "https://eur-lex.europa.eu/eli/dir/2015/2366/oj"
+    publisher: "EUR-Lex"
+    accessed: 2026-11-02
+    tier: T1
+related:
+  - "/oc-zawodowe/"
+  - "/ubezpieczenia/oc-dzialalnosci/"
+  - "/wiedza/oc-programisty-b2b/"
+  - "/wiedza/tech-eo-a-oc-zawodowe/"
+  - "/wiedza/usa-kanada-w-polisie/"
+changelog:
+  - rev: "A"
+    date: 2026-11-02
+    note: "Pierwsze wydanie: obowiązek ustawowy a wymóg z umowy, jak czytać zapis o ubezpieczeniu, dobór limitu, scenariusze, tabela zakresu i wyłączeń. Scala temat „klient wymaga polisy OC od kontraktora”."
+---
+
+Klient przysłał umowę B2B, a w niej zapis: „Wykonawca zobowiązuje się posiadać ubezpieczenie OC…”. Ten arkusz odpowiada na dwa pytania: czy musisz mieć taką polisę i jak przeczytać zapis, żeby kupić ochronę, która go spełni. Jest częścią przewodnika [OC zawodowe i cyber dla firm IT](/oc-cyber-dla-it/), w którym opisujemy pełny zakres ochrony. Piszemy z perspektywy kontraktora: programisty, architekta, testera, DevOpsa albo konsultanta prowadzącego jednoosobową działalność. Te same zasady dotyczą małych firm IT, które pracują jako podwykonawcy.
+
+Opisy zakresu są warunkowe, a wiążące są oferta, polisa i ogólne warunki ubezpieczenia. Treść umowy warto skonsultować z prawnikiem; my sprawdzamy jej część ubezpieczeniową.
+
+<SectionView label="Warunek brzegowy" />
+## Czy programista na B2B musi mieć OC?
+
+Z mocy prawa zwykle nie. Ubezpieczenia obowiązkowe wymienia ustawa o ubezpieczeniach obowiązkowych oraz ustawy dotyczące poszczególnych zawodów, np. doradców podatkowych czy architektów. Programistów i większości usług IT nie ma wśród nich. Wyjątki dotyczą wąskich, regulowanych działalności, np. dostawców usług inicjowania płatności i dostępu do informacji o rachunku, od których dyrektywa PSD2 wymaga OC lub porównywalnej gwarancji.
+
+Obowiązek może jednak wynikać z umowy. Jeśli zgodziłeś się na zapis o ubezpieczeniu, a polisy nie masz albo nie spełnia ona warunków, naruszasz umowę. Skutki określa kontrakt: klient może np. wstrzymać rozpoczęcie prac, wypowiedzieć umowę albo naliczyć karę umowną, jeśli ją przewidziano. Dlatego zapis o OC warto przeczytać przed podpisaniem, a nie po.
+
+Wymóg często przychodzi z góry łańcucha. Software house, który wygrał przetarg publiczny, mógł musieć wykazać ubezpieczenie OC jako warunek udziału, bo Prawo zamówień publicznych pozwala zamawiającemu tego wymagać (art. 112 i 115). Bank albo ubezpieczyciel, dla którego pracuje Twój klient, ma własne wymagania wobec dostawców. Twój klient przenosi je dalej, na podwykonawców i kontraktorów.
+
+<SectionView label="Rzut z perspektywy klienta" />
+## Dlaczego klient wymaga OC od kontraktora?
+
+Bo za błąd w Twojej pracy odpowiadasz wobec klienta na zasadach ogólnych, a jego szkoda może przekroczyć wartość kontraktu. Kodeks cywilny przewiduje obowiązek naprawienia szkody wynikłej z niewykonania lub nienależytego wykonania zobowiązania (art. 471). Szkoda obejmuje co do zasady zarówno poniesione straty, jak i utracone korzyści (art. 361 § 2), chyba że umowa stanowi inaczej.
+
+Z perspektywy klienta polisa kontraktora to zabezpieczenie, że jest z czego zapłacić. Majątek jednoosobowej działalności często nie wystarczy, żeby pokryć np. kilkudniowy przestój sprzedaży u klienta. Dla klienta liczy się też to, że w razie sporu po drugiej stronie stoi ubezpieczyciel z procedurą likwidacji szkód, a nie tylko osoba fizyczna.
+
+Jest też trzeci powód: regres. Jeśli klient ma własną polisę, a jego ubezpieczyciel wypłaci odszkodowanie za szkodę, którą spowodowałeś, może potem dochodzić zwrotu od Ciebie (art. 828 Kodeksu cywilnego). Twoja polisa OC może wtedy odpowiedzieć na to roszczenie, zgodnie z jej warunkami.
+
+<SectionView label="Szczegół A" />
+## Jak czytać zapis o ubezpieczeniu w umowie B2B?
+
+Rozbij go na elementy i każdy porównaj z ofertą polisy. Zapisy różnią się szczegółami, które decydują o tym, czy polisa je spełni.
+
+<SpecTable
+  caption="Zapis o ubezpieczeniu OC w umowie B2B: elementy do sprawdzenia"
+  columns={["Element zapisu", "Przykładowe sformułowanie", "Co sprawdzić w polisie"]}
+  rows={[
+    ["Rodzaj ubezpieczenia", "„OC z tytułu prowadzonej działalności”, „OC zawodowe”, „professional indemnity”", "Czy klientowi chodzi o szkody osobowe i rzeczowe (OC działalności), czy o błędy w pracy i straty finansowe (OC zawodowe). Jeśli zapis jest niejasny, zapytaj"],
+    ["Suma gwarancyjna", "„na sumę nie niższą niż … zł na jedno i wszystkie zdarzenia”", "Czy limit dotyczy jednego roszczenia, czy łącznie całego roku, w jakiej walucie i czy koszty obrony mieszczą się w limicie"],
+    ["Zakres", "„obejmujące szkody wynikłe z niewykonania lub nienależytego wykonania umowy”", "Czy polisa obejmuje odpowiedzialność z umowy, a nie tylko z czynu niedozwolonego, i czy opis działalności obejmuje Twoje usługi"],
+    ["Okres utrzymania", "„przez cały okres obowiązywania umowy oraz przez … lat po jej zakończeniu”", "Przy zasadzie claims made polisa musi trwać, gdy przyjdzie roszczenie. Pilnuj odnowień i [daty retroaktywnej](/slownik/#data-retroaktywna)"],
+    ["Terytorium", "„ochrona obejmująca roszczenia dochodzone na terytorium Unii Europejskiej”", "Czy obejmuje kraj klienta, kraj jego klientów i sąd wskazany w umowie. Klienci z USA i Kanady wymagają osobnego sprawdzenia"],
+    ["Potwierdzenie", "„Wykonawca przedstawi kopię polisy wraz z dowodem opłacenia składki”", "Czy wystarczy zaświadczenie, kiedy trzeba je dostarczyć i czy także po każdym odnowieniu"],
+    ["Status klienta", "„Zamawiający zostanie wskazany jako ubezpieczony dodatkowy”", "W części polis status ubezpieczonego dodatkowego wynika z warunków, gdy wymaga go pisemna umowa zawarta przed roszczeniem; w innych potrzebny jest aneks lub zgoda ubezpieczyciela. Zob. [ubezpieczony dodatkowy](/slownik/#ubezpieczony-dodatkowy)"],
+    ["Zmiany i wypowiedzenie", "„Wykonawca niezwłocznie poinformuje o rozwiązaniu lub zmianie umowy ubezpieczenia”", "Czy jesteś w stanie dotrzymać terminu i jak polisa przewiduje jej wypowiedzenie"]
+  ]}
+  note="Sformułowania są przykładowe. O tym, czy polisa spełnia zapis, decyduje porównanie jego treści z warunkami ubezpieczenia."
+/>
+
+Najczęstszy problem to pomylenie rodzajów OC. Polisa OC działalności gospodarczej, często kupowana razem z ubezpieczeniem biura, dotyczy głównie szkód na osobie i w mieniu. Jeśli klient wymaga ochrony za błędy w kodzie, która ma pokryć jego straty finansowe, potrzebujesz [OC zawodowego](/slownik/#oc-zawodowe). Część polis OC działalności ma klauzulę czystych strat finansowych, ale jej zakres i podlimit trzeba sprawdzić. Różnicę opisujemy na karcie [OC działalności dla firm technologicznych](/ubezpieczenia/oc-dzialalnosci/).
+
+<SectionView label="Wymiarowanie" />
+## Jaki limit OC ma sens dla kontraktora?
+
+Taki, który pasuje do Twojej odpowiedzialności z umowy, a nie tylko do minimum wpisanego przez klienta. Punkt wyjścia to porównanie dwóch wartości: sumy gwarancyjnej wymaganej przez klienta i ograniczenia odpowiedzialności w umowie (*limitation of liability*).
+
+- **Umowa ogranicza odpowiedzialność**, np. do wynagrodzenia z określonego okresu. Suma gwarancyjna na poziomie tego ograniczenia zwykle zamyka najważniejsze ryzyko.
+- **Umowa nie ogranicza odpowiedzialności.** Odpowiadasz do pełnej wysokości szkody, a polisa pokryje ją tylko do sumy gwarancyjnej. Warto negocjować ograniczenie w umowie.
+- **Limit wymagany przez klienta jest wyższy niż ograniczenie w umowie.** Sprawdź, skąd się wziął. Bywa przeniesiony z umowy klienta z jego klientem i może być do negocjacji.
+
+Ograniczenie odpowiedzialności nie działa przy szkodzie wyrządzonej umyślnie, bo takiej odpowiedzialności nie można z góry wyłączyć (art. 473 § 2 Kodeksu cywilnego). Kara umowna (art. 484) to osobny mechanizm, który polisy OC zwykle wyłączają, chyba że odpowiadałbyś także bez takiego zapisu.
+
+Przy wyborze limitu pamiętaj też, że koszty obrony zwykle pomniejszają [sumę gwarancyjną](/slownik/#suma-gwarancyjna). Limit dobieramy indywidualnie, po analizie umowy i działalności. Nie podajemy „rekomendowanych” kwot w oderwaniu od niej.
+
+<SectionView label="Przypadki obciążenia" />
+## Jak to wygląda w praktyce?
+
+Dwie sytuacje pokazują, jak wymóg z umowy przekłada się na ochronę. To scenariusze ilustracyjne, nie opisy prawdziwych szkód.
+
+<NoteBlock variant="scenario" label="Scenariusz ilustracyjny · kontraktor w łańcuchu podwykonawców">
+
+Kontraktor B2B rozwija dla software house'u moduł płatności w aplikacji klienta końcowego. Umowa wymaga od niego OC zawodowego na określoną sumę. Po wdrożeniu błąd w obsłudze zwrotów powoduje podwójne wypłaty. Klient końcowy żąda odszkodowania od software house'u, a ten od kontraktora.
+
+**Co może zadziałać:** OC zawodowe kontraktora, czyli koszty obrony i odszkodowanie w granicach jego odpowiedzialności wobec software house'u, jeśli roszczenie zgłoszono w okresie ubezpieczenia. Polisa software house'u może pokryć jego odpowiedzialność wobec klienta końcowego, a jej ubezpieczyciel może potem dochodzić zwrotu od kontraktora.
+
+**Gdzie granica:** kara umowna z umowy kontraktora zwykle nie jest objęta ponad to, za co odpowiadałby bez takiego zapisu.
+
+</NoteBlock>
+
+<NoteBlock variant="scenario" label="Scenariusz ilustracyjny · polisa kupiona za późno">
+
+Kontraktor podpisuje umowę z zapisem o OC i zaczyna pracę, zakładając, że kupi polisę „w przyszłym tygodniu”. Po dwóch miesiącach dział zakupów klienta prosi o potwierdzenie ubezpieczenia.
+
+**Co może się stać:** zgodnie z umową klient może wstrzymać płatności albo wypowiedzieć kontrakt. Nowa polisa w zasadzie claims made obejmie błędy popełnione po dacie retroaktywnej, którą często ustala się na początek ochrony.
+
+**Gdzie granica:** błędy z pierwszych dwóch miesięcy mogą zostać bez ochrony, jeśli ubezpieczyciel nie zgodzi się na wcześniejszą datę retroaktywną.
+
+</NoteBlock>
+
+<SectionView label="Lista elementów" />
+## Co zwykle obejmuje OC zawodowe kontraktora? Tabela zakresu
+
+Tabela pokazuje elementy, o które warto zapytać przy polisie kupowanej pod umowę B2B. Etykiety mówią, czy element jest zwykle w zakresie, czy zależy od rozszerzenia albo od oceny ryzyka.
+
+<BOM
+  id="tabela-zakresu"
+  caption={frontmatter.coverageCaption}
+  rows={frontmatter.coverage.filter((r) => r.label !== "excluded")}
+/>
+
+<SectionView label="Mapa luk" />
+## Czego OC kontraktora zwykle nie obejmuje?
+
+Najważniejsze wyłączenia i ograniczenia zebraliśmy w tabeli. W ostatniej kolumnie wskazujemy, co może zamknąć lukę albo ją zmniejszyć.
+
+<BOM
+  caption="Wyłączenia w OC kontraktora i co może je zamknąć"
+  prefix="X"
+  headers={{ conditions: "Co może zamknąć lukę" }}
+  rows={frontmatter.coverage.filter((r) => r.label === "excluded").map((r) => ({ event: r.event, label: r.label, conditions: r.conditions }))}
+/>
+
+Osobno sprawdź opis działalności w polisie. Jeśli ubezpieczyłeś „programowanie”, a w praktyce administrujesz też infrastrukturą klienta albo doradzasz przy wyborze systemów, poproś o rozszerzenie opisu. Usługa spoza opisu może nie być objęta, nawet jeśli wykonujesz ją w ramach tej samej umowy.
+
+<SectionView label="Parametry oceny" />
+## Od czego zależy składka?
+
+Składkę ustala ubezpieczyciel po ocenie ryzyka. U kontraktora największe znaczenie mają zwykle:
+
+- rodzaj usług i branża klienta, np. finanse, ochrona zdrowia, systemy krytyczne;
+- przychód z działalności;
+- wymagana suma gwarancyjna i wybrany udział własny;
+- terytorium, zwłaszcza gdy klient końcowy działa w USA lub Kanadzie;
+- historia roszczeń.
+
+Nie podajemy cenników, bo przy OC zawodowym nawet podobne profile mogą dostać różne warunki.
+
+<SectionView label="Procedura" />
+## Co przygotować, zanim kupisz polisę pod umowę?
+
+Prześlij nam:
+
+- pełny zapis o ubezpieczeniu z umowy albo całą sekcję o odpowiedzialności;
+- informację, kto jest klientem końcowym i w jakim kraju działa;
+- opis swoich usług i technologii, z którymi pracujesz;
+- przychód z działalności i planowany przychód z tego kontraktu;
+- datę, od której potrzebujesz ochrony;
+- obecną polisę, jeśli ją masz.
+
+Sprawdzimy zapis i powiemy wprost, czy polisa z rynku spełni go w całości, czy część wymagań trzeba wynegocjować z klientem. Przycisk „Napisz e-mail” poniżej wstawi numer tego arkusza do tematu wiadomości.
