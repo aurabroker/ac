@@ -35,7 +35,7 @@ const contact = d.showContact || kind === 'contact';
 
 <Sheet ctx={ctx} kind={kind}>
   <div class="container">
-    <SheetHead ctx={ctx} lead={d.lead} titleAccent={d.titleAccent} />
+    <SheetHead ctx={ctx} lead={d.lead} titleAccent={d.titleAccent} showAnswer={kind !== 'wiedza-index'} />
     {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} />}
     <DocBody headings={headings} toc={toc}>
       {/* /kontakt/ ma własną, szczegółową sekcję „Co przygotować…” — bez krótkiej listy z komponentu */}
@@ -60,7 +60,7 @@ const contact = d.showContact || kind === 'contact';
       <RelatedSheets paths={d.related} />
       <Sources items={d.sources} />
       {disclosure && <Disclosure show={['d', 'c']} />}
-      <SheetFoot ctx={ctx} author={kind === 'hub'} />
+      <SheetFoot ctx={ctx} author={kind === 'hub'} revisions={kind !== 'wiedza-index'} />
     </DocBody>
   </div>
 </Sheet>
