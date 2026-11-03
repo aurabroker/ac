@@ -34,26 +34,19 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 - [ ] **[blokuje start]** **Bramka „odcisku palca” (PLAN §7.3)** dla tabel zakresu w filarach i kartach: każdy wiersz zakresu ma mieć podstawę w ≥ 3 wordingach, w tym w publicznych polskich OWU (pole `basis` w `coverage`), albo zostać przeredagowany ogólniej. Dziś żaden wiersz nie ma `basis` — treść opiera się na wcześniej zweryfikowanych stronach i jednym zestawie dokumentów. Najbardziej wrażliwe: `/oc-zawodowe/` (zaległe honorarium, automatyczny okres zgłoszenia), `/oc-cyber-dla-it/` i `/ubezpieczenie-ai/` (definicje przerwy w działalności, błędu operatora, ujawnienia danych przez AI). Przegląd: Ty lub doradca compliance.
 - [ ] **[decyzja]** `/regulamin/` (regulamin świadczenia usług drogą elektroniczną, UŚUDE art. 8): serwis nie ma formularzy, kont ani newslettera, więc rekomendujemy „nie jest potrzebny” — **potwierdź opinią prawnika** albo zleć budowę strony (`src/content/pages/regulamin.mdx`).
 
-## 4. Cloudflare — sekrety i panel
+## 4. Cloudflare
 
-Szczegóły: `docs/cloudflare-checklist.md`.
+Nic do zrobienia przed startem — projekt **`aura-web`** w Cloudflare Pages jest utworzony i połączony z GitHubem (bez sekretów; integracja GitHub była już na koncie). Podglądy gałęzi `claude/*` budują się automatycznie.
 
-- [ ] Utwórz token API (szablon „Edit Cloudflare Workers”; zakres: konto + strefa auraconsulting.pl tylko do odczytu, bez DNS).
-- [ ] W GitHub → repo → Settings → Secrets and variables → Actions dodaj:
-  - `CLOUDFLARE_API_TOKEN`
-  - `CLOUDFLARE_ACCOUNT_ID`
-- [ ] Plan **Workers Paid** (rekomendacja planu: limit Free 100 tys. wywołań/dobę liczy się dla całego konta).
-- [ ] W panelu: route `www.auraconsulting.pl/*` → Worker `aura-web` (dopiero przy przełączeniu produkcji), reguła 301 apex → www, ustawienia botów (checklista).
-- [ ] Cloudflare Access na adresach podglądu (`*.workers.dev` wersji preview).
-
-Bez sekretów workflow `deploy.yml` buduje i waliduje serwis, ale niczego nie wdraża.
+- [ ] W dniu startu (wykonamy razem): włączenie wdrożeń produkcyjnych, domena `www.auraconsulting.pl` w projekcie, przekierowanie apex → www, ustawienia botów AI (checklista).
+- [ ] Opcjonalnie: Cloudflare Access na adresach podglądu `*.aura-web-2s1.pages.dev` (podglądy i tak mają `noindex`).
 
 ## 5. Repozytorium — rekomendacje (nie wykonujemy ich automatycznie)
 
-- [ ] **[blokuje start] Czyszczenie historii (K1).** `node scripts/guard.mjs --git-history` wykrywa w historii obecnego repo (stare wersje `index.html`, commity osiągalne z `main`, `_posts` i gałęzi roboczej) dane, które nie powinny być publiczne. Bieżące drzewo i `dist/` są czyste. Kroki: (1) nowe **prywatne** repo z czystą historią (sam bieżący stan plików, jeden commit), (2) przełączenie deployu i domeny na nowe repo, (3) usunięcie starego repo po przełączeniu, (4) prośba do GitHub Support o usunięcie cache i referencji PR (`refs/pull/*`), (5) wnioski o usunięcie kopii z Wayback Machine i Common Crawl. **Nie wypychaj tej gałęzi do nowych miejsc, dopóki niesie starą historię.** W nowym repo workflow `.github/workflows/guard-history.yml` (ręcznie i co tydzień) sprawdza całą historię — w obecnym repo będzie czerwony do czasu czyszczenia.
+- [ ] **[blokuje start] Czyszczenie historii (K1).** `node scripts/guard.mjs --git-history` wykrywa w historii obecnego repo (stare wersje `index.html`, commity osiągalne z `main`, `_posts` i gałęzi roboczej) dane, które nie powinny być publiczne. Bieżące drzewo i `dist/` są czyste. Kroki: (1) nowe **prywatne** repo z czystą historią (sam bieżący stan plików, jeden commit), (2) przełączenie deployu i domeny na nowe repo, (3) usunięcie starego repo po przełączeniu, (4) prośba do GitHub Support o usunięcie cache i referencji PR (`refs/pull/*`), (5) wnioski o usunięcie kopii z Wayback Machine i Common Crawl. **Nie wypychaj tej gałęzi do nowych miejsc, dopóki niesie starą historię.** Workflow `.github/workflows/guard-history.yml` (uruchamiany ręcznie) sprawdza całą historię — w obecnym repo będzie czerwony do czasu czyszczenia; w nowym repo można mu dodać harmonogram.
 - [ ] **Widoczność repo:** rekomendujemy repozytorium **prywatne** (wystarczy darmowy plan GitHub — jeden autor, bez wymaganych recenzji). Historia obecnego repo `aurabroker/ac` zawiera wcześniejsze wersje strony z danymi, które nie powinny być publiczne (strażnik poufności wykrywa je w historii: `node scripts/guard.mjs --git-history`). Rozważ: nowe prywatne repo z czystą historią (np. `aura-web`), a stare — po przełączeniu domeny — usunięcie oraz prośbę do GitHub Support o usunięcie cache i referencji PR.
 - [ ] Gałąź `main` (dziś GitHub Pages) zostaje nietknięta do czasu przełączenia na Cloudflare. Po przełączeniu: wyłącz GitHub Pages, usuń plik/ustawienie domeny, zweryfikuj domenę w ustawieniach GitHub Pages organizacji (ochrona przed przejęciem).
-- [ ] Opcjonalnie: ochrona gałęzi `main` (wymagane statusy `ci / guard`, `ci / build`, `ci / links`), jeśli plan repozytorium ją obejmuje. Niezależnie od tego `deploy.yml` uruchamia te same bramki przed każdym wdrożeniem i przy błędzie niczego nie wdraża.
+- [ ] Opcjonalnie: ochrona gałęzi `main` (wymagane statusy `ci / guard`, `ci / build`, `ci / links`), jeśli plan repozytorium ją obejmuje. Niezależnie od tego build w Cloudflare uruchamia strażnika poufności przed każdym wdrożeniem.
 
 ## 6. Decyzje otwarte
 

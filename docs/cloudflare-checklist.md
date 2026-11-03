@@ -1,23 +1,22 @@
 # Cloudflare — checklista konfiguracji (strefa auraconsulting.pl)
 
-Serwis: Worker **`aura-web`** z samymi zasobami statycznymi (Workers Static Assets, `wrangler.jsonc`), bez własnego kodu Workera w MVP. Kanoniczny host: `https://www.auraconsulting.pl`. Strefa DNS jest już na Cloudflare — nie ruszamy rekordów poczty (MX, SPF, DKIM, DMARC, autodiscover, TXT).
+Serwis: projekt **Cloudflare Pages `aura-web`** (statyczny build Astro, `public/_headers`, `public/_redirects`), połączony z repo `aurabroker/ac` przez integrację GitHub konta Cloudflare — **bez tokenów i sekretów w GitHubie**. Kanoniczny host: `https://www.auraconsulting.pl`. Strefa DNS jest już na Cloudflare — nie ruszamy rekordów poczty (MX, SPF, DKIM, DMARC, autodiscover, TXT).
 
-## 1. Konto, plan, sekrety
+## 1. Projekt (stan na 3.11.2026 — gotowe)
 
-- [ ] Plan **Workers Paid** (limit Free 100 tys. wywołań/dobę liczy się dla całego konta; skok crawla botów = błędy).
-- [ ] Token API dla CI: uprawnienia „Workers Scripts: Edit” (konto), bez edycji DNS i ustawień strefy.
-- [ ] Sekrety GitHub Actions: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
-- [ ] Token administracyjny (route'y, DNS, ustawienia strefy) — tylko u właściciela/maintainera, nigdy w CI.
+- [x] Projekt Pages `aura-web` (`aura-web-2s1.pages.dev`), źródło GitHub `aurabroker/ac`.
+- [x] Build: `npm run guard && npm run build` → `dist/`, `NODE_VERSION=22`.
+- [x] Podglądy: gałęzie `claude/*`, zmienna `PREVIEW=1` (szkice, `noindex`, `Disallow: /`).
+- [x] Produkcja: gałąź `main`, wdrożenia produkcyjne **wyłączone** do dnia startu.
 
-## 2. Wdrożenie i adresy
+## 2. Dzień startu
 
-- [ ] Pierwszy deploy z `main` (`deploy.yml` → `wrangler deploy`) tworzy Worker `aura-web`. Route'y NIE są w `wrangler.jsonc` — deploy bez `routes` nie zmienia route'ów ustawionych w panelu (sprawdź po pierwszym deployu).
-- [ ] Route **`www.auraconsulting.pl/*` → `aura-web`** (Workers Routes) — dopiero w dniu przełączenia z GitHub Pages; rekord `www` musi być proxowany (pomarańczowa chmurka).
-- [ ] Apex `auraconsulting.pl`: proxowany + **Redirect Rule 301** `https://auraconsulting.pl/*` → `https://www.auraconsulting.pl/${1}` (zachowaj ścieżkę i query). To samo dla `http://` (Always Use HTTPS).
-- [ ] **Redirect Rule 301 — ukośnik na końcu** (strefa, przed Workerem): gdy ścieżka nie ma rozszerzenia i nie kończy się „/” (`not ends_with(http.request.uri.path, "/") and not http.request.uri.path contains "."`) → 301 na `concat(http.request.uri.path, "/")` z zachowaniem query. Bez tej reguły `html_handling` odpowiada 307 (tymczasowo), np. dla starego adresu `/ubezpieczenie-ai` — ten jeden ma też regułę w `public/_redirects`.
-- [ ] `workers_dev: false` (produkcja nie jest na `*.workers.dev`). Adresy `*.workers.dev` (podglądy) dostają i tak `X-Robots-Tag: noindex` z `public/_headers`.
-- [ ] **Podglądy gałęzi** (`wrangler versions upload --preview-alias <gałąź>`, `preview_urls: true`): włącz **Cloudflare Access** dla adresów podglądu (Workers → aura-web → Settings → Domains & Routes → Preview URLs → „Enable Cloudflare Access”), logowanie kodem e-mail. Buildy podglądu mają i tak `noindex` (nagłówek + robots `Disallow: /`).
-- [ ] Rollback: Workers → aura-web → Deployments → wybierz poprzednią wersję (lub `wrangler rollback`).
+- [ ] Włącz wdrożenia produkcyjne (Pages → aura-web → Settings → Builds → Branch control) i scal gałąź z `main`.
+- [ ] Custom domain: `www.auraconsulting.pl` → projekt `aura-web` (Pages podmienia rekord `www`; dziś wskazuje GitHub Pages). Po weryfikacji wyłącz GitHub Pages w repo.
+- [ ] Apex `auraconsulting.pl`: proxowany + **Redirect Rule 301** `https://auraconsulting.pl/*` → `https://www.auraconsulting.pl/${1}` (zachowaj ścieżkę i query). Always Use HTTPS: On.
+- [ ] Ukośnik na końcu: Pages domyślnie przekierowuje `/x` → `/x/` dla katalogów z `index.html` — sprawdź w smoke teście (kod 308/301).
+- [ ] Rollback: Pages → aura-web → Deployments → „Rollback to this deployment”.
+- [ ] Opcjonalnie: Cloudflare Access na `*.aura-web-2s1.pages.dev` (podglądy).
 
 ## 3. Boty i AI (PLAN §4.2–4.3)
 
@@ -51,4 +50,4 @@ curl -sI -A "ClaudeBot" https://www.auraconsulting.pl/llms.txt | head -1        
 ```
 
 - [ ] Sitemapa `https://www.auraconsulting.pl/sitemap-index.xml` w Google Search Console i Bing Webmaster Tools (dopiero po 24 h stabilności).
-- [ ] IndexNow — po 24 h (później automatycznie z `deploy.yml`, poza MVP).
+- [ ] IndexNow — po 24 h (automatyzacja poza MVP).

@@ -38,7 +38,7 @@ Każdy agent edytuje **wyłącznie** swoje pliki. Pliki współdzielone są **ZA
 | `articles-b` | `src/content/wiedza/tech-eo-a-oc-zawodowe.mdx`, `klient-wymaga-oc-od-kontraktora.mdx`, `usa-kanada-w-polisie.mdx`, `llmjacking.mdx` |
 | `figures` | `src/components/figures/*` (rysunki + `index.ts` z rejestrem i legendami), `src/lib/og/template.ts` (wygląd obrazów OG) |
 
-**Zamrożone (współdzielone):** `astro.config.ts`, `src/content.config.ts`, `src/layouts/*`, `src/components/*` (poza `figures/`), `src/lib/*` (poza `og/template.ts`), `src/styles/*`, `src/pages/*` (poza treścią `404.astro`), `src/integrations/*`, `src/content/people.yaml`, `src/lib/nav.ts`, `public/*`, `scripts/*`, `.github/*`, `wrangler.jsonc`, `package.json`, `docs/*`.
+**Zamrożone (współdzielone):** `astro.config.ts`, `src/content.config.ts`, `src/layouts/*`, `src/components/*` (poza `figures/`), `src/lib/*` (poza `og/template.ts`), `src/styles/*`, `src/pages/*` (poza treścią `404.astro`), `src/integrations/*`, `src/content/people.yaml`, `src/lib/nav.ts`, `public/*`, `scripts/*`, `.github/*`, `package.json`, `docs/*`.
 
 Plik-stub zaczyna się komentarzem `{/* Właściciel: agent „…”. STUB … */}` — usuń go razem z tekstem „W przygotowaniu”, gdy wstawiasz treść. Możesz zmieniać frontmatter swoich plików (w granicach schematu), ale **nie zmieniaj** `path`, `template`, `sheet` ani nazwy pliku (adres URL) bez prośby w build-notes — inni linkują do tych adresów.
 

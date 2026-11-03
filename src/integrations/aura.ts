@@ -78,7 +78,8 @@ export default function aura(opts: { preview: boolean }): AstroIntegration {
           const pagePath = pagePathFromFile(outDir, file);
           if (!pagePath) continue;
           const html = await readFile(file, 'utf8');
-          const result = toPublicMarkdown(html);
+          // w PREVIEW (cały serwis noindex) także bliźniaki — autor sprawdza „Pobierz .md” na podglądzie
+          const result = toPublicMarkdown(html, { force: opts.preview });
           if (!result) {
             skipped++;
             continue;
