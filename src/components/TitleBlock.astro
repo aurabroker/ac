@@ -1,6 +1,6 @@
 ---
 /**
- * Tabliczka rysunkowa arkusza: nr arkusza, rewizja, data, „Autor”, „Sprawdził”, „Pobierz .md”.
+ * Tabliczka rysunkowa arkusza: nr arkusza, rewizja, data, „Autor” (tylko arkusze eksperckie), „Pobierz .md”.
  * variant="compact" — pod H1 (na mobile jedna linia); variant="full" — na końcu strony.
  * Metadane są we frontmatterze bliźniaka .md, więc tabliczka ma data-md-skip.
  */
@@ -12,14 +12,14 @@ interface Props {
   revision: string;
   updated: Date;
   published?: Date;
-  author: string;
-  checkedBy?: string;
+  /** Brak = strona firmowa/prawna (bez pola „Autor”). */
+  author?: string;
   mdPath?: string | null;
   title?: string;
   variant?: 'compact' | 'full';
   draft?: boolean;
 }
-const { sheet, revision, updated, published, author, checkedBy = author, mdPath, title, variant = 'compact', draft } =
+const { sheet, revision, updated, published, author, mdPath, title, variant = 'compact', draft } =
   Astro.props;
 ---
 
@@ -55,14 +55,14 @@ const { sheet, revision, updated, published, author, checkedBy = author, mdPath,
       <dt>{variant === 'full' ? 'Zaktualizowano' : 'Data'}</dt>
       <dd><time datetime={isoDate(updated)}>{fmtDate(updated)}</time></dd>
     </div>
-    <div class="tbc tbc--person tbc--author">
-      <dt>Autor</dt>
-      <dd>{author}</dd>
-    </div>
-    <div class="tbc tbc--person">
-      <dt>Sprawdził</dt>
-      <dd>{checkedBy}</dd>
-    </div>
+    {
+      author && (
+        <div class="tbc tbc--person tbc--author">
+          <dt>Autor</dt>
+          <dd>{author}</dd>
+        </div>
+      )
+    }
     {
       variant === 'full' && (
         <div class="tbc tbc--wide">

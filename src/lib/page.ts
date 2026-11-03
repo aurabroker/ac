@@ -39,6 +39,8 @@ export interface PageContext {
   crumbs: Crumb[];
   person: Person;
   authorName: string;
+  /** Czy pokazywać autora (tabliczka, karta autora). Strony firmowe i prawne — nie. */
+  showAuthor: boolean;
   jsonld: Record<string, unknown>;
 }
 
@@ -74,6 +76,8 @@ export async function pageContext(route: SiteRoute, extraNodes: (JsonLdNode | nu
   const noindex = !route.indexable;
   const person = await getPerson(d.author);
   const authorName = displayName(person);
+  const COMPANY_TEMPLATES = ['home', 'legal', 'contact', 'person', 'page', 'catalogue-index', 'wiedza-index'];
+  const showAuthor = !(route.kind === 'page' && COMPANY_TEMPLATES.includes((route.entry as PageEntry).data.template));
   const crumbs = breadcrumbsFor(route);
   const ogImage = `${SITE.url}/og/${ogKeyFor(path)}.png`;
   const title = d.title;
@@ -153,6 +157,7 @@ export async function pageContext(route: SiteRoute, extraNodes: (JsonLdNode | nu
     crumbs,
     person,
     authorName,
+    showAuthor,
     jsonld: graph(nodes),
   };
 }

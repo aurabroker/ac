@@ -14,7 +14,7 @@ const { ctx, author = true, revisions = true } = Astro.props;
 const d = ctx.route.entry.data;
 ---
 
-{author && <AuthorCard person={ctx.person} aiAssistance={d.aiAssistance} />}
+{author && ctx.showAuthor && <AuthorCard person={ctx.person} aiAssistance={d.aiAssistance} />}
 {revisions && <RevisionLog items={d.changelog} published={d.published} revision={d.revision} />}
 <TitleBlock
   variant="full"
@@ -23,7 +23,7 @@ const d = ctx.route.entry.data;
   revision={d.revision}
   updated={d.updated}
   published={d.published}
-  author={ctx.authorName}
+  author={ctx.showAuthor ? ctx.authorName : undefined}
   mdPath={ctx.mdPath}
   draft={ctx.draft}
 />

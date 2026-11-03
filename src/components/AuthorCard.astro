@@ -1,6 +1,6 @@
 ---
 /**
- * Autor (Opracował / Sprawdził) + dane spółki z KNF + nota „Jak powstał ten tekst”.
+ * Autor + dane spółki z KNF + nota „Jak powstał ten tekst”.
  * Dopóki imię właściciela to „TODO…”, pokazuje „Zespół Aura Consulting” (bez linku do osoby).
  */
 import { SITE } from '../lib/site.ts';
@@ -22,7 +22,7 @@ const known = isKnownPerson(person);
   <h2 id="autor" class="author__heading">{heading}</h2>
   <div class="author__grid">
     <div>
-      <p class="label">{aiAssistance ? 'Sprawdził i zatwierdził' : 'Opracował i sprawdził'}</p>
+      <p class="label">Autor</p>
       <p class="author__name">
         {known ? <a href={personPath(person)}>{name}</a> : name}
       </p>
