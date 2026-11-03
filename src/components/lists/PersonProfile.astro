@@ -33,7 +33,7 @@ const { person } = Astro.props;
           <dt>LinkedIn</dt>
           <dd>
             <a href={person.linkedin} rel="me noopener">
-              {person.linkedin.replace(/^https?:\/\//, '')}
+              {decodeURI(person.linkedin.replace(/^https?:\/\//, ''))}
             </a>
           </dd>
         </div>

@@ -7,7 +7,7 @@ Lista danych i decyzji, których nie da się uzupełnić bez Ciebie. Pozycje ozn
 Plik: `src/content/people.yaml` (wpis `id: marek-ciesla`, strona `/zespol/marek-ciesla/`). Imię i nazwisko są już wpisane — teksty podpisuje „Marek Cieśla”, a JSON-LD zawiera `Person` powiązaną ze spółką.
 
 - [ ] **Rola** — dziś: „Aura Consulting sp. z o.o. — broker ubezpieczeniowy”. Doprecyzuj funkcję, jeśli chcesz (np. „prezes zarządu”).
-- [ ] **Profil LinkedIn** (URL) — trafi do `sameAs`.
+- [x] **Profil LinkedIn** — wpisany (`people.yaml`, `sameAs` w JSON-LD, profil na `/zespol/marek-ciesla/`).
 - [ ] Funkcja w spółce do JSON-LD `Person.jobTitle` (pole `jobTitle` w `people.yaml`) — dziś pominięta; opis osoby w JSON-LD pochodzi z pola `bio`. Nie wpisujemy „broker ubezpieczeniowy” jako funkcji osoby bez Twojego potwierdzenia.
 - [ ] Opcjonalnie: portret (plik do `public/`, styl grafitowy), doświadczenie, wykształcenie i języki do biogramu `src/content/pages/zespol-wlasciciel.mdx` (lista pytań w komentarzu na początku pliku).
 - [ ] **[decyzja]** Biogram: program affinity dla branży beauty jest opisany anonimowo, jako program spółki. Czy możemy podać nazwę programu i partnera (zgoda partnera) i czy jesteś jego autorem osobiście? Czy Life & Health (grupowe życie, opieka medyczna) i CAR/EAR mają wrócić do biogramu jako Twoje doświadczenie — katalog serwisu ich nie obejmuje (BUILD-SPEC D3)?
