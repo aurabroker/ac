@@ -102,64 +102,65 @@ const leader = (b: Bal) => {
   const L = Math.hypot(dx, dy);
   return L < R + 1 ? '' : seg(b.from, [b.x - (dx / L) * R, b.y - (dy / L) * R]);
 };
-const leaders = bals.map(leader).join('');
 ---
 
 <FigFrame viewBox="0 0 800 352" labelledby={labelledby} title={title} desc={desc}>
   <!-- konstrukcja: połączenia sieci, oś przepływu -->
-  <path class="c" d={links} pathLength="1" />
+  <path class="c" d={links} pathLength="1" data-part="2" />
   <line class="ax" x1="24" y1={yc} x2={cx0 - 12} y2={yc} />
 
   <!-- 1 dane wejściowe -->
-  {sheets.map((d) => <path class="f" d={d} />)}
-  <path class="o2" d={sheets.join('')} pathLength="1" />
-  <path class="c" d={rows} pathLength="1" />
-  <path class="o" d={seg([112, yc], [X0 - 8, yc])} pathLength="1" />
-  <path class="ah fx" d={head(X0 - 6, yc, 0, 9, 2.6)} />
+  {sheets.map((d) => <path class="f" d={d} data-part="1" />)}
+  <path class="o2" d={sheets.join('')} pathLength="1" data-part="1" />
+  <path class="c" d={rows} pathLength="1" data-part="1" />
+  <path class="o" d={seg([112, yc], [X0 - 8, yc])} pathLength="1" data-part="1" />
+  <path class="ah fx" d={head(X0 - 6, yc, 0, 9, 2.6)} data-part="1" />
 
-  <!-- 2 obudowa modelu w przekroju -->
-  <path class="x fx" d={walls} />
-  <path class="o" d={outer + inner} pathLength="1" />
-  <path class="f" d={port(X0) + port(X1) + keyPort} />
-  <path class="o" d={port(X0) + port(X1) + keyPort} pathLength="1" />
-  <path class="o2" d={keySlot} pathLength="1" />
-  <path class="o2" d={inLinks + outLinks} pathLength="1" />
-  <path class="b" d={nodePath} pathLength="1" />
-  <text class="t t-s" x={X0 + T + 8} y={Y1 - T - 10}>MODEL · WARSTWY</text>
+  <!-- 2 obudowa modelu w przekroju, 3 gniazdo klucza API -->
+  <path class="x fx" d={walls} data-part="2" />
+  <path class="o" d={outer + inner} pathLength="1" data-part="2" />
+  <path class="f" d={port(X0) + port(X1)} data-part="2" />
+  <path class="o" d={port(X0) + port(X1)} pathLength="1" data-part="2" />
+  <path class="f" d={keyPort} data-part="3" />
+  <path class="o" d={keyPort} pathLength="1" data-part="3" />
+  <path class="o2" d={keySlot} pathLength="1" data-part="3" />
+  <path class="o2" d={inLinks + outLinks} pathLength="1" data-part="2" />
+  <path class="b" d={nodePath} pathLength="1" data-part="2" />
+  <text class="t t-s" x={X0 + T + 8} y={Y1 - T - 10} data-part="2">MODEL · WARSTWY</text>
 
   <!-- 4 weryfikacja, 5 karta kontrolna wyników -->
   <path class="o" d={outLine} pathLength="1" />
   <path class="ah fx" d={head(cx0 - 6, yc, 0, 9, 2.6)} />
-  <path class="f" d={valve} />
-  <path class="o" d={valve} pathLength="1" />
-  <path class="o2" d={axes + ticks} pathLength="1" />
+  <path class="f" d={valve} data-part="4" />
+  <path class="o" d={valve} pathLength="1" data-part="4" />
+  <path class="o2" d={axes + ticks} pathLength="1" data-part="5" />
   <line class="ax" x1={cx0} y1={yc} x2={cx1} y2={yc} />
-  <path class="d" d={band + tol.line} pathLength="1" />
-  <path class="c" d={tolExt} pathLength="1" />
-  <path class="d-fill fx" d={tol.heads} />
-  <path class="o2" d={series} pathLength="1" />
-  <path class="dot fx" d={dots} />
-  <text class="t-dim" transform={`translate(${f(797)} ${yc}) rotate(-90)`}>TOLERANCJA</text>
-  <text class="t t-s" x={cx0 + 6} y="290">KARTA KONTROLNA</text>
+  <path class="d" d={band + tol.line} pathLength="1" data-part="5" />
+  <path class="c" d={tolExt} pathLength="1" data-part="5" />
+  <path class="d-fill fx" d={tol.heads} data-part="5" />
+  <path class="o2" d={series} pathLength="1" data-part="5" />
+  <path class="dot fx" d={dots} data-part="5" />
+  <text class="t-dim" transform={`translate(${f(797)} ${yc}) rotate(-90)`} data-part="5">TOLERANCJA</text>
+  <text class="t t-s" x={cx0 + 6} y="290" data-part="5">KARTA KONTROLNA</text>
 
   <!-- 6 halucynacja: jedyny redline -->
-  <path class="sig" d={redline} pathLength="1" />
+  <path class="sig" d={redline} pathLength="1" data-part="6" />
 
   <!-- odnośniki -->
-  <path class="l" d={leaders} pathLength="1" />
+  {bals.map((b) => leader(b) && <path class="l" d={leader(b)} pathLength="1" data-part={b.n} />)}
   {
     bals.map((b) => (
       <>
-        <g class="bal">
+        <g class="bal" data-part={b.n}>
           <circle class="b" cx={b.x} cy={b.y} r={R} pathLength="1" />
           <text class="t-num" x={b.x} y={b.y}>
             {b.n}
           </text>
         </g>
-        <text class:list={['t', 't-b', b.red && 't-sig']} x={b.x + 18} y={b.y - 1}>
+        <text class:list={['t', 't-b', b.red && 't-sig']} x={b.x + 18} y={b.y - 1} data-part={b.n}>
           {b.main}
         </text>
-        <text class="t t-s" x={b.x + 18} y={b.y + 11}>
+        <text class="t t-s" x={b.x + 18} y={b.y + 11} data-part={b.n}>
           {b.sub}
         </text>
       </>

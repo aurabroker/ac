@@ -140,8 +140,9 @@ function transformChildren(children: (RootContent | ElementContent)[], canonical
       continue;
     }
 
-    // notatki (NoteBlock: <aside class="note">) → cytat; inne <aside> → bez opakowania
-    if (el.tagName === 'aside') {
+    // notatki (NoteBlock: <div class="note" role="note">, dawniej <aside class="note">) → cytat;
+    // inne <aside> → bez opakowania
+    if (el.tagName === 'aside' || (el.tagName === 'div' && classList(el).includes('note'))) {
       const kids = transformChildren(el.children, canonical);
       if (classList(el).includes('note')) {
         el.tagName = 'blockquote';
@@ -153,10 +154,20 @@ function transformChildren(children: (RootContent | ElementContent)[], canonical
       continue;
     }
 
-    // siatka kart (CardGrid) → lista punktowana; pojedyncza karta poza siatką → lista z jednym punktem
+    // siatka kart (CardGrid) → lista punktowana; pojedyncza karta poza siatką → lista z jednym punktem.
+    // Karty mogą być opakowane (katalog: <div class="cat-item"> z atrybutami filtra) — opakowanie pomijamy.
     if (el.tagName === 'div' && classList(el).includes('card-grid')) {
-      const items = el.children.filter((c): c is Element => isElement(c) && classList(c).includes('sheet-card'));
-      const others = el.children.filter((c) => !(isElement(c) && classList(c).includes('sheet-card')));
+      const cardOf = (c: unknown): Element | undefined => {
+        if (!isElement(c)) return undefined;
+        if (classList(c).includes('sheet-card')) return c;
+        if (classList(c).includes('cat-item')) {
+          const inner = c.children.filter(isElement);
+          return inner.length === 1 && classList(inner[0]).includes('sheet-card') ? inner[0] : undefined;
+        }
+        return undefined;
+      };
+      const items = el.children.map(cardOf).filter((c): c is Element => !!c);
+      const others = el.children.filter((c) => !cardOf(c));
       if (items.length) out.push(ul(items.map((c) => sheetCardItem(c, canonical))));
       out.push(...transformChildren(others, canonical));
       continue;

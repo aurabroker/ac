@@ -30,19 +30,26 @@ const { grid = true, class: cls } = Astro.props;
   if (reduce || !('IntersectionObserver' in window)) {
     items.forEach(finish);
   } else {
+    // obserwujemy sam rysunek (bez karty objaśnienia pod nim): rysowanie startuje, gdy widać ~1/5 rysunku
+    const owner = new Map<Element, HTMLElement>();
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting) continue;
-          const el = e.target as HTMLElement;
-          io.unobserve(el);
+          const el = owner.get(e.target);
+          io.unobserve(e.target);
+          if (!el) continue;
           el.classList.add('is-drawing');
           window.setTimeout(() => finish(el), 1800);
         }
       },
-      { threshold: 0.25 },
+      { threshold: 0.2 },
     );
-    items.forEach((el) => io.observe(el));
+    items.forEach((el) => {
+      const target = el.querySelector('svg.fig-svg') ?? el;
+      owner.set(target, el);
+      io.observe(target);
+    });
   }
   root.classList.add('plotter-ready');
 </script>

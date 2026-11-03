@@ -1,20 +1,20 @@
 ---
-/** Stopka arkusza: autor (+ nota), rejestr zmian, pełna tabliczka rysunkowa. */
-import AuthorCard from './AuthorCard.astro';
+/**
+ * Stopka arkusza: rejestr zmian i pełna tabliczka rysunkowa (arkusz, rewizja, daty, wydawca, .md).
+ * Autor jest pokazany raz — w zwartej tabliczce pod H1; nota „Jak powstał ten tekst” stoi przy źródłach.
+ */
 import RevisionLog from './RevisionLog.astro';
 import TitleBlock from './TitleBlock.astro';
 import type { PageContext } from '../lib/page.ts';
 
 interface Props {
   ctx: PageContext;
-  author?: boolean;
   revisions?: boolean;
 }
-const { ctx, author = true, revisions = true } = Astro.props;
+const { ctx, revisions = true } = Astro.props;
 const d = ctx.route.entry.data;
 ---
 
-{author && ctx.showAuthor && <AuthorCard person={ctx.person} aiAssistance={d.aiAssistance} />}
 {revisions && <RevisionLog items={d.changelog} published={d.published} revision={d.revision} />}
 <TitleBlock
   variant="full"
@@ -23,7 +23,6 @@ const d = ctx.route.entry.data;
   revision={d.revision}
   updated={d.updated}
   published={d.published}
-  author={ctx.showAuthor ? ctx.authorName : undefined}
   mdPath={ctx.mdPath}
   draft={ctx.draft}
 />

@@ -4,6 +4,17 @@
 - id: marek-ciesla
   name: "Marek Cieśla"
   role: "Aura Consulting sp. z o.o. — broker ubezpieczeniowy"
+  # jobTitle: funkcję w spółce (np. „Prezes zarządu”) dopisze właściciel — docs/TODO-wlasciciel.md §1
+  bio: "Marek Cieśla projektuje programy ubezpieczeniowe dla firm w Aura Consulting sp. z o.o.: OC zawodowe i cyber, D&O, ryzyka transakcyjne, gwarancje oraz majątek i przerwę w działalności."
+  knowsAbout:
+    - "OC zawodowe"
+    - "ubezpieczenie cyber"
+    - "OC i cyber dla firm IT"
+    - "ubezpieczenie AI"
+    - "D&O — OC członków zarządu"
+    - "ubezpieczenia transakcyjne (W&I)"
+    - "gwarancje ubezpieczeniowe"
+    - "mienie i przerwa w działalności"
   linkedin: ""
   photo: null
   sameAs: []

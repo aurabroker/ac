@@ -27,9 +27,19 @@ export function formulaB(opts: { securityConfirmed?: boolean; lloydsShare?: 'ful
   return [opts.lloydsShare === 'full' ? FORMULA_B_LLOYDS_FULL : FORMULA_B_LLOYDS_PARTIAL, FORMULA_B_BROKER_STATUS];
 }
 
-/** Nota „Jak powstał ten tekst” (dobrowolna informacja o pomocy AI — PLAN §4.5). */
+/**
+ * Nota „Jak powstał ten tekst” (dobrowolna informacja o pomocy AI — PLAN §4.5). Jedna dyskretna linia
+ * przy źródłach arkusza (komponent <Sources note>). Bez wzmianki o autorze — autor jest wymieniony
+ * z nazwiska tylko w tabliczce pod H1.
+ */
 export const NOTE_AI_ASSISTANCE =
-  'Tekst przygotowano z pomocą narzędzi AI na podstawie wskazanych źródeł. Treść sprawdził i zatwierdził autor, który odpowiada za nią redakcyjnie.';
-
+  'z pomocą narzędzi AI, na podstawie źródeł wymienionych wyżej; przed publikacją sprawdzony ze źródłami.';
+export const NOTE_AI_ASSISTANCE_NO_SOURCES = 'z pomocą narzędzi AI; przed publikacją sprawdzony merytorycznie.';
 export const NOTE_EDITORIAL =
-  'Tekst opracował i sprawdził autor. Twierdzenia o zakresie ochrony mają charakter ogólny i zależą od warunków konkretnej polisy.';
+  'napisany bez narzędzi AI. Opis zakresu ma charakter ogólny i zależy od warunków konkretnej polisy.';
+
+/** Treść noty po etykiecie „Jak powstał ten tekst:”. */
+export function creationNote(opts: { aiAssistance: boolean; hasSources: boolean }): string {
+  if (!opts.aiAssistance) return NOTE_EDITORIAL;
+  return opts.hasSources ? NOTE_AI_ASSISTANCE : NOTE_AI_ASSISTANCE_NO_SOURCES;
+}

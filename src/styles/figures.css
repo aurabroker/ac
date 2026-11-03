@@ -201,3 +201,279 @@
     animation: plot-fade 0.3s var(--ease) 1.25s forwards;
   }
 }
+
+/* ---------- Rysunek interaktywny (hero): AnnotatedFigure + src/scripts/figure-parts.ts ----------
+ * Bez JS nic się nie zmienia (legenda z linkami). Z JS: przyciski nad balonami, podświetlenie części
+ * (niebieski tusz, grubsza linia), reszta przygaszona do koloru linii pomocniczych, karta pod rysunkiem.
+ */
+.ifig {
+  position: relative;
+  max-width: 880px;
+  margin-inline: auto;
+}
+.ifig > .fig-svg {
+  max-width: none;
+}
+.afig.is-ready .fig-svg [data-part] {
+  cursor: pointer;
+}
+.ifig__hot-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ifig__hot {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+.ifig__hot:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+@media (max-width: 40rem) {
+  .ifig__hot {
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .afig.is-ready .fig-svg :is(.c, .o, .o2, .l, .d, .b, .x, .h, .ax, .sig, .t, .t-num, .t-dim, .ah, .ah2, .dot, .d-fill) {
+    transition:
+      stroke 160ms var(--ease),
+      fill 160ms var(--ease),
+      stroke-width 160ms var(--ease);
+  }
+}
+/* przygaszenie */
+.afig.is-active .fig-svg :is(.c, .o, .o2, .l, .d, .b, .x, .h, .ax, .sig, .c2) {
+  stroke: var(--rule);
+}
+.afig.is-active .fig-svg :is(.t, .t-num, .t-dim) {
+  fill: var(--ink-4);
+}
+.afig.is-active .fig-svg :is(.ah, .ah2, .dot, .d-fill, .sig-fill) {
+  fill: var(--rule);
+}
+/* część wskazana */
+.afig.is-active .fig-svg .is-on:is(.o, .o2, .l, .d, .c, .h, .sig, .b),
+.afig.is-active .fig-svg .is-on .b {
+  stroke: var(--blue);
+}
+.afig.is-active .fig-svg .is-on.o {
+  stroke-width: 2.5;
+}
+.afig.is-active .fig-svg .is-on:is(.o2, .l, .h) {
+  stroke-width: 1.5;
+}
+.afig.is-active .fig-svg .is-on.x {
+  stroke: var(--blue-construct);
+}
+.afig.is-active .fig-svg .is-on:is(.t, .t-dim),
+.afig.is-active .fig-svg .is-on .t-num,
+.afig.is-active .fig-svg .is-on:is(.ah, .ah2, .dot, .d-fill) {
+  fill: var(--blue);
+}
+.afig.is-active .fig-svg .is-on .b {
+  fill: var(--blue-wash);
+  stroke-width: 1.5;
+}
+@media (max-width: 40rem) {
+  .afig.is-active .fig-svg .is-on.o {
+    stroke-width: 3.2;
+  }
+  .afig.is-active .fig-svg .is-on:is(.o2, .l, .h, .b) {
+    stroke-width: 2;
+  }
+}
+
+/* karta objaśnienia pod rysunkiem: wszystkie karty w jednej komórce siatki — wysokość stała, bez skoków */
+.ifig__readout {
+  display: grid;
+  margin-top: var(--s-2);
+  border-top: 1px solid var(--ink);
+  background: var(--paper);
+}
+.ifig__readout[hidden] {
+  display: none;
+}
+/*
+ * Z JS miejsce na kartę jest zarezerwowane od pierwszego renderu (bez przesunięcia układu, gdy skrypt
+ * odsłoni kartę). Bez JS (scripting: none) karta zostaje ukryta. Ważniejsze niż globalne [hidden].
+ */
+@media (scripting: enabled) {
+  .ifig__readout[hidden] {
+    display: grid !important;
+    visibility: hidden;
+  }
+  .ifig__readout[hidden] > * {
+    visibility: hidden !important;
+  }
+}
+.ifig__readout > * {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+.ifig__readout > .is-shown {
+  visibility: visible;
+}
+.ifig__card:focus {
+  outline: none;
+}
+.ifig__card:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+/* stan początkowy: podpowiedź i lista części (przyciski) w miejscu karty */
+.ifig__idle {
+  min-width: 0;
+  padding: 12px 4px 4px;
+}
+.ifig__hint {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+.ifig__hint .icon {
+  margin-top: 2px;
+}
+.ifig__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--s-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ifig__chip {
+  -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 10px 4px 6px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  line-height: 1.25;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+.ifig__chip:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.ifig__chip-num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-2);
+}
+.ifig__chip:hover .ifig__chip-num {
+  color: var(--blue);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ifig__chip {
+    transition:
+      border-color 120ms var(--ease),
+      color 120ms var(--ease);
+  }
+}
+/* wąski ekran: mniejsze przyciski, zawijane — wypełniają miejsce zarezerwowane na kartę */
+@media (max-width: 40rem) {
+  .ifig__chips {
+    gap: 4px;
+  }
+  .ifig__chip {
+    min-height: 34px;
+    gap: 6px;
+    padding: 3px 8px 3px 4px;
+    font-size: 0.8125rem;
+  }
+  .ifig__chip-num {
+    width: 22px;
+    height: 22px;
+    font-size: 0.625rem;
+  }
+}
+.ifig__card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 var(--s-2);
+  align-content: start;
+  padding: 12px 4px 4px;
+}
+.ifig__num {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--blue);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  color: var(--blue);
+}
+.ifig__title {
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.ifig__text {
+  margin-top: 2px;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.ifig__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px var(--s-2);
+  margin-top: 4px;
+}
+.ifig__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-small);
+}
+.ifig__back {
+  min-height: 32px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+.ifig__back:hover {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

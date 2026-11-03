@@ -1,6 +1,11 @@
 ---
-/** Numerowane źródła z datą dostępu (T1–T3). */
+/**
+ * Numerowane źródła z datą dostępu (T1–T3) + jedna dyskretna linia „Jak powstał ten tekst” (`note`).
+ * Bez źródeł, a z notą — sama linia noty (bez nagłówka).
+ */
+import Icon from './Icon.astro';
 import { fmtDate, isoDate } from '../lib/format.ts';
+import { polishText } from '../lib/typography/polish.ts';
 
 interface Source {
   title: string;
@@ -12,14 +17,16 @@ interface Source {
 interface Props {
   items: Source[];
   heading?: string;
+  /** Nota „Jak powstał ten tekst” (treść po etykiecie; src/lib/compliance.ts → creationNote). */
+  note?: string;
 }
-const { items, heading = 'Źródła' } = Astro.props;
+const { items, heading = 'Źródła', note } = Astro.props;
 ---
 
 {
   items.length > 0 && (
     <section class="sources" aria-labelledby="zrodla">
-      <h2 id="zrodla">{heading}</h2>
+      <h2 id="zrodla"><Icon name="document" size={24} />{heading}</h2>
       <ol>
         {items.map((s) => (
           <li>
@@ -29,9 +36,11 @@ const { items, heading = 'Źródła' } = Astro.props;
           </li>
         ))}
       </ol>
+      {note && <p class="sources__how"><Icon name="info" size={16} /><span><strong>Jak powstał ten tekst:</strong> {polishText(note)}</span></p>}
     </section>
   )
 }
+{items.length === 0 && note && <p class="sources__how sources__how--solo"><Icon name="info" size={16} /><span><strong>Jak powstał ten tekst:</strong> {polishText(note)}</span></p>}
 
 <style>
   .sources {
@@ -40,8 +49,14 @@ const { items, heading = 'Źródła' } = Astro.props;
     font-size: var(--fs-small);
   }
   .sources h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding-top: var(--s-3);
     border-top: 1px solid var(--rule);
+  }
+  .sources h2 :global(.icon) {
+    color: var(--ink-3);
   }
   .sources ol {
     margin: var(--s-3) 0 0;
@@ -60,5 +75,26 @@ const { items, heading = 'Źródła' } = Astro.props;
   }
   .sources__meta {
     color: var(--ink-3);
+  }
+  .sources__how {
+    display: flex;
+    gap: var(--s-1);
+    align-items: flex-start;
+    margin-top: var(--s-3);
+    padding-top: var(--s-2);
+    border-top: 1px dashed var(--rule);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--ink-3);
+  }
+  .sources__how :global(.icon) {
+    margin-top: 2px;
+  }
+  .sources__how strong {
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .sources__how--solo {
+    margin-top: var(--s-8);
   }
 </style>

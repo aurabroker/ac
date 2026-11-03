@@ -1,0 +1,60 @@
+---
+/**
+ * Ikona z zestawu „rysunek techniczny” (src/icons/*.svg, reguły: src/lib/icons.ts).
+ * Inline SVG (bez żądań sieciowych; CSP: brak atrybutów style). Domyślnie dekoracyjna: aria-hidden.
+ * Z `title` — role="img" i etykieta dla czytników ekranu. W bliźniaku .md <svg> jest pomijany.
+ *
+ *   <Icon name="globe-pin" />            20 px, kolor tekstu
+ *   <Icon name="phone" size={16} />
+ *   <Icon name="info" title="Informacja" />
+ *
+ * Każda ikona trafia do strony raz: pierwsze użycie zawiera <symbol id="ico-…">, kolejne to
+ * <use href="#ico-…"> (mniejszy HTML i DOM). Odwołanie działa w całym dokumencie, także gdy pierwsze
+ * użycie jest w ukrytym elemencie. Styl z komponentu-rodzica: `.rodzic :global(.icon) { … }`.
+ */
+import { iconInner, firstUseOnPage } from '../lib/icons.ts';
+
+interface Props {
+  name: string;
+  size?: number;
+  title?: string;
+  class?: string;
+}
+const { name, size = 20, title, class: cls } = Astro.props;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+const id = `ico-${name}`;
+const first = firstUseOnPage(Astro.locals, name);
+const inner = iconInner(name);
+const body =
+  (title ? `<title>${esc(title)}</title>` : '') +
+  (first ? `<symbol id="${id}" viewBox="0 0 24 24">${inner}</symbol>` : '') +
+  `<use href="#${id}"/>`;
+---
+
+<svg
+  class:list={['icon', `icon--${name}`, cls]}
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="square"
+  stroke-linejoin="miter"
+  focusable="false"
+  aria-hidden={title ? undefined : 'true'}
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  set:html={body}
+/>
+
+<style>
+  .icon {
+    display: inline-block;
+    flex: none;
+    vertical-align: -0.2em;
+    overflow: visible;
+  }
+</style>

@@ -1,7 +1,9 @@
 ---
 /**
  * Układ dokumentu na siatce 12 kolumn: ≥ 1280 px spis treści w kolumnach 1–3 (sticky),
- * treść w kolumnach 4–10. Poniżej — jedna kolumna bez spisu treści.
+ * treść w kolumnach 4–10. Poniżej — jedna kolumna, a spis treści jako rozwijana lista na początku
+ * treści (TOC variant="mobile") z przyciskiem „Spis treści” przy dolnej krawędzi ekranu.
+ * Kolumna spisu to zwykły <div> — punktem orientacyjnym jest sam <nav aria-label="Spis treści">.
  */
 import TOC from './TOC.astro';
 
@@ -16,14 +18,15 @@ const { headings = [], tocExtra = [], toc = true } = Astro.props;
 <div class:list={['doc', !toc && 'doc--no-toc']}>
   {
     toc && (
-      <aside class="doc__toc" data-md-skip>
+      <div class="doc__toc" data-md-skip>
         <div class="doc__toc-inner">
           <TOC headings={headings} extra={tocExtra} />
         </div>
-      </aside>
+      </div>
     )
   }
   <div class="doc__main">
+    {toc && <TOC headings={headings} extra={tocExtra} variant="mobile" />}
     <slot />
   </div>
 </div>

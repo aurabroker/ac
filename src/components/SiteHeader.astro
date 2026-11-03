@@ -3,7 +3,9 @@
  * Nagłówek: wordmark, nawigacja główna, telefon (Plex Mono), CTA „Zleć analizę” (obrys tuszem).
  * Mobile: „Menu” otwiera <dialog> (showModal). Bez JS link prowadzi do mapy serwisu w stopce.
  */
+import Icon from './Icon.astro';
 import { MAIN_NAV } from '../lib/nav.ts';
+import { iconForPath } from '../lib/icons.ts';
 import { SITE } from '../lib/site.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
@@ -27,6 +29,7 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
           MAIN_NAV.map((l) => (
             <li>
               <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+                {iconForPath(l.href) && <Icon name={iconForPath(l.href) as string} size={16} />}
                 {polishText(l.label)}
               </a>
             </li>
@@ -36,15 +39,15 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
     </nav>
 
     <div class="site-header__actions">
-      <a class="site-header__tel mono" href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>
+      <a class="site-header__tel mono" href={`tel:${SITE.phoneE164}`}><Icon name="phone" size={16} />{SITE.phone}</a>
       <a class="btn site-header__cta" href="/kontakt/">Zleć analizę</a>
-      <a class="btn btn--quiet site-header__menu" href="#mapa-serwisu" data-menu-open aria-haspopup="dialog">Menu</a>
+      <a class="btn btn--quiet site-header__menu" href="#mapa-serwisu" data-menu-open>Menu</a>
     </div>
   </div>
 
-  <dialog class="menu-dialog" id="menu-dialog" aria-label="Spis arkuszy">
+  <dialog class="menu-dialog" id="menu-dialog" aria-label="Menu">
     <div class="menu-dialog__head">
-      <span class="label">Spis arkuszy</span>
+      <span class="label">Menu</span>
       <button type="button" class="btn btn--quiet" data-menu-close>Zamknij</button>
     </div>
     <ul class="menu-dialog__list">
@@ -55,6 +58,7 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
               <span class="mono" aria-hidden="true">
                 {String(i + 1).padStart(2, '0')}
               </span>
+              {iconForPath(l.href) && <Icon name={iconForPath(l.href) as string} size={22} />}
               {polishText(l.label)}
             </a>
           </li>
@@ -62,19 +66,31 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
       }
     </ul>
     <p class="menu-dialog__contact mono">
-      <a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a> · <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+      <a href={`tel:${SITE.phoneE164}`}><Icon name="phone" size={16} />{SITE.phone}</a>
+      <a href={`mailto:${SITE.email}`}><Icon name="envelope" size={16} />{SITE.email}</a>
     </p>
   </dialog>
 </header>
 
 <script>
+  // Bez JS „Menu” to link do mapy serwisu w stopce; z JS — prawdziwy przycisk otwierający <dialog>.
   const dialog = document.getElementById('menu-dialog') as HTMLDialogElement | null;
-  const opener = document.querySelector<HTMLAnchorElement>('[data-menu-open]');
-  if (dialog && opener && typeof dialog.showModal === 'function') {
-    opener.addEventListener('click', (e) => {
-      e.preventDefault();
+  const link = document.querySelector<HTMLAnchorElement>('[data-menu-open]');
+  if (dialog && link && typeof dialog.showModal === 'function') {
+    const opener = document.createElement('button');
+    // te same atrybuty (klasy i znaczniki stylów komponentu), bez href
+    for (const { name, value } of Array.from(link.attributes)) if (name !== 'href') opener.setAttribute(name, value);
+    opener.type = 'button';
+    opener.textContent = link.textContent;
+    opener.setAttribute('aria-haspopup', 'dialog');
+    opener.setAttribute('aria-controls', 'menu-dialog');
+    opener.setAttribute('aria-expanded', 'false');
+    link.replaceWith(opener);
+    opener.addEventListener('click', () => {
       dialog.showModal();
+      opener.setAttribute('aria-expanded', 'true');
     });
+    dialog.addEventListener('close', () => opener.setAttribute('aria-expanded', 'false'));
     dialog.querySelector('[data-menu-close]')?.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (e) => {
       if (e.target === dialog) dialog.close();
@@ -131,6 +147,9 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
     padding: 0;
   }
   .site-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     color: var(--ink-2);
     text-decoration: none;
     font-size: 0.9375rem;
@@ -138,9 +157,17 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
     padding-block: var(--s-1);
     border-bottom: 1px solid transparent;
   }
+  .site-nav a :global(.icon) {
+    color: var(--ink-3);
+    transition: color 120ms var(--ease);
+  }
   .site-nav a:hover {
     color: var(--ink);
     border-bottom-color: var(--ink);
+  }
+  .site-nav a:hover :global(.icon),
+  .site-nav a[aria-current='page'] :global(.icon) {
+    color: var(--blue);
   }
   .site-nav a[aria-current='page'] {
     color: var(--ink);
@@ -153,9 +180,15 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
     flex: none;
   }
   .site-header__tel {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     color: var(--ink);
     text-decoration: none;
     white-space: nowrap;
+  }
+  .site-header__tel :global(.icon) {
+    color: var(--ink-3);
   }
   .site-header__menu {
     display: none;
@@ -202,8 +235,23 @@ const isCurrent = (href: string) => currentPath === href || (href !== '/' && cur
     color: var(--ink-3);
     font-weight: 400;
   }
+  .menu-dialog__list a {
+    align-items: center;
+  }
+  .menu-dialog__list a :global(.icon) {
+    color: var(--ink-2);
+  }
   .menu-dialog__contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1) var(--s-3);
     margin-top: var(--s-4);
+  }
+  .menu-dialog__contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+    overflow-wrap: anywhere;
   }
   /* Pełna nawigacja tylko gdy cały wiersz mieści się w kontenerze 1312 px (bez poziomego przewijania). */
   @media (max-width: 1599px) {

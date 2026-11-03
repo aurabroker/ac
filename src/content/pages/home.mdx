@@ -77,6 +77,13 @@ Każda ścieżka to osobny arkusz: zakres, wyłączenia, scenariusze ilustracyjn
   <SheetCard href="/oc-zawodowe/" sheet="OZ-000" title="OC zawodowe dla firm usługowych i doradców" summary="Konsultanci, agencje i doradcy: roszczenia klientów za błędy w usługach. Przy obowiązkowym OC — ochrona ponad ustawowe minimum." meta="OC zawodowe · nadwyżka" />
 </CardGrid>
 
+<SectionView label="Konfigurator · Sześć pytań" icon="layers" />
+## Jaki program pasuje do Twojej firmy?
+
+Odpowiedz na sześć krótkich pytań, a zestawienie elementów programu uzupełni się na bieżąco: co jest rdzeniem, co warto dodać i co sprawdzić w polisie. Gotową konfigurację możesz wysłać nam e-mailem jako punkt wyjścia do rozmowy.
+
+<ProgramConfigurator sheet="AC-000" />
+
 <SectionView label="Szczegół B · USA i Kanada" />
 ## Czy polisa zadziała, gdy klient pozwie Cię w USA lub Kanadzie?
 
@@ -86,6 +93,7 @@ Tylko wtedy, gdy te kraje obejmuje zakres terytorialny polisy. Polscy ubezpieczy
 
 <SpecTable
   caption="Co sprawdzamy w polisie przy kontraktach z USA i Kanadą"
+  rowIcons={["column", "globe", "gauge", "contract-seal", "x-badge"]}
   columns={["Parametr", "Pytanie do polisy", "Dlaczego to ważne"]}
   rows={[
     ["Terytorium powództw", "Czy obejmuje pozwy wniesione przed sądami w USA i Kanadzie?", "Pozew wniesiony poza terytorium wskazanym w polisie zwykle nie jest objęty."],
@@ -106,6 +114,7 @@ Często tak — w ramach OC zawodowego i ubezpieczenia cyber, a nie jako osobna 
 
 <SpecTable
   caption="Ryzyka AI i miejsce, w którym zwykle szuka się dla nich ochrony"
+  rowIcons={["neural-node", "padlock", "key", "coins"]}
   columns={["Zdarzenie", "Gdzie szukać ochrony", "Co sprawdzić w polisie"]}
   rows={[
     ["Błędny wynik modelu szkodzi klientowi", "OC zawodowe", "czy usługa z użyciem AI mieści się w opisie działalności i czy polisa nie wyłącza AI"],
@@ -141,14 +150,13 @@ Wszystkie karty z opisem zakresu i rynków: [katalog ubezpieczeń dla firm](/ube
 
 W czterech etapach, z których każdy kończy się czymś, co możesz sprawdzić. Analiza i porównanie ofert nie zobowiązują do zakupu polisy.
 
-<SpecTable
+<Steps
   caption="Od pierwszej rozmowy do polisy"
-  columns={["Etap", "Co robimy", "Co otrzymujesz"]}
-  rows={[
-    ["1. Rozmowa", "Pytamy o działalność, klientów, rynki i wymagania z umów. Wystarczy telefon lub e-mail — bez formularzy.", "listę informacji potrzebnych do oferty"],
-    ["2. Analiza ryzyka", "Czytamy umowy i obecną polisę, wskazujemy luki i ustalamy parametry: zakres, limit, udział własny, terytorium, datę retroaktywną.", "opis potrzeb i parametrów ochrony"],
-    ["3. Porównanie ofert", "Zbieramy oferty z rynku krajowego i zagranicznego, w tym londyńskiego, i porównujemy zakresy, wyłączenia, limity i udziały własne.", "porównanie ofert z rekomendacją oraz dokumenty, w tym kartę produktu (IPID)"],
-    ["4. Polisa i opieka", "Pomagamy zawrzeć umowę, pilnujemy zmian i odnowień, a przy szkodzie wspieramy w zgłoszeniu i kontakcie z ubezpieczycielem.", "polisę z omówieniem kluczowych zapisów po polsku"],
+  steps={[
+    { icon: "phone", title: "Rozmowa", text: "Pytamy o działalność, klientów, rynki i wymagania z umów. Wystarczy telefon lub e-mail — bez formularzy.", result: "listę informacji potrzebnych do oferty" },
+    { icon: "magnifier", title: "Analiza ryzyka", text: "Czytamy umowy i obecną polisę, wskazujemy luki i ustalamy parametry: zakres, limit, udział własny, terytorium, datę retroaktywną.", result: "opis potrzeb i parametrów ochrony" },
+    { icon: "scales", title: "Porównanie ofert", text: "Zbieramy oferty z rynku krajowego i zagranicznego, w tym londyńskiego, i porównujemy zakresy, wyłączenia, limity i udziały własne.", result: "porównanie ofert z rekomendacją oraz dokumenty, w tym kartę produktu (IPID)" },
+    { icon: "contract-seal", title: "Polisa i opieka", text: "Pomagamy zawrzeć umowę, pilnujemy zmian i odnowień, a przy szkodzie wspieramy w zgłoszeniu i kontakcie z ubezpieczycielem.", result: "polisę z omówieniem kluczowych zapisów po polsku" },
   ]}
 />
 
@@ -162,7 +170,7 @@ Aura Consulting sp. z o.o. jest brokerem ubezpieczeniowym. Nie jest ubezpieczyci
 <SectionView label="Rejestr · Wiedza" />
 ## Gdzie znajdziesz odpowiedzi na pytania o polisy?
 
-W rejestrze arkuszy wiedzy. Każdy arkusz odpowiada na jedno pytanie, ma datę aktualizacji, źródła i autora, a obok wersji HTML ma wersję Markdown (`.md`) dla narzędzi AI.
+W rejestrze arkuszy wiedzy. Każdy arkusz odpowiada na jedno pytanie, ma datę aktualizacji i źródła.
 
 <CardGrid columns={3} label="Wiedza i zasady współpracy">
   <SheetCard href="/wiedza/" sheet="WI-000" title="Rejestr arkuszy" summary="Odpowiedzi na pytania o OC zawodowe, ubezpieczenie cyber i ryzyka AI — z datami aktualizacji i źródłami." />

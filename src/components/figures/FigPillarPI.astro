@@ -26,10 +26,10 @@ const S = 360;
 const E = 600;
 const ERP = 700;
 const datums = [
-  { x: RET, label: 'DATA RETRO' },
-  { x: S, label: 'POCZĄTEK' },
-  { x: E, label: 'KONIEC' },
-  { x: ERP, label: 'KONIEC ERP' },
+  { x: RET, n: 1, label: 'DATA RETRO' },
+  { x: S, n: 2, label: 'POCZĄTEK' },
+  { x: E, n: 2, label: 'KONIEC' },
+  { x: ERP, n: 3, label: 'KONIEC ERP' },
 ];
 
 // podziałka
@@ -38,7 +38,7 @@ const yr1 = 106;
 const ruler = poly([[XL, yr0], [XR, yr0], [XR, yr1], [XL, yr1]], true);
 let ticks = '';
 for (let x = XL + 10; x < XR; x += 10) ticks += seg([x, yr1], [x, yr1 - ((x - XL) % 50 === 0 ? 7 : 3.5)]);
-const datumMarks = datums.map((d) => `M${p(d.x - 5, yr0 - 1)}L${p(d.x + 5, yr0 - 1)}L${p(d.x, yr0 + 7)}Z`).join('');
+const datumMark = (x: number) => `M${p(x - 5, yr0 - 1)}L${p(x + 5, yr0 - 1)}L${p(x, yr0 + 7)}Z`;
 
 // tory
 const yE = 152;
@@ -58,8 +58,7 @@ const cases: Case[] = [
   { n: 6, e: 566, c: 664, kind: 'erp', note: 'TYLKO Z ERP' },
 ];
 const curve = (k: Case) => `M${p(k.e, yE + 5)}C${p(k.e, yE + 48)} ${p(k.c, yC - 52)} ${p(k.c, yC - 13)}`;
-const errMarks = cases.filter((k) => k.kind !== 'off').map((k) => circle(k.e, yE, 4.5)).join('');
-const claimMarks = cases.map((k) => `M${p(k.c, yC - 6)}L${p(k.c + 6, yC)}L${p(k.c, yC + 6)}L${p(k.c - 6, yC)}Z`).join('');
+const claimMark = (k: Case) => `M${p(k.c, yC - 6)}L${p(k.c + 6, yC)}L${p(k.c, yC + 6)}L${p(k.c - 6, yC)}Z`;
 const off = cases.find((k) => k.kind === 'off')!;
 const cross = seg([off.e - 7, yE - 7], [off.e + 7, yE + 7]) + seg([off.e - 7, yE + 7], [off.e + 7, yE - 7]);
 
@@ -69,7 +68,6 @@ const y2 = 72;
 const dRetro = dimH(RET, E, y1);
 const dPol = dimH(S, E, y2);
 const dErp = dimH(E, ERP, y2);
-const datumLines = datums.map((d) => seg([d.x, 26], [d.x, 252])).join('');
 
 // odnośniki
 const R = 11;
@@ -79,55 +77,64 @@ const top = [
   { n: 2, x: S - 30, y: y2, from: [S - 2, y2] as Pt },
   { n: 3, x: ERP + 30, y: y2, from: [ERP + 2, y2] as Pt },
 ];
-const leaders =
-  top.map((b) => seg(b.from, [b.x + (b.from[0] > b.x ? R : -R), b.y])).join('') +
-  cases.map((k) => seg([k.c, yC + 8], [k.c, yB - R])).join('');
+const topLeader = (b: (typeof top)[number]) => seg(b.from, [b.x + (b.from[0] > b.x ? R : -R), b.y]);
 ---
 
 <FigFrame viewBox="0 0 800 310" labelledby={labelledby} title={title} desc={desc}>
-  <!-- konstrukcja: linie baz -->
-  <path class="c" d={datumLines} pathLength="1" />
+  <!-- konstrukcja: linie baz (1 data retro, 2 okres, 3 koniec ERP) -->
+  {datums.map((d) => <path class="c" d={seg([d.x, 26], [d.x, 252])} pathLength="1" data-part={d.n} />)}
 
   <!-- podziałka czasu -->
   <path class="f" d={ruler} />
   <path class="o" d={ruler} pathLength="1" />
   <path class="o2" d={ticks} pathLength="1" />
-  <path class="ah fx" d={datumMarks} />
+  {datums.map((d) => <path class="ah fx" d={datumMark(d.x)} data-part={d.n} />)}
   <path class="ah2 fx" d={head(XR + 16, (yr0 + yr1) / 2, 0, 8, 2.3)} />
   <path class="o2" d={seg([XR, (yr0 + yr1) / 2], [XR + 10, (yr0 + yr1) / 2])} pathLength="1" />
   <text class="t t-s" x="24" y={yr1 - 1}>CZAS</text>
-  {datums.map((d) => <text class="t t-b t-m" x={d.x} y="18">{d.label}</text>)}
+  {datums.map((d) => <text class="t t-b t-m" x={d.x} y="18" data-part={d.n}>{d.label}</text>)}
 
   <!-- tory: błąd, roszczenie; strefy poza ochroną kreskowane, ERP linią ukrytą -->
   <path class="o2" d={tracks} pathLength="1" />
   <path class="f" d={offOutline} />
   <path class="x fx" d={offHatch} />
   <path class="o2" d={offOutline} pathLength="1" />
-  <path class="h" d={erpZone} />
+  <path class="h" d={erpZone} data-part="3" />
   <text class="t t-b" x="24" y={yE + 4}>BŁĄD</text>
   <text class="t t-b" x="24" y={yC + 4}>ROSZCZENIE</text>
 
-  <!-- przypadki -->
-  <path class="o" d={cases.filter((k) => k.kind === 'ok').map(curve).join('')} pathLength="1" />
-  <path class="o2" d={cases.filter((k) => k.kind === 'erp').map(curve).join('')} pathLength="1" />
-  <path class="h" d={curve(off)} />
-  <path class="ah fx" d={cases.map((k) => head(k.c, yC - 7, 90, 8, 2.3)).join('')} />
-  <path class="b" d={errMarks} pathLength="1" />
-  <path class="ah fx" d={claimMarks} />
-  <path class="sig" d={cross} pathLength="1" />
+  <!-- przypadki: 4 poza ochroną, 5 objęty, 6 tylko z ERP -->
+  {
+    cases.map((k) =>
+      k.kind === 'off' ? (
+        <path class="h" d={curve(k)} data-part={k.n} />
+      ) : (
+        <path class={k.kind === 'ok' ? 'o' : 'o2'} d={curve(k)} pathLength="1" data-part={k.n} />
+      ),
+    )
+  }
+  {cases.map((k) => <path class="ah fx" d={head(k.c, yC - 7, 90, 8, 2.3)} data-part={k.n} />)}
+  {cases.filter((k) => k.kind !== 'off').map((k) => <path class="b" d={circle(k.e, yE, 4.5)} pathLength="1" data-part={k.n} />)}
+  {cases.map((k) => <path class="ah fx" d={claimMark(k)} data-part={k.n} />)}
+  <path class="sig" d={cross} pathLength="1" data-part={off.n} />
 
   <!-- wymiary -->
-  <path class="d" d={dRetro.line + dPol.line + dErp.line} pathLength="1" />
-  <path class="d-fill fx" d={dRetro.heads + dPol.heads + dErp.heads} />
-  <text class="t-dim" x={(RET + E) / 2} y={y1 - 5}>BŁĄD PO DACIE RETRO</text>
-  <text class="t-dim" x={(S + E) / 2} y={y2 - 5}>ROSZCZENIE W OKRESIE UBEZPIECZENIA</text>
-  <text class="t-dim" x={(E + ERP) / 2} y={y2 - 5}>ERP · OPCJA</text>
+  <path class="d" d={dRetro.line} pathLength="1" data-part="1" />
+  <path class="d" d={dPol.line} pathLength="1" data-part="2" />
+  <path class="d" d={dErp.line} pathLength="1" data-part="3" />
+  <path class="d-fill fx" d={dRetro.heads} data-part="1" />
+  <path class="d-fill fx" d={dPol.heads} data-part="2" />
+  <path class="d-fill fx" d={dErp.heads} data-part="3" />
+  <text class="t-dim" x={(RET + E) / 2} y={y1 - 5} data-part="1">BŁĄD PO DACIE RETRO</text>
+  <text class="t-dim" x={(S + E) / 2} y={y2 - 5} data-part="2">ROSZCZENIE W OKRESIE UBEZPIECZENIA</text>
+  <text class="t-dim" x={(E + ERP) / 2} y={y2 - 5} data-part="3">ERP · OPCJA</text>
 
   <!-- odnośniki -->
-  <path class="l" d={leaders} pathLength="1" />
+  {top.map((b) => <path class="l" d={topLeader(b)} pathLength="1" data-part={b.n} />)}
+  {cases.map((k) => <path class="l" d={seg([k.c, yC + 8], [k.c, yB - R])} pathLength="1" data-part={k.n} />)}
   {
     [...top, ...cases.map((k) => ({ n: k.n, x: k.c, y: yB }))].map((b) => (
-      <g class="bal">
+      <g class="bal" data-part={b.n}>
         <circle class="b" cx={b.x} cy={b.y} r={R} pathLength="1" />
         <text class="t-num" x={b.x} y={b.y}>
           {b.n}
@@ -135,5 +142,5 @@ const leaders =
       </g>
     ))
   }
-  {cases.map((k) => <text class:list={['t t-s t-m']} x={k.c} y={yB + 26}>{k.note}</text>)}
+  {cases.map((k) => <text class:list={['t t-s t-m']} x={k.c} y={yB + 26} data-part={k.n}>{k.note}</text>)}
 </FigFrame>

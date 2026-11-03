@@ -1,9 +1,11 @@
 ---
 /**
- * Tabliczka rysunkowa arkusza: nr arkusza, rewizja, data, „Autor” (tylko arkusze eksperckie), „Pobierz .md”.
- * variant="compact" — pod H1 (na mobile jedna linia); variant="full" — na końcu strony.
+ * Tabliczka rysunkowa arkusza: nr arkusza, rewizja, data, „Autor” (tylko w zwartej tabliczce pod H1
+ * i tylko na arkuszach eksperckich — autor pojawia się na stronie raz), „Pobierz .md”.
+ * variant="compact" — pod H1 (na mobile jedna linia); variant="full" — na końcu strony (bez autora).
  * Metadane są we frontmatterze bliźniaka .md, więc tabliczka ma data-md-skip.
  */
+import Icon from './Icon.astro';
 import { fmtDate, isoDate } from '../lib/format.ts';
 import { SITE } from '../lib/site.ts';
 
@@ -12,15 +14,18 @@ interface Props {
   revision: string;
   updated: Date;
   published?: Date;
-  /** Brak = strona firmowa/prawna (bez pola „Autor”). */
+  /** Tylko variant="compact". Brak = strona firmowa/prawna (bez pola „Autor”). */
   author?: string;
+  /** Strona autora (link w polu „Autor”). */
+  authorHref?: string;
   mdPath?: string | null;
   title?: string;
   variant?: 'compact' | 'full';
   draft?: boolean;
 }
-const { sheet, revision, updated, published, author, mdPath, title, variant = 'compact', draft } =
+const { sheet, revision, updated, published, author, authorHref, mdPath, title, variant = 'compact', draft } =
   Astro.props;
+const showAuthor = variant === 'compact' && !!author;
 ---
 
 <div class:list={['title-block', `title-block--${variant}`]} data-md-skip role="group" aria-label="Tabliczka arkusza">
@@ -56,10 +61,10 @@ const { sheet, revision, updated, published, author, mdPath, title, variant = 'c
       <dd><time datetime={isoDate(updated)}>{fmtDate(updated)}</time></dd>
     </div>
     {
-      author && (
+      showAuthor && (
         <div class="tbc tbc--person tbc--author">
           <dt>Autor</dt>
-          <dd>{author}</dd>
+          <dd>{authorHref ? <a href={authorHref}>{author}</a> : author}</dd>
         </div>
       )
     }
@@ -76,7 +81,7 @@ const { sheet, revision, updated, published, author, mdPath, title, variant = 'c
         <div class="tbc tbc--md">
           <dt>Format</dt>
           <dd>
-            <a href={mdPath} type="text/markdown">Pobierz .md</a>
+            <a class="title-block__md" href={mdPath} type="text/markdown"><Icon name="document-md" size={16} />Pobierz .md</a>
           </dd>
         </div>
       )
@@ -133,6 +138,11 @@ const { sheet, revision, updated, published, author, mdPath, title, variant = 'c
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .title-block__md {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
   .title-block__draft {
     color: var(--signal);
   }
@@ -141,7 +151,7 @@ const { sheet, revision, updated, published, author, mdPath, title, variant = 'c
     margin-top: var(--s-12);
   }
   @media (max-width: 720px) {
-    /* mobile: zwarta linia — arkusz · data · .md (autor jest w stopce arkusza); zawija się zamiast przewijać */
+    /* mobile: zwarta linia — arkusz · data · autor · .md; zawija się zamiast przewijać */
     .title-block--compact .title-block__grid {
       flex-wrap: wrap;
       border: 0;
@@ -157,12 +167,20 @@ const { sheet, revision, updated, published, author, mdPath, title, variant = 'c
     .title-block--compact .tbc:first-child {
       padding-left: 0;
     }
-    .title-block--compact .tbc--rev,
-    .title-block--compact .tbc--person {
+    .title-block--compact .tbc--rev {
       display: none;
     }
     .title-block--compact .tbc:last-child {
       border-right: 0;
+    }
+    /* „Pobierz .md” zawsze w osobnym wierszu, wyrównane do lewej krawędzi tabliczki */
+    .title-block--compact .tbc--md {
+      flex-basis: 100%;
+      padding-left: 0;
+      border-top: 1px dashed var(--rule);
+    }
+    .title-block--compact .tbc--md dt {
+      display: none;
     }
   }
 </style>

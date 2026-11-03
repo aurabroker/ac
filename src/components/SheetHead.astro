@@ -8,6 +8,7 @@ import TitleBlock from './TitleBlock.astro';
 import AnswerBox from './AnswerBox.astro';
 import NoteBlock from './NoteBlock.astro';
 import { polishText } from '../lib/typography/polish.ts';
+import { isKnownPerson, personPath } from '../lib/people.ts';
 import type { PageContext } from '../lib/page.ts';
 
 interface Props {
@@ -41,6 +42,7 @@ if (titleAccent) {
     updated={d.updated}
     published={d.published}
     author={ctx.showAuthor ? ctx.authorName : undefined}
+    authorHref={ctx.showAuthor && isKnownPerson(ctx.person) ? personPath(ctx.person) : undefined}
     mdPath={ctx.mdPath}
     draft={ctx.draft}
   />

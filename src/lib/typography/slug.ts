@@ -25,7 +25,7 @@ export function slugify(text: string): string {
 export const RESERVED_IDS = [
   'tresc', 'h1', 'w-skrocie', 'faq', 'zrodla', 'kontakt', 'tabela-zakresu', 'rynki', 'rejestr-zmian', 'profil',
   'powiazane', 'menu-dialog', 'mapa-serwisu', 'filary', 'autor', 'arkusze-szczegolowe',
-  'arkusze-autora', 'w-przygotowaniu', 'spis-tresci',
+  'arkusze-autora', 'w-przygotowaniu', 'spis-tresci', 'karty-katalogu',
 ];
 
 type AnyNode = { type: string; value?: unknown; properties?: Record<string, unknown>; children?: AnyNode[] };

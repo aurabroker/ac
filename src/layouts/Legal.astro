@@ -15,6 +15,7 @@ import Sources from '../components/Sources.astro';
 import Disclosure from '../components/Disclosure.astro';
 import ContactChannels from '../components/ContactChannels.astro';
 import RelatedSheets from '../components/lists/RelatedSheets.astro';
+import { creationNote } from '../lib/compliance.ts';
 import type { PageContext } from '../lib/page.ts';
 import type { PageEntry } from '../lib/routes.ts';
 
@@ -37,7 +38,7 @@ const contact = d.showContact || kind === 'contact';
   <div class="container">
     <SheetHead ctx={ctx} lead={d.lead} titleAccent={d.titleAccent} showAnswer={kind !== 'wiedza-index'} />
     {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} />}
-    <DocBody headings={headings} toc={toc}>
+    <DocBody headings={headings} toc={toc} tocExtra={kind === 'catalogue-index' ? [{ slug: 'karty-katalogu', text: 'Karty katalogu' }] : []}>
       {/* /kontakt/ ma własną, szczegółową sekcję „Co przygotować…” — bez krótkiej listy z komponentu */}
       {
         kind === 'contact' && (
@@ -58,9 +59,12 @@ const contact = d.showContact || kind === 'contact';
       <FAQ items={d.faq} />
       {contact && kind !== 'contact' && <ContactChannels />}
       <RelatedSheets paths={d.related} />
-      <Sources items={d.sources} />
+      <Sources
+        items={d.sources}
+        note={kind === 'hub' ? creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 }) : undefined}
+      />
       {disclosure && <Disclosure show={['d', 'c']} />}
-      <SheetFoot ctx={ctx} author={kind === 'hub'} revisions={kind !== 'wiedza-index'} />
+      <SheetFoot ctx={ctx} revisions={kind !== 'wiedza-index'} />
     </DocBody>
   </div>
 </Sheet>

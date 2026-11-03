@@ -13,9 +13,11 @@ import DimensionLine from './DimensionLine.astro';
 import Figure from './Figure.astro';
 import NoteBlock from './NoteBlock.astro';
 import PlotterHero from './PlotterHero.astro';
+import ProgramConfigurator from './ProgramConfigurator.astro';
 import SectionView from './SectionView.astro';
 import SheetCard from './SheetCard.astro';
 import SpecTable from './SpecTable.astro';
+import Steps from './Steps.astro';
 import Term from './Term.astro';
 import { FIGURES } from './figures/index.ts';
 
@@ -30,9 +32,11 @@ export const mdxComponents = {
   Figure,
   NoteBlock,
   PlotterHero,
+  ProgramConfigurator,
   SectionView,
   SheetCard,
   SpecTable,
+  Steps,
   Term,
   ...FIGURES,
 };

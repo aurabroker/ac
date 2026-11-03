@@ -222,6 +222,12 @@ const people = defineCollection({
     /** Dopóki zaczyna się od „TODO”, strony pokazują „Zespół Aura Consulting”, a JSON-LD używa Organization. */
     name: z.string(),
     role: z.string(),
+    /** Funkcja w spółce (JSON-LD `jobTitle`) — tylko potwierdzona przez osobę; brak = pole pominięte. */
+    jobTitle: z.string().optional(),
+    /** Jedno zdanie o osobie (JSON-LD `description`), zgodne z jej stroną. */
+    bio: z.string().optional(),
+    /** Specjalizacje (JSON-LD `knowsAbout`). */
+    knowsAbout: z.array(z.string()).default([]),
     linkedin: z.string().default(''),
     photo: z.string().nullable().default(null),
     sameAs: z.array(z.url()).default([]),

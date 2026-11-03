@@ -2,8 +2,11 @@
 /**
  * Słownik A–Z na jednej stronie: nawigacja literami + lista definicji z kotwicami (/slownik/#<id>).
  * Dane: src/content/glossary/terms.yaml. JSON-LD DefinedTermSet buduje layout strony.
+ * Wyszukiwarka (z JS, src/scripts/glossary-search.ts): filtruje hasła na bieżąco, bez polskich znaków
+ * („retro”, „udzial”, „sublimit”), z licznikiem wyników; litery bez wyników są wyszarzone.
  */
 import { getCollection } from 'astro:content';
+import Icon from '../Icon.astro';
 import { inlineMd } from '../../lib/inline-md.ts';
 import { polishText } from '../../lib/typography/polish.ts';
 import { getRoutes, shortTitle } from '../../lib/routes.ts';
@@ -23,12 +26,34 @@ const letters = [...new Set(terms.map((t) => letterOf(t.term)))];
 ---
 
 <section class="glossary" aria-label="Hasła A–Z">
+  <div class="glossary__search" data-gl-search data-md-skip hidden>
+    <label class="glossary__search-label" for="slownik-szukaj">Szukaj w słowniku</label>
+    <div class="glossary__field">
+      <Icon name="search" size={20} />
+      <input
+        id="slownik-szukaj"
+        type="search"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="np. retroaktywna, sublimit, LLM"
+        aria-describedby="slownik-wynik"
+        data-gl-input
+      />
+    </div>
+    <p class="glossary__count" id="slownik-wynik" role="status" aria-live="polite" data-gl-count></p>
+  </div>
+  <p class="glossary__empty" data-gl-empty data-md-skip hidden>
+    Nie mamy jeszcze takiego hasła. Napisz na <a href="mailto:cyber@auraconsulting.pl">cyber@auraconsulting.pl</a> — dopiszemy je
+    albo wyjaśnimy pojęcie w kontekście Twojej polisy lub umowy.
+  </p>
   <nav class="glossary__letters" aria-label="Litery" data-md-skip>
     <ul>
       {
         letters.map((l) => (
           <li>
-            <a href={`#litera-${l.toLowerCase()}`}>{l}</a>
+            <a href={`#litera-${l.toLowerCase()}`} data-gl-letter={l.toLowerCase()}>
+              {l}
+            </a>
           </li>
         ))
       }
@@ -37,7 +62,7 @@ const letters = [...new Set(terms.map((t) => letterOf(t.term)))];
 
   {
     letters.map((l) => (
-      <section class="glossary__group" aria-labelledby={`litera-${l.toLowerCase()}`}>
+      <section class="glossary__group" aria-labelledby={`litera-${l.toLowerCase()}`} data-gl-group={l.toLowerCase()}>
         <h2 id={`litera-${l.toLowerCase()}`} class="glossary__letter">
           {l}
         </h2>
@@ -45,7 +70,7 @@ const letters = [...new Set(terms.map((t) => letterOf(t.term)))];
           {terms
             .filter((t) => letterOf(t.term) === l)
             .map((t) => (
-              <div class="glossary__item" id={t.id}>
+              <div class="glossary__item" id={t.id} data-gl-item>
                 <dt>
                   <dfn>{polishText(t.term)}</dfn>
                   {t.termEn && (
@@ -72,10 +97,86 @@ const letters = [...new Set(terms.map((t) => letterOf(t.term)))];
   }
 </section>
 
+<script>
+  import '../../scripts/glossary-search.ts';
+</script>
+
 <style>
   .glossary {
     margin-top: var(--s-6);
     max-width: 880px;
+  }
+  .glossary__search {
+    margin-bottom: var(--s-3);
+  }
+  .glossary__search[hidden],
+  .glossary__group[hidden],
+  .glossary__item[hidden],
+  .glossary__empty[hidden] {
+    display: none;
+  }
+  .glossary__search-label {
+    display: block;
+    margin-bottom: var(--s-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .glossary__field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 560px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+  }
+  .glossary__field :global(.icon) {
+    position: absolute;
+    left: 14px;
+    color: var(--ink-3);
+    pointer-events: none;
+  }
+  .glossary__field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 14px 10px 46px;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 1.0625rem;
+    color: var(--ink);
+  }
+  .glossary__field input::placeholder {
+    color: var(--ink-3);
+  }
+  .glossary__field input:focus {
+    outline: none;
+  }
+  .glossary__field:focus-within {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+  }
+  .glossary__field:focus-within :global(.icon) {
+    color: var(--blue);
+  }
+  .glossary__count {
+    margin-top: var(--s-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    color: var(--ink-3);
+  }
+  .glossary__letters a[aria-disabled='true'] {
+    color: var(--ink-4);
+    border-style: dashed;
+    pointer-events: none;
+  }
+  .glossary__empty {
+    margin: 0 0 var(--s-3);
+    padding: var(--s-2) var(--s-3);
+    border: 1px dashed var(--rule);
+    color: var(--ink-2);
   }
   .glossary__letters ul {
     display: flex;

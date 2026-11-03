@@ -17,7 +17,7 @@ import ContactChannels from '../components/ContactChannels.astro';
 import NoteBlock from '../components/NoteBlock.astro';
 import HubArticles from '../components/lists/HubArticles.astro';
 import RelatedSheets from '../components/lists/RelatedSheets.astro';
-import { formulaB } from '../lib/compliance.ts';
+import { creationNote, formulaB } from '../lib/compliance.ts';
 import type { PageContext } from '../lib/page.ts';
 import type { SolutionEntry } from '../lib/routes.ts';
 
@@ -71,7 +71,7 @@ const tocExtra = [
       <Disclosure show={['d', 'c']} />
       <ContactChannels sheet={d.code} />
       <RelatedSheets paths={d.related} />
-      <Sources items={d.sources} />
+      <Sources items={d.sources} note={creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })} />
       <SheetFoot ctx={ctx} />
     </DocBody>
   </div>

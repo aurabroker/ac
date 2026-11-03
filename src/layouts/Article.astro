@@ -18,6 +18,7 @@ import ContactChannels from '../components/ContactChannels.astro';
 import RelatedSheets from '../components/lists/RelatedSheets.astro';
 import { getRoute, type ArticleEntry, type RegulationEntry } from '../lib/routes.ts';
 import { polishText } from '../lib/typography/polish.ts';
+import { creationNote } from '../lib/compliance.ts';
 import type { PageContext } from '../lib/page.ts';
 
 interface Props {
@@ -56,7 +57,7 @@ const tocExtra = [
       }
       <ContactChannels sheet={d.sheet} checklist={false} />
       <FAQ items={d.faq} />
-      <Sources items={d.sources} />
+      <Sources items={d.sources} note={creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })} />
       <SheetFoot ctx={ctx} />
       <RelatedSheets paths={d.related} />
       <Disclosure show={['c']} />

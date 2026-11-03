@@ -10,10 +10,14 @@ html {
   text-size-adjust: 100%;
   scroll-padding-top: calc(var(--header-h) + var(--s-2));
 }
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
+/* bez smooth-scrolla (CONVENTIONS §9): skok do sekcji ze spisu treści jest natychmiastowy */
+
+/*
+ * `hidden` zawsze ukrywa — także elementy z własnym `display` (.btn, siatki). Elementy sterujące
+ * mają w HTML `hidden` i odsłania je skrypt (progresywne ulepszenie, CONVENTIONS §6).
+ */
+[hidden] {
+  display: none !important;
 }
 @view-transition {
   navigation: auto;
@@ -109,6 +113,47 @@ a {
 a:hover {
   color: var(--ink);
   text-decoration-color: var(--ink);
+}
+
+/*
+ * Linki w tekście: po najechaniu podkreślenie zamienia się w linię wymiarową — niebieska linia
+ * kreślona od lewej do prawej z kreskami na końcach (|—|). Tylko urządzenia ze wskaźnikiem;
+ * przy prefers-reduced-motion linia pojawia się bez animacji.
+ */
+:is(.prose, .faq__a, .afig__caption) :is(p, li, td, th, dd) > a:not(.btn),
+.faq__a a {
+  background-image:
+    linear-gradient(var(--blue), var(--blue)),
+    linear-gradient(var(--blue), var(--blue)),
+    linear-gradient(var(--blue), var(--blue));
+  background-repeat: no-repeat;
+  background-position:
+    0 100%,
+    0 100%,
+    100% 100%;
+  background-size:
+    0 1px,
+    1px 0,
+    1px 0;
+}
+@media (hover: hover) {
+  :is(.prose, .faq__a, .afig__caption) :is(p, li, td, th, dd) > a:not(.btn):hover,
+  .faq__a a:hover {
+    text-decoration-color: transparent;
+    background-size:
+      100% 1px,
+      1px 6px,
+      1px 6px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  :is(.prose, .faq__a, .afig__caption) :is(p, li, td, th, dd) > a:not(.btn),
+  .faq__a a {
+    transition:
+      color 120ms var(--ease),
+      text-decoration-color 120ms var(--ease),
+      background-size 260ms var(--ease);
+  }
 }
 
 /* fokus: jedyne miejsce sygnału poza CTA */
@@ -369,6 +414,13 @@ tbody th {
 .btn--quiet {
   border-color: var(--rule);
   color: var(--ink-2);
+}
+/* przycisk kopiowania po sukcesie: „Skopiowano” (src/scripts/copy.ts) */
+.btn.is-copied,
+.btn.is-copied:hover {
+  border-color: var(--blue);
+  background: var(--blue-wash);
+  color: var(--ink);
 }
 
 /* ---------- druk A4 ---------- */

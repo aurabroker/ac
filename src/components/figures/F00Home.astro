@@ -132,78 +132,76 @@ const leader = (at: Pt, by: number) => {
   const L = Math.hypot(dx, dy);
   return seg(at, [BX - (dx / L) * R, by - (dy / L) * R]);
 };
-const leaders = callouts.map((c) => leader(c.at, c.y)).join('');
-const dots = callouts.map((c) => circle(c.at[0], c.at[1], 1.9)).join('');
 ---
 
 <FigFrame viewBox="0 0 640 520" labelledby={labelledby} title={title} desc={desc}>
   <!-- konstrukcja -->
   <path class="c" d={env} pathLength="1" />
-  <path class="c" d={extSG + extSub} pathLength="1" />
+  <path class="c" d={extSG + extSub} pathLength="1" data-part="8" />
 
   <!-- 1 podstawa -->
-  <path class="f" d={baseCyl.fill} />
-  <path class="o" d={baseCyl.edges} pathLength="1" />
-  <path class="o2" d={holes + bore} pathLength="1" />
+  <path class="f" d={baseCyl.fill} data-part="1" />
+  <path class="o" d={baseCyl.edges} pathLength="1" data-part="1" />
+  <path class="o2" d={holes + bore} pathLength="1" data-part="1" />
 
   <!-- 2 sprężyna -->
-  <path class="o2" d={spring.back} pathLength="1" />
-  <path class="o" d={spring.front} pathLength="1" />
+  <path class="o2" d={spring.back} pathLength="1" data-part="2" />
+  <path class="o" d={spring.front} pathLength="1" data-part="2" />
 
   <!-- 3 OC zawodowe -->
-  <path class="f" d={ocCyl.fill} />
-  <path class="o" d={ocCyl.edges} pathLength="1" />
+  <path class="f" d={ocCyl.fill} data-part="3" />
+  <path class="o" d={ocCyl.edges} pathLength="1" data-part="3" />
 
   <!-- 4 cyber -->
-  <path class="f" d={cyCyl.fill} />
-  <path class="o" d={cyCyl.edges} pathLength="1" />
+  <path class="f" d={cyCyl.fill} data-part="4" />
+  <path class="o" d={cyCyl.edges} pathLength="1" data-part="4" />
 
   <!-- 5 podkładka: klauzula AI -->
-  <path class="f" d={shimCyl.fill} />
-  <path class="o" d={shimCyl.edges} pathLength="1" />
+  <path class="f" d={shimCyl.fill} data-part="5" />
+  <path class="o" d={shimCyl.edges} pathLength="1" data-part="5" />
 
   <!-- 6 pierścień: USA i Kanada -->
-  <path class="f" d={ringFill} fill-rule="evenodd" />
-  <path class="o" d={ringEdges} pathLength="1" />
+  <path class="f" d={ringFill} fill-rule="evenodd" data-part="6" />
+  <path class="o" d={ringEdges} pathLength="1" data-part="6" />
 
   <!-- 7 pokrywa w przekroju ćwiartkowym: wyłączenia -->
-  <path class="f" d={capFill} />
-  <path class="x fx" d={capHatch} />
-  <path class="o" d={capEdges} pathLength="1" />
+  <path class="f" d={capFill} data-part="7" />
+  <path class="x fx" d={capHatch} data-part="7" />
+  <path class="o" d={capEdges} pathLength="1" data-part="7" />
 
   <!-- oś zespołu (na wierzchu) -->
   <line class="ax" x1={X} y1="58" x2={X} y2="516" />
 
   <!-- 8 wymiary: suma gwarancyjna, podlimit; baza A -->
-  <path class="d" d={sg.line + sub.line} pathLength="1" />
-  <path class="d-fill fx" d={sg.heads + sub.heads} />
-  <path class="ah fx" d={datumTri} />
-  <path class="o2" d={datumBox} pathLength="1" />
-  <text class="t t-b t-m t-keep" x={dA} y={base.cy + 28}>A</text>
-  <text class="t-dim" transform={`translate(${dimX - 7} ${(cap.cy + base.cy) / 2}) rotate(-90)`}>SUMA GWARANCYJNA</text>
-  <text class="t-dim" transform={`translate(${subX - 6} ${cyber.cy + cyber.h / 2}) rotate(-90)`}>PODLIMIT</text>
-  <g class="bal">
+  <path class="d" d={sg.line + sub.line} pathLength="1" data-part="8" />
+  <path class="d-fill fx" d={sg.heads + sub.heads} data-part="8" />
+  <path class="ah fx" d={datumTri} data-part="1" />
+  <path class="o2" d={datumBox} pathLength="1" data-part="1" />
+  <text class="t t-b t-m t-keep" x={dA} y={base.cy + 28} data-part="1">A</text>
+  <text class="t-dim" transform={`translate(${dimX - 7} ${(cap.cy + base.cy) / 2}) rotate(-90)`} data-part="8">SUMA GWARANCYJNA</text>
+  <text class="t-dim" transform={`translate(${subX - 6} ${cyber.cy + cyber.h / 2}) rotate(-90)`} data-part="8">PODLIMIT</text>
+  <g class="bal" data-part="8">
     <circle class="b" cx={dimX} cy="64" r={R} pathLength="1" />
     <text class="t-num" x={dimX} y="64">8</text>
   </g>
-  <path class="l" d={seg([dimX, 64 + R], [dimX, cap.cy - 4])} pathLength="1" />
+  <path class="l" d={seg([dimX, 64 + R], [dimX, cap.cy - 4])} pathLength="1" data-part="8" />
 
   <!-- odnośniki -->
-  <path class="l" d={leaders} pathLength="1" />
-  <path class="dot fx" d={dots} />
+  {callouts.map((c) => <path class="l" d={leader(c.at, c.y)} pathLength="1" data-part={c.n} />)}
+  {callouts.map((c) => <path class="dot fx" d={circle(c.at[0], c.at[1], 1.9)} data-part={c.n} />)}
   {
     callouts.map((c) => (
       <>
-        <g class="bal">
+        <g class="bal" data-part={c.n}>
           <circle class="b" cx={BX} cy={c.y} r={R} pathLength="1" />
           <text class="t-num" x={BX} y={c.y}>
             {c.n}
           </text>
         </g>
-        <text class="t t-b" x={BX + 20} y={c.y - 1}>
+        <text class="t t-b" x={BX + 20} y={c.y - 1} data-part={c.n}>
           {c.main}
         </text>
-        <text class="t t-s" x={BX + 20} y={c.y + 11}>
+        <text class="t t-s" x={BX + 20} y={c.y + 11} data-part={c.n}>
           {c.sub}
         </text>
       </>

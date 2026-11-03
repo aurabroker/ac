@@ -2,7 +2,7 @@
 
 Serwis `https://www.auraconsulting.pl` — Astro 7 (statyczny build), TypeScript strict, treść w kolekcjach MD/MDX z walidacją Zod, hosting Cloudflare Workers Static Assets. Ten dokument jest wiążący dla wszystkich agentów budujących treść. Specyfikacja nadrzędna: `BUILD-SPEC.md` → `PLAN.md` (scratchpad planu).
 
-Spis: [1. Zasady twarde](#1-zasady-twarde) · [2. Mapa własności plików](#2-mapa-własności-plików) · [3. Build równoległy i walidacja](#3-build-równoległy-i-walidacja) · [4. Jak dodać stronę](#4-jak-dodać-stronę) · [5. Frontmatter](#5-frontmatter) · [6. Komponenty](#6-katalog-komponentów) · [7. Etykiety zakresu](#7-etykiety-zakresu) · [8. Bliźniaki .md, SEO/GEO](#8-bliźniaki-md-seo-i-geo) · [9. Design „Arkusz”](#9-design-arkusz) · [10. Pułapki MDX](#10-pułapki-mdx)
+Spis: [1. Zasady twarde](#1-zasady-twarde) · [2. Mapa własności plików](#2-mapa-własności-plików) · [3. Build równoległy i walidacja](#3-build-równoległy-i-walidacja) · [4. Jak dodać stronę](#4-jak-dodać-stronę) · [5. Frontmatter](#5-frontmatter) · [6. Komponenty](#6-katalog-komponentów) (w tym [ikony](#ikony) i [interakcje i budżet JS](#interakcje-i-budżet-js)) · [7. Etykiety zakresu](#7-etykiety-zakresu) · [8. Bliźniaki .md, SEO/GEO](#8-bliźniaki-md-seo-i-geo) · [9. Design „Arkusz”](#9-design-arkusz) · [10. Pułapki MDX](#10-pułapki-mdx)
 
 ---
 
@@ -13,7 +13,7 @@ Spis: [1. Zasady twarde](#1-zasady-twarde) · [2. Mapa własności plików](#2-m
 3. **Twierdzenia o zakresie** tylko ze źródeł (`scratchpad/pdftext/*.txt`, wcześniej zweryfikowane strony w historii git: `git show HEAD:oc-cyber.html`, `git show HEAD:ubezpieczenie-ai.html`; copy decki `scratchpad/copy_deck*.md`) i zawsze warunkowo: „zwykle w zakresie — zależy od polisy”, „zgodnie z warunkami polisy”, „zakres potwierdzamy w ofercie”. Bez gwarancji, bez „najlepszy”, „nr 1”, „jedyny”, „pełna ochrona”, „100%”, „gwarantujemy”. Bez twierdzeń absolutnych o „polskich polisach” i „ubezpieczycielach” („wiele polis…, sprawdź…” — tak).
 4. **Bez cen i kwot z ofert.** Liczby w formacie „1 000 000 zł”.
 5. **Każda strona:** „W skrócie” (answer-first, 40–60 słów), H2 jako pytania prostym językiem (tam, gdzie naturalne), tabela zakresu z etykietami warunkowymi, FAQ, źródła (artykuły), data aktualizacji, autor. Scenariusze zawsze z etykietą „scenariusz ilustracyjny” (`<NoteBlock variant="scenario">`).
-6. **Autor** = właściciel, Marek Cieśla (`author: marek-ciesla`, domyślne; strona `/zespol/marek-ciesla/`). Zabezpieczenie w kodzie: osoba z nazwą „TODO…” byłaby pokazana jako „Zespół Aura Consulting”. Nie wymyślaj innych osób, numerów RPU ani recenzentów.
+6. **Autor** = właściciel, Marek Cieśla (`author: marek-ciesla`, domyślne; strona `/zespol/marek-ciesla/`). Na stronie autor pojawia się **raz** — w zwartej tabliczce pod H1 (link do jego strony); nie dopisuj go w treści, w stopce arkusza ani w notach (nota „Jak powstał ten tekst” nie wspomina autora). Strona `/zespol/marek-ciesla/` opisuje osobę (specjalizacje, sposób pracy), nie autorstwo — bez rejestru „opracowanych arkuszy”. JSON-LD `Person`: opis i specjalizacje z `people.yaml` (`bio`, `knowsAbout`; `jobTitle` tylko potwierdzony przez właściciela). Zabezpieczenie w kodzie: osoba z nazwą „TODO…” byłaby pokazana jako „Zespół Aura Consulting”. Nie wymyślaj innych osób, numerów RPU ani recenzentów.
 7. **Szkice:** artykuły (`wiedza/`) i regulacje (`regulations/`) tworzone przez agentów mają `draft: true`. Strony stałe (główna, filary, karty, słownik, firmowe) mają `draft: false`.
 8. **Polszczyzna naturalna**, bez kalek z angielskiego; terminy EN w nawiasie przy pierwszej wzmiance (`<Term en="claims made">…</Term>`).
 9. **Bez commitów i pushy** w sesjach agentów, bez zmian na innych gałęziach.
@@ -147,11 +147,11 @@ Software house wdraża chatbota… (scenariusz ilustracyjny)
 …
 ```
 
-Layout dokłada automatycznie: okruszki, tabliczkę, „W skrócie”, „Stan prawny na”, tabelę zakresu (z `coverage`), kontakt z numerem arkusza w temacie maila, FAQ, źródła, autora z notą „Jak powstał ten tekst”, rejestr zmian, powiązane arkusze, pełną tabliczkę, formułę (c), JSON-LD (BlogPosting, FAQPage, BreadcrumbList) i OG. **Nie powtarzaj tych bloków w treści.**
+Layout dokłada automatycznie: okruszki, tabliczkę, „W skrócie”, „Stan prawny na”, tabelę zakresu (z `coverage`), kontakt z numerem arkusza w temacie maila, FAQ, źródła z jednoliniową notą „Jak powstał ten tekst”, rejestr zmian, powiązane arkusze, pełną tabliczkę, formułę (c), JSON-LD (BlogPosting, FAQPage, BreadcrumbList) i OG. **Nie powtarzaj tych bloków w treści.**
 
 ### Filar / segment filaru
 
-`src/content/pillars/<id>.mdx` → `/<id>/`; segment: `src/content/pillars/<filar>/<segment>.mdx` → `/<filar>/<segment>/` (pole `pillar` jak u rodzica). Layout: „W skrócie” → rysunek hero (`figure`, z ploterem) → treść (BOM-y, scenariusze, SpecTable, USA i Kanada, „Czego nie obejmuje”) → tabela zakresu → FAQ → „Arkusze szczegółowe” (automatycznie: artykuły z `hub` = ścieżka filaru) → formuły (d), (c) → kontakt → autor → rejestr → źródła.
+`src/content/pillars/<id>.mdx` → `/<id>/`; segment: `src/content/pillars/<filar>/<segment>.mdx` → `/<filar>/<segment>/` (pole `pillar` jak u rodzica). Layout: „W skrócie” → rysunek hero (`figure`, z ploterem) → treść (BOM-y, scenariusze, SpecTable, USA i Kanada, „Czego nie obejmuje”) → tabela zakresu → FAQ → „Arkusze szczegółowe” (automatycznie: artykuły z `hub` = ścieżka filaru) → formuły (d), (c) → kontakt → powiązane → źródła (z notą „Jak powstał ten tekst”) → rejestr → pełna tabliczka. Autor — tylko w tabliczce pod H1.
 
 ### Karta katalogu
 
@@ -207,7 +207,7 @@ Pola wspólne (wszystkie kolekcje stron; schemat: `src/content.config.ts`):
 | `related` | ścieżki | „Powiązane arkusze” (nieistniejące w buildzie są pomijane) |
 | `legalStateAsOf` | data | blok „Stan prawny na” |
 | `reviewEvery` | liczba dni | cykl weryfikacji |
-| `aiAssistance` | bool | nota „Jak powstał ten tekst” (domyślnie true dla wiedza/regulacje) |
+| `aiAssistance` | bool | treść noty „Jak powstał ten tekst” przy źródłach (domyślnie true; `src/lib/compliance.ts` → `creationNote`) |
 
 Pola specyficzne: `pages` — `path`, `template`, `titleAccent`, `lead`, `person`, `breadcrumbParent`, `showContact`, `order`; `pillars` — `pillar` (`it|ai|cyber|pi`), `lead`, `titleAccent`, `markets`, `cardSummary`, `order`; `solutions` — `code`, `group`, `markets`, `priority`, `availabilityConfirmed`, `securityConfirmed`, `lloydsShare`, `mandatoryOC`, `cardSummary`, `order`; `wiedza` — `hub`, `cluster`, `articleId`; `regulations` — `act`, `officialName`, `legalStateAsOf` (wymagane), `timeline[]`, `hub`.
 
@@ -222,10 +222,11 @@ W plikach `.mdx` poniższe komponenty są dostępne **bez importu** (mapa: `src/
 | Komponent | Props | Przykład / uwagi |
 |---|---|---|
 | `NoteBlock` | `variant?: 'note'\|'scenario'\|'legal'\|'warning'\|'exclusion'`, `label?`, `date?` | `<NoteBlock variant="scenario">…</NoteBlock>` — w `.md` staje się cytatem z etykietą |
-| `SectionView` | `label`, `title?`, `id?` | nadetykieta dekoracyjna (aria-hidden, nie trafia do `.md`). W MDX: `<SectionView label="Przekrój A–A" />` + w następnej linii `## Pytanie?` |
+| `SectionView` | `label`, `title?`, `id?`, `icon?` | nadetykieta dekoracyjna (aria-hidden, nie trafia do `.md`). W MDX: `<SectionView label="Przekrój A–A" />` + w następnej linii `## Pytanie?` |
 | `BOM` | `caption`, `rows: CoverageRow[]`, `headers?`, `prefix?`, `id?` | tabela elementów/zakresu z odznakami: `<BOM caption="Moduły polisy cyber" rows={[{ event: "Koszty reakcji na incydent", label: "typical" }]} />` |
 | `CoverageBadge` | `label: 'typical'\|'optional'\|'underwriting'\|'excluded'` | `<CoverageBadge label="optional" />` |
-| `SpecTable` | `caption`, `columns: string[]`, `rows: string[][]`, `note?`, `id?`, `rowHeaders?` | `<SpecTable caption="Od czego zależy składka" columns={["Parametr","Dlaczego"]} rows={[["Przychód","skala"]]} />` — komórki: inline Markdown |
+| `SpecTable` | `caption`, `columns: string[]`, `rows: string[][]`, `note?`, `id?`, `rowHeaders?`, `rowIcons?: (string\|null)[]` | `<SpecTable caption="Od czego zależy składka" columns={["Parametr","Dlaczego"]} rows={[["Przychód","skala"]]} />` — komórki: inline Markdown. `rowIcons` (tyle, ile wierszy): ikony przy nagłówkach wierszy — branże, sektory, parametry |
+| `Steps` | `caption?`, `steps: { icon?, title, text, result? }[]`, `resultLabel?` | etapy procesu jako schemat przepływu (symbol w ramce → linia z grotem → następny etap); w `.md` lista numerowana. Np. „Jak pracujemy?” na stronie głównej |
 | `AnnotatedFigure` | `figure?` (id z rejestru), `code?`, `caption?`, `legend?: string[]`, `plotter?`, `grid?`, `uid?` | `<AnnotatedFigure figure="FigPillarIT" />`; `plotter` tylko w hero |
 | `Figure` | `id`, `labelledby?`, `title?` | sam rysunek z rejestru |
 | `F00Home`, `FigPillarIT`, `FigPillarAI`, `FigPillarCyber`, `FigPillarPI`, `FigLloyds`, `FigCatalogue` | `labelledby?`, `title?` | rysunki techniczne (właściciel `figures`) |
@@ -233,11 +234,28 @@ W plikach `.mdx` poniższe komponenty są dostępne **bez importu** (mapa: `src/
 | `DimensionLine` | `label`, `value?` | ozdobna linia wymiarowa (data-md-skip) |
 | `Term` | `en?`, `href?` | `<Term en="claims made" href="/slownik/#claims-made">zasada zgłoszenia roszczenia</Term>` |
 | `ContactChannels` | `sheet?`, `heading?`, `lead?`, `signal?`, `checklist?`, `id?` | tel, mailto z tematem `[sheet]`, „Kopiuj adres”, „Kopiuj szablon”. Layouty już go dodają — nie duplikuj |
-| `SheetCard` | `href`, `title`, `sheet?`, `summary?`, `meta?`, `level?`, `draft?` | karta arkusza |
+| `SheetCard` | `href`, `title`, `sheet?`, `summary?`, `meta?`, `level?`, `draft?`, `icon?` | karta arkusza; symbol w ramce dobierany z adresu (`iconForPath`), `icon="…"` zmienia, `icon={false}` wyłącza |
+| `Icon` | `name`, `size?` (20), `title?`, `class?` | ikona z zestawu (niżej); bez `title` dekoracyjna (`aria-hidden`) |
 | `CardGrid` | `columns?: 2\|3`, `label?` | siatka kart: `<CardGrid columns={3}><SheetCard …/></CardGrid>` |
 | `AnswerBox` | `summary`, `points?`, `heading?` | „W skrócie” — layouty dodają z frontmattera; w MDX tylko wyjątkowo |
+| `ProgramConfigurator` | `compact?`, `sheet?`, `preset?` (np. `"ai=tak"`), `uid?` | konfigurator programu (6 pytań → zestawienie elementów, uwagi, mailto, „Kopiuj podsumowanie”). Pełny na stronie głównej, `compact` na filarach. Bez JS i w `.md` — tabela zasad doboru. Dane i reguły: `src/lib/configurator.ts` — **tylko twierdzenia obecne już na stronach serwisu** |
 
-Komponenty layoutów (nie używaj w MDX): `Breadcrumbs`, `TitleBlock`, `SheetHead`, `SheetFoot`, `TOC`, `FAQ`, `Sources`, `AuthorCard`, `RevisionLog`, `Disclosure` (formuły b/c/d z `src/lib/compliance.ts`), `SiteHeader`, `SiteFooter`, `DocBody`, `lists/*`.
+Komponenty layoutów (nie używaj w MDX): `Breadcrumbs`, `TitleBlock`, `SheetHead`, `SheetFoot`, `TOC`, `FAQ`, `Sources` (z notą `note`), `RevisionLog`, `Disclosure` (formuły b/c/d z `src/lib/compliance.ts`), `SiteHeader`, `SiteFooter`, `DocBody`, `lists/*`.
+
+### Ikony
+
+Zestaw własny w stylu rysunku technicznego: `src/icons/<nazwa>.svg` (siatka 24×24, linia obiektu 1,5, szczegóły i kreskowanie 1, narożniki ostre, końce kwadratowe, `currentColor`, wypełnienia tylko w drobnych akcentach). Lista nazw i reguły doboru: `src/lib/icons.ts` (`ICON_NAMES` — nowy plik `.svg` trzeba tam dopisać, inaczej build się zatrzyma). Komponent: `<Icon name="globe-pin" size={20} />` — inline SVG, bez żądań sieciowych, zgodny z CSP; w `.md` pomijany. Każda ikona trafia do strony raz (`<symbol id="ico-…">` przy pierwszym użyciu, dalej `<use href="#ico-…">`).
+
+| Grupa | Nazwy |
+|---|---|
+| ochrona, umowy, prawo | `shield-section` (cyber), `contract-seal` (polisa, umowa, gwarancja), `document`, `document-md`, `scales` (prawo, porównanie), `column` (sąd, instytucja) |
+| technologia | `code-brackets`, `server-rack`, `cloud`, `neural-node` (AI), `chip`, `network`, `padlock`, `key` (klucz API), `bug`, `browser`, `blocks` (blockchain) |
+| świat, branże | `globe`, `globe-pin` (USA i Kanada, terytorium), `bank`, `building`, `house`, `factory`, `medical-cross`, `cart`, `megaphone`, `team`, `compass` (OC zawodowe, architekt), `wrench`, `camera`, `suitcase`, `car`, `truck`, `gamepad`, `book`, `chart` |
+| pieniądze, limity, czas | `coins`, `calculator`, `percent`, `gauge` (limit, ocena ryzyka), `calendar` (data retroaktywna, oś czasu), `clock` |
+| incydenty | `warning-triangle`, `lightning` (incydent, scenariusz) |
+| interfejs | `phone`, `envelope`, `copy`, `download`, `arrow-right`, `search` (wyszukiwanie, szukanie ochrony), `magnifier` (lupa z plusem: przyjrzyj się, analiza), `layers` (katalog, moduły), `check-badge`, `x-badge`, `plus-badge`, `info`, `question` |
+
+Gdzie działają same: nawigacja i menu (`iconForPath`), karty `SheetCard`, nadetykiety `SectionView` (z etykiety: „Oś czasu” → `calendar`, „Mapa luk” → `x-badge`, „USA” → `globe-pin`, „Przypadki obciążenia” → `lightning`…), odznaki zakresu (`check-badge` / `plus-badge` / `gauge` / `x-badge`), `NoteBlock`, FAQ (`question`), źródła (`document`), kontakt (`phone`, `envelope`, `copy`), tabliczka („Pobierz .md” → `document-md`), stopka. W treści ręcznie tylko tam, gdzie pomagają skanować: `rowIcons` w `SpecTable` (sektory, profesje, parametry), `icon` w `Steps`. Ikona wspiera tekst — nie zastępuje go i nie jest ozdobnikiem; bez emoji.
 
 ### Rysunki (agent `figures`)
 
@@ -245,7 +263,25 @@ Kontrakt pliku `src/components/figures/<Nazwa>.astro`: props `labelledby?`, `tit
 
 Nowy rysunek: korzeń przez `<FigFrame viewBox title desc labelledby>` (role="img", `<title>`/`<desc>`, wnętrze w `<g aria-hidden>`), geometria z `figures/draw.ts` (elipsy rzutu, walce, kreskowanie przycięte do wielokąta, groty ISO, wymiary, chmurka rewizyjna). Klasy dodatkowe z FigFrame: `.ah`/`.ah2` grot tuszem, `.t-b`/`.t-s` etykieta główna/pomocnicza, `.t-m`/`.t-e` wyrównanie, `.t-sig` czerwony podpis przy redline, `.bal` grupa balonu, `.fx` wypełnienia dochodzące w ploterze po liniach, `.t-keep` etykieta zostająca na wąskim ekranie. Na ekranach ≤ 640 px etykiety tekstowe znikają (treść jest w legendzie HTML), balony rosną ×1,75, linie grubieją.
 
+Rysunek interaktywny (hero z `plotter`): wpis w `FIGURE_META` ma `parts` (tyle, ile pozycji legendy: `title`, `text` — jedno zdanie z twierdzeń serwisu, `href`, `link`), a elementy SVG części mają `data-part="n"` (także balon `<g class="bal" data-part="n">`, odnośnik i etykiety). Rozbij wspólne ścieżki na części tylko tam, gdzie trzeba podświetlić osobno; limit 40 elementów z `pathLength` dalej obowiązuje. Skrypt dokłada przyciski nad balonami (jeden przystanek Tab, strzałki, Enter przypina, Esc zamyka; nachodzące na wąskim ekranie są rozsuwane), kartę pod rysunkiem — przed wyborem z listą części jako przyciski, potem z „Wszystkie części” — i podświetlenie (niebieski tusz, reszta przygaszona). Bez JS: legenda z linkami w tytułach pozycji.
+
 ---
+
+### Interakcje i budżet JS
+
+Zasady: wanilia TS w `src/scripts/*.ts`, ładowana przez `<script>` w komponencie, który jej używa (Astro dołącza moduł tylko do stron, na których komponent się renderuje). Progresywne ulepszenie: treść i linki działają bez JS, elementy sterujące mają w HTML `hidden` (więc nie trafiają do `.md`), a skrypt je odsłania; `hidden` ukrywa zawsze (globalnie `display: none !important` w `base.css`, także `.btn`). Regiony `role="status"` dostają tekst początkowy w HTML albo przed odsłonięciem — komunikat tylko po działaniu użytkownika. Bez inline `<script>`/`style=` (CSP `script-src 'self'`) — pozycje i postęp ustawiamy przez CSSOM (`el.style.left`, `transform`). Każda animacja respektuje `prefers-reduced-motion`; dostęp z klawiatury i `role="status"` dla komunikatów. Bez gimmicków: interakcja ma odpowiadać na pytanie użytkownika.
+
+| Skrypt | Komponent → strony | Co robi | gz |
+|---|---|---|---|
+| `figure-parts.ts` | `AnnotatedFigure` (hero z `parts`) → `/`, filary | części rysunku jako przyciski (nachodzące na wąskim ekranie są rozsuwane), lista części w miejscu karty przed wyborem, karta objaśnienia z „Wszystkie części” | ≈ 1,6 KB |
+| `configurator.ts` + `copy.ts` | `ProgramConfigurator` → `/`, `/oc-cyber-dla-it/`, `/ubezpieczenie-ai/` | reguły `evaluate()`, zestawienie, mailto, schowek, `sessionStorage` | ≈ 2,3 KB + 0,4 KB |
+| `catalogue-filter.ts` | `CatalogueIndex` → `/ubezpieczenia/` | filtry ryzyko × branża, stan w `#ryzyko=…&branza=…` | ≈ 0,8 KB |
+| `glossary-search.ts` | `GlossaryList` → `/slownik/` | wyszukiwanie bez polskich znaków, licznik, litery bez wyników | ≈ 0,7 KB |
+| `toc-spy.ts` | `TOC` → artykuły, filary, karty, strony z TOC | ≥ 1280 px: bieżąca sekcja (`aria-current`), linia postępu czytania; poniżej: spis jako `<details>` na początku treści (bez JS też działa) + przycisk „Spis treści” przy dolnej krawędzi, gdy spis zniknie z widoku | ≈ 0,9 KB |
+| `copy.ts` | `ContactChannels`, konfigurator | „Skopiowano” na przycisku + komunikat dla czytnika | ≈ 0,4 KB (+ 0,3 KB `ContactChannels`) |
+| (bez zmian) | `SiteHeader`, `PlotterHero` | menu `<dialog>` (link „Menu” zamieniany na `<button aria-haspopup="dialog">`), jednorazowe rysowanie hero | 0,4 + 0,4 KB |
+
+Budżet na stronę (suma gz, build 3.11.2026): filary z konfiguratorem ≈ 5,2 KB, strona główna ≈ 4,5 KB, pozostałe filary ≈ 3,0 KB, `/ubezpieczenia/` ≈ 1,6 KB, karty/artykuły/strony firmowe ≈ 1,5 KB, `/slownik/` ≈ 0,8 KB. Limit: pojedynczy skrypt ≤ 8 KB gz; strona ≤ 8 KB gz. Mikrointerakcje bez JS (CSS): linia wymiarowa pod linkami w tekście i u dołu kart po najechaniu, krótkie rozwijanie FAQ (`::details-content`, Chromium; gdzie indziej od razu).
 
 ## 7. Etykiety zakresu
 

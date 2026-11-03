@@ -2,7 +2,10 @@
 /**
  * Karta arkusza w indeksach (katalog, rejestr wiedzy, „Arkusze szczegółowe”, „Powiązane”).
  * Cała karta jest linkiem przez tytuł (jeden <a>), numer arkusza w Plex Mono.
+ * Symbol w ramce: ikona strony wg adresu (src/lib/icons.ts → iconForPath); `icon="…"` zmienia, `icon={false}` wyłącza.
  */
+import Icon from './Icon.astro';
+import { iconForPath } from '../lib/icons.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
 interface Props {
@@ -14,16 +17,32 @@ interface Props {
   /** Poziom nagłówka tytułu. */
   level?: 2 | 3 | 4;
   draft?: boolean;
+  icon?: string | false;
 }
 const { href, title, sheet, summary, meta, level = 3, draft } = Astro.props;
 const H = `h${level}` as 'h2' | 'h3' | 'h4';
+const icon = Astro.props.icon === false ? undefined : (Astro.props.icon ?? iconForPath(href));
 ---
 
 <article class="sheet-card">
-  {sheet && <p class="sheet-card__sheet mono">{sheet}{draft && ' · SZKIC'}</p>}
+  {
+    (icon || sheet) && (
+      <div class="sheet-card__head">
+        {icon && (
+          <span class="sheet-card__symbol" aria-hidden="true">
+            <Icon name={icon} size={24} />
+          </span>
+        )}
+        {sheet && <p class="sheet-card__sheet mono">{sheet}{draft && ' · SZKIC'}</p>}
+      </div>
+    )
+  }
   <H class="sheet-card__title"><a href={href}>{polishText(title)}</a></H>
   {summary && <p class="sheet-card__summary">{polishText(summary)}</p>}
-  {meta && <p class="sheet-card__meta mono">{meta}</p>}
+  <div class="sheet-card__foot">
+    {meta && <p class="sheet-card__meta mono">{meta}</p>}
+    <span class="sheet-card__go" aria-hidden="true"><Icon name="arrow-right" size={18} /></span>
+  </div>
 </article>
 
 <style>
@@ -38,8 +57,55 @@ const H = `h${level}` as 'h2' | 'h3' | 'h4';
     transition: border-color 120ms var(--ease);
     height: 100%;
   }
-  .sheet-card:hover {
+  .sheet-card:hover,
+  .sheet-card:focus-within {
     border-color: var(--ink);
+  }
+  /* linia wymiarowa u dołu karty (|—|), kreślona od lewej po najechaniu lub fokusie */
+  .sheet-card::before {
+    content: '';
+    position: absolute;
+    left: var(--s-3);
+    right: var(--s-3);
+    bottom: 9px;
+    height: 7px;
+    border-inline: 1px solid var(--blue);
+    background: linear-gradient(var(--blue), var(--blue)) 0 3px / 100% 1px no-repeat;
+    clip-path: inset(0 100% 0 0);
+    pointer-events: none;
+  }
+  .sheet-card:hover::before,
+  .sheet-card:focus-within::before {
+    clip-path: inset(0 0 0 0);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet-card::before {
+      transition: clip-path 320ms var(--ease);
+    }
+  }
+  .sheet-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    margin-bottom: var(--s-1);
+  }
+  .sheet-card__symbol {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--rule);
+    color: var(--ink-2);
+    background: var(--paper);
+    transition:
+      color 120ms var(--ease),
+      border-color 120ms var(--ease);
+  }
+  .sheet-card:hover .sheet-card__symbol,
+  .sheet-card:focus-within .sheet-card__symbol {
+    color: var(--blue);
+    border-color: var(--blue);
   }
   .sheet-card__sheet {
     color: var(--ink-3);
@@ -68,9 +134,36 @@ const H = `h${level}` as 'h2' | 'h3' | 'h4';
     font-size: var(--fs-small);
     color: var(--ink-2);
   }
-  .sheet-card__meta {
+  .sheet-card__foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-2);
     margin-top: auto;
     padding-top: var(--s-1);
+  }
+  .sheet-card__meta {
     color: var(--ink-3);
+  }
+  .sheet-card__go {
+    margin-left: auto;
+    color: var(--ink-3);
+    line-height: 0;
+    transition: color 120ms var(--ease);
+  }
+  .sheet-card:hover .sheet-card__go,
+  .sheet-card:focus-within .sheet-card__go {
+    color: var(--blue);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet-card__go {
+      transition:
+        color 120ms var(--ease),
+        transform 160ms var(--ease);
+    }
+    .sheet-card:hover .sheet-card__go,
+    .sheet-card:focus-within .sheet-card__go {
+      transform: translateX(4px);
+    }
   }
 </style>

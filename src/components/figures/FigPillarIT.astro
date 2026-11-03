@@ -44,23 +44,18 @@ const supPath = (s: Sup) => {
 };
 const supGeo = sups.map((s) => ({ s, ...supPath(s) }));
 const pins = supGeo.filter((g) => !g.s.roller).map((g) => circle(g.s.x, yB + 1, 3)).join('');
-const groundHatch = supGeo
-  .map((g) => hatch([[g.s.x - 26, g.g], [g.s.x + 26, g.g], [g.s.x + 26, g.g + 9], [g.s.x - 26, g.g + 9]], 5, 135))
-  .join('');
 
 // siły skupione
-type Load = { x: number; main: string; sub: string; light?: boolean };
+type Load = { x: number; n: number; main: string; sub: string; light?: boolean };
 const loads: Load[] = [
-  { x: 132, main: 'SZKODA RZECZOWA', sub: 'LUB OSOBOWA' },
-  { x: 262, main: 'BŁĄD W USŁUDZE', sub: 'ROSZCZENIE KLIENTA' },
-  { x: 590, main: 'INCYDENT CYBER', sub: 'KOSZTY · PRZESTÓJ' },
-  { x: 736, main: 'POZEW W USA', sub: 'JURYSDYKCJA', light: true },
+  { x: 132, n: 4, main: 'SZKODA RZECZOWA', sub: 'LUB OSOBOWA' },
+  { x: 262, n: 1, main: 'BŁĄD W USŁUDZE', sub: 'ROSZCZENIE KLIENTA' },
+  { x: 590, n: 2, main: 'INCYDENT CYBER', sub: 'KOSZTY · PRZESTÓJ' },
+  { x: 736, n: 5, main: 'POZEW W USA', sub: 'JURYSDYKCJA', light: true },
 ];
 const yArrow0 = 96;
-const shafts = loads.filter((l) => !l.light).map((l) => seg([l.x, yArrow0], [l.x, yT - 8])).join('');
-const shaftsLight = loads.filter((l) => l.light).map((l) => seg([l.x, yArrow0], [l.x, yT - 8])).join('');
-const heads = loads.filter((l) => !l.light).map((l) => head(l.x, yT - 1, 90, 9, 2.6)).join('');
-const headsLight = loads.filter((l) => l.light).map((l) => head(l.x, yT - 1, 90, 9, 2.6)).join('');
+const shaft = (l: Load) => seg([l.x, yArrow0], [l.x, yT - 8]);
+const arrowHead = (l: Load) => head(l.x, yT - 1, 90, 9, 2.6);
 
 // obciążenie ciągłe: wyciek danych w strefie styku
 const q0 = 340;
@@ -87,7 +82,7 @@ const bals: Bal[] = [
   { n: 3, x: qMid, from: [qMid, 226] },
   { n: 5, x: 712, from: [712, yB + 3] },
 ];
-const leaders = bals.map((b) => seg(b.from, [b.x, yBal - R])).join('');
+const leader = (b: Bal) => seg(b.from, [b.x, yBal - R]);
 ---
 
 <FigFrame viewBox="0 0 800 326" labelledby={labelledby} title={title} desc={desc}>
@@ -97,53 +92,52 @@ const leaders = bals.map((b) => seg(b.from, [b.x, yBal - R])).join('');
   <line class="ax" x1="30" y1={yAxis} x2="782" y2={yAxis} />
   {supGeo.map((g) => <line class="ax" x1={g.s.x} y1={yB + 4} x2={g.s.x} y2={g.g + 12} />)}
 
-  <!-- belka i wspornik -->
+  <!-- belka i wspornik (5: USA i Kanada) -->
   <path class="f" d={beam} />
   <path class="o" d={beam} pathLength="1" />
-  <path class="h" d={overhang} />
+  <path class="h" d={overhang} data-part="5" />
   <text class="t t-s" x={L0 + 14} y={yAxis + 3.5}>FIRMA IT</text>
 
-  <!-- podpory -->
-  {supGeo.map((g) => <path class="f" d={g.tri} />)}
-  <path class="o" d={supGeo.map((g) => g.tri + g.rollers).join('')} pathLength="1" />
-  <path class="o" d={supGeo.map((g) => g.ground).join('')} pathLength="1" />
-  <path class="x fx" d={groundHatch} />
-  <path class="b" d={pins} />
-  {supGeo.map((g) => <text class="t t-b t-m" x={g.s.x + 22} y={yB + 18}>{g.s.key}</text>)}
+  <!-- podpory: 4 OC działalności (C), 1 OC zawodowe (A), 2 cyber (B) -->
+  {supGeo.map((g) => <path class="f" d={g.tri} data-part={g.s.n} />)}
+  {supGeo.map((g) => <path class="o" d={g.tri + g.rollers + g.ground} pathLength="1" data-part={g.s.n} />)}
+  {supGeo.map((g) => <path class="x fx" d={hatch([[g.s.x - 26, g.g], [g.s.x + 26, g.g], [g.s.x + 26, g.g + 9], [g.s.x - 26, g.g + 9]], 5, 135)} data-part={g.s.n} />)}
+  <path class="b" d={pins} data-part="1" />
+  {supGeo.map((g) => <text class="t t-b t-m" x={g.s.x + 22} y={yB + 18} data-part={g.s.n}>{g.s.key}</text>)}
 
   <!-- siły -->
-  <path class="o" d={shafts} pathLength="1" />
-  <path class="ah fx" d={heads} />
-  <path class="o2" d={shaftsLight} pathLength="1" />
-  <path class="ah2 fx" d={headsLight} />
-  <path class="o2" d={qLines} pathLength="1" />
-  <path class="ah2 fx" d={qHeads} />
   {
     loads.map((l) => (
       <>
-        <text class="t t-b t-m" x={l.x} y="64">
+        <path class={l.light ? 'o2' : 'o'} d={shaft(l)} pathLength="1" data-part={l.n} />
+        <path class={l.light ? 'ah2 fx' : 'ah fx'} d={arrowHead(l)} data-part={l.n} />
+        <text class="t t-b t-m" x={l.x} y="64" data-part={l.n}>
           {l.main}
         </text>
-        <text class="t t-s t-m" x={l.x} y="78">
+        <text class="t t-s t-m" x={l.x} y="78" data-part={l.n}>
           {l.sub}
         </text>
       </>
     ))
   }
-  <text class="t t-b t-m" x={qMid} y="96">WYCIEK DANYCH KLIENTA</text>
-  <text class="t t-s t-m" x={qMid} y="110">OBCIĄŻENIE CIĄGŁE</text>
+  <path class="o2" d={qLines} pathLength="1" data-part="3" />
+  <path class="ah2 fx" d={qHeads} data-part="3" />
+  <text class="t t-b t-m" x={qMid} y="96" data-part="3">WYCIEK DANYCH KLIENTA</text>
+  <text class="t t-s t-m" x={qMid} y="110" data-part="3">OBCIĄŻENIE CIĄGŁE</text>
 
   <!-- wymiary -->
-  <path class="d" d={zone.line + all.line} pathLength="1" />
-  <path class="d-fill fx" d={zone.heads + all.heads} />
-  <text class="t-dim" x={qMid} y="217">STYK OC / CYBER</text>
+  <path class="d" d={zone.line} pathLength="1" data-part="3" />
+  <path class="d" d={all.line} pathLength="1" />
+  <path class="d-fill fx" d={zone.heads} data-part="3" />
+  <path class="d-fill fx" d={all.heads} />
+  <text class="t-dim" x={qMid} y="217" data-part="3">STYK OC / CYBER</text>
   <text class="t-dim" x={(L0 + L1) / 2} y={yAll - 5}>OC I CYBER · LIMITY WG POLISY</text>
 
   <!-- odnośniki -->
-  <path class="l" d={leaders} pathLength="1" />
+  {bals.map((b) => <path class="l" d={leader(b)} pathLength="1" data-part={b.n} />)}
   {
     bals.map((b) => (
-      <g class="bal">
+      <g class="bal" data-part={b.n}>
         <circle class="b" cx={b.x} cy={yBal} r={R} pathLength="1" />
         <text class="t-num" x={b.x} y={yBal}>
           {b.n}
@@ -154,15 +148,15 @@ const leaders = bals.map((b) => seg(b.from, [b.x, yBal - R])).join('');
   {
     supGeo.map((g) => (
       <>
-        <text class="t t-b t-m" x={g.s.x} y={yBal + 30}>
+        <text class="t t-b t-m" x={g.s.x} y={yBal + 30} data-part={g.s.n}>
           {g.s.main}
         </text>
-        <text class="t t-s t-m" x={g.s.x} y={yBal + 43}>
+        <text class="t t-s t-m" x={g.s.x} y={yBal + 43} data-part={g.s.n}>
           {g.s.sub}
         </text>
       </>
     ))
   }
-  <text class="t t-b t-m" x="712" y={yBal + 30}>USA / KANADA</text>
-  <text class="t t-s t-m" x="712" y={yBal + 43}>GDY OBEJMUJE JE POLISA</text>
+  <text class="t t-b t-m" x="712" y={yBal + 30} data-part="5">USA / KANADA</text>
+  <text class="t t-s t-m" x="712" y={yBal + 43} data-part="5">GDY OBEJMUJE JE POLISA</text>
 </FigFrame>

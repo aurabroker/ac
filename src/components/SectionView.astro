@@ -8,7 +8,12 @@
  *  2) W MDX (H2 z Markdown trafia do spisu treści):
  *       <SectionView label="Przekrój A–A" />
  *       ## Co obejmuje OC zawodowe?
+ *
+ * Ikona: dobierana z etykiety (src/lib/icons.ts → sectionIcon: „Oś czasu” → kalendarz, „Mapa luk” → ✕,
+ * „USA” → glob z pinezką…); `icon="…"` wymusza inną, `icon={false}` wyłącza.
  */
+import Icon from './Icon.astro';
+import { sectionIcon } from '../lib/icons.ts';
 import { slugify } from '../lib/typography/slug.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
@@ -16,8 +21,10 @@ interface Props {
   label: string;
   title?: string;
   id?: string;
+  icon?: string | false;
 }
 const { label, title, id } = Astro.props;
+const icon = Astro.props.icon === false ? undefined : (Astro.props.icon ?? sectionIcon(label));
 // ta sama reguła co kotwice nagłówków Markdown (ASCII, bez polskich znaków)
 const hid = id ?? (title ? slugify(title) : undefined);
 ---
@@ -26,6 +33,7 @@ const hid = id ?? (title ? slugify(title) : undefined);
   title ? (
     <section class="section-view" aria-labelledby={hid}>
       <p class="section-view__label" aria-hidden="true">
+        {icon && <Icon name={icon} size={18} />}
         {polishText(label)}
       </p>
       <h2 id={hid}>{title}</h2>
@@ -33,6 +41,7 @@ const hid = id ?? (title ? slugify(title) : undefined);
     </section>
   ) : (
     <p class="section-view__label section-view__label--solo" aria-hidden="true">
+      {icon && <Icon name={icon} size={18} />}
       {polishText(label)}
     </p>
   )
@@ -59,6 +68,9 @@ const hid = id ?? (title ? slugify(title) : undefined);
     content: '';
     width: 24px;
     border-top: 1px solid var(--ink);
+  }
+  .section-view__label :global(.icon) {
+    color: var(--ink-2);
   }
   /* w .prose: etykieta przyklejona do następującego H2 */
   :global(.prose) .section-view__label--solo {

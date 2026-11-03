@@ -39,7 +39,7 @@ export const FOOTER_NAV: { title: string; links: NavLink[] }[] = [
     title: 'Firma',
     links: [
       { label: 'O nas', href: '/o-nas/' },
-      { label: 'Autor: Marek Cieśla', href: '/zespol/marek-ciesla/' },
+      { label: 'Zespół', href: '/zespol/marek-ciesla/' },
       { label: 'Informacje o brokerze', href: '/informacje-o-brokerze/' },
       { label: 'Reklamacje', href: '/reklamacje/' },
       { label: 'Polityka prywatności', href: '/polityka-prywatnosci/' },

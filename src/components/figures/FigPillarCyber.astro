@@ -114,12 +114,11 @@ const leader = (b: Bal) => {
   const L = Math.hypot(dx, dy);
   return seg(b.from, [b.x - (dx / L) * R, b.y - (dy / L) * R]);
 };
-const leaders = bals.map(leader).join('');
 ---
 
 <FigFrame viewBox="0 0 800 352" labelledby={labelledby} title={title} desc={desc}>
   <!-- konstrukcja: osie modułu, linie wymiarowe pomocnicze -->
-  <path class="c" d={ext} pathLength="1" />
+  <path class="c" d={ext} pathLength="1" data-part="4" />
 
   <!-- rzut: ściany w przekroju, otwór, drzwi -->
   <path class="f" d={box(B0, T0, B1, T1)} />
@@ -132,56 +131,66 @@ const leaders = bals.map(leader).join('');
   <text class="t t-s" x={PX + W + 12} y={T1 - W - 10}>SERWEROWNIA</text>
   <text class="t t-s" x={210} y={190}>KSIĘGOWOŚĆ</text>
 
-  <!-- otoczenie -->
-  <path class="f" d={ir + backup + third + bank} />
-  <path class="o2" d={ir + backup + third} pathLength="1" />
-  <path class="h" d={bank + crime} />
-  <path class="o2" d={disks} pathLength="1" />
-  <path class="o2" d={irArrow + restore + claims} pathLength="1" />
-  <path class="ah2 fx" d={head(325, 86, 90, 8, 2.3) + head(B1 + 2, 124, 180, 8, 2.3) + head(650, 232, 0, 8, 2.3) + head(124, 225, 140, 8, 2.3)} />
-  <text class="t t-s t-m" x="325" y="32">ZESPÓŁ IR</text>
-  <text class="t t-s t-m" x="709" y="154">KOPIA ZAPASOWA</text>
-  <text class="t t-s t-m" x="709" y="229">OSOBY TRZECIE</text>
-  <text class="t t-s t-m" x="709" y="242">ROSZCZENIA</text>
-  <text class="t t-s t-m" x="78" y="226">PRZELEW</text>
-  <text class="t t-s t-m" x="78" y="238">OPCJA</text>
-  <text class="t t-s" x="74" y="106">ŁĄCZE · POCZTA</text>
+  <!-- otoczenie: 2 zespół IR, 3 kopia zapasowa, 5 osoby trzecie, 6 przelew -->
+  <path class="f" d={ir} data-part="2" />
+  <path class="f" d={backup} data-part="3" />
+  <path class="f" d={third} data-part="5" />
+  <path class="f" d={bank} data-part="6" />
+  <path class="o2" d={ir} pathLength="1" data-part="2" />
+  <path class="o2" d={backup} pathLength="1" data-part="3" />
+  <path class="o2" d={third} pathLength="1" data-part="5" />
+  <path class="h" d={bank + crime} data-part="6" />
+  <path class="o2" d={disks} pathLength="1" data-part="3" />
+  <path class="o2" d={irArrow} pathLength="1" data-part="2" />
+  <path class="o2" d={restore} pathLength="1" data-part="3" />
+  <path class="o2" d={claims} pathLength="1" data-part="5" />
+  <path class="ah2 fx" d={head(325, 86, 90, 8, 2.3)} data-part="2" />
+  <path class="ah2 fx" d={head(B1 + 2, 124, 180, 8, 2.3)} data-part="3" />
+  <path class="ah2 fx" d={head(650, 232, 0, 8, 2.3)} data-part="5" />
+  <path class="ah2 fx" d={head(124, 225, 140, 8, 2.3)} data-part="6" />
+  <text class="t t-s t-m" x="325" y="32" data-part="2">ZESPÓŁ IR</text>
+  <text class="t t-s t-m" x="709" y="154" data-part="3">KOPIA ZAPASOWA</text>
+  <text class="t t-s t-m" x="709" y="229" data-part="5">OSOBY TRZECIE</text>
+  <text class="t t-s t-m" x="709" y="242" data-part="5">ROSZCZENIA</text>
+  <text class="t t-s t-m" x="78" y="226" data-part="6">PRZELEW</text>
+  <text class="t t-s t-m" x="78" y="238" data-part="6">OPCJA</text>
+  <text class="t t-s" x="74" y="106" data-part="1">ŁĄCZE · POCZTA</text>
 
-  <!-- droga incydentu: jedyny redline -->
-  <path class="o2" d={origin} pathLength="1" />
-  <path class="sig" d={incident} pathLength="1" />
+  <!-- 1 droga incydentu: jedyny redline -->
+  <path class="o2" d={origin} pathLength="1" data-part="1" />
+  <path class="sig" d={incident} pathLength="1" data-part="1" />
 
-  <!-- oś czasu przestoju -->
-  <path class="o2" d={axis} pathLength="1" />
-  <path class="ah2 fx" d={head(608, yT, 0, 8, 2.3)} />
-  <path class="f" d={bar} />
-  <path class="x fx" d={barHatch} />
-  <path class="o" d={bar + seg([tlF, yT - 7], [tlF, yT + 7])} pathLength="1" />
-  <path class="d" d={dF.line + dP.line} pathLength="1" />
-  <path class="d-fill fx" d={dF.heads + dP.heads} />
-  <text class="t-dim" x={(tl0 + tlF) / 2} y={dimY - 5}>FRANSZYZA</text>
-  <text class="t-dim" x={(tlF + tl1) / 2} y={dimY - 5}>OKRES ODSZKODOWAWCZY</text>
-  <text class="t t-s t-m" x={tl0} y={yT + 22}>T0 · INCYDENT</text>
-  <text class="t t-s" x="616" y={yT + 4}>t</text>
+  <!-- 4 oś czasu przestoju -->
+  <path class="o2" d={axis} pathLength="1" data-part="4" />
+  <path class="ah2 fx" d={head(608, yT, 0, 8, 2.3)} data-part="4" />
+  <path class="f" d={bar} data-part="4" />
+  <path class="x fx" d={barHatch} data-part="4" />
+  <path class="o" d={bar + seg([tlF, yT - 7], [tlF, yT + 7])} pathLength="1" data-part="4" />
+  <path class="d" d={dF.line + dP.line} pathLength="1" data-part="4" />
+  <path class="d-fill fx" d={dF.heads + dP.heads} data-part="4" />
+  <text class="t-dim" x={(tl0 + tlF) / 2} y={dimY - 5} data-part="4">FRANSZYZA</text>
+  <text class="t-dim" x={(tlF + tl1) / 2} y={dimY - 5} data-part="4">OKRES ODSZKODOWAWCZY</text>
+  <text class="t t-s t-m" x={tl0} y={yT + 22} data-part="4">T0 · INCYDENT</text>
+  <text class="t t-s" x="616" y={yT + 4} data-part="4">t</text>
 
   <!-- odnośniki -->
-  <path class="l" d={leaders} pathLength="1" />
+  {bals.map((b) => leader(b) && <path class="l" d={leader(b)} pathLength="1" data-part={b.n} />)}
   {
     bals.map((b) => (
       <>
-        <g class="bal">
+        <g class="bal" data-part={b.n}>
           <circle class="b" cx={b.x} cy={b.y} r={R} pathLength="1" />
           <text class="t-num" x={b.x} y={b.y}>
             {b.n}
           </text>
         </g>
         {b.main && (
-          <text class="t t-b" x={b.x + 18} y={b.y - 1}>
+          <text class="t t-b" x={b.x + 18} y={b.y - 1} data-part={b.n}>
             {b.main}
           </text>
         )}
         {b.sub && (
-          <text class="t t-s" x={b.x + 18} y={b.y + 11}>
+          <text class="t t-s" x={b.x + 18} y={b.y + 11} data-part={b.n}>
             {b.sub}
           </text>
         )}

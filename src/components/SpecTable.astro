@@ -9,7 +9,10 @@
  *   columns={['Parametr', 'Co sprawdza ubezpieczyciel', 'Wpływ']}
  *   rows={[['Przychód', 'Skala działalności…', 'wysoki']]}
  * />
+ *
+ * `rowIcons` — ikony przy nagłówkach wierszy (branże, etapy), np. rowIcons={["cart", "factory", null]}.
  */
+import Icon from './Icon.astro';
 import { inlineMd } from '../lib/inline-md.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
@@ -22,8 +25,12 @@ interface Props {
   id?: string;
   /** Pierwsza kolumna jako <th scope="row"> (domyślnie tak). */
   rowHeaders?: boolean;
+  /** Ikony nagłówków wierszy (nazwy z src/lib/icons.ts; null = bez ikony). */
+  rowIcons?: (string | null)[];
 }
-const { caption, columns, rows, note, id, rowHeaders = true } = Astro.props;
+const { caption, columns, rows, note, id, rowHeaders = true, rowIcons } = Astro.props;
+if (rowIcons && rowIcons.length !== rows.length)
+  throw new Error(`SpecTable „${caption}”: rowIcons (${rowIcons.length}) ≠ liczba wierszy (${rows.length})`);
 ---
 
 <div class="table-wrap spec" role="region" tabindex="0" aria-label={caption} id={id}>
@@ -34,10 +41,17 @@ const { caption, columns, rows, note, id, rowHeaders = true } = Astro.props;
     </thead>
     <tbody>
       {
-        rows.map((row) => (
+        rows.map((row, r) => (
           <tr>
             {row.map((cell, i) =>
-              i === 0 && rowHeaders ? (
+              i === 0 && rowHeaders && rowIcons?.[r] ? (
+                <th scope="row">
+                  <span class="spec__rh">
+                    <Icon name={rowIcons[r] as string} size={20} />
+                    <span set:html={inlineMd(cell)} />
+                  </span>
+                </th>
+              ) : i === 0 && rowHeaders ? (
                 <th scope="row" set:html={inlineMd(cell)} />
               ) : (
                 <td data-label={columns[i]} set:html={inlineMd(cell)} />
@@ -52,6 +66,18 @@ const { caption, columns, rows, note, id, rowHeaders = true } = Astro.props;
 </div>
 
 <style>
+  .spec__rh {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .spec__rh :global(.icon) {
+    margin-top: 1px;
+    color: var(--ink-2);
+  }
+  .spec tbody tr:hover .spec__rh :global(.icon) {
+    color: var(--blue);
+  }
   /* Telefon: tabele 3+ kolumnowe jako „karty” — wiersz pod wierszem, etykieta kolumny nad komórką */
   @media (max-width: 560px) {
     .spec table,

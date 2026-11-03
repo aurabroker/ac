@@ -5,8 +5,11 @@
  *   optional      ROZSZERZENIE OPCJONALNE                    (linia kreskowa)
  *   underwriting  ZALEŻY OD OCENY RYZYKA                     (linia kropkowa)
  *   excluded      ZWYKLE WYŁĄCZONE – ZALEŻY OD POLISY        (kreskowanie)
+ * Ikona (✓ / + kreskowy / tarcza pomiarowa / ✕) powtarza kod ramki — odznakę da się rozpoznać kątem oka.
  */
+import Icon from './Icon.astro';
 import { COVERAGE_LABELS, type CoverageKey } from '../lib/coverage.ts';
+import { COVERAGE_ICONS } from '../lib/icons.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
 interface Props {
@@ -17,11 +20,13 @@ const text = COVERAGE_LABELS[label];
 if (!text) throw new Error(`CoverageBadge: nieznana etykieta „${label}”`);
 ---
 
-<span class:list={['badge', `badge--${label}`]}>{polishText(text)}</span>
+<span class:list={['badge', `badge--${label}`]}><Icon name={COVERAGE_ICONS[label]} size={14} /><span>{polishText(text)}</span></span>
 
 <style>
   .badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 6px;
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     line-height: 1.35;
@@ -32,6 +37,12 @@ if (!text) throw new Error(`CoverageBadge: nieznana etykieta „${label}”`);
     border: 1px solid var(--ink);
     white-space: normal;
     max-width: 26ch;
+  }
+  .badge :global(.icon) {
+    margin-top: 0.5px;
+  }
+  .badge--excluded :global(.icon) {
+    color: var(--ink-2);
   }
   .badge--optional {
     border-style: dashed;

@@ -1,6 +1,10 @@
 ---
 /**
- * Spis treści z nagłówków H2 (opcjonalnie H3). Na ≥ 1280 px przyklejony w kolumnach 1–3.
+ * Spis treści z nagłówków H2 (opcjonalnie H3).
+ * variant="side" (domyślnie) — na ≥ 1280 px przyklejony w kolumnach 1–3; z JS (src/scripts/toc-spy.ts):
+ *   bieżąca sekcja (aria-current="location") i cienka linia postępu czytania w stylu tabliczki.
+ * variant="mobile" — poniżej 1280 px: rozwijana lista <details> na początku treści; z JS dodatkowo
+ *   przycisk „Spis treści” przy dolnej krawędzi ekranu, gdy lista zniknie z widoku.
  * headings: z `render(entry)` (Astro) — [{ depth, slug, text }].
  */
 interface Heading {
@@ -14,8 +18,14 @@ interface Props {
   extra?: { slug: string; text: string }[];
   maxDepth?: 2 | 3;
   title?: string;
+  variant?: 'side' | 'mobile';
 }
-const { headings, extra = [], maxDepth = 2, title = 'Spis treści' } = Astro.props;
+const { headings, extra = [], maxDepth = 2, title = 'Spis treści', variant = 'side' } = Astro.props;
+const sections = (n: number) => {
+  const d = n % 10;
+  const t = n % 100;
+  return n === 1 ? 'sekcja' : d >= 2 && d <= 4 && (t < 12 || t > 14) ? 'sekcje' : 'sekcji';
+};
 const items = [
   ...headings.filter((h) => h.depth >= 2 && h.depth <= maxDepth && h.slug !== 'w-skrocie'),
   ...extra.map((e) => ({ ...e, depth: 2 })),
@@ -23,9 +33,40 @@ const items = [
 ---
 
 {
-  items.length > 1 && (
-    <nav class="toc" aria-label={title} data-md-skip>
-      <p class="label">{title}</p>
+  items.length > 1 && variant === 'mobile' && (
+    <>
+      <details class="toc-mobile" id="spis-tresci" data-md-skip data-toc-mobile>
+        <summary>
+          <span class="toc-mobile__title">{title}</span>
+          <span class="toc-mobile__n">
+            {items.length} {sections(items.length)}
+          </span>
+        </summary>
+        <ol>
+          {items.map((h) => (
+            <li class:list={[`toc__d${h.depth}`]}>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ol>
+      </details>
+      <a class="toc-fab" href="#spis-tresci" data-toc-fab data-md-skip hidden>
+        <span class="toc-fab__bars" aria-hidden="true" />
+        {title}
+      </a>
+    </>
+  )
+}
+{
+  items.length > 1 && variant === 'side' && (
+    <nav class="toc" aria-label={title} data-md-skip data-toc>
+      <p class="label toc__head">
+        <span>{title}</span>
+        <span class="toc__pct" data-toc-pct aria-hidden="true" />
+      </p>
+      <span class="toc__progress" aria-hidden="true" hidden data-toc-progress>
+        <span class="toc__bar" data-toc-bar />
+      </span>
       <ol>
         {items.map((h) => (
           <li class:list={[`toc__d${h.depth}`]}>
@@ -36,6 +77,10 @@ const items = [
     </nav>
   )
 }
+
+<script>
+  import '../scripts/toc-spy.ts';
+</script>
 
 <style>
   .toc {
@@ -64,8 +109,177 @@ const items = [
     color: var(--ink);
     border-left-color: var(--ink);
   }
+  .toc a[aria-current='location'] {
+    color: var(--ink);
+    border-left: 2px solid var(--blue);
+    margin-left: -1.5px;
+    padding-left: calc(var(--s-2) - 0.5px);
+  }
+  .toc__head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-1);
+  }
+  .toc__pct {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+  }
+  /* linia postępu: jak linia wymiarowa — kreski na końcach, wypełnienie niebieskim tuszem */
+  .toc__progress {
+    position: relative;
+    display: block;
+    height: 7px;
+    margin: 6px 0 var(--s-1);
+    border-inline: 1px solid var(--ink-3);
+  }
+  .toc__progress[hidden] {
+    display: none;
+  }
+  .toc__progress::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 3px;
+    border-top: 1px solid var(--rule);
+  }
+  .toc__bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 2px;
+    height: 3px;
+    background: var(--blue);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
   .toc__d3 a {
     padding-left: var(--s-4);
     font-size: 0.875rem;
+  }
+
+  /* ---------- wariant mobilny: <details> + przycisk przy dolnej krawędzi ---------- */
+  .toc-mobile {
+    margin-block: var(--s-3) var(--s-4);
+    border: 1px solid var(--ink);
+    background: var(--paper);
+  }
+  .toc-mobile summary {
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 48px;
+    padding: 8px var(--s-2);
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+  .toc-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+  /* znacznik rozwinięcia: kreska pozioma, po otwarciu bez pionowej (+ / −) */
+  .toc-mobile summary::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    margin-left: auto;
+    flex: none;
+    background:
+      linear-gradient(var(--ink), var(--ink)) center / 12px 1.5px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) center / 1.5px 12px no-repeat;
+  }
+  .toc-mobile[open] summary::after {
+    background: linear-gradient(var(--ink), var(--ink)) center / 12px 1.5px no-repeat;
+  }
+  .toc-mobile__title {
+    color: var(--ink);
+  }
+  .toc-mobile__n {
+    color: var(--ink-3);
+  }
+  .toc-mobile ol {
+    list-style: none;
+    margin: 0;
+    padding: 4px var(--s-2) var(--s-2);
+    border-top: 1px solid var(--rule);
+    counter-reset: tocm;
+  }
+  .toc-mobile li {
+    counter-increment: tocm;
+    border-bottom: 1px solid var(--rule);
+  }
+  .toc-mobile li:last-child {
+    border-bottom: 0;
+  }
+  .toc-mobile a {
+    display: flex;
+    gap: var(--s-2);
+    padding: 10px 0;
+    font-size: var(--fs-small);
+    line-height: 1.35;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .toc-mobile a::before {
+    content: counter(tocm, decimal-leading-zero);
+    flex: none;
+    min-width: 2ch;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    color: var(--ink-3);
+    padding-top: 2px;
+  }
+  .toc-mobile a:hover {
+    color: var(--blue);
+  }
+  .toc-fab {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    box-shadow: 0 1px 0 var(--rule);
+  }
+  .toc-fab:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  /* trzy kreski jak linie spisu */
+  .toc-fab__bars {
+    width: 14px;
+    height: 10px;
+    flex: none;
+    background:
+      linear-gradient(currentColor, currentColor) 0 0 / 14px 1.5px no-repeat,
+      linear-gradient(currentColor, currentColor) 0 50% / 10px 1.5px no-repeat,
+      linear-gradient(currentColor, currentColor) 0 100% / 14px 1.5px no-repeat;
+  }
+  @media (min-width: 1280px) {
+    .toc-mobile,
+    .toc-fab {
+      display: none !important;
+    }
+  }
+  @media print {
+    .toc-mobile,
+    .toc-fab {
+      display: none !important;
+    }
   }
 </style>

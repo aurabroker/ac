@@ -265,10 +265,10 @@ export function personNode(p: Person): JsonLdNode | null {
     '@type': 'Person',
     '@id': personId(p),
     name: p.name,
-    // rola w serwisie (jak na stronie autora); funkcję w spółce dopisze właściciel (docs/TODO-wlasciciel.md §1)
-    jobTitle: 'Autor i redaktor treści',
-    description: `${p.name} — autor i redaktor odpowiedzialny za treści serwisu ${SITE.legalName}, brokera ubezpieczeniowego (zezwolenie KNF nr ${SITE.knfPermit}).`,
-    knowsAbout: ['OC zawodowe', 'ubezpieczenie cyber', 'ubezpieczenie AI', 'OC i cyber dla firm IT'],
+    // opis osoby z people.yaml (zgodny z jej stroną); jobTitle tylko, gdy właściciel poda funkcję w spółce
+    jobTitle: p.jobTitle,
+    description: p.bio ?? `${p.name} pracuje w ${SITE.legalName}, brokerze ubezpieczeniowym (zezwolenie KNF nr ${SITE.knfPermit}).`,
+    knowsAbout: p.knowsAbout.length ? p.knowsAbout : undefined,
     worksFor: { '@id': ORG_ID },
     url: absoluteUrl(personPath(p)),
     sameAs,

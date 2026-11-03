@@ -6,9 +6,16 @@
  * <AnnotatedFigure figure="FigPillarIT" />                       — podpis i legenda z FIGURE_META
  * <AnnotatedFigure figure="FigPillarIT" plotter />               — z jednorazowym rysowaniem (tylko hero)
  * <AnnotatedFigure code="F-12" caption="…" legend={['…']}>…<svg/>…</AnnotatedFigure>  — własny SVG w slocie
+ *
+ * Rysunek interaktywny (domyślnie w hero, gdy FIGURE_META ma `parts`): części rysunku (elementy SVG
+ * z data-part="n") i balony są wskazywalne myszą, dotykiem i klawiaturą (przyciski nad balonami w kolejności
+ * Tab, strzałki, Esc). Karta objaśnienia pod rysunkiem: tytuł, jedno zdanie, link; zanim coś wybierzesz —
+ * lista części jako przyciski (w miejscu karty, bez skoku układu). Bez JS — legenda z linkami w tytułach pozycji. Skrypt: src/scripts/figure-parts.ts (tylko na stronach z takim rysunkiem).
  */
 import Figure from './Figure.astro';
+import Icon from './Icon.astro';
 import PlotterHero from './PlotterHero.astro';
+import FigurePartsScript from './FigurePartsScript.astro';
 import { FIGURE_META, isFigureId } from './figures/index.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
@@ -19,6 +26,8 @@ interface Props {
   legend?: string[];
   /** Jednorazowe rysowanie (PlotterHero) — tylko hero strony głównej i filarów. */
   plotter?: boolean;
+  /** Wskazywalne części (wymaga `parts` w FIGURE_META). Domyślnie: tak w hero (plotter). */
+  interactive?: boolean;
   /** Siatka kreślarska za rysunkiem. */
   grid?: boolean;
   /** Unikalny prefiks id (gdy kilka rysunków na stronie). */
@@ -31,13 +40,80 @@ const caption = Astro.props.caption ?? meta?.caption ?? '';
 const legend = Astro.props.legend ?? meta?.legend ?? [];
 const base = (uid ?? code).toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const descId = `rys-${base}-opis`;
+const parts = !Astro.props.legend && meta?.parts && meta.parts.length === legend.length ? meta.parts : undefined;
+const interactive = !!parts && !!figure && (Astro.props.interactive ?? plotter);
+const pad = (n: number) => String(n).padStart(2, '0');
+/** Pozycja legendy „Tytuł — opis”: tytuł jako link do miejsca, które go rozwija (gdy są `parts`). */
+const split = (item: string) => {
+  const i = item.indexOf(' — ');
+  return i > 0 ? [item.slice(0, i), item.slice(i)] : [item, ''];
+};
 ---
 
-<figure class="afig">
+<figure class:list={['afig', interactive && 'afig--interactive']} data-ifig={interactive ? '' : undefined}>
   {
     plotter ? (
       <PlotterHero grid={grid}>
-        <div class="afig__drawing">{figure ? <Figure id={figure} labelledby={descId} /> : <slot />}</div>
+        <div class="afig__drawing">
+          {figure ? (
+            <div class="ifig" data-ifig-stage>
+              <Figure id={figure} labelledby={descId} />
+            </div>
+          ) : (
+            <slot />
+          )}
+          {interactive && parts && (
+            <div class="ifig__readout" data-ifig-readout data-md-skip hidden>
+              <div class="ifig__idle is-shown" data-ifig-hint>
+                <p class="ifig__hint">
+                  <Icon name="magnifier" size={16} />
+                  Wskaż część rysunku albo wybierz pozycję — pokażemy, co oznacza.
+                </p>
+                <ul class="ifig__chips" aria-label="Części rysunku">
+                  {parts.map((pt, i) => (
+                    <li>
+                      <button type="button" class="ifig__chip" data-chip={i + 1}>
+                        <span class="ifig__chip-num" aria-hidden="true">
+                          {pad(i + 1)}
+                        </span>
+                        {polishText(pt.title)}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {parts.map((pt, i) => (
+                <div
+                  class="ifig__card"
+                  data-card={i + 1}
+                  data-title={polishText(pt.title)}
+                  role="group"
+                  aria-labelledby={`${descId}-t${i + 1}`}
+                  tabindex="-1"
+                >
+                  <span class="ifig__num">{pad(i + 1)}</span>
+                  <div class="ifig__body">
+                    <p class="ifig__title" id={`${descId}-t${i + 1}`}>
+                      {polishText(pt.title)}
+                    </p>
+                    <p class="ifig__text" id={`${descId}-p${i + 1}`}>
+                      {polishText(pt.text)}
+                    </p>
+                    <div class="ifig__foot">
+                      <a class="ifig__link" href={pt.href}>
+                        {polishText(pt.link)}
+                        <Icon name="arrow-right" size={14} />
+                      </a>
+                      <button type="button" class="ifig__back" data-ifig-back>
+                        Wszystkie części
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </PlotterHero>
     ) : (
       <div class:list={['afig__drawing', grid && 'drafting-grid']}>
@@ -51,14 +127,23 @@ const descId = `rys-${base}-opis`;
     {
       legend.length > 0 && (
         <ol class="afig__legend">
-          {legend.map((item) => (
-            <li>{polishText(item)}</li>
-          ))}
+          {legend.map((item, i) => {
+            const pt = parts?.[i];
+            if (!pt) return <li>{polishText(item)}</li>;
+            const [head, rest] = split(item);
+            return (
+              <li data-part={i + 1}>
+                <a href={pt.href}>{polishText(head)}</a>
+                {polishText(rest)}
+              </li>
+            );
+          })}
         </ol>
       )
     }
   </figcaption>
 </figure>
+{interactive && <FigurePartsScript />}
 
 <style>
   .afig {
@@ -98,5 +183,21 @@ const descId = `rys-${base}-opis`;
     font-family: var(--font-mono);
     font-size: 0.85em;
     color: var(--ink);
+  }
+  .afig__legend a {
+    color: var(--ink);
+    text-decoration-color: var(--rule);
+  }
+  .afig__legend a:hover {
+    color: var(--blue);
+    text-decoration-color: var(--blue);
+  }
+  .afig__legend li {
+    transition: color 120ms var(--ease);
+  }
+  .afig__legend li.is-on,
+  .afig__legend li.is-on::marker,
+  .afig__legend li.is-on a {
+    color: var(--blue);
   }
 </style>
