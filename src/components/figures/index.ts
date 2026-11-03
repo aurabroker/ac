@@ -45,7 +45,7 @@ export const FIGURE_META: Record<FigureId, FigureMeta> = {
     "code": "F-IT",
     "caption": "Schemat obciążeń: jak program OC i cyber przejmuje ryzyka firmy IT",
     "legend": [
-      "OC zawodowe (Tech E&O) — podpora A: roszczenia klientów za błędy w usługach IT",
+      "OC zawodowe (Technology Errors & Omissions, Tech E&O) — podpora A: roszczenia klientów za błędy w usługach IT",
       "Ubezpieczenie cyber — podpora B: Twoje koszty po incydencie i roszczenia po wycieku danych",
       "Strefa styku — wyciek danych klienta przez lukę w kodzie może dotyczyć obu polis",
       "OC działalności — podpora C: szkody osobowe i rzeczowe wyrządzone innym",

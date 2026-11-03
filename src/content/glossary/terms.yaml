@@ -91,9 +91,9 @@
   see: "/oc-zawodowe/"
   related: [e-and-o, claims-made]
 - id: e-and-o
-  term: "E&O i Tech E&O"
+  term: "E&O (Errors & Omissions) i Tech E&O (Technology Errors & Omissions)"
   termEn: "errors and omissions"
-  definition: "Anglosaska nazwa OC zawodowego za błędy i zaniechania w usługach. Tech E&O to odmiana dla firm technologicznych, często łączona w jednej polisie z ubezpieczeniem cyber."
+  definition: "Anglosaska nazwa OC zawodowego za błędy i zaniechania w usługach. Tech E&O (Technology Errors & Omissions) to odmiana dla firm technologicznych, często łączona w jednej polisie z ubezpieczeniem cyber."
   see: "/oc-cyber-dla-it/"
   related: [oc-zawodowe]
 - id: szkody-wlasne-i-oc-cyber
