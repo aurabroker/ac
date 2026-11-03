@@ -1,0 +1,232 @@
+---
+/**
+ * Formularz kontaktowy → POST /api/kontakt (Cloudflare Pages Function → Resend).
+ * Temat e-maila zawiera tytuł strony: „[<pageTitle>] Zapytanie od <imię>”.
+ * Działa bez JS (zwykły POST, powrót 303 z ?formularz=wyslano|blad#formularz); z JS — fetch, błędy przy polach.
+ */
+import Icon from './Icon.astro';
+import { SITE } from '../lib/site.ts';
+
+interface Props {
+  /** Tytuł podstrony — trafia do tematu wiadomości. */
+  pageTitle: string;
+}
+const { pageTitle } = Astro.props;
+const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
+---
+
+<div class="cform" id="formularz" data-cform data-md-skip>
+  <form class="cform__form" action="/api/kontakt" method="post" novalidate>
+    <input type="hidden" name="pageTitle" value={pageTitle} />
+    <input type="hidden" name="pageUrl" value={pageUrl} />
+    <input type="hidden" name="t" value="" data-cform-t />
+    <input type="hidden" name="config" value="" data-cform-config />
+    <div class="cform__trap" aria-hidden="true">
+      <label>Strona www (zostaw puste)<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <p class="cform__intro label"><Icon name="envelope" size={16} /> Formularz · temat: {pageTitle}</p>
+
+    <div class="cform__grid">
+      <div class="cform__field">
+        <label for="cf-name">Imię i nazwisko <span class="cform__req" aria-hidden="true">*</span></label>
+        <input id="cf-name" name="name" type="text" required autocomplete="name" maxlength="120" aria-describedby="cf-name-err" />
+        <p class="cform__err" id="cf-name-err" data-err="name"></p>
+      </div>
+      <div class="cform__field">
+        <label for="cf-email">E-mail <span class="cform__req" aria-hidden="true">*</span></label>
+        <input id="cf-email" name="email" type="email" required autocomplete="email" maxlength="200" aria-describedby="cf-email-err" />
+        <p class="cform__err" id="cf-email-err" data-err="email"></p>
+      </div>
+      <div class="cform__field">
+        <label for="cf-phone">Telefon <span class="cform__opt">(opcjonalnie)</span></label>
+        <input id="cf-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" />
+      </div>
+      <div class="cform__field">
+        <label for="cf-company">Firma <span class="cform__opt">(opcjonalnie)</span></label>
+        <input id="cf-company" name="company" type="text" autocomplete="organization" maxlength="160" />
+      </div>
+      <div class="cform__field cform__field--wide">
+        <label for="cf-message">W czym możemy pomóc? <span class="cform__req" aria-hidden="true">*</span></label>
+        <textarea id="cf-message" name="message" rows="5" required minlength="10" maxlength="5000" aria-describedby="cf-message-hint cf-message-err" placeholder="Np. czym zajmuje się firma, gdzie są klienci (Polska, UE, USA), czego wymagają umowy, kiedy kończy się obecna polisa."></textarea>
+        <p class="cform__hint" id="cf-message-hint" data-config-note hidden>Dołączymy też konfigurację z konfiguratora programu.</p>
+        <p class="cform__err" id="cf-message-err" data-err="message"></p>
+      </div>
+      <div class="cform__field cform__field--wide cform__consent">
+        <input id="cf-consent" name="consent" type="checkbox" value="on" required aria-describedby="cf-consent-err" />
+        <label for="cf-consent">
+          Proszę o kontakt w sprawie mojego zapytania. Zasady przetwarzania danych: <a href="/polityka-prywatnosci/#jak-dziala-formularz-kontaktowy">polityka prywatności</a>. <span class="cform__req" aria-hidden="true">*</span>
+        </label>
+        <p class="cform__err" id="cf-consent-err" data-err="consent"></p>
+      </div>
+    </div>
+
+    <div class="cform__actions">
+      <button type="submit" class="btn btn--signal" data-cform-submit><Icon name="arrow-right" size={18} /><span data-label>Wyślij zapytanie</span></button>
+      <p class="cform__note">Odpowiadamy w dni robocze, zwykle w ciągu jednego dnia roboczego.</p>
+    </div>
+    <p class="cform__formerr" data-err="form" role="alert"></p>
+  </form>
+
+  <div class="cform__done" data-cform-done hidden tabindex="-1">
+    <p class="label"><Icon name="check-badge" size={18} /> Wiadomość wysłana</p>
+    <p>Dziękujemy — odpowiemy w dni robocze, zwykle w ciągu jednego dnia roboczego. W pilnej sprawie zadzwoń: <a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>.</p>
+  </div>
+  <p class="visually-hidden" role="status" aria-live="polite" data-cform-status></p>
+</div>
+
+<script>
+  import { initContactForms } from '../scripts/contact-form.ts';
+  initContactForms();
+</script>
+
+<style>
+  .cform {
+    margin-top: var(--s-3);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+    scroll-margin-top: var(--s-10);
+  }
+  .cform__intro {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 var(--s-2);
+    color: var(--ink-3);
+    overflow-wrap: anywhere;
+  }
+  .cform__trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .cform__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-2) var(--s-3);
+  }
+  .cform__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .cform__field--wide {
+    grid-column: 1 / -1;
+  }
+  .cform__field label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .cform__opt {
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink-3);
+  }
+  .cform__req {
+    color: var(--signal);
+  }
+  .cform input[type='text'],
+  .cform input[type='email'],
+  .cform input[type='tel'],
+  .cform textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--ink-3);
+    border-radius: 0;
+  }
+  .cform textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  .cform input:focus-visible,
+  .cform textarea:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 1px;
+    border-color: var(--blue);
+  }
+  .cform [aria-invalid='true'] {
+    border-color: var(--signal);
+  }
+  .cform__consent {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .cform__consent input {
+    width: 22px;
+    height: 22px;
+    margin: 2px 0 0;
+    flex: none;
+    accent-color: var(--ink);
+  }
+  .cform__consent label {
+    flex: 1 1 0;
+    min-width: 0;
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-2);
+  }
+  .cform__consent .cform__err {
+    flex-basis: 100%;
+  }
+  .cform__hint {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--blue);
+  }
+  .cform__err,
+  .cform__formerr {
+    margin: 0;
+    min-height: 0;
+    font-size: var(--fs-small);
+    color: var(--signal);
+  }
+  .cform__err:empty,
+  .cform__formerr:empty {
+    display: none;
+  }
+  .cform__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-3);
+  }
+  .cform__note {
+    margin: 0;
+    font-size: var(--fs-small);
+    color: var(--ink-3);
+  }
+  .cform__done {
+    padding: var(--s-3);
+    border: 1px solid var(--ink);
+    border-left: 3px solid var(--blue);
+  }
+  .cform__done .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 var(--s-1);
+  }
+  .cform__done p:last-child {
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .cform__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

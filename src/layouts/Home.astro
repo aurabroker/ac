@@ -71,7 +71,7 @@ const at = accent ? title.indexOf(accent) : -1;
     <AnswerBox summary={d.summary} points={d.summaryPoints} />
     <div class="home-body prose prose--wide"><slot /></div>
     <FAQ items={d.faq} />
-    <ContactChannels sheet={d.sheet} signal={false} />
+    <ContactChannels sheet={d.sheet} signal={false} pageTitle={ctx.title} />
     <Disclosure show={['d', 'c']} />
     <SheetFoot ctx={ctx} />
   </div>

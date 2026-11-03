@@ -4,11 +4,11 @@ description: "Jak Aura Consulting przetwarza dane osobowe: administrator, cele i
 seoTitle: "Polityka prywatności i informacja RODO · Aura Consulting"
 published: 2026-11-02
 updated: 2026-11-03
-revision: "B"
+revision: "C"
 path: "/polityka-prywatnosci/"
 template: "legal"
 sheet: "AC-022"
-summary: "Administratorem danych jest Aura Consulting sp. z o.o. z siedzibą w Warszawie. Serwis nie ma formularzy, nie używa analitycznych ani reklamowych plików cookie i nie pobiera fontów z serwerów Google. Dane przetwarzamy, gdy dzwonisz lub piszesz, oraz w zakresie technicznym przy wyświetlaniu strony. Masz prawo dostępu, sprostowania i usunięcia danych oraz skargi do Prezesa UODO."
+summary: "Administratorem danych jest Aura Consulting sp. z o.o. z siedzibą w Warszawie. Formularz kontaktowy wysyła Twoją wiadomość e-mailem do nas (przez Cloudflare i Resend). Serwis nie używa analitycznych ani reklamowych plików cookie i nie pobiera fontów z serwerów Google. Dane przetwarzamy, gdy dzwonisz, piszesz lub wysyłasz formularz, oraz w zakresie technicznym przy wyświetlaniu strony. Masz prawo dostępu, sprostowania i usunięcia danych oraz skargi do Prezesa UODO."
 summaryPoints:
   - "Korespondencję bez zawartej umowy przechowujemy do 12 miesięcy od ostatniego kontaktu."
   - "Dane do oferty przekazujemy ubezpieczycielom tylko w zakresie potrzebnym do jej przygotowania."
@@ -34,6 +34,7 @@ related:
 changelog:
   - { rev: "A", date: 2026-11-02, note: "Pierwsze wydanie: korespondencja e-mail i telefoniczna, serwis bez formularzy i bez analityki w przeglądarce." }
   - { rev: "B", date: 2026-11-03, note: "Konfigurator programu: odpowiedzi w pamięci sesji przeglądarki (sessionStorage)." }
+  - { rev: "C", date: 2026-11-03, note: "Formularz kontaktowy: zakres danych, odbiorcy (Cloudflare, Resend), przekazanie poza EOG, ochrona przed spamem." }
 order: 62
 ---
 
@@ -51,13 +52,13 @@ Ta polityka realizuje obowiązek informacyjny z art. 13 RODO wobec osób, które
 
 ## Jakie dane przetwarzamy i w jakim celu?
 
-Serwis nie ma formularzy ani kont użytkowników. Dane osobowe trafiają do nas przede wszystkim wtedy, gdy dzwonisz lub piszesz.
+Serwis nie ma kont użytkowników. Dane osobowe trafiają do nas wtedy, gdy dzwonisz, piszesz e-mail albo wysyłasz formularz kontaktowy.
 
 <SpecTable
   caption="Cele, podstawy prawne i okresy przechowywania danych"
   columns={["Sytuacja", "Jakie dane", "Cel i podstawa prawna", "Jak długo"]}
   rows={[
-    ["Zapytanie e-mailem lub telefonicznie", "imię i nazwisko, dane kontaktowe, stanowisko, treść wiadomości, informacje o firmie", "odpowiedź i przygotowanie oferty na Twoje żądanie — art. 6 ust. 1 lit. b RODO; gdy kontaktujesz się w imieniu firmy — nasz prawnie uzasadniony interes w kontakcie z jej przedstawicielem, art. 6 ust. 1 lit. f RODO", "do 12 miesięcy od ostatniego kontaktu, jeśli nie zawrzemy umowy"],
+    ["Zapytanie e-mailem, telefonicznie lub przez formularz", "imię i nazwisko, dane kontaktowe, stanowisko, treść wiadomości, informacje o firmie", "odpowiedź i przygotowanie oferty na Twoje żądanie — art. 6 ust. 1 lit. b RODO; gdy kontaktujesz się w imieniu firmy — nasz prawnie uzasadniony interes w kontakcie z jej przedstawicielem, art. 6 ust. 1 lit. f RODO", "do 12 miesięcy od ostatniego kontaktu, jeśli nie zawrzemy umowy"],
     ["Obsługa umowy ubezpieczenia", "dane potrzebne do zawarcia i wykonania umowy, korespondencja, dokumenty", "wykonanie umowy — art. 6 ust. 1 lit. b RODO; obowiązki z przepisów o dystrybucji ubezpieczeń, rachunkowości i podatkach — art. 6 ust. 1 lit. c RODO", "przez czas trwania umowy, a potem do upływu terminów przedawnienia roszczeń i okresów wymaganych przepisami"],
     ["Dane osób wskazanych przez klienta (np. członków zarządu, kontaktów w firmie)", "imię i nazwisko, funkcja, dane potrzebne do oceny ryzyka", "przygotowanie oferty i wykonanie umowy na rzecz klienta — art. 6 ust. 1 lit. f RODO; źródłem danych jest klient", "jak w wierszach powyżej"],
     ["Reklamacje", "dane z reklamacji i korespondencja", "rozpatrzenie reklamacji — art. 6 ust. 1 lit. c RODO", "do upływu terminów przedawnienia roszczeń"],
@@ -68,17 +69,27 @@ Serwis nie ma formularzy ani kont użytkowników. Dane osobowe trafiają do nas 
 
 Nie wysyłamy informacji marketingowych bez Twojej odrębnej zgody. Nie podejmujemy decyzji w sposób wyłącznie zautomatyzowany i nie profilujemy osób odwiedzających serwis.
 
+## Jak działa formularz kontaktowy?
+
+Formularz na stronach serwisu wysyła Twoją wiadomość e-mailem na adres cyber@auraconsulting.pl. W temacie wiadomości zapisujemy tytuł strony, z której piszesz, żeby szybciej odpowiedzieć na pytanie, którego dotyczy.
+
+- **Jakie dane:** imię i nazwisko, adres e-mail, opcjonalnie telefon i nazwa firmy, treść wiadomości, adres strony, a jeśli korzystasz z konfiguratora programu — jego podsumowanie. Nie podawaj w formularzu danych o zdrowiu ani danych osobowych swoich klientów.
+- **Cel i podstawa:** odpowiedź na zapytanie i przygotowanie oferty na Twoje żądanie — art. 6 ust. 1 lit. b RODO; gdy piszesz w imieniu firmy — nasz prawnie uzasadniony interes w kontakcie z jej przedstawicielem, art. 6 ust. 1 lit. f RODO. Zaznaczenie pola przy formularzu potwierdza, że prosisz o kontakt; nie jest zgodą na marketing.
+- **Odbiorcy:** Cloudflare, Inc. (hosting i przetworzenie formularza) oraz Resend, Inc. (wysyłka wiadomości e-mail), działający na nasze zlecenie, a także nasz dostawca poczty elektronicznej. Przekazanie poza EOG — na podstawach opisanych niżej (art. 45 lub 46 RODO).
+- **Jak długo:** do 12 miesięcy od ostatniego kontaktu, jeśli nie zawrzemy umowy; dłużej, jeśli wymagają tego przepisy albo ustalenie, dochodzenie lub obrona roszczeń.
+- **Ochrona przed spamem:** formularz ma pole-pułapkę i limit wysyłek; do jego działania krótkotrwale używamy adresu IP (art. 6 ust. 1 lit. f RODO). Nie profilujemy osób wysyłających formularz.
+
 ## Komu przekazujemy dane?
 
 Tylko tym podmiotom, które potrzebują ich do realizacji celów opisanych wyżej:
 
 - **ubezpieczycielom i podmiotom działającym w ich imieniu** (np. partnerom underwritingowym) — w zakresie potrzebnym do przygotowania oferty, zawarcia i wykonania umowy ubezpieczenia; są one odrębnymi administratorami danych i informują o tym we własnych dokumentach;
-- **dostawcom usług**, którzy działają na nasze zlecenie: hostingu i dostarczania strony (Cloudflare), poczty elektronicznej, telefonii, usług IT oraz księgowości;
+- **dostawcom usług**, którzy działają na nasze zlecenie: hostingu, dostarczania strony i obsługi formularza (Cloudflare, Inc.), wysyłki wiadomości z formularza (Resend, Inc.), poczty elektronicznej, telefonii, usług IT oraz księgowości;
 - **organom publicznym**, gdy wymagają tego przepisy (na przykład Komisji Nadzoru Finansowego, sądom).
 
 ## Czy dane trafiają poza Europejski Obszar Gospodarczy?
 
-Mogą. Stronę dostarcza Cloudflare, który ma serwery także poza EOG, w tym w USA. Przekazanie odbywa się na podstawie decyzji Komisji Europejskiej stwierdzającej odpowiedni stopień ochrony (EU-US Data Privacy Framework) lub standardowych klauzul umownych zatwierdzonych przez Komisję (art. 45 i 46 RODO).
+Mogą. Stronę i formularz obsługuje Cloudflare, który ma serwery także poza EOG, w tym w USA. Wiadomości z formularza wysyła Resend (Resend, Inc., USA) z regionu w Unii Europejskiej; jako spółka amerykańska może mieć dostęp do danych z USA. Przekazanie odbywa się na podstawie decyzji Komisji Europejskiej stwierdzającej odpowiedni stopień ochrony (EU-US Data Privacy Framework) lub standardowych klauzul umownych zatwierdzonych przez Komisję (art. 45 i 46 RODO).
 
 Jeśli dostawca poczty elektronicznej lub telefonii przetwarza dane poza EOG, przekazanie odbywa się na tych samych podstawach (art. 45 lub 46 RODO). Na prośbę wskażemy dostawcę i podstawę przekazania.
 

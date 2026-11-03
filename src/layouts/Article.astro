@@ -55,7 +55,7 @@ const tocExtra = [
           <BOM id="tabela-zakresu" caption={d.coverageCaption ?? 'Tabela zakresu'} rows={d.coverage} />
         )
       }
-      <ContactChannels sheet={d.sheet} checklist={false} />
+      <ContactChannels sheet={d.sheet} checklist={false} pageTitle={ctx.title} />
       <FAQ items={d.faq} />
       <Sources items={d.sources} note={creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })} />
       <SheetFoot ctx={ctx} />

@@ -208,8 +208,11 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}`;
       </div>
 
       <div class="cfg__actions">
-        <a class="btn btn--signal" href={mailto} data-cfg-mail>
-          <Icon name="envelope" size={18} />Wyślij konfigurację do brokera
+        <button type="button" class="btn btn--signal" data-cfg-form-send hidden>
+          <Icon name="arrow-right" size={18} />Wyślij konfigurację formularzem
+        </button>
+        <a class="btn" href={mailto} data-cfg-mail>
+          <Icon name="envelope" size={18} />Wyślij e-mailem
         </a>
         <button type="button" class="btn btn--quiet" data-cfg-copy hidden>
           <Icon name="copy" size={18} /><span data-label>Kopiuj podsumowanie</span>

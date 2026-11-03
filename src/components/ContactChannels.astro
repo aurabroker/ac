@@ -1,10 +1,11 @@
 ---
 /**
  * Kanały kontaktu: telefon, mailto (z tematem z numerem arkusza), „Kopiuj adres”,
- * „Kopiuj szablon wiadomości”. Bez formularzy. Przyciski kopiowania pojawiają się tylko z JS.
+ * „Kopiuj szablon wiadomości” + formularz kontaktowy (temat e-maila = tytuł strony). Przyciski kopiowania pojawiają się tylko z JS.
  * signal=true → przycisk e-mail jest JEDYNYM wypełnionym CTA (redline) w widoku.
  */
 import Icon from './Icon.astro';
+import ContactForm from './ContactForm.astro';
 import { SITE } from '../lib/site.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
@@ -17,14 +18,17 @@ interface Props {
   /** Pokaż listę „Co przygotować”. */
   checklist?: boolean;
   id?: string;
+  /** Tytuł podstrony do tematu wiadomości z formularza. */
+  pageTitle?: string;
 }
 const {
   sheet,
   heading = 'Zleć analizę ryzyka',
-  lead = 'Napisz lub zadzwoń. Odpowiadamy w dni robocze. Analiza i porównanie ofert nie zobowiązują do zakupu polisy.',
+  lead = 'Wypełnij formularz, napisz lub zadzwoń. Odpowiadamy w dni robocze. Analiza i porównanie ofert nie zobowiązują do zakupu polisy.',
   signal = true,
   checklist = true,
   id = 'kontakt',
+  pageTitle = 'Kontakt',
 } = Astro.props;
 
 const subject = `${sheet ? `[${sheet}] ` : ''}Analiza ryzyka — prośba o kontakt`;
@@ -50,6 +54,8 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body
 <section class="contact" aria-labelledby={id} data-contact>
   <h2 id={id}>{polishText(heading)}</h2>
   <p class="contact__lead">{polishText(lead)}</p>
+
+  <ContactForm pageTitle={pageTitle} />
 
   <div class="contact__channels">
     <div class="contact__channel">

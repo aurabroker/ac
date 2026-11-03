@@ -69,7 +69,7 @@ const tocExtra = [
       <FAQ items={d.faq} />
       <HubArticles hubPath={ctx.path} />
       <Disclosure show={['d', 'c']} />
-      <ContactChannels sheet={d.code} />
+      <ContactChannels sheet={d.code} pageTitle={ctx.title} />
       <RelatedSheets paths={d.related} />
       <Sources items={d.sources} note={creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })} />
       <SheetFoot ctx={ctx} />

@@ -66,13 +66,25 @@ const fab = document.querySelector<HTMLAnchorElement>('[data-toc-fab]');
 if (mob && fab && 'IntersectionObserver' in window) {
   const narrow = window.matchMedia('(max-width: 1279.98px)');
   let past = false;
+  // przycisk znika, gdy na ekranie jest formularz kontaktowy (nie może zasłaniać pól)
+  let formVisible = false;
   const sync = () => {
-    fab.hidden = !(narrow.matches && past);
+    fab.hidden = !(narrow.matches && past && !formVisible);
   };
   new IntersectionObserver(([e]) => {
     past = !e.isIntersecting && e.boundingClientRect.top < 0;
     sync();
   }).observe(mob);
+  const seen = new Set<Element>();
+  const formObserver = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) seen.add(e.target);
+      else seen.delete(e.target);
+    }
+    formVisible = seen.size > 0;
+    sync();
+  });
+  document.querySelectorAll('[data-contact]').forEach((el) => formObserver.observe(el));
   narrow.addEventListener('change', sync);
   fab.addEventListener('click', () => {
     mob.open = true;

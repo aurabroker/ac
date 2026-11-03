@@ -35,6 +35,12 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 - [ ] **[blokuje start]** **Bramka „odcisku palca” (PLAN §7.3)** dla tabel zakresu w filarach i kartach: każdy wiersz zakresu ma mieć podstawę w ≥ 3 wordingach, w tym w publicznych polskich OWU (pole `basis` w `coverage`), albo zostać przeredagowany ogólniej. Dziś żaden wiersz nie ma `basis` — treść opiera się na wcześniej zweryfikowanych stronach i jednym zestawie dokumentów. Najbardziej wrażliwe: `/oc-zawodowe/` (zaległe honorarium, automatyczny okres zgłoszenia), `/oc-cyber-dla-it/` i `/ubezpieczenie-ai/` (definicje przerwy w działalności, błędu operatora, ujawnienia danych przez AI). Przegląd: Ty lub doradca compliance.
 - [ ] **[decyzja]** `/regulamin/` (regulamin świadczenia usług drogą elektroniczną, UŚUDE art. 8): serwis nie ma formularzy, kont ani newslettera, więc rekomendujemy „nie jest potrzebny” — **potwierdź opinią prawnika** albo zleć budowę strony (`src/content/pages/regulamin.mdx`).
 
+## 3a. Formularz kontaktowy (Resend)
+
+- [ ] Prawnik / IOD: akceptacja sekcji „Jak działa formularz kontaktowy?” w `/polityka-prywatnosci/` (odbiorcy: Cloudflare, Resend; przekazanie poza EOG; okres przechowywania).
+- [ ] Potwierdź zaakceptowane umowy powierzenia (DPA) z Cloudflare i Resend.
+- [ ] Wyślij próbną wiadomość z podglądu — temat ma postać „[PODGLĄD] [<tytuł strony>] Zapytanie od …” i trafia na cyber@auraconsulting.pl.
+
 ## 4. Cloudflare
 
 Nic do zrobienia przed startem — projekt **`aura-web`** w Cloudflare Pages jest utworzony i połączony z GitHubem (bez sekretów; integracja GitHub była już na koncie). Podglądy gałęzi `claude/*` budują się automatycznie.

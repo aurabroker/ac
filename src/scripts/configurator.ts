@@ -1,10 +1,11 @@
 /**
  * Konfigurator programu — zachowanie (komponent: src/components/ProgramConfigurator.astro).
  * Reguły z src/lib/configurator.ts (evaluate); teksty są w HTML — skrypt tylko pokazuje, ukrywa
- * i porządkuje wiersze. Nic nie wysyła: mailto otwiera pocztę użytkownika. Pamięć: sessionStorage.
+ * i porządkuje wiersze. Sam niczego nie wysyła: przekazuje podsumowanie do formularza kontaktowego albo otwiera mailto. Pamięć: sessionStorage.
  */
 import { evaluate, STATUS_LABEL, type Answers, type QId } from '../lib/configurator.ts';
 import { copyWithFeedback } from './copy.ts';
+import { handOffConfig } from './contact-form.ts';
 
 const KEY = 'aura-cfg-v1';
 const EMAIL = 'cyber@auraconsulting.pl';
@@ -150,6 +151,14 @@ function init(root: HTMLElement) {
   if (copyBtn && navigator.clipboard) {
     copyBtn.hidden = false;
     copyBtn.addEventListener('click', () => copyWithFeedback(copyBtn, summary(), live));
+  }
+  // przekazanie podsumowania do formularza kontaktowego (na tej stronie albo na /kontakt/)
+  const formBtn = root.querySelector<HTMLButtonElement>('[data-cfg-form-send]');
+  if (formBtn) {
+    formBtn.hidden = false;
+    formBtn.addEventListener('click', () => {
+      if (!handOffConfig(summary())) window.location.href = '/kontakt/#formularz';
+    });
   }
   render();
 }

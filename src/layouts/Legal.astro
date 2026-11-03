@@ -43,9 +43,10 @@ const contact = d.showContact || kind === 'contact';
       {
         kind === 'contact' && (
           <ContactChannels
-            heading="Napisz lub zadzwoń"
+            heading="Wyślij zapytanie"
             checklist={false}
             lead="Odpowiadamy w dni robocze, zwykle w ciągu jednego dnia roboczego. Analiza i porównanie ofert nie zobowiązują do zakupu polisy."
+            pageTitle={ctx.title}
           />
         )
       }
@@ -57,7 +58,7 @@ const contact = d.showContact || kind === 'contact';
         )
       }
       <FAQ items={d.faq} />
-      {contact && kind !== 'contact' && <ContactChannels />}
+      {contact && kind !== 'contact' && <ContactChannels pageTitle={ctx.title} />}
       <RelatedSheets paths={d.related} />
       <Sources
         items={d.sources}
