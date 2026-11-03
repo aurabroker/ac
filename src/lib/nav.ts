@@ -30,7 +30,7 @@ export const FOOTER_NAV: { title: string; links: NavLink[] }[] = [
   {
     title: 'Wiedza',
     links: [
-      { label: 'Rejestr arkuszy', href: '/wiedza/' },
+      { label: 'Blog', href: '/wiedza/' },
       { label: 'Słownik', href: '/slownik/' },
       { label: 'Rynek Lloyd’s', href: '/rynek-lloyds/' },
     ],
