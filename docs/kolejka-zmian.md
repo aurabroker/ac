@@ -54,3 +54,13 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
   - `/wiedza/` (blog), `/slownik/`, `/kontakt/`, `/o-nas/`, `/zespol/marek-ciesla/`,
   - wszystkie karty-odnośniki do arkuszy (strona główna, „Powiązane”, blog, katalog) — miniatura u góry karty.
 - Strony prawne (`/informacje-o-brokerze/`, `/reklamacje/`, `/polityka-prywatnosci/`) — do decyzji przy wdrożeniu; rekomendacja: bez grafiki albo tylko mała, spokojna miniatura.
+
+## 6. Tło: delikatnie dryfująca siatka „neuronów” (zgłoszone 4.11.2026)
+
+„Czy w tle może coś latać? Delikatnie, jakby jakaś siatka, à la neurony?”
+
+- Jedna warstwa `<canvas>` pod treścią: punkty (węzły) wolno dryfują, łączą się cienkimi liniami, gdy są blisko; linie grafitowe ~10% krycia, część węzłów w błękicie kreślarskim z delikatnym „pulsem”. Tło nadal białe.
+- Czytelność: karty, tabele, formularz i tabliczki mają białe tło, więc siatka nie przechodzi pod tekstem.
+- Wydajność i dostępność: skrypt ~1–2 KB, pauza w nieaktywnej karcie i poza ekranem, mniejsza gęstość na telefonie, wyłączona przy `prefers-reduced-motion` i trybie oszczędzania danych; bez wpływu na CSP (osobny plik).
+- Do decyzji przy wdrożeniu: na całym serwisie czy tylko na stronie głównej i blogu; opcjonalnie lekka reakcja na kursor (węzły przy kursorze łączą się mocniej).
+- Szkic (nagranie 8 s): /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/net-mock/tlo-siatka-neuronow.mp4
