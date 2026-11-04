@@ -32,3 +32,12 @@ Status: **CZEKA** — właściciel zbiera kolejne zmiany i da znać, kiedy wdro�
 - Liczby na grafikach tylko ilustracyjne i oznaczone jako takie albo bez liczb (np. „+840%” ze szkicu nie przechodzi do produkcji bez źródła).
 - Szkic: /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/ic-mock/karty-uklady-scalone.png
 - Do decyzji właściciela: tylko karty-odnośniki czy także rysunki hero (dziś: rysunki złożeniowe „zespołu”) w tym samym języku układów scalonych.
+
+## 4. Więcej 3D — rysunki izometryczne „rozstrzelone” (zgłoszone 4.11.2026)
+
+Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych, „ale może coś bardziej w 3D?”.
+
+- Kierunek A (rekomendowany): rzut izometryczny (3D w linii, SVG): program ubezpieczenia jako układ scalony rozłożony na warstwy — płytka (działalność, umowy) → kulki BGA (terytorium PL/UE/USA) → podłoże (limity) → rdzeń (OC + cyber + AI) → pokrywa (wyłączenia). Warstwy „rozjeżdżają się” przy przewijaniu / najechaniu, kliknięcie warstwy otwiera opis (jak dziś części rysunku). Lekkie, bez WebGL, działa na telefonie.
+- Kierunek B (opcjonalnie, tylko hero strony głównej): prawdziwy model 3D obracany myszą (WebGL), w stylu linii technicznej, ładowany dopiero po wejściu na stronę; statyczny rysunek jako zapas. Większy koszt (~150 KB JS) i wydajność.
+- Spójnie z punktem 3: karty-odnośniki jako miniatury izometryczne tych samych „układów”.
+- Szkic: /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/iso-mock/izometria-uklad.png
