@@ -62,5 +62,22 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - Jedna warstwa `<canvas>` pod treścią: punkty (węzły) wolno dryfują, łączą się cienkimi liniami, gdy są blisko; linie grafitowe ~10% krycia, część węzłów w błękicie kreślarskim z delikatnym „pulsem”. Tło nadal białe.
 - Czytelność: karty, tabele, formularz i tabliczki mają białe tło, więc siatka nie przechodzi pod tekstem.
 - Wydajność i dostępność: skrypt ~1–2 KB, pauza w nieaktywnej karcie i poza ekranem, mniejsza gęstość na telefonie, wyłączona przy `prefers-reduced-motion` i trybie oszczędzania danych; bez wpływu na CSP (osobny plik).
-- Do decyzji przy wdrożeniu: na całym serwisie czy tylko na stronie głównej i blogu; opcjonalnie lekka reakcja na kursor (węzły przy kursorze łączą się mocniej).
+- **Decyzja (4.11):** na całym serwisie, **z reakcją na kursor** (węzły przy kursorze łączą się mocniej i lekko do niego ciążą; na dotyku bez reakcji).
 - Szkic (nagranie 8 s): /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/net-mock/tlo-siatka-neuronow.mp4
+
+## 7. Autor tylko przy artykułach (zgłoszone 4.11.2026)
+
+„Przy opisie rozwiązań ubezpieczeniowych nie podawaj autora. Autor pojawia się przy artykułach.”
+
+- **Bez autora** (tabliczka, JSON-LD `author` zamiast osoby → organizacja): filary (`/oc-cyber-dla-it/`, `/ubezpieczenie-ai/` + „AI w firmie”, `/ubezpieczenie-cyber/`, `/oc-zawodowe/`), 12 kart katalogu, `/ubezpieczenia/`, `/rynek-lloyds/`, `/slownik/` oraz strony firmowe i prawne (tam już nie ma).
+- **Z autorem** (Marek Cieśla, link do profilu): artykuły bloga `/wiedza/*` i arkusze regulacji `/regulacje/*` (pokazywane na blogu jak artykuły).
+- Nota „Jak powstał ten tekst” (AI) — zostaje przy artykułach; przy rozwiązaniach jako krótka informacja redakcyjna bez osoby.
+
+## 8. Daty publikacji artykułów: co 2 dni (zgłoszone 4.11.2026)
+
+„Artykuły muszą mieć inną datę publikacji. Zróbmy co 2 dni.”
+
+- Każdy artykuł dostaje własną datę `published`, kolejne co 2 dni (8 artykułów + 2 arkusze regulacji = 10 pozycji ≈ 20 dni).
+- **Interpretacja przyjęta do wdrożenia:** harmonogram „w przód” od dnia startu — artykuł z datą w przyszłości nie trafia do serwisu, sitemap, RSS i `llms.txt`, dopóki jego dzień nie nadejdzie; codzienny automatyczny rebuild (Cloudflare: hook wdrożenia + zadanie cron po stronie Cloudflare, bez sekretów w GitHubie) publikuje kolejny artykuł. Nie cofamy dat w przeszłość (daty w danych strukturalnych muszą być prawdziwe).
+- Warunek: artykuł zatwierdzony przez autora; niezatwierdzony nie wchodzi do harmonogramu.
+- Kolejność do ustalenia przy wdrożeniu (propozycja: najpierw teksty pod frazy „OC dla IT” i „OC/cyber dla AI”: OC programisty B2B → LLMjacking → USA i Kanada → Tech E&O → klient wymaga OC → AI Act a ubezpieczenie → ransomware 2.0 → PLD a software house → regulacje AI Act, PLD).
