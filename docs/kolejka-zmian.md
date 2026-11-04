@@ -41,3 +41,16 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - Kierunek B (opcjonalnie, tylko hero strony głównej): prawdziwy model 3D obracany myszą (WebGL), w stylu linii technicznej, ładowany dopiero po wejściu na stronę; statyczny rysunek jako zapas. Większy koszt (~150 KB JS) i wydajność.
 - Spójnie z punktem 3: karty-odnośniki jako miniatury izometryczne tych samych „układów”.
 - Szkic: /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/iso-mock/izometria-uklad.png
+
+## 5. Zakres nowych grafik: tylko tam, gdzie dziś nie ma żadnej (zgłoszone 4.11.2026)
+
+„Te nowe elementy dodaj do obszarów, gdzie nie ma jeszcze żadnych grafik.”
+
+- **Bez zmian:** istniejące rysunki zostają (hero: strona główna, 4 filary, `/ubezpieczenia/`, `/rynek-lloyds/`). Nie zastępujemy ich układami scalonymi.
+- **Nowe grafiki (izometryczne układy scalone, punkty 3–4) tam, gdzie dziś brak:**
+  - 12 kart katalogu (`/ubezpieczenia/*`) — rysunek w nagłówku karty,
+  - 8 artykułów bloga i 2 arkusze regulacji (AI Act, PLD) — rysunek w nagłówku,
+  - `/ubezpieczenie-ai/ai-w-firmie/`,
+  - `/wiedza/` (blog), `/slownik/`, `/kontakt/`, `/o-nas/`, `/zespol/marek-ciesla/`,
+  - wszystkie karty-odnośniki do arkuszy (strona główna, „Powiązane”, blog, katalog) — miniatura u góry karty.
+- Strony prawne (`/informacje-o-brokerze/`, `/reklamacje/`, `/polityka-prywatnosci/`) — do decyzji przy wdrożeniu; rekomendacja: bez grafiki albo tylko mała, spokojna miniatura.
