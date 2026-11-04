@@ -22,3 +22,13 @@ Status: **CZEKA** — właściciel zbiera kolejne zmiany i da znać, kiedy wdro�
   - `/reklamacje/` — ustawa o rozpatrywaniu reklamacji wymaga wskazania kanału elektronicznego; zostawić e-mail albo wskazać formularz jako kanał elektroniczny (decyzja właściciela/prawnika).
   - `/polityka-prywatnosci/` — kontakt w sprawach danych: `warszawa@auraconsulting.pl` zostaje (decyzja 3.11).
   - Komunikaty błędów formularza (fallback „napisz na …”) — zamienić na telefon.
+
+## 3. Grafika przy każdym odnośniku do arkusza — układy scalone (zgłoszone 4.11.2026)
+
+„Wszystkie odnośniki do ARKUSZA na każdej stronie powinny mieć graficzny układ. Może układy scalone?”
+
+- Każda karta-odnośnik do innej strony (filary, karty katalogu, artykuły, „Powiązane”, blog, strona główna) dostaje u góry grafikę ~360×190 w stylu rysunku technicznego elektroniki: obudowa QFP z wyprowadzeniami (filary: piny = moduły ochrony), ścieżki PCB z przelotkami (karty katalogu: przebieg ryzyka), matryca BGA / schemat blokowy (artykuły).
+- Grafiki generowane w buildzie jako SVG (deterministycznie z adresu strony + kilka parametrów w frontmatterze: etykiety pinów, odcinek „awarii” na czerwono), bez zewnętrznych plików i bez JS; w `.md` pomijane.
+- Liczby na grafikach tylko ilustracyjne i oznaczone jako takie albo bez liczb (np. „+840%” ze szkicu nie przechodzi do produkcji bez źródła).
+- Szkic: /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/ic-mock/karty-uklady-scalone.png
+- Do decyzji właściciela: tylko karty-odnośniki czy także rysunki hero (dziś: rysunki złożeniowe „zespołu”) w tym samym języku układów scalonych.
