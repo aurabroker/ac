@@ -1,0 +1,86 @@
+---
+/**
+ * ConsentBanner — zgoda na statystyki Google Analytics 4 (src/scripts/consent.ts, src/lib/analytics.ts).
+ * Wstawiany raz w layoucie bazowym (Sheet) i na 404. Domyślnie ukryty (hidden): pokazuje go skrypt,
+ * gdy odwiedzający jeszcze nie wybrał. Przyciski „Zgadzam się” i „Nie zgadzam się” są równorzędne.
+ * Ponowne otwarcie: przycisk „Ustawienia cookies” w stopce (SiteFooter, [data-consent-open]).
+ * Poza <main> i z data-md-skip — nie trafia do bliźniaka .md.
+ */
+---
+
+<section class="consent" data-consent data-md-skip hidden aria-labelledby="consent-title">
+  <div class="consent__body">
+    <p class="consent__title label" id="consent-title">Statystyki odwiedzin</p>
+    <p class="consent__text">
+      Za Twoją zgodą użyjemy Google Analytics, żeby sprawdzać, które strony są przydatne i ile osób wysyła zapytania.
+      Bez zgody serwis działa tak samo, a Twoja przeglądarka nie łączy się z Google. Zdanie możesz zmienić
+      w&nbsp;stopce („Ustawienia cookies”). Szczegóły: <a href="/polityka-prywatnosci/#czy-mierzymy-ruch-na-stronie">polityka prywatności</a>.
+    </p>
+  </div>
+  <div class="consent__actions">
+    <button type="button" class="btn" data-consent-reject>Nie zgadzam się</button>
+    <button type="button" class="btn" data-consent-accept>Zgadzam się</button>
+  </div>
+</section>
+
+<script>
+  import '../scripts/consent.ts';
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    right: var(--pad-x);
+    bottom: var(--pad-x);
+    left: var(--pad-x);
+    z-index: 50;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2) var(--s-3);
+    align-items: flex-end;
+    justify-content: space-between;
+    max-width: 960px;
+    margin-inline: auto;
+    padding: var(--s-3);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    box-shadow: 0 8px 24px rgb(22 25 29 / 0.12);
+  }
+  .consent[hidden] {
+    display: none;
+  }
+  .consent__body {
+    flex: 1 1 420px;
+    min-width: 0;
+  }
+  .consent__title {
+    margin: 0 0 var(--s-1);
+  }
+  .consent__text {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .consent__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+  }
+  @media (max-width: 480px) {
+    .consent {
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: var(--s-2) 16px;
+      border-width: 1px 0 0;
+    }
+    .consent__actions {
+      width: 100%;
+    }
+    .consent__actions .btn {
+      flex: 1 1 0;
+      justify-content: center;
+    }
+  }
+</style>

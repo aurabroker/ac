@@ -88,6 +88,12 @@ Nic do zrobienia przed startem — projekt **`aura-web`** w Cloudflare Pages jes
 - [ ] Arkusz `/regulacje/pld/` i artykuł `/wiedza/pld-a-oc-software-house/` (szkice): przed publikacją potwierdź datę publikacji projektu polskiej ustawy wdrażającej PLD (Ministerstwo Sprawiedliwości) i dodaj źródło — usunęliśmy niezweryfikowany link do artykułu prasowego i datę „wrzesień 2026 r.”.
 - [ ] Kanał RSS ma dziś 0 pozycji (wszystkie artykuły są szkicami); link do RSS w `<head>` i w `llms.txt` pojawi się automatycznie po publikacji pierwszego arkusza. Pozycje zawierają skrót („W skrócie”) i link — pełna treść w RSS (PLAN §2.6) to zadanie na czas publikacji artykułów.
 
-- [ ] Analityka: domyślnie brak (0 KB). Cloudflare Web Analytics (bez cookies) — włączyć dopiero po decyzji/opinii IOD; wtedy aktualizacja polityki prywatności i CSP.
+- [ ] **Analityka — GA4 za zgodą (decyzja 5.11.2026: przywrócić usługę `G-GDEW6G7KB0` ze starej strony).** Kod: `src/lib/analytics.ts`, `src/scripts/consent.ts`, `src/components/ConsentBanner.astro`; CSP w `public/_headers`; polityka prywatności rev. F. Przed scaleniem do `main`:
+  - [ ] IOD/prawnik zatwierdza politykę prywatności rev. F i treść banera (`ConsentBanner.astro`).
+  - [ ] Panel GA4 → Administracja → Gromadzenie i modyfikacja danych → **Przechowywanie danych: 14 miesięcy** (tak opisuje polityka; inny okres = poprawka polityki).
+  - [ ] Panel GA4 → **Google Signals: wyłączone**, personalizacja reklam wyłączona (polityka mówi, że nie są włączone).
+  - [ ] Panel GA4 → Zdarzenia: oznacz `generate_lead` jako **kluczowe zdarzenie** (było na starej stronie); jeśli konto Google Ads importuje konwersje z GA4 — sprawdź, że import wskazuje `generate_lead`.
+  - [ ] Zdarzenia z nowej strony: `generate_lead` (wysłany formularz, param. `form`), `click_to_call`, `cta_click` (link do /kontakt/, param. `cta`, `link_url`), `faq_open` (param. `question`). Ze starej strony nie wracają: `click_to_mail` (brak mailto, decyzja 4.11), wirtualne `page_view` paneli.
+  - [ ] Tryb zgody „podstawowy”: przed zgodą brak żadnych żądań do Google (brak modelowania konwersji). Zmiana na tryb „zaawansowany” wymaga decyzji IOD i zmiany polityki.
 - [ ] Negocjacja `Accept: text/markdown` na adresach HTML i log botów — wymaga małego Workera (ADR `docs/adr/001-negocjacja-markdown.md`).
 - [ ] Lokalna lista jawnych fraz dla strażnika: `.guard/forbidden.local.txt` (plik poza Git, po jednej frazie w linii) — przekaż maintainerowi bezpiecznym kanałem, jeśli ma być używana lokalnie.

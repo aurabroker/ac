@@ -70,6 +70,7 @@ const year = new Date().getFullYear();
     <div class="site-footer__bottom mono">
       <span>© {year} {SITE.legalName}</span>
       <span class="site-footer__machines">
+        <button type="button" class="site-footer__consent" data-consent-open hidden>Ustawienia cookies</button>
         {mdPath && <a href={mdPath} type="text/markdown">[.md]</a>}
         <a href="/llms.txt" type="text/plain">llms.txt</a>
         <a href="/rss.xml" type="application/rss+xml">RSS</a>
@@ -182,6 +183,20 @@ const year = new Date().getFullYear();
   }
   .site-footer__machines a {
     color: var(--ink-3);
+  }
+  /* „Ustawienia cookies” — ponowne otwarcie banera zgody (ConsentBanner); widoczny tylko z JS */
+  .site-footer__consent {
+    padding: 0;
+    font: inherit;
+    color: var(--ink-3);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .site-footer__consent[hidden] {
+    display: none;
   }
   @media (max-width: 900px) {
     .site-footer__map {

@@ -2,6 +2,9 @@
 // Bez JS formularz działa zwykłym POST-em; ta warstwa tylko go ulepsza. Ładuje ją na żądanie ContactForm.astro.
 // Konfigurator wpisuje podsumowanie do pola [data-cform-config] i wysyła zdarzenie `cform-config`;
 // z innej strony przekazuje je przez sessionStorage (klucz niżej).
+// Po udanej wysyłce: zdarzenie GA4 generate_lead (wysyłane tylko przy zgodzie — src/scripts/analytics.ts).
+
+import { track } from './analytics.ts';
 
 const CONFIG_KEY = 'aura-config-handoff';
 
@@ -103,6 +106,7 @@ export function initContactForms() {
         const body = (await res.json().catch(() => ({}))) as { ok?: boolean; errors?: Errors };
         if (res.ok && body.ok) {
           showDone(root, form);
+          track('generate_lead', { form: 'kontakt' });
           return;
         }
         setErrors(form, body.errors ?? { form: 'Nie udało się wysłać wiadomości. Spróbuj ponownie albo zadzwoń: +48 500 502 702.' });

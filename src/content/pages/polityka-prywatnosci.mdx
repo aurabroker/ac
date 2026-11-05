@@ -4,11 +4,11 @@ description: "Jak Aura Consulting przetwarza dane osobowe: administrator, cele i
 seoTitle: "Polityka prywatności i informacja RODO · Aura Consulting"
 published: 2026-11-02
 updated: 2026-11-05
-revision: "E"
+revision: "F"
 path: "/polityka-prywatnosci/"
 template: "legal"
 sheet: "AC-022"
-summary: "Administratorem danych jest Aura Consulting sp. z o.o. z siedzibą w Warszawie. Formularz kontaktowy wysyła Twoją wiadomość e-mailem do nas (przez Cloudflare i Resend). Serwis nie używa analitycznych ani reklamowych plików cookie i nie pobiera fontów z serwerów Google. Dane przetwarzamy, gdy dzwonisz, piszesz lub wysyłasz formularz, oraz w zakresie technicznym przy wyświetlaniu strony. Masz prawo dostępu, sprostowania i usunięcia danych oraz skargi do Prezesa UODO."
+summary: "Administratorem danych jest Aura Consulting sp. z o.o. z siedzibą w Warszawie. Formularz kontaktowy wysyła Twoją wiadomość e-mailem do nas (przez Cloudflare i Resend). Statystyki Google Analytics włączamy tylko za Twoją zgodą; nie używamy reklamowych plików cookie ani fontów z serwerów Google. Dane przetwarzamy, gdy dzwonisz, piszesz lub wysyłasz formularz, oraz w zakresie technicznym przy wyświetlaniu strony. Masz prawo dostępu, sprostowania i usunięcia danych oraz skargi do Prezesa UODO."
 summaryPoints:
   - "Korespondencję bez zawartej umowy przechowujemy do 12 miesięcy od ostatniego kontaktu."
   - "Dane do oferty przekazujemy ubezpieczycielom tylko w zakresie potrzebnym do jej przygotowania."
@@ -19,7 +19,7 @@ legalStateAsOf: 2026-11-02
 reviewEvery: 180
 faq:
   - q: "Czy serwis używa Google Analytics lub innych narzędzi śledzących?"
-    a: "Nie. Serwis nie ładuje skryptów analitycznych ani reklamowych, nie używa pikseli śledzących i nie pobiera fontów z serwerów Google — fonty są udostępniane z naszej domeny."
+    a: "Tylko za Twoją zgodą. Google Analytics 4 uruchamiamy dopiero po kliknięciu „Zgadzam się” w okienku zgody — bez niej przeglądarka nie łączy się z Google. Nie używamy narzędzi reklamowych ani pikseli śledzących, a fonty są udostępniane z naszej domeny. Zgodę zmienisz w każdej chwili przyciskiem „Ustawienia cookies” w stopce."
   - q: "Czy muszę podawać dane osobowe, żeby otrzymać ofertę?"
     a: "Podanie danych jest dobrowolne, ale bez informacji o firmie i danych kontaktowych nie przygotujemy oferty. Nie potrzebujemy danych osobowych Twoich klientów ani danych o zdrowiu — prosimy ich nie przesyłać."
   - q: "Komu przekazujecie dane z zapytania o ofertę?"
@@ -37,10 +37,11 @@ changelog:
   - { rev: "C", date: 2026-11-03, note: "Formularz kontaktowy: zakres danych, odbiorcy (Cloudflare, Resend), przekazanie poza EOG, ochrona przed spamem." }
   - { rev: "D", date: 2026-11-04, note: "Kontakt przez telefon albo formularz; konfigurację wysyła się tylko formularzem." }
   - { rev: "E", date: 2026-11-05, note: "Resend: bez niepotwierdzonej informacji o regionie wysyłki." }
+  - { rev: "F", date: 2026-11-05, note: "Statystyki Google Analytics 4 za zgodą (baner zgody, ustawienia w stopce), odbiorca Google, przekazanie poza EOG." }
 order: 62
 ---
 
-{/* Właściciel: agent „home”. Do zatwierdzenia przez prawnika / IOD (PLAN §9, T2). Przy włączeniu Cloudflare Web Analytics zaktualizuj sekcję o statystykach, datę `updated` i `changelog`. */}
+{/* Właściciel: agent „home”. Do zatwierdzenia przez prawnika / IOD (PLAN §9, T2). Rewizja F (GA4 za zgodą) — DO ZATWIERDZENIA przed wdrożeniem: podstawa prawna, okres przechowywania danych w GA4 (ustawienie usługi), wyłączone Google Signals i funkcje reklamowe (docs/TODO-wlasciciel.md §6). */}
 
 ## Kto jest administratorem Twoich danych?
 
@@ -66,6 +67,7 @@ Serwis nie ma kont użytkowników. Dane osobowe trafiają do nas wtedy, gdy dzwo
     ["Reklamacje", "dane z reklamacji i korespondencja", "rozpatrzenie reklamacji — art. 6 ust. 1 lit. c RODO", "do upływu terminów przedawnienia roszczeń"],
     ["Roszczenia", "dane potrzebne do ustalenia, dochodzenia lub obrony roszczeń", "prawnie uzasadniony interes — art. 6 ust. 1 lit. f RODO", "do upływu terminów przedawnienia roszczeń"],
     ["Wyświetlanie strony", "adres IP, data i godzina, adres strony, typ przeglądarki (dane techniczne)", "dostarczenie strony i ochrona przed nadużyciami — art. 6 ust. 1 lit. f RODO", "krótko, zgodnie z zasadami dostawcy hostingu; sami nie prowadzimy dzienników z adresami IP"],
+    ["Statystyki odwiedzin (Google Analytics 4) — tylko za zgodą", "identyfikator w pliku cookie, odwiedzone strony, kliknięcia (np. telefon, wysłanie formularza — bez jego treści), przybliżona lokalizacja, typ urządzenia i przeglądarki", "statystyki i ulepszanie serwisu — Twoja zgoda, art. 6 ust. 1 lit. a RODO; zapis plików cookie — art. 399 Prawa komunikacji elektronicznej", "pliki cookie do 2 lat albo do cofnięcia zgody; dane w usłudze — 14 miesięcy"],
   ]}
 />
 
@@ -86,12 +88,12 @@ Formularz na stronach serwisu wysyła Twoją wiadomość e-mailem do nas. W tema
 Tylko tym podmiotom, które potrzebują ich do realizacji celów opisanych wyżej:
 
 - **ubezpieczycielom i podmiotom działającym w ich imieniu** (np. partnerom underwritingowym) — w zakresie potrzebnym do przygotowania oferty, zawarcia i wykonania umowy ubezpieczenia; są one odrębnymi administratorami danych i informują o tym we własnych dokumentach;
-- **dostawcom usług**, którzy działają na nasze zlecenie: hostingu, dostarczania strony i obsługi formularza (Cloudflare, Inc.), wysyłki wiadomości z formularza (Resend, Inc.), poczty elektronicznej, telefonii, usług IT oraz księgowości;
+- **dostawcom usług**, którzy działają na nasze zlecenie: hostingu, dostarczania strony i obsługi formularza (Cloudflare, Inc.), wysyłki wiadomości z formularza (Resend, Inc.), statystyk odwiedzin — tylko za Twoją zgodą (Google Ireland Limited), poczty elektronicznej, telefonii, usług IT oraz księgowości;
 - **organom publicznym**, gdy wymagają tego przepisy (na przykład Komisji Nadzoru Finansowego, sądom).
 
 ## Czy dane trafiają poza Europejski Obszar Gospodarczy?
 
-Mogą. Stronę i formularz obsługuje Cloudflare, który ma serwery także poza EOG, w tym w USA. Wiadomości z formularza wysyła Resend (Resend, Inc., USA), który może przetwarzać dane także w USA. Przekazanie odbywa się na podstawie decyzji Komisji Europejskiej stwierdzającej odpowiedni stopień ochrony (EU-US Data Privacy Framework) lub standardowych klauzul umownych zatwierdzonych przez Komisję (art. 45 i 46 RODO).
+Mogą. Stronę i formularz obsługuje Cloudflare, który ma serwery także poza EOG, w tym w USA. Wiadomości z formularza wysyła Resend (Resend, Inc., USA), który może przetwarzać dane także w USA. Dane ze statystyk (tylko za zgodą) może przetwarzać Google LLC w USA. Przekazanie odbywa się na podstawie decyzji Komisji Europejskiej stwierdzającej odpowiedni stopień ochrony (EU-US Data Privacy Framework) lub standardowych klauzul umownych zatwierdzonych przez Komisję (art. 45 i 46 RODO).
 
 Jeśli dostawca poczty elektronicznej lub telefonii przetwarza dane poza EOG, przekazanie odbywa się na tych samych podstawach (art. 45 lub 46 RODO). Na prośbę wskażemy dostawcę i podstawę przekazania.
 
@@ -101,7 +103,9 @@ Jeśli oferta pochodzi z rynku londyńskiego, dane potrzebne do jej przygotowani
 
 ## Czy serwis używa plików cookie?
 
-Nie używamy analitycznych ani reklamowych plików cookie i nie zapisujemy w Twojej przeglądarce identyfikatorów. W serwisie nie ma osadzonych filmów, wtyczek mediów społecznościowych ani zewnętrznych czcionek — fonty są udostępniane z naszej domeny, więc Twoja przeglądarka nie łączy się z serwerami Google.
+Analityczne pliki cookie Google Analytics zapisujemy **tylko za Twoją zgodą** (opis w następnej części). Nie używamy reklamowych plików cookie. W serwisie nie ma osadzonych filmów, wtyczek mediów społecznościowych ani zewnętrznych czcionek — fonty są udostępniane z naszej domeny.
+
+Twój wybór w okienku zgody (zgoda albo odmowa) zapisujemy w pamięci przeglądarki (localStorage) na 12 miesięcy, żeby nie pytać przy każdej wizycie. Ten zapis nie trafia do nas ani do Google.
 
 Cloudflare, który dostarcza stronę, może w niektórych sytuacjach ustawić techniczny plik cookie niezbędny do ochrony przed ruchem automatycznym (botami). Taki plik nie służy do śledzenia, a jego użycie wynika z konieczności zapewnienia bezpieczeństwa usługi.
 
@@ -109,9 +113,19 @@ Konfigurator programu (strona główna i niektóre arkusze) zapamiętuje Twoje o
 
 ## Czy mierzymy ruch na stronie?
 
-Obecnie tylko w formie zbiorczych statystyk z poziomu serwera, które Cloudflare udostępnia w panelu usługi (na przykład liczba odsłon i kraje odwiedzin). Statystyki te nie wymagają skryptów ani plików cookie w Twojej przeglądarce i nie pozwalają nam Cię zidentyfikować.
+Tak, na dwa sposoby:
 
-W przyszłości możemy włączyć Cloudflare Web Analytics — narzędzie, które nie używa plików cookie. Zanim to zrobimy, zaktualizujemy tę politykę (nowa data aktualizacji pod tytułem), a jeśli przepisy będą tego wymagać — poprosimy o zgodę.
+- **Zbiorcze statystyki serwera** — Cloudflare udostępnia nam w panelu usługi na przykład liczbę odsłon i kraje odwiedzin. Nie wymagają one skryptów ani plików cookie w Twojej przeglądarce i nie pozwalają nam Cię zidentyfikować.
+- **Google Analytics 4 — tylko za Twoją zgodą.** Przy pierwszej wizycie pytamy o zgodę w okienku na dole strony. Dopiero po kliknięciu „Zgadzam się” przeglądarka pobiera skrypt Google i zapisuje pliki cookie `_ga` oraz `_ga_GDEW6G7KB0` (do 2 lat). Bez zgody serwis działa tak samo i nie łączy się z Google.
+
+**Co mierzy Google Analytics:** odwiedzone strony, źródło wejścia (np. wyszukiwarka), przybliżoną lokalizację (kraj, miasto), typ urządzenia i przeglądarki oraz kilka działań: kliknięcie numeru telefonu, przejście do formularza, rozwinięcie pytania w FAQ i wysłanie formularza. **Nie przekazujemy** do Google treści formularza, imienia, adresu e-mail ani numeru telefonu. Według Google usługa Google Analytics 4 nie zapisuje adresów IP. Nie włączamy funkcji reklamowych ani łączenia danych z kontami Google (Google Signals).
+
+- **Dostawca:** Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlandia — działa na nasze zlecenie; dane może przetwarzać także Google LLC w USA (EU-US Data Privacy Framework, art. 45 RODO, oraz standardowe klauzule umowne, art. 46 RODO).
+- **Podstawa:** Twoja zgoda — art. 6 ust. 1 lit. a RODO; zapis i odczyt plików cookie — art. 399 ustawy Prawo komunikacji elektronicznej.
+- **Jak długo:** dane w usłudze przechowujemy 14 miesięcy, potem Google je usuwa.
+- **Cofnięcie zgody:** w każdej chwili przyciskiem „Ustawienia cookies” w stopce strony — wybierz „Nie zgadzam się”. Wtedy wyłączamy skrypt i usuwamy pliki cookie `_ga`. Cofnięcie zgody nie wpływa na zgodność z prawem wcześniejszego przetwarzania.
+
+{/* DO ZATWIERDZENIA (docs/TODO-wlasciciel.md §6): w panelu GA4 ustawić przechowywanie danych na 14 miesięcy (Administracja → Gromadzenie i modyfikacja danych → Przechowywanie danych), wyłączyć Google Signals i personalizację reklam; jeśli właściciel wybierze 2 miesiące — poprawić tekst wyżej i w tabeli. */}
 
 ## Jakie masz prawa?
 
