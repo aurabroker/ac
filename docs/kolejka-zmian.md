@@ -89,3 +89,12 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - Warunek: artykuł zatwierdzony przez autora; niezatwierdzony nie wchodzi do harmonogramu.
 - Kolejność do ustalenia przy wdrożeniu (propozycja: najpierw teksty pod frazy „OC dla IT” i „OC/cyber dla AI”: OC programisty B2B → LLMjacking → USA i Kanada → Tech E&O → klient wymaga OC → AI Act a ubezpieczenie → ransomware 2.0 → PLD a software house → regulacje AI Act, PLD).
 - **Wdrożone (4.11):** daty od 05.11 do 23.11.2026 w tej kolejności (tabela: `docs/TODO-wlasciciel.md` §3b); jedna reguła publikacji `isLive` (`src/lib/routes.ts`); podgląd z etykietą „Zaplanowano”. Codzienny rebuild: workflow GitHub `daily-publish` (pusty commit na `main` przez `GITHUB_TOKEN`, bez sekretów) zamiast hooka i crona po stronie Cloudflare. Artykuły zostają szkicami do zatwierdzenia.
+
+## 9. Drobne poprawki (zgłoszone 5.11.2026)
+
+„Źródła — mniejsza czcionka. W Kontakcie na samym dole kasujesz @ [e-mail]. Z każdego formularza, jak idzie wiadomość, dopisz znacznik [CYBER] albo [AI_AURA].”
+
+- **Wdrożone (5.11):**
+  - Źródła: drobny druk — nagłówek jak etykieta arkusza (12 px, mono), lista 13 px, nota 12 px.
+  - Koperta (symbol e-maila) usunięta z całego serwisu: stopka „Kontakt”, menu na telefonie, blok kontaktu i ikona strony `/kontakt/` mają ikonę formularza (`form`).
+  - Temat każdej wiadomości z formularza zaczyna się od `[AI_AURA]`; inny znacznik (np. `[CYBER]`) — zmienna `CONTACT_TAG` w Cloudflare Pages, bez zmiany kodu.

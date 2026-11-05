@@ -40,7 +40,7 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 
 - [ ] Prawnik / IOD: akceptacja sekcji „Jak działa formularz kontaktowy?” w `/polityka-prywatnosci/` (odbiorcy: Cloudflare, Resend; przekazanie poza EOG; okres przechowywania).
 - [ ] Potwierdź zaakceptowane umowy powierzenia (DPA) z Cloudflare i Resend.
-- [ ] Wyślij próbną wiadomość z podglądu — temat ma postać „[PODGLĄD] [<tytuł strony>] Zapytanie od …” i trafia na cyber@auraconsulting.pl. Wiadomości ze słowem „reklamacja” (albo wysłane ze strony `/reklamacje/`) mają na początku tematu „[REKLAMACJA]”, a ze słowem „szkoda” — „[SZKODA]”: odpowiedź na reklamację najpóźniej w 30 dni (ustawa o rozpatrywaniu reklamacji). Ustaw w poczcie regułę lub flagę dla tych tematów.
+- [ ] Wyślij próbną wiadomość z podglądu — temat ma postać „[AI_AURA] [PODGLĄD] [<tytuł strony>] Zapytanie od …” i trafia na cyber@auraconsulting.pl. Znacznik „[AI_AURA]” mają wszystkie wiadomości z formularzy serwisu (reguła w poczcie: temat zawiera „[AI_AURA]”); inny znacznik, np. „[CYBER]” — zmienna `CONTACT_TAG` w Cloudflare Pages (Settings → Variables), bez zmiany kodu. Wiadomości ze słowem „reklamacja” (albo wysłane ze strony `/reklamacje/`) mają w temacie także „[REKLAMACJA]”, a ze słowem „szkoda” — „[SZKODA]”: odpowiedź na reklamację najpóźniej w 30 dni (ustawa o rozpatrywaniu reklamacji). Ustaw w poczcie regułę lub flagę dla tych tematów.
 - [ ] Sprawdź w panelu Resend region domeny nadawcy (`CONTACT_FROM`, domena `auraconsulting.pl`). Jeśli to region UE (eu-west-1), możemy dopisać w `/polityka-prywatnosci/`, że wysyłka odbywa się z UE — dziś polityka tego nie twierdzi.
 
 ## 3b. Harmonogram artykułów (co 2 dni)

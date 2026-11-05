@@ -150,7 +150,7 @@ Software house wdraża chatbota… (scenariusz ilustracyjny)
 …
 ```
 
-Layout dokłada automatycznie: okruszki, tabliczkę, „W skrócie”, „Stan prawny na”, tabelę zakresu (z `coverage`), kontakt (telefon + formularz; temat wiadomości = tytuł strony), FAQ, źródła z jednoliniową notą „Jak powstał ten tekst”, powiązane arkusze, pełną tabliczkę, formułę (c), JSON-LD (BlogPosting, FAQPage, BreadcrumbList) i OG. **Nie powtarzaj tych bloków w treści.**
+Layout dokłada automatycznie: okruszki, tabliczkę, „W skrócie”, „Stan prawny na”, tabelę zakresu (z `coverage`), kontakt (telefon + formularz; temat wiadomości = znacznik `[AI_AURA]` + tytuł strony), FAQ, źródła z jednoliniową notą „Jak powstał ten tekst”, powiązane arkusze, pełną tabliczkę, formułę (c), JSON-LD (BlogPosting, FAQPage, BreadcrumbList) i OG. **Nie powtarzaj tych bloków w treści.**
 
 ### Filar / segment filaru
 
@@ -238,7 +238,7 @@ W plikach `.mdx` poniższe komponenty są dostępne **bez importu** (mapa: `src/
 | `PlotterHero` | `grid?`, `class?` | jednorazowe rysowanie dzieci-SVG (elementy z `pathLength="1"`) |
 | `DimensionLine` | `label`, `value?` | ozdobna linia wymiarowa (data-md-skip) |
 | `Term` | `en?`, `href?` | `<Term en="claims made" href="/slownik/#claims-made">zasada zgłoszenia roszczenia</Term>` |
-| `ContactChannels` | `heading?`, `lead?`, `checklist?`, `id?`, `pageTitle?` | telefon + formularz (`ContactForm`, `#formularz`, temat wiadomości = tytuł strony), lista „Co przygotować”. Bez e-maila i kopiowania. Layouty już go dodają — nie duplikuj |
+| `ContactChannels` | `heading?`, `lead?`, `checklist?`, `id?`, `pageTitle?` | telefon + formularz (`ContactForm`, `#formularz`, temat wiadomości = znacznik `[AI_AURA]` + tytuł strony), lista „Co przygotować”. Bez e-maila i kopiowania. Layouty już go dodają — nie duplikuj |
 | `SheetCard` | `href`, `title`, `sheet?`, `summary?`, `meta?`, `level?`, `draft?`, `icon?`, `thumb?` | karta arkusza; u góry miniatura strony docelowej (`/fig/<ścieżka>.svg`, tylko strony z buildu; `thumb={false}` wyłącza); symbol w ramce dobierany z adresu (`iconForPath`), `icon="…"` zmienia, `icon={false}` wyłącza |
 | `Icon` | `name`, `size?` (20), `title?`, `class?` | ikona z zestawu (niżej); bez `title` dekoracyjna (`aria-hidden`) |
 | `CardGrid` | `columns?: 2\|3`, `label?` | siatka kart: `<CardGrid columns={3}><SheetCard …/></CardGrid>` |
@@ -258,9 +258,9 @@ Zestaw własny w stylu rysunku technicznego: `src/icons/<nazwa>.svg` (siatka 24�
 | świat, branże | `globe`, `globe-pin` (USA i Kanada, terytorium), `bank`, `building`, `house`, `factory`, `medical-cross`, `cart`, `megaphone`, `team`, `compass` (OC zawodowe, architekt), `wrench`, `camera`, `suitcase`, `car`, `truck`, `gamepad`, `book`, `chart` |
 | pieniądze, limity, czas | `coins`, `calculator`, `percent`, `gauge` (limit, ocena ryzyka), `calendar` (data retroaktywna, oś czasu), `clock` |
 | incydenty | `warning-triangle`, `lightning` (incydent, scenariusz) |
-| interfejs | `phone`, `envelope`, `copy`, `download`, `arrow-right`, `search` (wyszukiwanie, szukanie ochrony), `magnifier` (lupa z plusem: przyjrzyj się, analiza), `layers` (katalog, moduły), `check-badge`, `x-badge`, `plus-badge`, `info`, `question` |
+| interfejs | `phone`, `form` (formularz kontaktowy; bez koperty — kontakt nie idzie e-mailem), `copy`, `download`, `arrow-right`, `search` (wyszukiwanie, szukanie ochrony), `magnifier` (lupa z plusem: przyjrzyj się, analiza), `layers` (katalog, moduły), `check-badge`, `x-badge`, `plus-badge`, `info`, `question` |
 
-Gdzie działają same: nawigacja i menu (`iconForPath`), karty `SheetCard`, nadetykiety `SectionView` (z etykiety: „Oś czasu” → `calendar`, „Mapa luk” → `x-badge`, „USA” → `globe-pin`, „Przypadki obciążenia” → `lightning`…), odznaki zakresu (`check-badge` / `plus-badge` / `gauge` / `x-badge`), `NoteBlock`, FAQ (`question`), źródła (`document`), kontakt (`phone`, `envelope`), tabliczka („Pobierz .md” → `document-md`), stopka. W treści ręcznie tylko tam, gdzie pomagają skanować: `rowIcons` w `SpecTable` (sektory, profesje, parametry), `icon` w `Steps`. Ikona wspiera tekst — nie zastępuje go i nie jest ozdobnikiem; bez emoji.
+Gdzie działają same: nawigacja i menu (`iconForPath`), karty `SheetCard`, nadetykiety `SectionView` (z etykiety: „Oś czasu” → `calendar`, „Mapa luk” → `x-badge`, „USA” → `globe-pin`, „Przypadki obciążenia” → `lightning`…), odznaki zakresu (`check-badge` / `plus-badge` / `gauge` / `x-badge`), `NoteBlock`, FAQ (`question`), źródła (`document`), kontakt (`phone`, `form`), tabliczka („Pobierz .md” → `document-md`), stopka. W treści ręcznie tylko tam, gdzie pomagają skanować: `rowIcons` w `SpecTable` (sektory, profesje, parametry), `icon` w `Steps`. Ikona wspiera tekst — nie zastępuje go i nie jest ozdobnikiem; bez emoji.
 
 ### Rysunki (agent `figures`)
 

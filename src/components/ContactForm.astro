@@ -1,7 +1,7 @@
 ---
 /**
  * Formularz kontaktowy → POST /api/kontakt (Cloudflare Pages Function → Resend).
- * Temat e-maila zawiera tytuł strony: „[<pageTitle>] Zapytanie od <imię>”.
+ * Temat e-maila: znacznik serwisu i tytuł strony — „[AI_AURA] [<pageTitle>] Zapytanie od <imię>” (functions/api/kontakt.js).
  * Działa bez JS: zwykły POST z walidacją przeglądarki, powrót 303 na #formularz-wyslano albo #formularz-blad
  * (komunikat odsłania CSS :target). Z JS — fetch i błędy przy polach; skrypt ładuje się dopiero przy pierwszym
  * fokusie w formularzu albo przekazaniu podsumowania z konfiguratora (zdarzenie `cform-config`, sessionStorage).

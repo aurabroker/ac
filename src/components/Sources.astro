@@ -28,7 +28,7 @@ const { items, heading = 'Źródła', note, noteLabel = 'Jak powstał ten tekst'
 {
   items.length > 0 && (
     <section class="sources" aria-labelledby="zrodla">
-      <h2 id="zrodla"><Icon name="document" size={24} />{heading}</h2>
+      <h2 id="zrodla"><Icon name="document" size={16} />{heading}</h2>
       <ol>
         {items.map((s) => (
           <li>
@@ -45,27 +45,37 @@ const { items, heading = 'Źródła', note, noteLabel = 'Jak powstał ten tekst'
 {items.length === 0 && note && <p class="sources__how sources__how--solo"><Icon name="info" size={16} /><span><strong>{noteLabel}:</strong> {polishText(note)}</span></p>}
 
 <style>
+  /* źródła: drobny druk pod treścią — nagłówek jak etykieta arkusza, lista 13 px */
   .sources {
     max-width: var(--end-measure, 100%);
     margin-top: var(--s-10);
-    font-size: var(--fs-small);
+    font-size: var(--fs-mono);
+    line-height: 1.55;
   }
   .sources h2 {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    margin: 0;
     padding-top: var(--s-3);
     border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--ink-2);
   }
   .sources h2 :global(.icon) {
     color: var(--ink-3);
   }
   .sources ol {
-    margin: var(--s-3) 0 0;
-    padding-left: 1.6em;
+    margin: var(--s-2) 0 0;
+    padding-left: 1.8em;
   }
   .sources li + li {
-    margin-top: var(--s-1);
+    margin-top: 6px;
   }
   .sources li::marker {
     font-family: var(--font-mono);
@@ -85,7 +95,7 @@ const { items, heading = 'Źródła', note, noteLabel = 'Jak powstał ten tekst'
     margin-top: var(--s-3);
     padding-top: var(--s-2);
     border-top: 1px dashed var(--rule);
-    font-size: 0.8125rem;
+    font-size: var(--fs-label);
     line-height: 1.55;
     color: var(--ink-3);
   }

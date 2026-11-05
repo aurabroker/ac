@@ -58,7 +58,7 @@ export const ICON_NAMES = [
   'lightning',
   // interfejs
   'phone',
-  'envelope',
+  'form',
   'copy',
   'download',
   'arrow-right',
@@ -144,7 +144,7 @@ const PATH_ICONS: Record<string, IconName> = {
   '/regulacje/ai-act/': 'scales',
   '/regulacje/pld/': 'scales',
   '/slownik/': 'book',
-  '/kontakt/': 'envelope',
+  '/kontakt/': 'form',
   '/o-nas/': 'building',
   '/informacje-o-brokerze/': 'info',
   '/reklamacje/': 'document',

@@ -1,8 +1,10 @@
 // Cloudflare Pages Function: POST /api/kontakt — formularz kontaktowy → e-mail przez Resend.
 // Sekrety i ustawienia (Cloudflare Pages → aura-web → Settings → Variables): RESEND_API_KEY (secret),
-// CONTACT_TO, CONTACT_FROM, CONTACT_ENV ("preview" dodaje [PODGLĄD] do tematu).
-// Temat wiadomości zawiera tytuł podstrony, z której wysłano formularz: „[<tytuł strony>] Zapytanie od <imię>”.
-// Reklamacje i szkody są oznaczone na początku tematu („[REKLAMACJA] ”, „[SZKODA] ”) — 30-dniowy termin
+// CONTACT_TO, CONTACT_FROM, CONTACT_ENV ("preview" dodaje [PODGLĄD] do tematu), CONTACT_TAG (znacznik serwisu,
+// domyślnie [AI_AURA]).
+// Temat zaczyna się znacznikiem serwisu, potem tytuł podstrony, z której wysłano formularz:
+// „[AI_AURA] [<tytuł strony>] Zapytanie od <imię>” — wiadomości z formularza łatwo odfiltrować w skrzynce.
+// Reklamacje i szkody mają w temacie dodatkowy znacznik („[REKLAMACJA] ”, „[SZKODA] ”) — 30-dniowy termin
 // odpowiedzi na reklamację (ustawa o rozpatrywaniu reklamacji, art. 6) widać od razu w skrzynce.
 // Bez JS: odpowiedź 303 na stronę formularza z kotwicą #formularz-wyslano albo #formularz-blad (komunikat w HTML, CSS :target).
 // Ochrona przed spamem: pole-pułapka, minimalny czas wypełnienia, sprawdzenie Origin, limit 1 wysyłki / 20 s / IP.
@@ -10,6 +12,7 @@
 const ALLOWED_HOSTS = [/^(www\.)?auraconsulting\.pl$/, /(^|\.)aura-web-2s1\.pages\.dev$/, /^localhost(:\d+)?$/, /^127\.0\.0\.1(:\d+)?$/];
 const EMAIL_RE = /^[^\s@<>()[\],;:"]+@[^\s@<>()[\],;:"]+\.[a-z]{2,}$/i;
 const RATE_SECONDS = 20;
+const SITE_TAG = '[AI_AURA]'; // znacznik każdej wiadomości z formularzy serwisu (nadpisuje go CONTACT_TAG)
 
 const clean = (v, max) => String(v ?? '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, max);
 const oneLine = (v, max) => clean(v, max).replace(/[\r\n]+/g, ' ');
@@ -102,7 +105,8 @@ export async function onRequestPost({ request, env }) {
     return reply(wantsJson, 503, { ok: false, errors: { form: 'Formularz jest chwilowo niedostępny. Zadzwoń: +48 500 502 702 (pn–pt, 9:00–17:00).' } }, pagePath);
   }
 
-  const prefix = env.CONTACT_ENV === 'preview' ? '[PODGLĄD] ' : '';
+  const siteTag = oneLine(env.CONTACT_TAG, 40) || SITE_TAG;
+  const prefix = `${siteTag} ${env.CONTACT_ENV === 'preview' ? '[PODGLĄD] ' : ''}`;
   const topic = `${pagePath} ${message}`;
   const tags = `${/reklamac/i.test(topic) ? '[REKLAMACJA] ' : ''}${/(^|[^\p{L}])szkod/iu.test(message) ? '[SZKODA] ' : ''}`;
   const subject = `${prefix}${tags}[${pageTitle}] Zapytanie od ${name}`.slice(0, 200);
