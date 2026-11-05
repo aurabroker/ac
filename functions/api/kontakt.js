@@ -17,8 +17,29 @@ const RATE_SECONDS = 20;
 const TAG_SITE = '[AI_AURA]'; // znacznik każdej wiadomości z formularzy serwisu
 const TAG_CYBER = '[CYBER_AURA]'; // zamiast TAG_SITE, gdy zapytanie dotyczy cyber
 const CYBER_PAGE = /^\/ubezpieczenie-cyber\//;
-const CYBER_WORDS =
-  /cyber|ransomware|phishing|malware|ddos|haker|hakow|wyciek\p{L}* danych|naruszeni\p{L}* (ochrony )?danych|incydent|zaszyfrow|socjotechni|przejęci\p{L}* kont|\brodo\b/iu;
+// słowa o cyberryzyku (bez ogólnych: „incydent” tylko z dopowiedzeniem — „incydent medyczny” to nie cyber)
+const CYBER_WORDS = new RegExp(
+  [
+    'cyber',
+    'ransomware',
+    'phishing',
+    'malware',
+    'ddos',
+    'haker',
+    'zaszyfrow',
+    'socjotechni',
+    '\\brodo\\b',
+    'wyciek\\p{L}*\\s+(?:\\p{L}+\\s+)?(?:danych|informacji)',
+    'dane\\s+(?:\\p{L}+\\s+)?wyciek',
+    'naruszeni\\p{L}*\\s+(?:ochrony\\s+)?danych',
+    'incydent\\p{L}*\\s+(?:bezpieczeństwa|informatyczn|teleinformatyczn|it\\b)',
+    'kradzie\\p{L}*\\s+(?:danych|kluczy|haseł|tożsamości)',
+    'włama\\p{L}*\\s+(?:do|na)\\s+(?:system|sieć|sieci|serwer|skrzynk|kont|poczt|aplikacj)',
+    'atak\\p{L}*\\s+na\\s+(?:system|serwer|sieć|sieci|stronę|skrzynk|poczt)',
+    'przej(?:ęci\\p{L}*|ął|ęli|ęła|ęto)\\s+(?:\\p{L}+\\s+)?kont(?:a|o|em|om|ach)?(?![\\p{L}])',
+  ].join('|'),
+  'iu',
+);
 
 const clean = (v, max) => String(v ?? '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, max);
 const oneLine = (v, max) => clean(v, max).replace(/[\r\n]+/g, ' ');

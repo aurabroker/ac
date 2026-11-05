@@ -1,12 +1,16 @@
 import type { APIRoute } from 'astro';
-import { BOT_RULES, DISALLOW_PATHS, CONTENT_SIGNAL } from '../lib/seo/bots.ts';
+import { BOT_RULES, DISALLOW_PATHS, CONTENT_SIGNAL, PREVIEW_USER_AGENTS, PREVIEW_CONTENT_SIGNAL } from '../lib/seo/bots.ts';
 import { SITE } from '../lib/site.ts';
 import { PREVIEW } from '../lib/env.ts';
 
 export const GET: APIRoute = () => {
   const lines: string[] = [`# robots.txt — ${SITE.host}`, '# Polityka: PLAN §4.2 (src/lib/seo/bots.ts).', ''];
   if (PREVIEW) {
-    lines.push('# PREVIEW — nie indeksować', 'User-agent: *', 'Disallow: /', '');
+    // podgląd: noindex (nagłówek X-Robots-Tag) + tylko pobrania na prośbę użytkownika (samokontrola przez agentów AI)
+    lines.push('# PREVIEW — nie indeksować; agenci AI mogą pobrać stronę na prośbę użytkownika');
+    for (const a of PREVIEW_USER_AGENTS) lines.push(`User-agent: ${a}`);
+    lines.push('Allow: /', `Content-Signal: ${PREVIEW_CONTENT_SIGNAL}`, '');
+    lines.push('# Wyszukiwarki, boty treningowe i pozostałe', 'User-agent: *', 'Disallow: /', '');
   } else {
     for (const rule of BOT_RULES) {
       lines.push(`# ${rule.role}`);

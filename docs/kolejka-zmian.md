@@ -97,4 +97,10 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - **Wdrożone (5.11):**
   - Źródła: drobny druk — nagłówek jak etykieta arkusza (12 px, mono), lista 13 px, nota 12 px.
   - Koperta (symbol e-maila) usunięta z całego serwisu: stopka „Kontakt”, menu na telefonie, blok kontaktu i ikona strony `/kontakt/` mają ikonę formularza (`form`).
-  - Temat każdej wiadomości z formularza zaczyna się od znacznika: `[CYBER_AURA]` — formularz ze strony działu cyber (`/ubezpieczenie-cyber/` i artykuły z tego działu) albo wiadomość o cyberryzyku (słowa: cyber, ransomware, phishing, malware, DDoS, haker, wyciek/naruszenie danych, incydent, zaszyfrowanie, socjotechnika, przejęcie konta, RODO); w pozostałych — `[AI_AURA]`. Podsumowanie z konfiguratora nie decyduje (wymienia cały program).
+  - Temat każdej wiadomości z formularza zaczyna się od znacznika: `[CYBER_AURA]` — formularz ze strony działu cyber (`/ubezpieczenie-cyber/` i artykuły z tego działu) albo wiadomość o cyberryzyku (słowa: cyber, ransomware, phishing, malware, DDoS, haker, zaszyfrowanie, socjotechnika, RODO, wyciek/naruszenie/kradzież danych, incydent bezpieczeństwa, włamanie do systemu/poczty, atak na serwer, przejęcie konta; „incydent medyczny”, „przejęcie kontroli” czy „wyciek wody” — nie); w pozostałych — `[AI_AURA]`. Podsumowanie z konfiguratora nie decyduje (wymienia cały program).
+
+## 10. Dostęp agentów AI do podglądu (zgłoszone 5.11.2026)
+
+„Czy możesz włączyć dostęp do strony podglądu innym agentom AI? Chciałem dokonać samokontroli.”
+
+- **Wdrożone (5.11):** `robots.txt` podglądu wpuszcza agentów pobierających stronę na prośbę użytkownika (ChatGPT-User, Claude-User, Perplexity-User, MistralAI-User, Meta-ExternalFetcher), `Content-Signal: search=no, ai-input=yes, ai-train=no`. Wyszukiwarki i boty treningowe — nadal `Disallow`, cały podgląd nadal `noindex`. Produkcja bez zmian (`src/lib/seo/bots.ts`).
