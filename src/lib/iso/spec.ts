@@ -10,7 +10,7 @@ import type { Motif } from './motifs.ts';
 import type { IsoSpec } from './render.ts';
 import { MAIN_NAV } from '../nav.ts';
 import { getPerson } from '../people.ts';
-import { shortTitle, type PageEntry, type SiteRoute } from '../routes.ts';
+import { shortTitle, type PageEntry, type PillarEntry, type SiteRoute } from '../routes.ts';
 import { ogKeyFor } from '../site.ts';
 
 /** Miniatura strony (plik SVG z builda, src/pages/fig/[...key].svg.ts): `/` → `/fig/index.svg`. */
@@ -114,6 +114,9 @@ export async function isoSpecFor(route: SiteRoute): Promise<IsoSpec> {
   let chip = chipFor(d.title);
   let fault: string | undefined = hasExclusions(cov) ? 'Wyłączenia' : undefined;
   let calm = false;
+  let variant: number | undefined;
+  // nazwa dostępna rysunku: temat strony, bez metafory „układu scalonego”
+  let title = `Schemat zakresu: ${shortTitle(d.title)}`;
 
   switch (route.kind) {
     case 'solution':
@@ -126,27 +129,36 @@ export async function isoSpecFor(route: SiteRoute): Promise<IsoSpec> {
       motif = 'stack';
       chip = undefined;
       break;
-    case 'pillar':
+    case 'pillar': {
       motif = route.entry.id.includes('/') ? 'stack' : 'qfp';
       chip = undefined;
+      // cztery filary obok siebie na stronie głównej: każdy z inną sylwetką obudowy
+      const order = (route.entry as PillarEntry).data.order;
+      if (motif === 'qfp') variant = [4, 0, 5, 2][(order - 1 + 4) % 4];
       break;
+    }
     case 'page': {
       const t = d.template;
       chip = undefined;
+      title = `Schemat: ${shortTitle(d.title)}`;
       if (t === 'contact') {
+        title = 'Schemat: kanały kontaktu';
         motif = 'pcb';
         inputs = ['Analiza ryzyka', 'Zgłoszenie szkody'];
         labels = ['Formularz', 'Telefon'];
         chip = 'Broker';
       } else if (t === 'person') {
+        title = 'Schemat: obszary specjalizacji';
         motif = 'qfp';
         const person = await getPerson(d.person ?? d.author);
         labels = uniq(person.knowsAbout.map((s) => cleanLabel(s.split(' — ')[0])));
       } else if (t === 'wiedza-index') {
+        title = 'Schemat: główne tematy';
         motif = 'bga';
         labels = MAIN_NAV.filter((l) => /^\/(oc-|ubezpieczenie-)/.test(l.href)).map((l) => l.label);
         chip = 'Wiedza';
       } else if (t === 'glossary') {
+        title = 'Schemat: podstawowe pojęcia';
         motif = 'bga';
         // pojęcia, od których zależy, czy roszczenie trafi do polisy (wstęp strony słownika)
         const core = ['claims-made', 'data-retroaktywna', 'suma-gwarancyjna', 'udzial-wlasny'];
@@ -184,17 +196,17 @@ export async function isoSpecFor(route: SiteRoute): Promise<IsoSpec> {
   }
 
   const up = (s: string) => s.toLocaleUpperCase('pl');
-  const name = shortTitle(d.title);
   const shown = labels.slice(0, 4);
-  const list = (a: string[]) => a.map((s) => s.toLocaleLowerCase('pl')).join(', ');
-  const faultNote = fault ? ` Czerwienią oznaczono: ${fault.toLocaleLowerCase('pl')}.` : '';
+  // opis z etykietami w pisowni źródła (skróty jak OC, D&O, AI zostają wielkimi literami)
+  const list = (a: string[]) => a.join(', ');
+  const faultNote = fault ? ` Czerwienią oznaczono: ${fault}.` : '';
   const desc =
     motif === 'stack'
       ? `Układ scalony w widoku rozstrzelonym, warstwy od góry: ${list([...(fault ? [fault] : []), ...shown])}.`
       : motif === 'qfp'
         ? `Obudowa układu scalonego nad płytką drukowaną${shown.length ? `; podpisane wyprowadzenia: ${list(shown)}` : ''}.${faultNote}`
         : motif === 'pcb'
-          ? `Ścieżki płytki drukowanej prowadzą przez układ${inputs.length ? ` od: ${list(inputs)}` : ''}${shown.length ? ` do: ${list(shown)}` : ''}.${fault ? ` Przerwana ścieżka: ${fault.toLocaleLowerCase('pl')}.` : ''}`
+          ? `Ścieżki płytki drukowanej prowadzą przez układ${inputs.length ? ` od: ${list(inputs)}` : ''}${shown.length ? ` do: ${list(shown)}` : ''}.${fault ? ` Przerwana ścieżka: ${fault}.` : ''}`
           : `Matryca kulek pod rdzeniem układu scalonego${shown.length ? `; wyróżnione pola: ${list(shown)}` : ''}.${faultNote}`;
 
   return {
@@ -205,7 +217,8 @@ export async function isoSpecFor(route: SiteRoute): Promise<IsoSpec> {
     chip: chip ? up(chip) : undefined,
     fault: fault ? up(fault) : undefined,
     calm,
-    title: `Rysunek: ${name} jako układ scalony`,
+    variant,
+    title,
     desc,
   };
 }

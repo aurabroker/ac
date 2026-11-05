@@ -76,7 +76,7 @@ const tocExtra = [
       <Sources
         items={d.sources}
         noteLabel={NOTE_LABEL_EDITORIAL}
-        note={editorialNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })}
+        note={editorialNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0, reviewed: d.reviewed })}
       />
       <SheetFoot ctx={ctx} />
     </DocBody>

@@ -2,7 +2,9 @@
 /**
  * Formularz kontaktowy → POST /api/kontakt (Cloudflare Pages Function → Resend).
  * Temat e-maila zawiera tytuł strony: „[<pageTitle>] Zapytanie od <imię>”.
- * Działa bez JS (zwykły POST, powrót 303 z ?formularz=wyslano|blad#formularz); z JS — fetch, błędy przy polach.
+ * Działa bez JS: zwykły POST z walidacją przeglądarki, powrót 303 na #formularz-wyslano albo #formularz-blad
+ * (komunikat odsłania CSS :target). Z JS — fetch i błędy przy polach; skrypt ładuje się dopiero przy pierwszym
+ * fokusie w formularzu albo przekazaniu podsumowania z konfiguratora (zdarzenie `cform-config`, sessionStorage).
  */
 import Icon from './Icon.astro';
 import { SITE } from '../lib/site.ts';
@@ -16,7 +18,13 @@ const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
 ---
 
 <div class="cform" id="formularz" data-cform data-md-skip>
-  <form class="cform__form" action="/api/kontakt" method="post" novalidate>
+  <p class="cform__result" id="formularz-wyslano" tabindex="-1">
+    <Icon name="check-badge" size={18} /> Wiadomość wysłana. Odpowiemy w dni robocze, zwykle w ciągu jednego dnia roboczego. W pilnej sprawie zadzwoń: <a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>.
+  </p>
+  <p class="cform__result cform__result--err" id="formularz-blad" tabindex="-1">
+    Nie udało się wysłać wiadomości. Sprawdź pola oznaczone gwiazdką i spróbuj ponownie albo zadzwoń: <a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>.
+  </p>
+  <form class="cform__form" action="/api/kontakt" method="post">
     <input type="hidden" name="pageTitle" value={pageTitle} />
     <input type="hidden" name="pageUrl" value={pageUrl} />
     <input type="hidden" name="t" value="" data-cform-t />
@@ -53,7 +61,7 @@ const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
       <div class="cform__field cform__field--wide cform__consent">
         <input id="cf-consent" name="consent" type="checkbox" value="on" required aria-describedby="cf-consent-err" />
         <label for="cf-consent">
-          Proszę o kontakt w sprawie mojego zapytania. Zasady przetwarzania danych: <a href="/polityka-prywatnosci/#jak-dziala-formularz-kontaktowy">polityka prywatności</a>. <span class="cform__req" aria-hidden="true">*</span>
+          Proszę o kontakt w sprawie mojego zapytania. Zasady przetwarzania danych: <a href="/polityka-prywatnosci/#jak-dziala-formularz-kontaktowy">polityka prywatności</a>.&nbsp;<span class="cform__req" aria-hidden="true">*</span>
         </label>
         <p class="cform__err" id="cf-consent-err" data-err="consent"></p>
       </div>
@@ -74,8 +82,24 @@ const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
 </div>
 
 <script>
-  import { initContactForms } from '../scripts/contact-form.ts';
-  initContactForms();
+  // Ładowanie na żądanie: formularz działa bez JS, więc skrypt (błędy przy polach, wysyłka fetch) czeka na pierwszy
+  // fokus w formularzu, przekazanie z konfiguratora albo konfigurację zostawioną na innej stronie.
+  for (const root of document.querySelectorAll<HTMLElement>('[data-cform]')) {
+    const t = root.querySelector<HTMLInputElement>('[data-cform-t]');
+    if (t) t.value = String(Date.now());
+    const load = () => {
+      root.removeEventListener('focusin', load);
+      root.removeEventListener('cform-config', load);
+      import('../scripts/contact-form.ts').then((m) => m.initContactForms());
+    };
+    root.addEventListener('focusin', load);
+    root.addEventListener('cform-config', load);
+    try {
+      if (sessionStorage.getItem('aura-config-handoff')) load();
+    } catch {
+      /* brak sessionStorage */
+    }
+  }
 </script>
 
 <style>
@@ -84,6 +108,24 @@ const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
     padding-top: var(--s-3);
     border-top: 1px solid var(--rule);
     scroll-margin-top: var(--s-10);
+  }
+  .cform__result {
+    display: none;
+    margin: 0 0 var(--s-3);
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--ink);
+    border-left: 3px solid var(--blue);
+    background: #fff;
+    scroll-margin-top: var(--s-10);
+  }
+  .cform__result--err {
+    border-left-color: var(--signal);
+  }
+  .cform__result:target {
+    display: block;
+  }
+  .cform:has(#formularz-wyslano:target) .cform__form {
+    display: none;
   }
   .cform__trap {
     position: absolute;

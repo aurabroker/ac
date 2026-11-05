@@ -41,17 +41,17 @@ const pillars = routes
             </div>
             <p class="post__meta mono">
               <span class="post__cat">{categoryOf(r)}</span>
-              <span aria-hidden="true"> · </span>
               {r.scheduled ? (
                 <span class="post__plan">
                   Zaplanowano: <time datetime={isoDate(r.entry.data.published)}>{fmtDate(r.entry.data.published)}</time>
                 </span>
               ) : (
-                <time datetime={isoDate(r.entry.data.published)}>{fmtDate(r.entry.data.published)}</time>
+                <span>
+                  <time datetime={isoDate(r.entry.data.published)}>{fmtDate(r.entry.data.published)}</time>
+                </span>
               )}
-              <span aria-hidden="true"> · </span>
               <span>{minutes(r.entry.body)} min czytania</span>
-              {r.draft && <span class="post__draft"> · SZKIC</span>}
+              {r.draft && <span class="post__draft">SZKIC</span>}
             </p>
             <h2 class="post__title">
               <a href={r.path}>{polishText(r.entry.data.title)}</a>
@@ -117,9 +117,25 @@ const pillars = routes
   .post:focus-within .post__fig {
     border-color: var(--ink);
   }
+  /* pozycje nie łamią się w środku; kropka przed każdą pozycją, a ta na początku wiersza jest przycięta */
   .post__meta {
-    margin: 0;
+    --sep: 1.4em;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 0 calc(-1 * var(--sep));
+    clip-path: inset(0 0 0 var(--sep));
     font-size: var(--fs-mono);
+    color: var(--ink-3);
+  }
+  .post__meta > span {
+    white-space: nowrap;
+  }
+  .post__meta > span::before {
+    content: '·';
+    content: '·' / '';
+    display: inline-block;
+    width: var(--sep);
+    text-align: center;
     color: var(--ink-3);
   }
   .post__cat {
@@ -132,7 +148,6 @@ const pillars = routes
   }
   .post__plan {
     color: var(--ink);
-    white-space: nowrap;
   }
   .post__title {
     margin: 0;

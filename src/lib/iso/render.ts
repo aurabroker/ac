@@ -18,6 +18,8 @@ export interface IsoSpec {
   chip?: string;
   fault?: string;
   calm?: boolean;
+  /** Wariant sylwetki motywu (np. filary: różne obudowy QFP). */
+  variant?: number;
   /** Nazwa dostępna rysunku i opis (po polsku). */
   title: string;
   desc: string;
@@ -135,6 +137,7 @@ export function sceneFor(spec: IsoSpec, kind: FrameKind): Scene {
       chip: spec.chip,
       fault: spec.fault,
       calm: spec.calm,
+      variant: spec.variant,
       maxLabels: f.maxLabels,
       maxInputs: f.maxInputs,
     },

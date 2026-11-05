@@ -121,6 +121,8 @@ export interface WebPageInput {
   description: string;
   published?: Date;
   updated?: Date;
+  /** dateModified, gdy różni się od `updated` (listy artykułów: src/lib/routes.ts → lastModified). */
+  modified?: Date;
   hasBreadcrumb?: boolean;
   ogImage?: string;
   authorId?: string;
@@ -140,7 +142,7 @@ export function webPageNode(i: WebPageInput): JsonLdNode {
     isPartOf: { '@id': WEBSITE_ID },
     publisher: { '@id': ORG_ID },
     datePublished: iso(i.published),
-    dateModified: iso(i.updated),
+    dateModified: iso(i.modified ?? i.updated),
     lastReviewed: iso(i.updated),
     reviewedBy: i.reviewedById ? { '@id': i.reviewedById } : undefined,
     author: i.authorId ? { '@id': i.authorId } : undefined,

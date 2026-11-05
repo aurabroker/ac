@@ -82,6 +82,8 @@ export interface MotifInput {
   /** Podpis czerwonego akcentu (np. „WYŁĄCZENIA”). */
   fault?: string;
   calm?: boolean;
+  /** Wariant sylwetki (qfp: 0–5); bez niego — z ziarna. */
+  variant?: number;
   /** Ile etykiet zmieści kadr (bez wejść pcb). */
   maxLabels: number;
   maxInputs: number;
@@ -224,15 +226,24 @@ export function qfp(m: MotifInput, r: Rng): Scene {
   const hi = !m.calm;
   const B = 210; // płytka
   const T = 6;
-  const P0 = 55;
-  const P1 = 155; // obudowa
   const n = r.int(6, 8);
-  const pitch = (P1 - P0) / (n + 1);
-  const pos = Array.from({ length: n }, (_, i) => P0 + pitch * (i + 1));
+  // sylwetka (wariant albo ziarno): obudowa kwadratowa, szeroka albo głęboka; w wariantach 3–5 radiator nad obudową (grupa 3)
+  const v = m.variant ?? r.int(0, 5);
+  const [X0, X1, Y0, Y1] = (
+    [
+      [55, 155, 55, 155],
+      [45, 165, 65, 145],
+      [65, 145, 45, 165],
+    ] as const
+  )[v % 3];
+  const lid = v >= 3;
+  const along = (a: number, c: number) => Array.from({ length: n }, (_, i) => a + ((c - a) / (n + 1)) * (i + 1));
+  const posY = along(Y0, Y1); // wyprowadzenia na ścianach x = X0 i x = X1
+  const posX = along(X0, X1); // wyprowadzenia na ścianach y = Y0 i y = Y1
   const zb = T + 2 * G0; // spód obudowy (grupa 2) = poziom stopek wyprowadzeń
   const zm = zb + 6;
 
-  // podpisane wyprowadzenia na prawej ścianie (x = P1): od prawego narożnika, co drugie
+  // podpisane wyprowadzenia na prawej ścianie (x = X1): od prawego narożnika, co drugie
   const nLab = Math.min(m.labels.length, m.maxLabels - (m.fault ? 1 : 0));
   const want = nLab + (m.fault ? 1 : 0);
   const stride = want * 2 - 1 <= n ? 2 : 1;
@@ -242,52 +253,65 @@ export function qfp(m: MotifInput, r: Rng): Scene {
 
   // płytka, pola lutownicze, ścieżki
   b.slab(0, 0, 0, B, B, 0, T);
-  b.add(0, 'fine-d', rectZ(P0, P0, P1, P1, T));
-  pos.forEach((p, i) => {
+  b.add(0, 'fine-d', rectZ(X0, Y0, X1, Y1, T));
+  for (let i = 0; i < n; i++) {
+    const p = posY[i];
+    const q = posX[i];
     const tone = hi ? tagged.get(i) : undefined;
-    b.add(0, tone === 'hi' ? 'pad-hi' : tone === 'sig' ? 'pad-sig' : 'pad', rectZ(P1 + 9, p - 1.8, P1 + 16, p + 1.8, T));
+    b.add(0, tone === 'hi' ? 'pad-hi' : tone === 'sig' ? 'pad-sig' : 'pad', rectZ(X1 + 9, p - 1.8, X1 + 16, p + 1.8, T));
     if (tone === 'hi' || r.chance(0.55)) {
       const jog = tone ? 0 : r.pick([0, 0, 6, -6]);
-      const x2 = P1 + 26;
-      const pts: [number, number][] = jog ? [[P1 + 16, p], [x2, p], [x2 + 6, p + jog], [B, p + jog]] : [[P1 + 16, p], [B, p]];
+      const x2 = X1 + 26;
+      const pts: [number, number][] = jog ? [[X1 + 16, p], [x2, p], [x2 + 6, p + jog], [B, p + jog]] : [[X1 + 16, p], [B, p]];
       b.add(0, tone === 'hi' ? 'trace-hi' : 'trace', pathZ(pts, T));
       if (!tone && r.chance(0.35)) b.add(0, 'via', ell(x2 + 14, p + jog, T, 2.4));
     }
-    b.add(0, 'pad', rectZ(p - 1.8, P1 + 9, p + 1.8, P1 + 16, T));
-    if (r.chance(0.45)) b.add(0, 'trace', pathZ([[p, P1 + 16], [p, B]], T));
-    b.add(0, 'pad', rectZ(P0 - 16, p - 1.8, P0 - 9, p + 1.8, T));
-    b.add(0, 'pad', rectZ(p - 1.8, P0 - 16, p + 1.8, P0 - 9, T));
-  });
-  // narożniki obudowy i rzutujące (wyróżnione wyprowadzenie → jego pole)
+    b.add(0, 'pad', rectZ(q - 1.8, Y1 + 9, q + 1.8, Y1 + 16, T));
+    if (r.chance(0.45)) b.add(0, 'trace', pathZ([[q, Y1 + 16], [q, B]], T));
+    b.add(0, 'pad', rectZ(X0 - 16, p - 1.8, X0 - 9, p + 1.8, T));
+    b.add(0, 'pad', rectZ(q - 1.8, Y0 - 16, q + 1.8, Y0 - 9, T));
+  }
+  // narożniki obudowy (i radiatora) oraz rzutujące (wyróżnione wyprowadzenie → jego pole)
   for (const [x, y] of [
-    [P0, P0],
-    [P1, P0],
-    [P1, P1],
-    [P0, P1],
-  ] as const)
+    [X0, Y0],
+    [X1, Y0],
+    [X1, Y1],
+    [X0, Y1],
+  ] as const) {
     b.vline(x, y, T, 2);
-  if (hi) for (const [i, tone] of tagged) if (tone === 'hi') b.vline(P1 + 12.5, pos[i], T, 2, 'proj');
+    if (lid) b.vline(x + Math.sign(X0 + X1 - 2 * x) * 12, y + Math.sign(Y0 + Y1 - 2 * y) * 12, T, 3);
+  }
+  if (hi) for (const [i, tone] of tagged) if (tone === 'hi') b.vline(X1 + 12.5, posY[i], T, 2, 'proj');
 
   // wyprowadzenia z tyłu (malowane przed korpusem)
-  for (const p of pos) {
-    b.add(2, 'pin', poly([[P0, p, zm], [P0 - 4, p, zm], [P0 - 7, p, zb], [P0 - 12, p, zb]], false));
-    b.add(2, 'pin', poly([[p, P0, zm], [p, P0 - 4, zm], [p, P0 - 7, zb], [p, P0 - 12, zb]], false));
+  for (let i = 0; i < n; i++) {
+    b.add(2, 'pin', poly([[X0, posY[i], zm], [X0 - 4, posY[i], zm], [X0 - 7, posY[i], zb], [X0 - 12, posY[i], zb]], false));
+    b.add(2, 'pin', poly([[posX[i], Y0, zm], [posX[i], Y0 - 4, zm], [posX[i], Y0 - 7, zb], [posX[i], Y0 - 12, zb]], false));
   }
-  b.slab(2, P0, P0, P1 - P0, P1 - P0, zb, 12);
-  b.add(2, 'fine', ell(P0 + 9, P0 + 9, zb + 12, 3.2));
-  b.add(2, 'fine-d', rectZ(P0 + 20, P0 + 20, P1 - 20, P1 - 20, zb + 12));
-  if (m.chip) b.marks.push({ text: m.chip, at: [(P0 + P1) / 2, (P0 + P1) / 2, zb + 12], size: 8.5, max: 84, g: 2 });
-  for (const p of pos) b.add(2, 'pin', poly([[p, P1, zm], [p, P1 + 4, zm], [p, P1 + 7, zb], [p, P1 + 12, zb]], false));
-  pos.forEach((p, i) => {
+  b.slab(2, X0, Y0, X1 - X0, Y1 - Y0, zb, 12);
+  b.add(2, 'fine', ell(X0 + 9, Y0 + 9, zb + 12, 3.2));
+  b.add(2, 'fine-d', rectZ(X0 + 20, Y0 + 20, X1 - 20, Y1 - 20, zb + 12));
+  const mark = (z: number, g: number, inset: number) =>
+    m.chip && b.marks.push({ text: m.chip, at: [(X0 + X1) / 2, (Y0 + Y1) / 2, z], size: 8.5, max: Math.min(84, X1 - X0 - 2 * inset - 4), g });
+  if (!lid) mark(zb + 12, 2, 8);
+  for (const q of posX) b.add(2, 'pin', poly([[q, Y1, zm], [q, Y1 + 4, zm], [q, Y1 + 7, zb], [q, Y1 + 12, zb]], false));
+  posY.forEach((p, i) => {
     const tone = hi ? tagged.get(i) : undefined;
-    b.add(2, tone === 'hi' ? 'pin-hi' : tone === 'sig' ? 'pin-sig' : 'pin', poly([[P1, p, zm], [P1 + 4, p, zm], [P1 + 7, p, zb], [P1 + 12, p, zb]], false));
+    b.add(2, tone === 'hi' ? 'pin-hi' : tone === 'sig' ? 'pin-sig' : 'pin', poly([[X1, p, zm], [X1 + 4, p, zm], [X1 + 7, p, zb], [X1 + 12, p, zb]], false));
   });
+  // radiator: płaska płytka nad obudową, z liniami użebrowania (albo napisem)
+  if (lid) {
+    const zl = T + 3 * G0;
+    b.slab(3, X0 + 12, Y0 + 12, X1 - X0 - 24, Y1 - Y0 - 24, zl, 4);
+    if (m.chip) mark(zl + 4, 3, 14);
+    else for (let x = X0 + 22; x < X1 - 16; x += 10) b.add(3, 'fine', pathZ([[x, Y0 + 16], [x, Y1 - 16]], zl + 4));
+  }
 
   const texts = m.labels.slice(0, nLab);
   let k = 0;
   for (const [i, tone] of [...tagged].sort((a, c) => a[0] - c[0])) {
     const text = tone === 'sig' ? m.fault : texts[k++];
-    b.label(text, [P1 + 12, pos[i], zb], 'r', 2, hi ? tone : 'ink');
+    b.label(text, [X1 + 12, posY[i], zb], 'r', 2, hi ? tone : 'ink');
   }
   return b.done();
 }

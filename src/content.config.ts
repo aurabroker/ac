@@ -132,6 +132,11 @@ const base = z.object({
    * Przegląd i zatwierdzenie przez autora każdej publikowanej strony blokuje start (docs/TODO-wlasciciel.md §3).
    */
   aiAssistance: z.boolean().default(true),
+  /**
+   * Dzień przeglądu strony przez autora (sprawdzenie ze źródłami). Na stronach rozwiązań nota „Opracowanie”
+   * mówi „przed publikacją sprawdzone ze źródłami” tylko wtedy, gdy pole jest ustawione (src/lib/compliance.ts).
+   */
+  reviewed: z.coerce.date().optional(),
 });
 
 const pages = defineCollection({

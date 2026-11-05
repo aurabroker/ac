@@ -51,10 +51,13 @@ export function creationNote(opts: { aiAssistance: boolean; hasSources: boolean 
 export const NOTE_LABEL_ARTICLE = 'Jak powstał ten tekst';
 export const NOTE_LABEL_EDITORIAL = 'Opracowanie';
 
-/** Treść po etykiecie „Opracowanie:”. */
-export function editorialNote(opts: { aiAssistance: boolean; hasSources: boolean }): string {
+/**
+ * Treść po etykiecie „Opracowanie:”. Zdanie o sprawdzeniu pojawia się dopiero po przeglądzie autora
+ * (frontmatter `reviewed: RRRR-MM-DD`) — wcześniej nota mówi tylko, jak tekst powstał.
+ */
+export function editorialNote(opts: { aiAssistance: boolean; hasSources: boolean; reviewed?: Date }): string {
   if (!opts.aiAssistance) return 'Aura Consulting. Opis zakresu ma charakter ogólny i zależy od warunków konkretnej polisy.';
-  return opts.hasSources
-    ? 'Aura Consulting, z pomocą narzędzi AI, na podstawie źródeł wymienionych wyżej; przed publikacją sprawdzone ze źródłami.'
-    : 'Aura Consulting, z pomocą narzędzi AI; przed publikacją sprawdzone merytorycznie.';
+  const base = opts.hasSources ? 'Aura Consulting, z pomocą narzędzi AI, na podstawie źródeł wymienionych wyżej' : 'Aura Consulting, z pomocą narzędzi AI';
+  if (!opts.reviewed) return `${base}.`;
+  return opts.hasSources ? `${base}; przed publikacją sprawdzone ze źródłami.` : `${base}; przed publikacją sprawdzone merytorycznie.`;
 }

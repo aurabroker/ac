@@ -5,6 +5,8 @@
  * treści (TOC variant="mobile") z przyciskiem „Spis treści” przy dolnej krawędzi ekranu.
  * Kolumna spisu to zwykły <div> — punktem orientacyjnym jest sam <nav aria-label="Spis treści">.
  * Slot „aside” (rysunek): ≥ 1280 px bez spisu treści — w kolumnach 9–12 obok treści, niżej — nad treścią.
+ * `wideList` (blog): ≥ 1280 px element `.doc__wide` w treści (lista artykułów) zajmuje całą szerokość
+ * pod wstępem i rysunkiem, zamiast zostawiać pustą kolumnę rysunku obok długiej listy.
  */
 import TOC from './TOC.astro';
 
@@ -12,11 +14,12 @@ interface Props {
   headings?: { depth: number; slug: string; text: string }[];
   tocExtra?: { slug: string; text: string }[];
   toc?: boolean;
+  wideList?: boolean;
 }
-const { headings = [], tocExtra = [], toc = true } = Astro.props;
+const { headings = [], tocExtra = [], toc = true, wideList = false } = Astro.props;
 ---
 
-<div class:list={['doc', !toc && 'doc--no-toc']}>
+<div class:list={['doc', !toc && 'doc--no-toc', wideList && 'doc--wide-list']}>
   {
     toc && (
       <div class="doc__toc" data-md-skip>
@@ -84,6 +87,17 @@ const { headings = [], tocExtra = [], toc = true } = Astro.props;
       align-self: start;
       max-width: none;
       margin: var(--s-1) 0 0;
+    }
+    /* dzieci treści stają się elementami siatki: wstęp obok rysunku, lista na całą szerokość, reszta w kolumnach 1–8 */
+    .doc--wide-list .doc__main {
+      display: contents;
+    }
+    .doc--wide-list .doc__main > :global(*) {
+      grid-column: 1 / span 8;
+      min-width: 0;
+    }
+    .doc--wide-list .doc__main > :global(.doc__wide) {
+      grid-column: 1 / -1;
     }
   }
 </style>

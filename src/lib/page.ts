@@ -4,7 +4,7 @@
  */
 import { SITE, absoluteUrl, mdPathFor, ogKeyFor } from './site.ts';
 import { getPerson, displayName, type Person } from './people.ts';
-import { breadcrumbsFor, shortTitle, type SiteRoute, type PageEntry, type PillarEntry } from './routes.ts';
+import { breadcrumbsFor, lastModified, shortTitle, type SiteRoute, type PageEntry, type PillarEntry } from './routes.ts';
 import {
   organizationNode,
   websiteNode,
@@ -136,6 +136,7 @@ export async function pageContext(route: SiteRoute, extraNodes: (JsonLdNode | nu
       description: d.description,
       published: d.published,
       updated: d.updated,
+      modified: await lastModified(route),
       hasBreadcrumb: hasCrumbs,
       ogImage,
       authorId,

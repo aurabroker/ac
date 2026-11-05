@@ -5,9 +5,28 @@
  */
 import { evaluate, STATUS_LABEL, type Answers, type QId } from '../lib/configurator.ts';
 import { copyWithFeedback } from './copy.ts';
-import { handOffConfig } from './contact-form.ts';
 
 const KEY = 'aura-cfg-v1';
+const HANDOFF_KEY = 'aura-config-handoff'; // czyta src/scripts/contact-form.ts
+
+/** Podsumowanie do formularza kontaktowego: na tej stronie (pole + zdarzenie `cform-config`) albo na /kontakt/. */
+function sendToForm(summary: string) {
+  const root = document.querySelector<HTMLElement>('[data-cform]');
+  const field = root?.querySelector<HTMLInputElement>('[data-cform-config]');
+  if (!root || !field) {
+    try {
+      sessionStorage.setItem(HANDOFF_KEY, summary);
+    } catch {
+      /* tryb prywatny — formularz bez konfiguracji */
+    }
+    window.location.href = '/kontakt/#formularz';
+    return;
+  }
+  field.value = summary;
+  root.dispatchEvent(new Event('cform-config'));
+  root.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  root.querySelector<HTMLInputElement>('[name="name"]')?.focus({ preventScroll: true });
+}
 
 const plural = (n: number, one: string, few: string, many: string) => {
   const d = n % 10;
@@ -66,13 +85,8 @@ function init(root: HTMLElement) {
   write({ ...preset, ...load() });
 
   const summary = () => {
-    const lines = [
-      'Dzień dobry,',
-      '',
-      'proszę o analizę ryzyka. Poniżej konfiguracja z konfiguratora na auraconsulting.pl (wynik orientacyjny).',
-      '',
-      'PROFIL FIRMY',
-    ];
+    // trafia do formularza (pole ukryte) albo do schowka — bez formułek listu: dane kontaktowe są w formularzu
+    const lines = ['Konfiguracja programu z auraconsulting.pl (wynik orientacyjny)', '', 'PROFIL FIRMY'];
     for (const fs of fieldsets) {
       const c = fs.querySelector<HTMLInputElement>('input:checked');
       lines.push(`- ${fs.dataset.qLabel}: ${c ? clean(c.nextElementSibling?.textContent) : '—'}`);
@@ -87,7 +101,6 @@ function init(root: HTMLElement) {
       lines.push('', 'DO SPRAWDZENIA');
       for (const n of notes) lines.push(`- ${n.dataset.title}`);
     }
-    lines.push('', 'Firma (nazwa, NIP):', 'Przychód roczny (rząd wielkości):', 'Telefon kontaktowy:', '', 'Pozdrawiam');
     return lines.join('\n');
   };
 
@@ -149,7 +162,7 @@ function init(root: HTMLElement) {
   if (formBtn) {
     formBtn.hidden = false;
     formBtn.addEventListener('click', () => {
-      if (!handOffConfig(summary())) window.location.href = '/kontakt/#formularz';
+      sendToForm(summary());
     });
   }
   render();

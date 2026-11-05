@@ -2,16 +2,18 @@ name: daily-publish
 
 # Codzienna publikacja z harmonogramu. Artykuł lub arkusz regulacji z datą `published` w przyszłości
 # nie wchodzi do buildu (src/lib/schedule.ts). Ten job sprawdza rano, czy na dziś (Europe/Warsaw) przypada
-# zatwierdzony wpis (`draft: false`), i wtedy wypycha pusty commit „Publikacja: <tytuły>” na `main` —
-# integracja GitHub w Cloudflare Pages buduje produkcję od nowa. Bez sekretów: wystarcza GITHUB_TOKEN.
+# zatwierdzony wpis (`draft: false`) — albo zaległy, którego dzień minął bez nowego commita na `main` — i wtedy
+# wypycha pusty commit „Publikacja: <tytuły>” na `main`; integracja GitHub w Cloudflare Pages buduje produkcję
+# od nowa. Bez sekretów: wystarcza GITHUB_TOKEN. Drugie uruchomienie w ciągu dnia jest zapasem na pominięty
+# lub opóźniony harmonogram GitHuba; gdy publikacja już poszła, nic nie robi.
 #
 # GitHub uruchamia harmonogram (`schedule`) tylko z gałęzi domyślnej (`main`), więc job zacznie działać
 # po scaleniu tej gałęzi z `main` w dniu startu; do tego czasu wdrożenia produkcyjne w Pages są wyłączone.
 
 on:
   schedule:
-    # 05:05 UTC = 06:05 czasu polskiego zimą, 07:05 latem
-    - cron: '5 5 * * *'
+    # 05:05 i 10:05 UTC = 06:05 i 11:05 czasu polskiego zimą, 07:05 i 12:05 latem
+    - cron: '5 5,10 * * *'
   workflow_dispatch:
 
 permissions:
@@ -47,4 +49,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit --allow-empty -m "$MESSAGE"
-          git push origin HEAD:main
+          # main mógł się zmienić od checkoutu — wtedy rebase i druga próba
+          git push origin HEAD:main || { git pull --rebase origin main && git push origin HEAD:main; }

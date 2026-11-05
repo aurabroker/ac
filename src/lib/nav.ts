@@ -5,7 +5,7 @@ export interface NavLink {
 }
 
 export const MAIN_NAV: NavLink[] = [
-  { label: 'OC i Cyber dla IT', href: '/oc-cyber-dla-it/' },
+  { label: 'OC i cyber dla IT', href: '/oc-cyber-dla-it/' },
   { label: 'Ubezpieczenie AI', href: '/ubezpieczenie-ai/' },
   { label: 'Cyber', href: '/ubezpieczenie-cyber/' },
   { label: 'OC zawodowe', href: '/oc-zawodowe/' },

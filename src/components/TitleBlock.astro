@@ -178,7 +178,8 @@ const date = compactPlan && published ? published : updated;
     .title-block--compact .tbc--rev {
       display: none;
     }
-    .title-block--compact .tbc:last-child {
+    .title-block--compact .tbc:last-child,
+    .title-block--compact .tbc:has(+ .tbc--md) {
       border-right: 0;
     }
     /* „Pobierz .md” zawsze w osobnym wierszu, wyrównane do lewej krawędzi tabliczki */

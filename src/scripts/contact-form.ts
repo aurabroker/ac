@@ -1,5 +1,7 @@
 // Formularz kontaktowy: wysyłka fetch → /api/kontakt, błędy przy polach, stan „wysłano”.
-// Bez JS formularz działa zwykłym POST-em; ta warstwa tylko go ulepsza.
+// Bez JS formularz działa zwykłym POST-em; ta warstwa tylko go ulepsza. Ładuje ją na żądanie ContactForm.astro.
+// Konfigurator wpisuje podsumowanie do pola [data-cform-config] i wysyła zdarzenie `cform-config`;
+// z innej strony przekazuje je przez sessionStorage (klucz niżej).
 
 const CONFIG_KEY = 'aura-config-handoff';
 
@@ -47,30 +49,13 @@ function showDone(root: HTMLElement, form: HTMLFormElement) {
   }
 }
 
-/** Wstawia podsumowanie z konfiguratora do najbliższego formularza na stronie. Zwraca element formularza albo null. */
-export function handOffConfig(summary: string): HTMLElement | null {
-  const root = document.querySelector<HTMLElement>('[data-cform]');
-  if (!root) {
-    try {
-      sessionStorage.setItem(CONFIG_KEY, summary);
-    } catch {
-      /* brak sessionStorage */
-    }
-    return null;
-  }
-  applyConfig(root, summary);
-  root.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-  root.querySelector<HTMLInputElement>('[name="name"]')?.focus({ preventScroll: true });
-  return root;
-}
-
 function applyConfig(root: HTMLElement, summary: string) {
   const field = root.querySelector<HTMLInputElement>('[data-cform-config]');
   const note = root.querySelector<HTMLElement>('[data-config-note]');
   const message = root.querySelector<HTMLTextAreaElement>('[name="message"]');
   if (field) field.value = summary;
   if (note) note.hidden = !summary;
-  if (message && !message.value.trim()) message.value = 'Proszę o analizę programu według konfiguracji z konfiguratora.';
+  if (summary && message && !message.value.trim()) message.value = 'Proszę o analizę programu według konfiguracji z konfiguratora.';
 }
 
 export function initContactForms() {
@@ -79,21 +64,20 @@ export function initContactForms() {
     root.dataset.ready = '1';
     const form = root.querySelector<HTMLFormElement>('form');
     if (!form) continue;
+    form.noValidate = true; // walidacja przy polach zamiast dymków przeglądarki
     const t = form.querySelector<HTMLInputElement>('[data-cform-t]');
-    if (t) t.value = String(Date.now());
+    if (t && !t.value) t.value = String(Date.now());
 
-    // powrót po wysyłce bez JS
-    const result = new URLSearchParams(location.search).get('formularz');
-    if (result === 'wyslano') showDone(root, form);
-    if (result === 'blad') setErrors(form, { form: 'Nie udało się wysłać wiadomości. Spróbuj ponownie albo zadzwoń: +48 500 502 702.' });
-
-    // konfiguracja przekazana z innej strony
+    // konfiguracja z konfiguratora na tej stronie albo przekazana z innej strony
+    const config = root.querySelector<HTMLInputElement>('[data-cform-config]');
+    let pending = config?.value ?? '';
     try {
-      const pending = sessionStorage.getItem(CONFIG_KEY);
-      if (pending) applyConfig(root, pending);
+      pending ||= sessionStorage.getItem(CONFIG_KEY) ?? '';
     } catch {
       /* brak sessionStorage */
     }
+    if (pending) applyConfig(root, pending);
+    root.addEventListener('cform-config', () => applyConfig(root, config?.value ?? ''));
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();

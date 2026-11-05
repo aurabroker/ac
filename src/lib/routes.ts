@@ -153,3 +153,19 @@ export async function articlesForHub(hubPath: string): Promise<SiteRoute[]> {
     .filter((r) => r.kind === 'article' && (r.entry as ArticleEntry).data.hub === hubPath)
     .sort((a, b) => b.entry.data.published.getTime() - a.entry.data.published.getTime());
 }
+
+/**
+ * Data ostatniej zmiany strony dla sitemap (`lastmod`) i JSON-LD (`WebPage.dateModified`): `updated`,
+ * a na stronach z listą artykułów (blog `/wiedza/`, huby z „Arkuszami szczegółowymi”) — nowsza z `updated`
+ * i dnia publikacji najnowszego opublikowanego wpisu na tej liście (harmonogram zmienia stronę bez edycji pliku).
+ */
+export async function lastModified(route: SiteRoute): Promise<Date> {
+  const own = route.entry.data.updated;
+  const listed =
+    (route.entry.data as { template?: string }).template === 'wiedza-index'
+      ? (await getRoutes()).filter((r) => r.kind === 'article' || r.kind === 'regulation')
+      : await articlesForHub(route.path);
+  return listed
+    .filter((r) => isLive(r.entry))
+    .reduce((m, r) => (r.entry.data.published > m ? r.entry.data.published : m), own);
+}

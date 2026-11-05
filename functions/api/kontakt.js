@@ -2,6 +2,9 @@
 // Sekrety i ustawienia (Cloudflare Pages → aura-web → Settings → Variables): RESEND_API_KEY (secret),
 // CONTACT_TO, CONTACT_FROM, CONTACT_ENV ("preview" dodaje [PODGLĄD] do tematu).
 // Temat wiadomości zawiera tytuł podstrony, z której wysłano formularz: „[<tytuł strony>] Zapytanie od <imię>”.
+// Reklamacje i szkody są oznaczone na początku tematu („[REKLAMACJA] ”, „[SZKODA] ”) — 30-dniowy termin
+// odpowiedzi na reklamację (ustawa o rozpatrywaniu reklamacji, art. 6) widać od razu w skrzynce.
+// Bez JS: odpowiedź 303 na stronę formularza z kotwicą #formularz-wyslano albo #formularz-blad (komunikat w HTML, CSS :target).
 // Ochrona przed spamem: pole-pułapka, minimalny czas wypełnienia, sprawdzenie Origin, limit 1 wysyłki / 20 s / IP.
 
 const ALLOWED_HOSTS = [/^(www\.)?auraconsulting\.pl$/, /(^|\.)aura-web-2s1\.pages\.dev$/, /^localhost(:\d+)?$/, /^127\.0\.0\.1(:\d+)?$/];
@@ -36,11 +39,10 @@ function reply(wantsJson, status, payload, backTo) {
       headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' },
     });
   }
-  // bez JS: wracamy na stronę z wynikiem w adresie
+  // bez JS: wracamy na stronę formularza; kotwica odsłania komunikat (CSS :target)
   const url = new URL(backTo || '/kontakt/', 'https://www.auraconsulting.pl');
-  url.searchParams.set('formularz', payload.ok ? 'wyslano' : 'blad');
-  url.hash = 'formularz';
-  return new Response(null, { status: 303, headers: { location: url.pathname + url.search + url.hash, 'cache-control': 'no-store' } });
+  url.hash = payload.ok ? 'formularz-wyslano' : 'formularz-blad';
+  return new Response(null, { status: 303, headers: { location: url.pathname + url.hash, 'cache-control': 'no-store' } });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -85,7 +87,7 @@ export async function onRequestPost({ request, env }) {
   if (name.length < 2) errors.name = 'Podaj imię i nazwisko.';
   if (!EMAIL_RE.test(email)) errors.email = 'Podaj poprawny adres e-mail.';
   if (message.length < 10) errors.message = 'Opisz krótko, w czym możemy pomóc (min. 10 znaków).';
-  if (!consent) errors.consent = 'Potrzebujemy zgody na kontakt w sprawie zapytania.';
+  if (!consent) errors.consent = 'Zaznacz prośbę o kontakt.';
   if (Object.keys(errors).length) return reply(wantsJson, 422, { ok: false, errors }, pagePath);
 
   // prosty limit: 1 wysyłka na 20 s z jednego adresu IP (cache brzegowy Cloudflare)
@@ -101,7 +103,10 @@ export async function onRequestPost({ request, env }) {
   }
 
   const prefix = env.CONTACT_ENV === 'preview' ? '[PODGLĄD] ' : '';
-  const subject = `${prefix}[${pageTitle}] Zapytanie od ${name}`.slice(0, 200);
+  const topic = `${pagePath} ${message}`;
+  const tags = `${/reklamac/i.test(topic) ? '[REKLAMACJA] ' : ''}${/(^|[^\p{L}])szkod/iu.test(message) ? '[SZKODA] ' : ''}`;
+  const subject = `${prefix}${tags}[${pageTitle}] Zapytanie od ${name}`.slice(0, 200);
+  const sentAt = new Date().toISOString();
   const rows = [
     ['Strona', `${pageTitle}${pageUrl ? ` — ${pageUrl}` : ''}`],
     ['Imię i nazwisko', name],
@@ -116,7 +121,7 @@ export async function onRequestPost({ request, env }) {
     message,
     ...(config ? ['', 'Konfiguracja programu (z konfiguratora na stronie):', config] : []),
     '',
-    `Zgoda na kontakt w sprawie zapytania: tak · ${new Date().toISOString()}`,
+    `Prośba o kontakt w sprawie zapytania: tak · ${sentAt}`,
   ].join('\n');
   const html = `<div style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#1a1a1a">
 <table cellpadding="4" style="border-collapse:collapse">${rows
@@ -124,7 +129,7 @@ export async function onRequestPost({ request, env }) {
     .join('')}</table>
 <p style="margin-top:16px"><strong>Wiadomość</strong></p><p style="white-space:pre-wrap">${esc(message)}</p>${
     config ? `<p style="margin-top:16px"><strong>Konfiguracja programu</strong></p><p style="white-space:pre-wrap">${esc(config)}</p>` : ''
-  }<p style="color:#888;font-size:12px;margin-top:16px">Zgoda na kontakt w sprawie zapytania: tak · ${new Date().toISOString()}</p></div>`;
+  }<p style="color:#888;font-size:12px;margin-top:16px">Prośba o kontakt w sprawie zapytania: tak · ${sentAt}</p></div>`;
 
   let res;
   try {

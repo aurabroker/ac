@@ -27,7 +27,7 @@ const items = await articlesForHub(hubPath);
             title={r.entry.data.title}
             sheet={r.entry.data.sheet}
             summary={r.entry.data.description}
-            meta={`Rew. ${r.entry.data.revision} · ${fmtDate(r.entry.data.updated)}`}
+            meta={r.scheduled ? undefined : fmtDate(r.entry.data.published ?? r.entry.data.updated)}
             draft={r.draft}
             scheduled={r.scheduled ? r.entry.data.published : undefined}
           />

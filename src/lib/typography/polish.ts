@@ -1,7 +1,7 @@
 /**
  * Polska typografia: twarde spacje po jednoliterowych spójnikach i przyimkach,
- * między liczbą a jednostką, w grupach tysięcy, między dniem a nazwą miesiąca;
- * cudzysłowy „…”, apostrof ’, wielokropek, półpauza.
+ * między liczbą a jednostką, w grupach tysięcy, między dniem a nazwą miesiąca, przed pauzą i półpauzą
+ * (myślnik nie zaczyna wiersza); cudzysłowy „…”, apostrof ’, wielokropek, półpauza.
  *
  * - `polishText(s)` — dla zwykłych napisów (frontmatter, propsy komponentów).
  * - `rehypePolish()` — plugin rehype dla treści MD/MDX (skonfigurowany w astro.config.ts).
@@ -36,6 +36,7 @@ export function polishText(input: string, opts: { quotes?: boolean } = {}): stri
   s = s.replace(APOSTROPHE_RE, '$1’$2');
   s = s.replace(/\.\.\./g, '…');
   s = s.replace(/ - /g, ' – ');
+  s = s.replace(/ ([–—])(?=\s|$)/g, `${NBSP}$1`);
   // dwa przebiegi, by objąć sekwencje typu „a w”, „i z”
   s = s.replace(ORPHAN_RE, `$1$2${NBSP}`).replace(ORPHAN_RE, `$1$2${NBSP}`);
   s = s.replace(THOUSANDS_RE, `$1${NBSP}`).replace(THOUSANDS_RE, `$1${NBSP}`);

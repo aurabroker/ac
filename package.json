@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Serwis www.auraconsulting.pl — Astro, statyczny build na Cloudflare Workers Static Assets.",
+  "description": "Serwis www.auraconsulting.pl — Astro, statyczny build na Cloudflare Pages (+ Pages Function /api/kontakt).",
   "engines": {
     "node": ">=22.12.0"
   },

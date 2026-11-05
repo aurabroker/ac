@@ -43,7 +43,12 @@ const iso = showsHeaderIso(ctx.route);
       {iso && kind !== 'wiedza-index' && <IsoFigure slot="figure" route={ctx.route} />}
     </SheetHead>
     {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} />}
-    <DocBody headings={headings} toc={toc} tocExtra={kind === 'catalogue-index' ? [{ slug: 'karty-katalogu', text: 'Karty katalogu' }] : []}>
+    <DocBody
+      headings={headings}
+      toc={toc}
+      tocExtra={kind === 'catalogue-index' ? [{ slug: 'karty-katalogu', text: 'Karty katalogu' }] : []}
+      wideList={kind === 'wiedza-index' && !toc}
+    >
       {/* /kontakt/ ma własną, szczegółową sekcję „Co przygotować…” — bez krótkiej listy z komponentu */}
       {
         kind === 'contact' && (
@@ -57,7 +62,15 @@ const iso = showsHeaderIso(ctx.route);
       }
       {iso && kind === 'wiedza-index' && <IsoFigure slot="aside" route={ctx.route} />}
       <div class="prose"><slot /></div>
-      <slot name="listing" />
+      {
+        kind === 'wiedza-index' ? (
+          <div class="doc__wide">
+            <slot name="listing" />
+          </div>
+        ) : (
+          <slot name="listing" />
+        )
+      }
       {
         d.coverage.length > 0 && d.coveragePlacement === 'auto' && (
           <BOM id="tabela-zakresu" caption={d.coverageCaption ?? 'Tabela zakresu'} rows={d.coverage} />
@@ -69,7 +82,7 @@ const iso = showsHeaderIso(ctx.route);
       <Sources
         items={d.sources}
         noteLabel={NOTE_LABEL_EDITORIAL}
-        note={kind === 'hub' ? editorialNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 }) : undefined}
+        note={kind === 'hub' ? editorialNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0, reviewed: d.reviewed }) : undefined}
       />
       {disclosure && <Disclosure show={['d', 'c']} />}
       <SheetFoot ctx={ctx} />

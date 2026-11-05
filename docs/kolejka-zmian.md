@@ -1,6 +1,6 @@
 # Kolejka zmian od właściciela (do wdrożenia razem, na sygnał)
 
-Status: **CZEKA** — właściciel zbiera kolejne zmiany i da znać, kiedy wdrożyć wszystkie naraz.
+Status: **WDROŻONE 5.11.2026** (punkty 1–8, gałąź `claude/aura-consulting-redesign-fX1bn`, podgląd Cloudflare Pages). Kolejne zmiany dopisujemy poniżej jako nowe punkty.
 
 ## 1. Rejestr zmian — poza widokiem użytkownika (zgłoszone 4.11.2026)
 
@@ -9,6 +9,7 @@ Status: **CZEKA** — właściciel zbiera kolejne zmiany i da znać, kiedy wdro�
 - Usunąć blok „Rejestr zmian” (`RevisionLog`) ze wszystkich publicznych stron i z bliźniaków `.md`.
 - Dane `changelog` zostają w plikach treści i w historii git (do panelu admina, jeśli powstanie).
 - Do decyzji przy wdrożeniu: tylko ukryć (rekomendacja na teraz) czy zbudować prosty panel admina.
+- **Wdrożone (5.11):** blok usunięty ze wszystkich stron i bliźniaków `.md` (komponent `RevisionLog` skasowany); `changelog` zostaje w plikach treści i w git. Panelu admina nie budujemy.
 
 ## 2. Kontakt tylko: telefon albo formularz (zgłoszone 4.11.2026)
 
@@ -22,6 +23,7 @@ Status: **CZEKA** — właściciel zbiera kolejne zmiany i da znać, kiedy wdro�
   - `/reklamacje/` — ustawa o rozpatrywaniu reklamacji wymaga wskazania kanału elektronicznego; zostawić e-mail albo wskazać formularz jako kanał elektroniczny (decyzja właściciela/prawnika).
   - `/polityka-prywatnosci/` — kontakt w sprawach danych: `warszawa@auraconsulting.pl` zostaje (decyzja 3.11).
   - Komunikaty błędów formularza (fallback „napisz na …”) — zamienić na telefon.
+- **Wdrożone (5.11):** na wszystkich stronach tylko telefon i formularz (Resend, temat z tytułem strony). `/reklamacje/` — kanał elektroniczny = formularz (do potwierdzenia przez prawnika, `docs/TODO-wlasciciel.md`); temat zgłoszenia z „reklamac…” dostaje prefiks `[REKLAMACJA]`, z „szkod…” — `[SZKODA]`. E-mail zostaje tylko w polityce prywatności (`warszawa@auraconsulting.pl`).
 
 ## 3. Grafika przy każdym odnośniku do arkusza — układy scalone (zgłoszone 4.11.2026)
 
@@ -67,6 +69,7 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - Wydajność i dostępność: skrypt ~1–2 KB, pauza w nieaktywnej karcie i poza ekranem, mniejsza gęstość na telefonie, wyłączona przy `prefers-reduced-motion` i trybie oszczędzania danych; bez wpływu na CSP (osobny plik).
 - **Decyzja (4.11):** na całym serwisie, **z reakcją na kursor** (węzły przy kursorze łączą się mocniej i lekko do niego ciążą; na dotyku bez reakcji).
 - Szkic (nagranie 8 s): /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/net-mock/tlo-siatka-neuronow.mp4
+- **Wdrożone (5.11):** `src/scripts/neural-bg.ts` (≈ 1,5 KB gz) na całym serwisie, reakcja na kursor tylko przy myszy; pauza poza kartą, wyłączone przy `prefers-reduced-motion` i oszczędzaniu danych.
 
 ## 7. Autor tylko przy artykułach (zgłoszone 4.11.2026)
 
@@ -75,6 +78,7 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - **Bez autora** (tabliczka, JSON-LD `author` zamiast osoby → organizacja): filary (`/oc-cyber-dla-it/`, `/ubezpieczenie-ai/` + „AI w firmie”, `/ubezpieczenie-cyber/`, `/oc-zawodowe/`), 12 kart katalogu, `/ubezpieczenia/`, `/rynek-lloyds/`, `/slownik/` oraz strony firmowe i prawne (tam już nie ma).
 - **Z autorem** (Marek Cieśla, link do profilu): artykuły bloga `/wiedza/*` i arkusze regulacji `/regulacje/*` (pokazywane na blogu jak artykuły).
 - Nota „Jak powstał ten tekst” (AI) — zostaje przy artykułach; przy rozwiązaniach jako krótka informacja redakcyjna bez osoby.
+- **Wdrożone (5.11):** autor (tabliczka + JSON-LD `Person`) tylko na `/wiedza/*` i `/regulacje/*`; pozostałe strony — organizacja jako autor.
 
 ## 8. Daty publikacji artykułów: co 2 dni (zgłoszone 4.11.2026)
 

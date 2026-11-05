@@ -4,7 +4,7 @@
  * Kursor (tylko wskaźnik precyzyjny, nie dotyk): węzły w promieniu R łączą się z nim wyraźniej
  * i lekko do niego ciążą — przesunięcie wygasa, gdy kursor odejdzie (bez zbijania się w kłąb).
  * Nie startuje przy prefers-reduced-motion i trybie oszczędzania danych; stoi w ukrytej karcie;
- * bez ruchu kursora ~30 kl./s. Pozycje węzłów przechodzą między stronami (sessionStorage).
+ * bez ruchu kursora ~30 kl./s. Niczego nie zapisuje w przeglądarce: każda strona losuje nową siatkę.
  */
 const c = document.querySelector<HTMLCanvasElement>('[data-nbg]');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
@@ -13,7 +13,6 @@ const ctx = !reduce.matches && !saveData && c?.getContext('2d');
 
 if (c && ctx) {
   type Node = { x: number; y: number; vx: number; vy: number; b: number; p: number; ox: number; oy: number; q: number };
-  const KEY = 'aura-nbg';
   const LINK = 140; // zasięg linii między węzłami (px)
   const R = 160; // zasięg kursora (px)
   const css = getComputedStyle(document.documentElement);
@@ -30,27 +29,19 @@ if (c && ctx) {
   let my = 0;
   let on = 0; // kursor nad oknem
   let pa = 0; // wygaszanie reakcji na kursor (0–1)
-  let nodes: Node[] = [];
+  const nodes: Node[] = [];
 
-  const make = (x = rnd() * W, y = rnd() * H, vx = (rnd() - 0.5) * 12, vy = (rnd() - 0.5) * 12, b = +(rnd() < 0.12), p = rnd() * 6.3): Node => ({
-    x,
-    y,
-    vx,
-    vy,
-    b,
-    p,
+  const make = (): Node => ({
+    x: rnd() * W,
+    y: rnd() * H,
+    vx: (rnd() - 0.5) * 12,
+    vy: (rnd() - 0.5) * 12,
+    b: +(rnd() < 0.12),
+    p: rnd() * 6.3,
     ox: 0,
     oy: 0,
     q: 0,
   });
-
-  try {
-    const saved: unknown = JSON.parse(sessionStorage.getItem(KEY) || '[]');
-    if (Array.isArray(saved))
-      nodes = saved.filter((v): v is number[] => Array.isArray(v) && v.length === 6 && v.every(Number.isFinite)).map((v) => make(...(v as [number, number, number, number, number, number])));
-  } catch {
-    /* brak sessionStorage: nowa siatka */
-  }
 
   const size = () => {
     const w = c.clientWidth;
@@ -147,13 +138,6 @@ if (c && ctx) {
     if (!reduce.matches) return start();
     stop();
     c.classList.remove('is-on');
-  });
-  addEventListener('pagehide', () => {
-    try {
-      sessionStorage.setItem(KEY, JSON.stringify(nodes.map((a) => [a.x, a.y, a.vx, a.vy, a.b, a.p].map((v) => Math.round(v * 10) / 10))));
-    } catch {
-      /* bez zapisu */
-    }
   });
 
   if (matchMedia('(pointer: fine)').matches) {
