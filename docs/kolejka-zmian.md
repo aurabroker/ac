@@ -92,9 +92,9 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 
 ## 9. Drobne poprawki (zgłoszone 5.11.2026)
 
-„Źródła — mniejsza czcionka. W Kontakcie na samym dole kasujesz @ [e-mail]. Z każdego formularza, jak idzie wiadomość, dopisz znacznik [CYBER] albo [AI_AURA].”
+„Źródła — mniejsza czcionka. W Kontakcie na samym dole kasujesz @ [e-mail]. Z każdego formularza, jak idzie wiadomość, dopisz znacznik [CYBER] albo [AI_AURA].” Doprecyzowanie: „Zostaw [AI_AURA] albo [CYBER_AURA] — jeśli pytać będą o cyber.”
 
 - **Wdrożone (5.11):**
   - Źródła: drobny druk — nagłówek jak etykieta arkusza (12 px, mono), lista 13 px, nota 12 px.
   - Koperta (symbol e-maila) usunięta z całego serwisu: stopka „Kontakt”, menu na telefonie, blok kontaktu i ikona strony `/kontakt/` mają ikonę formularza (`form`).
-  - Temat każdej wiadomości z formularza zaczyna się od `[AI_AURA]`; inny znacznik (np. `[CYBER]`) — zmienna `CONTACT_TAG` w Cloudflare Pages, bez zmiany kodu.
+  - Temat każdej wiadomości z formularza zaczyna się od znacznika: `[CYBER_AURA]` — formularz ze strony działu cyber (`/ubezpieczenie-cyber/` i artykuły z tego działu) albo wiadomość o cyberryzyku (słowa: cyber, ransomware, phishing, malware, DDoS, haker, wyciek/naruszenie danych, incydent, zaszyfrowanie, socjotechnika, przejęcie konta, RODO); w pozostałych — `[AI_AURA]`. Podsumowanie z konfiguratora nie decyduje (wymienia cały program).

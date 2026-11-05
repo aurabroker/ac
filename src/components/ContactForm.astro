@@ -1,13 +1,15 @@
 ---
 /**
  * Formularz kontaktowy → POST /api/kontakt (Cloudflare Pages Function → Resend).
- * Temat e-maila: znacznik serwisu i tytuł strony — „[AI_AURA] [<pageTitle>] Zapytanie od <imię>” (functions/api/kontakt.js).
+ * Temat e-maila: znacznik serwisu i tytuł strony — „[AI_AURA] [<pageTitle>] Zapytanie od <imię>”; ze stron działu cyber
+ * (pole `topic`) i przy pytaniach o cyber — „[CYBER_AURA] …” (functions/api/kontakt.js).
  * Działa bez JS: zwykły POST z walidacją przeglądarki, powrót 303 na #formularz-wyslano albo #formularz-blad
  * (komunikat odsłania CSS :target). Z JS — fetch i błędy przy polach; skrypt ładuje się dopiero przy pierwszym
  * fokusie w formularzu albo przekazaniu podsumowania z konfiguratora (zdarzenie `cform-config`, sessionStorage).
  */
 import Icon from './Icon.astro';
 import { SITE } from '../lib/site.ts';
+import { getRoutes } from '../lib/routes.ts';
 
 interface Props {
   /** Tytuł podstrony — trafia do tematu wiadomości. */
@@ -15,6 +17,11 @@ interface Props {
 }
 const { pageTitle } = Astro.props;
 const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
+// dział cyber (strona filaru i artykuły z hub: /ubezpieczenie-cyber/) → znacznik [CYBER_AURA] w temacie wiadomości
+const CYBER_HUB = '/ubezpieczenie-cyber/';
+const route = (await getRoutes()).find((r) => r.path === Astro.url.pathname);
+const hub = (route?.entry.data as { hub?: string } | undefined)?.hub;
+const topic = Astro.url.pathname.startsWith(CYBER_HUB) || hub === CYBER_HUB ? 'cyber' : '';
 ---
 
 <div class="cform" id="formularz" data-cform data-md-skip>
@@ -29,6 +36,7 @@ const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
     <input type="hidden" name="pageUrl" value={pageUrl} />
     <input type="hidden" name="t" value="" data-cform-t />
     <input type="hidden" name="config" value="" data-cform-config />
+    {topic && <input type="hidden" name="topic" value={topic} />}
     <div class="cform__trap" aria-hidden="true">
       <label>Strona www (zostaw puste)<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
     </div>

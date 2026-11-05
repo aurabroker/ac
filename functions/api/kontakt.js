@@ -1,9 +1,11 @@
 // Cloudflare Pages Function: POST /api/kontakt — formularz kontaktowy → e-mail przez Resend.
 // Sekrety i ustawienia (Cloudflare Pages → aura-web → Settings → Variables): RESEND_API_KEY (secret),
-// CONTACT_TO, CONTACT_FROM, CONTACT_ENV ("preview" dodaje [PODGLĄD] do tematu), CONTACT_TAG (znacznik serwisu,
-// domyślnie [AI_AURA]).
+// CONTACT_TO, CONTACT_FROM, CONTACT_ENV ("preview" dodaje [PODGLĄD] do tematu).
 // Temat zaczyna się znacznikiem serwisu, potem tytuł podstrony, z której wysłano formularz:
 // „[AI_AURA] [<tytuł strony>] Zapytanie od <imię>” — wiadomości z formularza łatwo odfiltrować w skrzynce.
+// Zapytania o cyber mają „[CYBER_AURA]” zamiast „[AI_AURA]”: formularz ze strony działu cyber (pole `topic`
+// ustawiane w buildzie, zapasowo ścieżka strony) albo wiadomość ze słowami o cyberryzyku (CYBER_WORDS).
+// Podsumowanie z konfiguratora nie decyduje — wymienia cały zalecany program (OC, cyber, AI).
 // Reklamacje i szkody mają w temacie dodatkowy znacznik („[REKLAMACJA] ”, „[SZKODA] ”) — 30-dniowy termin
 // odpowiedzi na reklamację (ustawa o rozpatrywaniu reklamacji, art. 6) widać od razu w skrzynce.
 // Bez JS: odpowiedź 303 na stronę formularza z kotwicą #formularz-wyslano albo #formularz-blad (komunikat w HTML, CSS :target).
@@ -12,7 +14,11 @@
 const ALLOWED_HOSTS = [/^(www\.)?auraconsulting\.pl$/, /(^|\.)aura-web-2s1\.pages\.dev$/, /^localhost(:\d+)?$/, /^127\.0\.0\.1(:\d+)?$/];
 const EMAIL_RE = /^[^\s@<>()[\],;:"]+@[^\s@<>()[\],;:"]+\.[a-z]{2,}$/i;
 const RATE_SECONDS = 20;
-const SITE_TAG = '[AI_AURA]'; // znacznik każdej wiadomości z formularzy serwisu (nadpisuje go CONTACT_TAG)
+const TAG_SITE = '[AI_AURA]'; // znacznik każdej wiadomości z formularzy serwisu
+const TAG_CYBER = '[CYBER_AURA]'; // zamiast TAG_SITE, gdy zapytanie dotyczy cyber
+const CYBER_PAGE = /^\/ubezpieczenie-cyber\//;
+const CYBER_WORDS =
+  /cyber|ransomware|phishing|malware|ddos|haker|hakow|wyciek\p{L}* danych|naruszeni\p{L}* (ochrony )?danych|incydent|zaszyfrow|socjotechni|przejęci\p{L}* kont|\brodo\b/iu;
 
 const clean = (v, max) => String(v ?? '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').trim().slice(0, max);
 const oneLine = (v, max) => clean(v, max).replace(/[\r\n]+/g, ' ');
@@ -105,8 +111,8 @@ export async function onRequestPost({ request, env }) {
     return reply(wantsJson, 503, { ok: false, errors: { form: 'Formularz jest chwilowo niedostępny. Zadzwoń: +48 500 502 702 (pn–pt, 9:00–17:00).' } }, pagePath);
   }
 
-  const siteTag = oneLine(env.CONTACT_TAG, 40) || SITE_TAG;
-  const prefix = `${siteTag} ${env.CONTACT_ENV === 'preview' ? '[PODGLĄD] ' : ''}`;
+  const cyber = clean(data.topic, 20) === 'cyber' || CYBER_PAGE.test(pagePath) || CYBER_WORDS.test(message);
+  const prefix = `${cyber ? TAG_CYBER : TAG_SITE} ${env.CONTACT_ENV === 'preview' ? '[PODGLĄD] ' : ''}`;
   const topic = `${pagePath} ${message}`;
   const tags = `${/reklamac/i.test(topic) ? '[REKLAMACJA] ' : ''}${/(^|[^\p{L}])szkod/iu.test(message) ? '[SZKODA] ' : ''}`;
   const subject = `${prefix}${tags}[${pageTitle}] Zapytanie od ${name}`.slice(0, 200);
