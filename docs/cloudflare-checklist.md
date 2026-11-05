@@ -7,13 +7,14 @@ Serwis: projekt **Cloudflare Pages `aura-web`** (statyczny build Astro, `public/
 - [x] Projekt Pages `aura-web` (`aura-web-2s1.pages.dev`), źródło GitHub `aurabroker/ac`.
 - [x] Build: `npm run guard && npm run build` → `dist/`, `NODE_VERSION=22`.
 - [x] Podglądy: gałęzie `claude/*`, zmienna `PREVIEW=1` (szkice, `noindex`, `Disallow: /`).
-- [x] Produkcja: gałąź `main`, wdrożenia produkcyjne **wyłączone** do dnia startu.
+- [x] Produkcja: gałąź `main`, wdrożenia produkcyjne **włączone 5.11.2026** (start serwisu).
 
-## 2. Dzień startu
+## 2. Dzień startu (wykonane 5.11.2026)
 
-- [ ] Włącz wdrożenia produkcyjne (Pages → aura-web → Settings → Builds → Branch control) i scal gałąź z `main`.
-- [ ] Custom domain: `www.auraconsulting.pl` → projekt `aura-web` (Pages podmienia rekord `www`; dziś wskazuje GitHub Pages). Po weryfikacji wyłącz GitHub Pages w repo.
-- [ ] Apex `auraconsulting.pl`: proxowany + **Redirect Rule 301** `https://auraconsulting.pl/*` → `https://www.auraconsulting.pl/${1}` (zachowaj ścieżkę i query). Always Use HTTPS: On.
+- [x] Włącz wdrożenia produkcyjne (Pages → aura-web → Settings → Builds → Branch control) i scal gałąź z `main` — 5.11, pierwsze wdrożenie produkcyjne `0f0d719`.
+- [x] Custom domain: `www.auraconsulting.pl` → projekt `aura-web` (aktywna, certyfikat Google); rekord `www` CNAME → `aura-web-2s1.pages.dev` (proxied), wcześniej `aurabroker.github.io`.
+- [ ] **Właściciel:** wyłącz GitHub Pages w repo (Settings → Pages → Source: None) — stara strona nie jest już pod domeną.
+- [x] Apex `auraconsulting.pl`: proxowany + **Redirect Rule 301** (`http.host eq "auraconsulting.pl"` → `https://www.auraconsulting.pl` + ścieżka, query zachowane). Always Use HTTPS: On. Rekordy A/AAAA apeksu nadal wskazują GitHub Pages, ale przekierowanie działa na brzegu Cloudflare, zanim żądanie dotrze do źródła.
 - [ ] Ukośnik na końcu: Pages domyślnie przekierowuje `/x` → `/x/` dla katalogów z `index.html` — sprawdź w smoke teście (kod 308/301).
 - [ ] Rollback: Pages → aura-web → Deployments → „Rollback to this deployment”.
 - [ ] Harmonogram artykułów: po scaleniu z `main` workflow `daily-publish` działa z `main`. Przy pierwszej publikacji sprawdź, że commit „Publikacja: …” od `github-actions[bot]` uruchomił wdrożenie produkcyjne w Pages. Jeśli `main` dostanie ochronę gałęzi, zezwól GitHub Actions na push (inaczej job się zatrzyma).
@@ -22,10 +23,10 @@ Serwis: projekt **Cloudflare Pages `aura-web`** (statyczny build Astro, `public/
 ## 3. Boty i AI (PLAN §4.2–4.3)
 
 - [ ] **AI Crawl Control:** Search, Agent, Training — **Allow** (serwis chce być cytowany).
-- [ ] **Block AI bots:** **Off**.
-- [ ] **Managed robots.txt (Cloudflare):** **Off** — używamy własnego `robots.txt` z builda (deny tylko Bytespider).
+- [x] **Block AI bots:** **Off** (5.11).
+- [x] **Managed robots.txt (Cloudflare):** **Off** (5.11) — używamy własnego `robots.txt` z builda (deny tylko Bytespider).
 - [ ] **AI Labyrinth**, **Pay per crawl:** Off.
-- [ ] **Bot Fight Mode / Super Bot Fight Mode / JS Detections:** **Off** (wstrzykiwane skrypty łamią CSP, a challenge blokuje zweryfikowane boty wyszukiwarek i AI). Jeśli kiedyś włączone — wyjątek dla zweryfikowanych botów i brak challenge na trasach treści.
+- [x] **Bot Fight Mode / Super Bot Fight Mode / JS Detections:** **Off** (5.11; wcześniej Bot Fight Mode i JS Detections były włączone) (wstrzykiwane skrypty łamią CSP, a challenge blokuje zweryfikowane boty wyszukiwarek i AI). Jeśli kiedyś włączone — wyjątek dla zweryfikowanych botów i brak challenge na trasach treści.
 - [ ] **Markdown for Agents:** Off (serwis ma własne bliźniaki `.md`).
 - [ ] **Crawler Hints:** **On**.
 - [ ] Raz w tygodniu: raport AI Crawl Control (4xx/5xx dla botów).
@@ -33,7 +34,7 @@ Serwis: projekt **Cloudflare Pages `aura-web`** (statyczny build Astro, `public/
 ## 4. Wydajność i bezpieczeństwo
 
 - [ ] **Always Use HTTPS:** On. **Brotli:** On.
-- [ ] **Email Obfuscation:** Off (wstrzykuje skrypt — CSP). **Rocket Loader:** Off.
+- [x] **Email Obfuscation:** Off (5.11; wcześniej On) (wstrzykuje skrypt — CSP). **Rocket Loader:** Off.
 - [ ] **Reguły cache:** bez „Cache Everything” dla HTML (statyczne zasoby `/_astro/*` mają `immutable` z `_headers`).
 - [ ] **HSTS** etap 1: `max-age=86400`, bez `includeSubDomains`, bez preload; etap 2 (po audycie wszystkich nazw DNS): 6 miesięcy z `includeSubDomains`.
 - [ ] **Web Analytics** (beacon JS): Off do decyzji IOD; po włączeniu — dopisz źródła do CSP w `public/_headers` i zaktualizuj politykę prywatności.

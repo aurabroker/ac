@@ -22,6 +22,8 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 
 ## 3. Treści prawne do akceptacji (z prawnikiem)
 
+> Serwis wystartował 5.11.2026 na decyzję właściciela; punkty oznaczone „[blokuje start]” pozostają otwarte i trzeba je domknąć możliwie szybko.
+
 - [ ] **[blokuje start]** Formuły (b), (c), (d) — `src/lib/compliance.ts` — pisemna akceptacja prawnika.
 - [ ] **[blokuje start]** `/informacje-o-brokerze/` — akceptacja całej strony (podstawa porady, niezależność, reklamacje), a w szczególności:
   - [ ] **[blokuje start]** potwierdzenie braku powiązań kapitałowych ≥ 10% (głosów lub kapitału) z zakładami ubezpieczeń — dziś strona NIE twierdzi, że ich nie ma (mówi tylko, że informację przekazujemy przed umową); po potwierdzeniu wpisujemy zdanie rozstrzygające (komentarz w `src/content/pages/informacje-o-brokerze.mdx`);
@@ -45,7 +47,7 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 
 ## 3b. Harmonogram artykułów (co 2 dni)
 
-- [ ] **Zatwierdź artykuły do harmonogramu (zmień `draft: false`).** Przejrzyj tekst i w jego pliku zmień `draft: true` na `draft: false`. Zatwierdzony artykuł wchodzi na stronę rano w dniu z tabeli. **Po terminie: najpierw przenieś na nowy termin** — `node scripts/publish-today.mjs --reschedule` (podgląd zmian: `--dry-run`; od dnia startu: `--from=RRRR-MM-DD`) przesuwa szkice po terminie na kolejne wolne dni co 2 dni, z zachowaniem kolejności. Krok CI `publish-today --check` odrzuci zatwierdzenie z datą wsteczną (dzień commita z `draft: false`, na `main` — dzień scalenia, późniejszy niż `published`).
+- [x] 5.11.2026: właściciel zatwierdził wszystkie 10 tekstów (publikacja co 2 dni, 05.11–23.11). Kolejne teksty: **zatwierdź artykuł do harmonogramu (zmień `draft: false`).** Przejrzyj tekst i w jego pliku zmień `draft: true` na `draft: false`. Zatwierdzony artykuł wchodzi na stronę rano w dniu z tabeli. **Po terminie: najpierw przenieś na nowy termin** — `node scripts/publish-today.mjs --reschedule` (podgląd zmian: `--dry-run`; od dnia startu: `--from=RRRR-MM-DD`) przesuwa szkice po terminie na kolejne wolne dni co 2 dni, z zachowaniem kolejności. Krok CI `publish-today --check` odrzuci zatwierdzenie z datą wsteczną (dzień commita z `draft: false`, na `main` — dzień scalenia, późniejszy niż `published`).
 - [ ] **Arkusze regulacji i artykuły o przepisach** (`legalStateAsOf`): zatwierdzenie = ponowne sprawdzenie przepisów w dniu zatwierdzenia; ustaw `legalStateAsOf` (i daty dostępu zmienionych źródeł) na dzień sprawdzenia — nie później niż `published`. `--check` ostrzega, gdy stan prawny jest starszy niż 14 dni w dniu publikacji.
 
 | Publikacja | Artykuł | Plik |
@@ -69,7 +71,9 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 
 Nic do zrobienia przed startem — projekt **`aura-web`** w Cloudflare Pages jest utworzony i połączony z GitHubem (bez sekretów; integracja GitHub była już na koncie). Podglądy gałęzi `claude/*` budują się automatycznie.
 
-- [ ] W dniu startu (wykonamy razem): włączenie wdrożeń produkcyjnych, domena `www.auraconsulting.pl` w projekcie, przekierowanie apex → www, ustawienia botów AI (checklista).
+- [x] Start 5.11.2026: wdrożenia produkcyjne włączone, domena `www.auraconsulting.pl` w projekcie, przekierowanie apex → www, ustawienia botów AI (checklista `docs/cloudflare-checklist.md`).
+- [ ] Wyłącz GitHub Pages w repo (Settings → Pages → Source: None) — stara strona nie jest już pod domeną.
+- [ ] Po 24 h stabilności: sitemapa w Google Search Console i Bing Webmaster Tools.
 - [ ] Opcjonalnie: Cloudflare Access na adresach podglądu `*.aura-web-2s1.pages.dev` (podglądy i tak mają `noindex`).
 
 ## 5. Repozytorium — rekomendacje (nie wykonujemy ich automatycznie)
