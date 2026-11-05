@@ -26,7 +26,7 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 
 - [ ] **[blokuje start]** Formuły (b), (c), (d) — `src/lib/compliance.ts` — pisemna akceptacja prawnika.
 - [ ] **[blokuje start]** `/informacje-o-brokerze/` — akceptacja całej strony (podstawa porady, niezależność, reklamacje), a w szczególności:
-  - [ ] **[blokuje start]** potwierdzenie braku powiązań kapitałowych ≥ 10% (głosów lub kapitału) z zakładami ubezpieczeń — dziś strona NIE twierdzi, że ich nie ma (mówi tylko, że informację przekazujemy przed umową); po potwierdzeniu wpisujemy zdanie rozstrzygające (komentarz w `src/content/pages/informacje-o-brokerze.mdx`);
+  - [x] brak powiązań kapitałowych z zakładami ubezpieczeń — potwierdzone przez właściciela 5.11.2026 („Aura nie ma żadnych udziałów ubezpieczycieli”); strona mówi o tym wprost (w obie strony: ubezpieczyciel w Aurze i Aura w ubezpieczycielu);
   - [ ] **[blokuje start]** opis wynagrodzenia, w tym od partnera underwritingowego (sekcja „Jak jesteśmy wynagradzani?” oraz FAQ „Kto płaci brokerowi za pracę?” na stronie głównej).
 - [ ] **[blokuje start]** `/polityka-prywatnosci/` — akceptacja prawnika / IOD, w tym:
   - [ ] potwierdzenie, że IOD nie został wyznaczony (strona tak dziś mówi) — albo dane kontaktowe IOD;
