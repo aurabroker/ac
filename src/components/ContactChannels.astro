@@ -1,8 +1,8 @@
 ---
 /**
- * Kanały kontaktu: telefon, mailto (z tematem z numerem arkusza), „Kopiuj adres”,
- * „Kopiuj szablon wiadomości” + formularz kontaktowy (temat e-maila = tytuł strony). Przyciski kopiowania pojawiają się tylko z JS.
- * signal=true → przycisk e-mail jest JEDYNYM wypełnionym CTA (redline) w widoku.
+ * Kontakt: telefon albo formularz (decyzja właściciela 4.11.2026 — bez adresu e-mail, mailto i kopiowania).
+ * Formularz → POST /api/kontakt; temat wiadomości zawiera tytuł strony. Lista „Co przygotować” opcjonalnie.
+ * W bliźniaku .md zostają: nagłówek, lead, telefon, link do formularza i lista (sam formularz ma data-md-skip).
  */
 import Icon from './Icon.astro';
 import ContactForm from './ContactForm.astro';
@@ -10,11 +10,8 @@ import { SITE } from '../lib/site.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
 interface Props {
-  /** Numer arkusza do tematu wiadomości, np. „IT-000”. */
-  sheet?: string;
   heading?: string;
   lead?: string;
-  signal?: boolean;
   /** Pokaż listę „Co przygotować”. */
   checklist?: boolean;
   id?: string;
@@ -22,40 +19,17 @@ interface Props {
   pageTitle?: string;
 }
 const {
-  sheet,
   heading = 'Zleć analizę ryzyka',
-  lead = 'Wypełnij formularz, napisz lub zadzwoń. Odpowiadamy w dni robocze. Analiza i porównanie ofert nie zobowiązują do zakupu polisy.',
-  signal = true,
+  lead = 'Zadzwoń albo wyślij wiadomość przez formularz. Analiza i porównanie ofert nie zobowiązują do zakupu polisy.',
   checklist = true,
   id = 'kontakt',
   pageTitle = 'Kontakt',
 } = Astro.props;
-
-const subject = `${sheet ? `[${sheet}] ` : ''}Analiza ryzyka — prośba o kontakt`;
-const template = [
-  'Dzień dobry,',
-  '',
-  'proszę o analizę ryzyka i porównanie ofert ubezpieczenia.',
-  '',
-  'Firma (nazwa, NIP):',
-  'Czym się zajmujemy:',
-  'Przychód roczny (rząd wielkości):',
-  'Klienci lub przychody spoza Polski (np. USA, Kanada, UK):',
-  'Obecna polisa i termin odnowienia (jeśli jest):',
-  'Wymóg ubezpieczenia z umowy lub przetargu (jeśli jest):',
-  'Telefon kontaktowy:',
-  '',
-  'Pozdrawiam',
-].join('\n');
-// RFC 6068: łamanie wierszy w treści mailto jako CRLF (schowek dostaje zwykłe \n)
-const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(template.replace(/\n/g, '\r\n'))}`;
 ---
 
 <section class="contact" aria-labelledby={id} data-contact>
   <h2 id={id}>{polishText(heading)}</h2>
   <p class="contact__lead">{polishText(lead)}</p>
-
-  <ContactForm pageTitle={pageTitle} />
 
   <div class="contact__channels">
     <div class="contact__channel">
@@ -63,33 +37,24 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body
       <div>
         <p class="label">Telefon</p>
         <a class="contact__value" href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>
+        <p class="contact__hint">{SITE.phoneHours}</p>
       </div>
     </div>
     <div class="contact__channel">
       <span class="contact__symbol" aria-hidden="true"><Icon name="envelope" size={22} /></span>
       <div>
-        <p class="label">E-mail</p>
-        <a class="contact__value" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <p class="label">Formularz</p>
+        <a class="contact__value contact__value--text" href="#formularz">Wyślij wiadomość</a>
       </div>
     </div>
   </div>
 
-  <div class="contact__actions">
-    <a class:list={['btn', signal && 'btn--signal']} href={mailto} data-md-skip><Icon name="envelope" size={18} />Napisz e-mail</a>
-    <button type="button" class="btn btn--quiet" data-copy={SITE.email} hidden><Icon name="copy" size={18} /><span data-label>Kopiuj adres</span></button>
-    <button type="button" class="btn btn--quiet" data-copy-template hidden><Icon name="copy" size={18} /><span data-label>Kopiuj szablon wiadomości</span></button>
-    <span class="contact__status visually-hidden" role="status" aria-live="polite"></span>
-  </div>
+  <ContactForm pageTitle={pageTitle} />
 
   <p class="contact__privacy" data-md-skip>
     Administratorem danych z korespondencji jest {SITE.legalName} —{' '}
     <a href="/polityka-prywatnosci/">polityka prywatności</a>.
   </p>
-
-  <details class="contact__template">
-    <summary>Szablon wiadomości (temat: {subject})</summary>
-    <pre data-template>{template}</pre>
-  </details>
 
   {
     checklist && (
@@ -105,24 +70,6 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body
     )
   }
 </section>
-
-<script>
-  import { copyWithFeedback } from '../scripts/copy.ts';
-
-  if (navigator.clipboard) {
-    for (const root of document.querySelectorAll<HTMLElement>('[data-contact]')) {
-      const status = root.querySelector<HTMLElement>('.contact__status');
-      root.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
-        b.hidden = false;
-        b.addEventListener('click', () => copyWithFeedback(b, b.dataset.copy ?? '', status));
-      });
-      root.querySelectorAll<HTMLButtonElement>('[data-copy-template]').forEach((b) => {
-        b.hidden = false;
-        b.addEventListener('click', () => copyWithFeedback(b, root.querySelector('[data-template]')?.textContent ?? '', status));
-      });
-    }
-  }
-</script>
 
 <style>
   .contact {
@@ -141,8 +88,8 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--s-3);
     margin-top: var(--s-3);
-    padding-block: var(--s-2);
-    border-block: 1px solid var(--rule);
+    padding-top: var(--s-2);
+    border-top: 1px solid var(--rule);
   }
   .contact__channel {
     display: flex;
@@ -178,14 +125,14 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body
   .contact__value:hover {
     text-decoration: underline;
   }
-  .contact__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--s-1) var(--s-2);
-    margin-top: var(--s-3);
+  .contact__value--text {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--blue);
   }
-  .contact__status {
+  .contact__hint {
+    margin: 2px 0 0;
+    font-size: var(--fs-small);
     color: var(--ink-3);
   }
   .contact__privacy {
@@ -193,22 +140,6 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body
     margin-bottom: 0;
     font-size: var(--fs-small);
     color: var(--ink-3);
-  }
-  .contact__template {
-    margin-top: var(--s-3);
-    font-size: var(--fs-small);
-  }
-  .contact__template summary {
-    cursor: pointer;
-    color: var(--ink-2);
-  }
-  .contact__template pre {
-    margin: var(--s-2) 0 0;
-    padding: var(--s-2);
-    background: var(--paper-inset);
-    border-left: 1px solid var(--rule);
-    white-space: pre-wrap;
-    font-size: var(--fs-mono);
   }
   .contact__prep {
     margin-top: var(--s-3);

@@ -1,0 +1,50 @@
+name: daily-publish
+
+# Codzienna publikacja z harmonogramu. Artykuł lub arkusz regulacji z datą `published` w przyszłości
+# nie wchodzi do buildu (src/lib/schedule.ts). Ten job sprawdza rano, czy na dziś (Europe/Warsaw) przypada
+# zatwierdzony wpis (`draft: false`), i wtedy wypycha pusty commit „Publikacja: <tytuły>” na `main` —
+# integracja GitHub w Cloudflare Pages buduje produkcję od nowa. Bez sekretów: wystarcza GITHUB_TOKEN.
+#
+# GitHub uruchamia harmonogram (`schedule`) tylko z gałęzi domyślnej (`main`), więc job zacznie działać
+# po scaleniu tej gałęzi z `main` w dniu startu; do tego czasu wdrożenia produkcyjne w Pages są wyłączone.
+
+on:
+  schedule:
+    # 05:05 UTC = 06:05 czasu polskiego zimą, 07:05 latem
+    - cron: '5 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publikacja z harmonogramu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Co wchodzi dziś (Europe/Warsaw)
+        id: today
+        run: node scripts/publish-today.mjs
+      - name: Pusty commit na main (rebuild produkcji w Cloudflare Pages)
+        if: steps.today.outputs.count != '0'
+        env:
+          MESSAGE: ${{ steps.today.outputs.message }}
+        run: |
+          if [ "$(git log -1 --format=%s)" = "$MESSAGE" ]; then
+            echo "Commit „$MESSAGE” już jest na main — pomijam."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --allow-empty -m "$MESSAGE"
+          git push origin HEAD:main

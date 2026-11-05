@@ -28,6 +28,7 @@ Projekt **`aura-web`** w Cloudflare Pages jest połączony z repo `aurabroker/ac
 - **Podglądy:** każdy push na gałąź `claude/*` buduje podgląd z `PREVIEW=1` (szkice widoczne, cały serwis `noindex`, `robots.txt` → `Disallow: /`). Adres: `https://<gałąź>.aura-web-2s1.pages.dev` (alias gałęzi) lub adres konkretnego wdrożenia.
 - **Produkcja:** wdrożenia z `main` są **wyłączone** do dnia startu (na `main` jest jeszcze stara strona GitHub Pages). Start: włączyć „production deployments”, scalić gałąź z `main`, podpiąć domenę `www.auraconsulting.pl` do projektu (Custom domains), przekierowanie apex → www. Szczegóły: `docs/cloudflare-checklist.md`.
 - `public/_headers` i `public/_redirects` działają w Pages bez zmian. Rollback: Pages → aura-web → Deployments → „Rollback to this deployment”.
+- **Harmonogram artykułów:** artykuł lub arkusz regulacji wchodzi do produkcji, gdy ma `draft: false` i `published` ≤ dziś (Europe/Warsaw, w chwili builda; reguła `isLive` w `src/lib/routes.ts`). Workflow `.github/workflows/daily-publish.yml` (codziennie 05:05 UTC i ręcznie) uruchamia `scripts/publish-today.mjs`; gdy na dziś przypada zatwierdzony wpis, wypycha na `main` pusty commit „Publikacja: <tytuły>” (`GITHUB_TOKEN`, `contents: write`, bez sekretów), a Pages buduje produkcję od nowa. GitHub uruchamia harmonogramy tylko z gałęzi domyślnej (`main`), a wdrożenia produkcyjne włączamy dopiero w dniu startu — do tego czasu workflow nic nie robi. Tabela dat: `docs/TODO-wlasciciel.md` §3b; plan ze stanami: `node scripts/publish-today.mjs --list`.
 
 ## Strażnik poufności
 

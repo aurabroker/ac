@@ -5,6 +5,7 @@
 //  - wymagane typy wg rodzaju strony (data-kind na <body>):
 //      pillar/solution → Service; article → BlogPosting; regulation → Article; glossary → DefinedTermSet,
 //      każda strona poza główną → BreadcrumbList; widoczne FAQ (<section class="faq">) ↔ FAQPage,
+//      Person tylko na artykułach, regulacjach i stronie osoby; #org bez adresu e-mail,
 //  - referencje {"@id": …} do węzłów lokalnych istnieją w grafie,
 //  - zakazy (PLAN §4.4): bez HowTo, speakable, aggregateRating/review, Offer/price, memberOf, „Lloyd's” w serviceType.
 import { outDir, walk, pagePathOf, read, report, SITE } from './lib/dist.mjs';
@@ -76,7 +77,9 @@ for (const file of walk(root, new Set(['_astro', 'og']))) {
   if (!org) errors.push(`${label}: brak węzła #org`);
   else {
     for (const t of ['InsuranceAgency', 'Organization']) if (!typesOf(org).includes(t)) errors.push(`${label}: #org bez typu ${t}`);
-    for (const k of ['legalName', 'address', 'telephone', 'email', 'taxID', 'identifier']) if (!org[k]) errors.push(`${label}: #org bez pola ${k}`);
+    for (const k of ['legalName', 'address', 'telephone', 'contactPoint', 'taxID', 'identifier']) if (!org[k]) errors.push(`${label}: #org bez pola ${k}`);
+    // kontakt publiczny: telefon albo formularz — bez adresu e-mail w JSON-LD (decyzja 4.11.2026)
+    if (org.email || org.contactPoint?.email) errors.push(`${label}: #org z adresem e-mail (kontakt: telefon i formularz)`);
   }
   if (!byId.get(`${SITE}/#website`)) errors.push(`${label}: brak węzła #website`);
   const page = byId.get(`${url}#webpage`);
@@ -96,6 +99,8 @@ for (const file of walk(root, new Set(['_astro', 'og']))) {
   if (kind === 'person') need.push('ProfilePage');
   if (pagePath !== '/') need.push('BreadcrumbList');
   for (const t of need) if (!has(t)) errors.push(`${label}: brak wymaganego typu ${t} (data-kind=${kind})`);
+  // autor (Person) tylko przy artykułach i regulacjach; strona osoby ma Person jako mainEntity (decyzja 4.11.2026)
+  if (!['article', 'regulation', 'person'].includes(kind) && has('Person')) errors.push(`${label}: węzeł Person poza artykułem (data-kind=${kind})`);
 
   const faqVisible = /<section[^>]*class="[^"]*\bfaq\b/.test(html);
   if (faqVisible && !has('FAQPage')) errors.push(`${label}: widoczne FAQ bez FAQPage`);

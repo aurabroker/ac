@@ -1,7 +1,7 @@
 ---
 /**
  * Konfigurator programu ubezpieczenia (orientacyjny). 6 pytań jako przełączniki → zestawienie elementów
- * w stylu BOM: rdzeń / zalecane / do rozważenia, uwagi do zakresu, mailto do brokera i „Kopiuj podsumowanie”.
+ * w stylu BOM: rdzeń / zalecane / do rozważenia, uwagi do zakresu, „Wyślij konfigurację formularzem” i „Kopiuj podsumowanie”.
  *
  *   <ProgramConfigurator />                    pełny (strona główna, po czterech ścieżkach)
  *   <ProgramConfigurator compact />            zwarty (filary, blisko początku)
@@ -13,12 +13,11 @@
  */
 import Icon from './Icon.astro';
 import { MODULES, NOTES, QUESTIONS, RULES_TABLE, STATUS_LABEL, type Status } from '../lib/configurator.ts';
-import { SITE } from '../lib/site.ts';
 import { polishText } from '../lib/typography/polish.ts';
 
 interface Props {
   compact?: boolean;
-  /** Numer arkusza do tematu wiadomości. */
+  /** Numer arkusza w nagłówku konfiguratora. */
   sheet?: string;
   /** Wstępne odpowiedzi, np. "ai=tak" lub "branza=ai&ai=tak". */
   preset?: string;
@@ -39,14 +38,11 @@ const STATUS_LEGEND: [Status, string][] = [
   ['rec', 'element, który warto mieć przy Twoim profilu ryzyka.'],
   ['opt', 'element zależny od sytuacji firmy, np. umów, przelewów albo struktury spółki.'],
 ];
-const subject = `[${sheet}] Konfiguracja programu — prośba o analizę`;
-const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}`;
 ---
 
 <section
   class:list={['cfg', compact && 'cfg--compact']}
   data-cfg
-  data-sheet={sheet}
   data-preset={preset}
   aria-label="Konfigurator programu ubezpieczenia"
 >
@@ -211,9 +207,6 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}`;
         <button type="button" class="btn btn--signal" data-cfg-form-send hidden>
           <Icon name="arrow-right" size={18} />Wyślij konfigurację formularzem
         </button>
-        <a class="btn" href={mailto} data-cfg-mail>
-          <Icon name="envelope" size={18} />Wyślij e-mailem
-        </a>
         <button type="button" class="btn btn--quiet" data-cfg-copy hidden>
           <Icon name="copy" size={18} /><span data-label>Kopiuj podsumowanie</span>
         </button>
@@ -222,7 +215,7 @@ const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}`;
       <p class="cfg__disclaimer">
         {
           polishText(
-            'Wynik orientacyjny — nie jest ofertą ani poradą. Zakres, limity i wyłączenia potwierdzamy w ofercie i polisie. Odpowiedzi zostają w Twojej przeglądarce: wiadomość wysyłasz sam, ze swojej poczty.',
+            'Wynik orientacyjny — nie jest ofertą ani poradą. Zakres, limity i wyłączenia potwierdzamy w ofercie i polisie. Odpowiedzi zostają w Twojej przeglądarce, dopóki nie wyślesz ich formularzem.',
           )
         }
       </p>

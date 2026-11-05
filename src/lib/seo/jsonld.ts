@@ -30,7 +30,7 @@ export function organizationNode(): JsonLdNode {
     url: SITE.url + '/',
     logo: { '@type': 'ImageObject', url: `${SITE.url}/brand/logo.png`, width: 512, height: 512 },
     image: `${SITE.url}/og/index.png`,
-    email: SITE.email,
+    // kontakt publiczny: telefon albo formularz (bez adresu e-mail — decyzja 4.11.2026)
     telephone: SITE.phoneE164,
     address: {
       '@type': 'PostalAddress',
@@ -67,7 +67,7 @@ export function organizationNode(): JsonLdNode {
       '@type': 'ContactPoint',
       contactType: 'customer service',
       telephone: SITE.phoneE164,
-      email: SITE.email,
+      url: SITE.formUrl,
       availableLanguage: ['pl', 'en'],
       areaServed: 'PL',
       // godziny jak na /kontakt/ (pn–pt 9:00–17:00)

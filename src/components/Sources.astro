@@ -1,6 +1,6 @@
 ---
 /**
- * Numerowane źródła z datą dostępu (T1–T3) + jedna dyskretna linia „Jak powstał ten tekst” (`note`).
+ * Numerowane źródła z datą dostępu (T1–T3) + jedna dyskretna linia noty (`note`, etykieta `noteLabel`).
  * Bez źródeł, a z notą — sama linia noty (bez nagłówka).
  */
 import Icon from './Icon.astro';
@@ -17,10 +17,12 @@ interface Source {
 interface Props {
   items: Source[];
   heading?: string;
-  /** Nota „Jak powstał ten tekst” (treść po etykiecie; src/lib/compliance.ts → creationNote). */
+  /** Nota (treść po etykiecie; src/lib/compliance.ts → creationNote / editorialNote). */
   note?: string;
+  /** Etykieta noty: „Jak powstał ten tekst” (artykuły) albo „Opracowanie” (rozwiązania). */
+  noteLabel?: string;
 }
-const { items, heading = 'Źródła', note } = Astro.props;
+const { items, heading = 'Źródła', note, noteLabel = 'Jak powstał ten tekst' } = Astro.props;
 ---
 
 {
@@ -36,11 +38,11 @@ const { items, heading = 'Źródła', note } = Astro.props;
           </li>
         ))}
       </ol>
-      {note && <p class="sources__how"><Icon name="info" size={16} /><span><strong>Jak powstał ten tekst:</strong> {polishText(note)}</span></p>}
+      {note && <p class="sources__how"><Icon name="info" size={16} /><span><strong>{noteLabel}:</strong> {polishText(note)}</span></p>}
     </section>
   )
 }
-{items.length === 0 && note && <p class="sources__how sources__how--solo"><Icon name="info" size={16} /><span><strong>Jak powstał ten tekst:</strong> {polishText(note)}</span></p>}
+{items.length === 0 && note && <p class="sources__how sources__how--solo"><Icon name="info" size={16} /><span><strong>{noteLabel}:</strong> {polishText(note)}</span></p>}
 
 <style>
   .sources {

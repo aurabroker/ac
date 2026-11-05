@@ -4,6 +4,7 @@
  * treść w kolumnach 4–10. Poniżej — jedna kolumna, a spis treści jako rozwijana lista na początku
  * treści (TOC variant="mobile") z przyciskiem „Spis treści” przy dolnej krawędzi ekranu.
  * Kolumna spisu to zwykły <div> — punktem orientacyjnym jest sam <nav aria-label="Spis treści">.
+ * Slot „aside” (rysunek): ≥ 1280 px bez spisu treści — w kolumnach 9–12 obok treści, niżej — nad treścią.
  */
 import TOC from './TOC.astro';
 
@@ -22,6 +23,13 @@ const { headings = [], tocExtra = [], toc = true } = Astro.props;
         <div class="doc__toc-inner">
           <TOC headings={headings} extra={tocExtra} />
         </div>
+      </div>
+    )
+  }
+  {
+    Astro.slots.has('aside') && (
+      <div class="doc__aside">
+        <slot name="aside" />
       </div>
     )
   }
@@ -45,6 +53,13 @@ const { headings = [], tocExtra = [], toc = true } = Astro.props;
     grid-column: 1 / -1;
     min-width: 0;
   }
+  /* rysunek obok treści (strony bez spisu treści, np. blog); niżej — nad treścią */
+  .doc__aside {
+    grid-column: 1 / -1;
+    min-width: 0;
+    max-width: 640px;
+    margin-bottom: var(--s-4);
+  }
   @media (min-width: 1280px) {
     .doc__toc {
       display: block;
@@ -61,6 +76,14 @@ const { headings = [], tocExtra = [], toc = true } = Astro.props;
     }
     .doc--no-toc .doc__main {
       grid-column: 1 / span 8;
+      grid-row: 1;
+    }
+    .doc--no-toc .doc__aside {
+      grid-column: 9 / -1;
+      grid-row: 1;
+      align-self: start;
+      max-width: none;
+      margin: var(--s-1) 0 0;
     }
   }
 </style>

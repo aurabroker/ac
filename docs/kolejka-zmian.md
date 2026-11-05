@@ -32,6 +32,7 @@ Status: **CZEKA** — właściciel zbiera kolejne zmiany i da znać, kiedy wdro�
 - Liczby na grafikach tylko ilustracyjne i oznaczone jako takie albo bez liczb (np. „+840%” ze szkicu nie przechodzi do produkcji bez źródła).
 - Szkic: /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/ic-mock/karty-uklady-scalone.png
 - Do decyzji właściciela: tylko karty-odnośniki czy także rysunki hero (dziś: rysunki złożeniowe „zespołu”) w tym samym języku układów scalonych.
+- **Wdrożone (4.11):** miniatura 360×190 u góry każdej karty-odnośnika (`SheetCard`, blog) jako plik `/fig/<ścieżka>.svg` z buildu (`<img loading="lazy">`, ≈ 3 KB gz), bez liczb; hero bez zmian. Opis: `docs/CONVENTIONS.md` §6 „Rysunki izometryczne”.
 
 ## 4. Więcej 3D — rysunki izometryczne „rozstrzelone” (zgłoszone 4.11.2026)
 
@@ -40,6 +41,7 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - Kierunek A (rekomendowany): rzut izometryczny (3D w linii, SVG): program ubezpieczenia jako układ scalony rozłożony na warstwy — płytka (działalność, umowy) → kulki BGA (terytorium PL/UE/USA) → podłoże (limity) → rdzeń (OC + cyber + AI) → pokrywa (wyłączenia). Warstwy „rozjeżdżają się” przy przewijaniu / najechaniu, kliknięcie warstwy otwiera opis (jak dziś części rysunku). Lekkie, bez WebGL, działa na telefonie.
 - Kierunek B (opcjonalnie, tylko hero strony głównej): prawdziwy model 3D obracany myszą (WebGL), w stylu linii technicznej, ładowany dopiero po wejściu na stronę; statyczny rysunek jako zapas. Większy koszt (~150 KB JS) i wydajność.
 - Spójnie z punktem 3: karty-odnośniki jako miniatury izometryczne tych samych „układów”.
+- **Wdrożone (4.11):** kierunek A — generator `src/lib/iso` (motywy: stos warstw, QFP, ścieżki PCB, matryca BGA; ziarno z adresu strony). Warstwy rozsuwają się raz przy wejściu w widok (CSS, bez ruchu przy `prefers-reduced-motion`); bez klikania warstw. Kierunek B (WebGL) — nie.
 - Szkic: /tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/iso-mock/izometria-uklad.png
 
 ## 5. Zakres nowych grafik: tylko tam, gdzie dziś nie ma żadnej (zgłoszone 4.11.2026)
@@ -54,6 +56,7 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
   - `/wiedza/` (blog), `/slownik/`, `/kontakt/`, `/o-nas/`, `/zespol/marek-ciesla/`,
   - wszystkie karty-odnośniki do arkuszy (strona główna, „Powiązane”, blog, katalog) — miniatura u góry karty.
 - Strony prawne (`/informacje-o-brokerze/`, `/reklamacje/`, `/polityka-prywatnosci/`) — do decyzji przy wdrożeniu; rekomendacja: bez grafiki albo tylko mała, spokojna miniatura.
+- **Wdrożone (4.11):** rysunek w nagłówku (obok „W skrócie”) na wszystkich stronach z listy; strony prawne — bez rysunku w nagłówku, na kartach spokojna miniatura bez podpisów. Etykiety z treści strony (moduły z tabeli zakresu, „Wyłączenia”), dla regulacji i `/o-nas/` — `iso` we frontmatterze.
 
 ## 6. Tło: delikatnie dryfująca siatka „neuronów” (zgłoszone 4.11.2026)
 
@@ -81,3 +84,4 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 - **Interpretacja przyjęta do wdrożenia:** harmonogram „w przód” od dnia startu — artykuł z datą w przyszłości nie trafia do serwisu, sitemap, RSS i `llms.txt`, dopóki jego dzień nie nadejdzie; codzienny automatyczny rebuild (Cloudflare: hook wdrożenia + zadanie cron po stronie Cloudflare, bez sekretów w GitHubie) publikuje kolejny artykuł. Nie cofamy dat w przeszłość (daty w danych strukturalnych muszą być prawdziwe).
 - Warunek: artykuł zatwierdzony przez autora; niezatwierdzony nie wchodzi do harmonogramu.
 - Kolejność do ustalenia przy wdrożeniu (propozycja: najpierw teksty pod frazy „OC dla IT” i „OC/cyber dla AI”: OC programisty B2B → LLMjacking → USA i Kanada → Tech E&O → klient wymaga OC → AI Act a ubezpieczenie → ransomware 2.0 → PLD a software house → regulacje AI Act, PLD).
+- **Wdrożone (4.11):** daty od 05.11 do 23.11.2026 w tej kolejności (tabela: `docs/TODO-wlasciciel.md` §3b); jedna reguła publikacji `isLive` (`src/lib/routes.ts`); podgląd z etykietą „Zaplanowano”. Codzienny rebuild: workflow GitHub `daily-publish` (pusty commit na `main` przez `GITHUB_TOKEN`, bez sekretów) zamiast hooka i crona po stronie Cloudflare. Artykuły zostają szkicami do zatwierdzenia.

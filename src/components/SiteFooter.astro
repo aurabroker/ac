@@ -38,8 +38,7 @@ const year = new Date().getFullYear();
         <p class="label">Kontakt</p>
         <ul>
           <li class="site-footer__ic"><Icon name="phone" size={16} /><a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a></li>
-          {/* <wbr> po „@”: na 320 px adres łamie się w kolumnie zamiast poszerzać stronę */}
-          <li class="site-footer__ic"><Icon name="envelope" size={16} /><a href={`mailto:${SITE.email}`}>{SITE.email.split('@')[0]}@<wbr />{SITE.email.split('@')[1]}</a></li>
+          <li class="site-footer__ic"><Icon name="envelope" size={16} /><a href={SITE.formPath}>Formularz kontaktowy</a></li>
           <li class="site-footer__ic site-footer__muted"><Icon name="building" size={16} /><span>{ADDRESS_LINE}</span></li>
         </ul>
       </div>

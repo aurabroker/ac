@@ -47,7 +47,7 @@ export const GET: APIRoute = async () => {
       '',
       `> ${SITE.legalName} — broker ubezpieczeniowy (zezwolenie KNF nr ${SITE.knfPermit}, rejestr brokerów ${SITE.brokerRegister}, KRS ${SITE.krs}, NIP ${SITE.nip}). Analizujemy oferty z rynku krajowego i zagranicznego, w tym londyńskiego: OC zawodowe i cyber dla firm IT, ubezpieczenie AI, ubezpieczenie cyber dla firm, OC zawodowe dla firm usługowych.`,
       '',
-      `Kontakt: ${SITE.email} · ${SITE.phone} · ${ADDRESS_LINE}. Wersją kanoniczną każdej strony jest HTML; pliki .md to czyste wersje tekstowe tych samych stron. Treści mają charakter informacyjny — zakres ochrony określają dokumenty ubezpieczenia.`,
+      `Kontakt: tel. ${SITE.phone} albo formularz ${SITE.formUrl} · ${ADDRESS_LINE}. Wersją kanoniczną każdej strony jest HTML; pliki .md to czyste wersje tekstowe tych samych stron. Treści mają charakter informacyjny — zakres ochrony określają dokumenty ubezpieczenia.`,
       '',
     ];
     const section = (title: string, list: SiteRoute[], compact = false) => {

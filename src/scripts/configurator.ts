@@ -1,14 +1,13 @@
 /**
  * Konfigurator programu — zachowanie (komponent: src/components/ProgramConfigurator.astro).
  * Reguły z src/lib/configurator.ts (evaluate); teksty są w HTML — skrypt tylko pokazuje, ukrywa
- * i porządkuje wiersze. Sam niczego nie wysyła: przekazuje podsumowanie do formularza kontaktowego albo otwiera mailto. Pamięć: sessionStorage.
+ * i porządkuje wiersze. Sam niczego nie wysyła: przekazuje podsumowanie do formularza kontaktowego. Pamięć: sessionStorage.
  */
 import { evaluate, STATUS_LABEL, type Answers, type QId } from '../lib/configurator.ts';
 import { copyWithFeedback } from './copy.ts';
 import { handOffConfig } from './contact-form.ts';
 
 const KEY = 'aura-cfg-v1';
-const EMAIL = 'cyber@auraconsulting.pl';
 
 const plural = (n: number, one: string, few: string, many: string) => {
   const d = n % 10;
@@ -40,13 +39,11 @@ function init(root: HTMLElement) {
   const bom = root.querySelector<HTMLOListElement>('[data-cfg-bom]');
   if (!ui || !form || !bom) return;
   const notesWrap = root.querySelector<HTMLElement>('[data-cfg-notes]');
-  const mail = root.querySelector<HTMLAnchorElement>('[data-cfg-mail]');
   const copyBtn = root.querySelector<HTMLButtonElement>('[data-cfg-copy]');
   const live = root.querySelector<HTMLElement>('[data-cfg-live]');
   const count = root.querySelector<HTMLElement>('[data-cfg-count]');
   const meta = root.querySelector<HTMLElement>('[data-cfg-meta]');
   const fieldsets = Array.from(form.querySelectorAll<HTMLFieldSetElement>('[data-q]'));
-  const sheet = root.dataset.sheet ?? 'AC-000';
 
   ui.hidden = false;
   root.querySelector<HTMLElement>('[data-cfg-static]')?.setAttribute('hidden', '');
@@ -131,11 +128,6 @@ function init(root: HTMLElement) {
     if (count) count.textContent = `${answered} z ${fieldsets.length} odpowiedzi`;
     const msg = `${modules.length} ${plural(modules.length, 'element', 'elementy', 'elementów')} · ${notes.length} ${plural(notes.length, 'uwaga', 'uwagi', 'uwag')}`;
     if (meta) meta.textContent = msg;
-    if (mail) {
-      const subject = `[${sheet}] Konfiguracja programu — prośba o analizę`;
-      // RFC 6068: łamanie wierszy w treści mailto jako CRLF
-      mail.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary().replace(/\n/g, '\r\n'))}`;
-    }
     if (!first) {
       save(a);
       window.clearTimeout(timer);

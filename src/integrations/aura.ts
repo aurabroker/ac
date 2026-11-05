@@ -109,7 +109,7 @@ export default function aura(opts: { preview: boolean }): AstroIntegration {
         const parts: string[] = [
           `# ${SITE.name} — pełna treść serwisu (llms-full.txt)`,
           '',
-          `> Wszystkie publiczne strony ${SITE.host} w formacie Markdown. Wersją kanoniczną każdej strony jest HTML (adres w polu \`canonical\`). Kontakt: ${SITE.email} · ${SITE.phone}.`,
+          `> Wszystkie publiczne strony ${SITE.host} w formacie Markdown. Wersją kanoniczną każdej strony jest HTML (adres w polu \`canonical\`). Kontakt: tel. ${SITE.phone} albo formularz ${SITE.formUrl}.`,
           '',
         ];
         // Każdy dokument: jednolinijkowy nagłówek zamiast frontmattera YAML (w środku pliku YAML + „---”

@@ -2,11 +2,13 @@
 /**
  * Filar (PLAN §5.5): tabliczka → „W skrócie” → hero (rysunek z ploterem) → treść (BOM-y, scenariusze,
  * SpecTable, USA i Kanada, „Czego nie obejmuje”) → tabela zakresu → FAQ → „Arkusze szczegółowe”
- * → formuły (d) i (c) → kontakt → autor → rejestr zmian → źródła → pełna tabliczka.
+ * → formuły (d) i (c) → kontakt → powiązane → źródła (z linią redakcyjną) → pełna tabliczka. Bez autora.
  */
 import Sheet from './Sheet.astro';
 import SheetHead from '../components/SheetHead.astro';
 import SheetFoot from '../components/SheetFoot.astro';
+import IsoFigure from '../components/IsoFigure.astro';
+import { showsHeaderIso } from '../lib/iso/spec.ts';
 import DocBody from '../components/DocBody.astro';
 import AnnotatedFigure from '../components/AnnotatedFigure.astro';
 import BOM from '../components/BOM.astro';
@@ -16,7 +18,7 @@ import Disclosure from '../components/Disclosure.astro';
 import ContactChannels from '../components/ContactChannels.astro';
 import HubArticles from '../components/lists/HubArticles.astro';
 import RelatedSheets from '../components/lists/RelatedSheets.astro';
-import { creationNote } from '../lib/compliance.ts';
+import { editorialNote, NOTE_LABEL_EDITORIAL } from '../lib/compliance.ts';
 import type { PageContext } from '../lib/page.ts';
 import type { PillarEntry } from '../lib/routes.ts';
 
@@ -35,7 +37,9 @@ const tocExtra = [
 
 <Sheet ctx={ctx} kind="pillar">
   <div class="container">
-    <SheetHead ctx={ctx} lead={d.lead} titleAccent={d.titleAccent} />
+    <SheetHead ctx={ctx} lead={d.lead} titleAccent={d.titleAccent}>
+      {showsHeaderIso(ctx.route) && <IsoFigure slot="figure" route={ctx.route} />}
+    </SheetHead>
     {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} plotter />}
     <DocBody headings={headings} tocExtra={tocExtra}>
       <div class="prose"><slot /></div>
@@ -47,9 +51,13 @@ const tocExtra = [
       <FAQ items={d.faq} />
       <HubArticles hubPath={ctx.path} />
       <Disclosure show={['d', 'c']} />
-      <ContactChannels sheet={d.sheet} pageTitle={ctx.title} />
+      <ContactChannels pageTitle={ctx.title} />
       <RelatedSheets paths={d.related} />
-      <Sources items={d.sources} note={creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })} />
+      <Sources
+        items={d.sources}
+        noteLabel={NOTE_LABEL_EDITORIAL}
+        note={editorialNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })}
+      />
       <SheetFoot ctx={ctx} />
     </DocBody>
   </div>

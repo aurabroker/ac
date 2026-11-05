@@ -1,7 +1,7 @@
 ---
 /**
  * Tabliczka rysunkowa arkusza: nr arkusza, rewizja, data, „Autor” (tylko w zwartej tabliczce pod H1
- * i tylko na arkuszach eksperckich — autor pojawia się na stronie raz), „Pobierz .md”.
+ * i tylko w artykułach i regulacjach — autor pojawia się na stronie raz), „Pobierz .md”.
  * variant="compact" — pod H1 (na mobile jedna linia); variant="full" — na końcu strony (bez autora).
  * Metadane są we frontmatterze bliźniaka .md, więc tabliczka ma data-md-skip.
  */
@@ -14,7 +14,7 @@ interface Props {
   revision: string;
   updated: Date;
   published?: Date;
-  /** Tylko variant="compact". Brak = strona firmowa/prawna (bez pola „Autor”). */
+  /** Tylko variant="compact". Brak = strona bez autora (wszystko poza artykułami i regulacjami). */
   author?: string;
   /** Strona autora (link w polu „Autor”). */
   authorHref?: string;
@@ -22,10 +22,15 @@ interface Props {
   title?: string;
   variant?: 'compact' | 'full';
   draft?: boolean;
+  /** Data publikacji jeszcze nie nadeszła (podgląd): „Zaplanowano” zamiast „Data”/„Opublikowano”. */
+  scheduled?: boolean;
 }
-const { sheet, revision, updated, published, author, authorHref, mdPath, title, variant = 'compact', draft } =
+const { sheet, revision, updated, published, author, authorHref, mdPath, title, variant = 'compact', draft, scheduled } =
   Astro.props;
 const showAuthor = variant === 'compact' && !!author;
+const plan = !!scheduled && !!published;
+const compactPlan = variant === 'compact' && plan;
+const date = compactPlan && published ? published : updated;
 ---
 
 <div class:list={['title-block', `title-block--${variant}`]} data-md-skip role="group" aria-label="Tabliczka arkusza">
@@ -49,16 +54,16 @@ const showAuthor = variant === 'compact' && !!author;
     {
       variant === 'full' && published && (
         <div class="tbc">
-          <dt>Opublikowano</dt>
-          <dd>
+          <dt>{plan ? 'Zaplanowano' : 'Opublikowano'}</dt>
+          <dd class:list={[plan && 'title-block__plan']}>
             <time datetime={isoDate(published)}>{fmtDate(published)}</time>
           </dd>
         </div>
       )
     }
     <div class="tbc">
-      <dt>{variant === 'full' ? 'Zaktualizowano' : 'Data'}</dt>
-      <dd><time datetime={isoDate(updated)}>{fmtDate(updated)}</time></dd>
+      <dt>{variant === 'full' ? 'Zaktualizowano' : compactPlan ? 'Zaplanowano' : 'Data'}</dt>
+      <dd class:list={[compactPlan && 'title-block__plan']}><time datetime={isoDate(date)}>{fmtDate(date)}</time></dd>
     </div>
     {
       showAuthor && (
@@ -145,6 +150,9 @@ const showAuthor = variant === 'compact' && !!author;
   }
   .title-block__draft {
     color: var(--signal);
+  }
+  .title-block dd.title-block__plan {
+    color: var(--blue);
   }
   .title-block--full {
     max-width: var(--end-measure, 100%);

@@ -377,6 +377,41 @@ tbody th {
   padding-top: var(--s-2);
 }
 
+/*
+ * ---------- tło z siatką (NeuralBackground) ----------
+ * Siatka nie przechodzi pod drobnym tekstem: tabele, tabliczki, karty, formularze, FAQ, spisy,
+ * źródła i stopka leżą na białym papierze. Akapity treści mogą leżeć nad bardzo jasną siatką.
+ * :where() = zerowa specyficzność, więc własne tło komponentu (np. --paper-inset) ma pierwszeństwo.
+ */
+:where(
+    .table-wrap,
+    table,
+    pre,
+    .title-block,
+    .tb,
+    .sheet-card,
+    .note,
+    .faq,
+    .toc,
+    .toc-mobile,
+    .sources,
+    .disclosure,
+    .breadcrumbs,
+    .contact,
+    .cform,
+    .cfg,
+    .steps,
+    .afig,
+    .iso-fig,
+    .glossary,
+    .catalogue,
+    .markets,
+    .person,
+    .site-footer
+  ) {
+  background-color: var(--paper);
+}
+
 /* ---------- przyciski / CTA ---------- */
 .btn {
   display: inline-flex;

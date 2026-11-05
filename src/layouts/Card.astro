@@ -7,6 +7,8 @@
 import Sheet from './Sheet.astro';
 import SheetHead from '../components/SheetHead.astro';
 import SheetFoot from '../components/SheetFoot.astro';
+import IsoFigure from '../components/IsoFigure.astro';
+import { showsHeaderIso } from '../lib/iso/spec.ts';
 import DocBody from '../components/DocBody.astro';
 import AnnotatedFigure from '../components/AnnotatedFigure.astro';
 import BOM from '../components/BOM.astro';
@@ -17,7 +19,7 @@ import ContactChannels from '../components/ContactChannels.astro';
 import NoteBlock from '../components/NoteBlock.astro';
 import HubArticles from '../components/lists/HubArticles.astro';
 import RelatedSheets from '../components/lists/RelatedSheets.astro';
-import { creationNote, formulaB } from '../lib/compliance.ts';
+import { editorialNote, formulaB, NOTE_LABEL_EDITORIAL } from '../lib/compliance.ts';
 import type { PageContext } from '../lib/page.ts';
 import type { SolutionEntry } from '../lib/routes.ts';
 
@@ -38,7 +40,7 @@ const tocExtra = [
 
 <Sheet ctx={ctx} kind="solution">
   <div class="container">
-    <SheetHead ctx={ctx} />
+    <SheetHead ctx={ctx}>{showsHeaderIso(ctx.route) && <IsoFigure slot="figure" route={ctx.route} />}</SheetHead>
     {d.figure && <AnnotatedFigure figure={d.figure} caption={d.figureCaption} />}
     <DocBody headings={headings} tocExtra={tocExtra}>
       <div class="prose"><slot /></div>
@@ -69,9 +71,13 @@ const tocExtra = [
       <FAQ items={d.faq} />
       <HubArticles hubPath={ctx.path} />
       <Disclosure show={['d', 'c']} />
-      <ContactChannels sheet={d.code} pageTitle={ctx.title} />
+      <ContactChannels pageTitle={ctx.title} />
       <RelatedSheets paths={d.related} />
-      <Sources items={d.sources} note={creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })} />
+      <Sources
+        items={d.sources}
+        noteLabel={NOTE_LABEL_EDITORIAL}
+        note={editorialNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })}
+      />
       <SheetFoot ctx={ctx} />
     </DocBody>
   </div>

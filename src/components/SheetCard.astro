@@ -3,10 +3,15 @@
  * Karta arkusza w indeksach (katalog, rejestr wiedzy, „Arkusze szczegółowe”, „Powiązane”).
  * Cała karta jest linkiem przez tytuł (jeden <a>), numer arkusza w Plex Mono.
  * Symbol w ramce: ikona strony wg adresu (src/lib/icons.ts → iconForPath); `icon="…"` zmienia, `icon={false}` wyłącza.
+ * Miniatura u góry: rysunek izometryczny strony docelowej (/fig/<ścieżka>.svg, src/lib/iso) jako <img> — lekki DOM
+ * przy wielu kartach; tylko dla stron z tego buildu; `thumb={false}` wyłącza. W .md pomijana.
  */
 import Icon from './Icon.astro';
 import { iconForPath } from '../lib/icons.ts';
 import { polishText } from '../lib/typography/polish.ts';
+import { fmtDate, isoDate } from '../lib/format.ts';
+import { existingPaths } from '../lib/routes.ts';
+import { figPathFor } from '../lib/iso/spec.ts';
 
 interface Props {
   href: string;
@@ -17,14 +22,27 @@ interface Props {
   /** Poziom nagłówka tytułu. */
   level?: 2 | 3 | 4;
   draft?: boolean;
+  /** Data publikacji z harmonogramu, gdy jeszcze nie nadeszła (tylko podgląd): „Zaplanowano: dd.mm.rrrr”. */
+  scheduled?: Date;
   icon?: string | false;
+  /** Miniatura strony docelowej (domyślnie tak). */
+  thumb?: boolean;
 }
-const { href, title, sheet, summary, meta, level = 3, draft } = Astro.props;
+const { href, title, sheet, summary, meta, level = 3, draft, scheduled } = Astro.props;
 const H = `h${level}` as 'h2' | 'h3' | 'h4';
 const icon = Astro.props.icon === false ? undefined : (Astro.props.icon ?? iconForPath(href));
+const target = href.split('#')[0];
+const fig = Astro.props.thumb !== false && (await existingPaths()).has(target) ? figPathFor(target) : undefined;
 ---
 
-<article class="sheet-card">
+<article class:list={['sheet-card', fig && 'sheet-card--fig']}>
+  {
+    fig && (
+      <div class="sheet-card__fig" aria-hidden="true" data-md-skip>
+        <img src={fig} width="360" height="190" loading="lazy" decoding="async" alt="" />
+      </div>
+    )
+  }
   {
     (icon || sheet) && (
       <div class="sheet-card__head">
@@ -35,6 +53,13 @@ const icon = Astro.props.icon === false ? undefined : (Astro.props.icon ?? iconF
         )}
         {sheet && <p class="sheet-card__sheet mono">{sheet}{draft && ' · SZKIC'}</p>}
       </div>
+    )
+  }
+  {
+    scheduled && (
+      <p class="sheet-card__plan mono">
+        Zaplanowano: <time datetime={isoDate(scheduled)}>{fmtDate(scheduled)}</time>
+      </p>
     )
   }
   <H class="sheet-card__title"><a href={href}>{polishText(title)}</a></H>
@@ -83,6 +108,22 @@ const icon = Astro.props.icon === false ? undefined : (Astro.props.icon ?? iconF
       transition: clip-path 320ms var(--ease);
     }
   }
+  /* miniatura na całą szerokość karty, oddzielona linią */
+  .sheet-card__fig {
+    margin: calc(-1 * var(--s-3)) calc(-1 * var(--s-3)) var(--s-1);
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+    transition: border-color 120ms var(--ease);
+  }
+  .sheet-card__fig img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .sheet-card:hover .sheet-card__fig,
+  .sheet-card:focus-within .sheet-card__fig {
+    border-color: var(--ink);
+  }
   .sheet-card__head {
     display: flex;
     align-items: center;
@@ -109,6 +150,12 @@ const icon = Astro.props.icon === false ? undefined : (Astro.props.icon ?? iconF
   }
   .sheet-card__sheet {
     color: var(--ink-3);
+    font-size: var(--fs-label);
+    letter-spacing: var(--tracking-label);
+  }
+  .sheet-card__plan {
+    margin: 0;
+    color: var(--blue);
     font-size: var(--fs-label);
     letter-spacing: var(--tracking-label);
   }

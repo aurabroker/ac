@@ -1,21 +1,19 @@
 ---
 /**
- * Stopka arkusza: rejestr zmian i pełna tabliczka rysunkowa (arkusz, rewizja, daty, wydawca, .md).
- * Autor jest pokazany raz — w zwartej tabliczce pod H1; nota „Jak powstał ten tekst” stoi przy źródłach.
+ * Stopka arkusza: pełna tabliczka rysunkowa (arkusz, rewizja, daty, wydawca, .md).
+ * Rejestr zmian (`changelog`) nie jest pokazywany czytelnikom — zostaje w danych treści i w historii git.
+ * Autor (tylko artykuły i regulacje) jest pokazany raz — w zwartej tabliczce pod H1.
  */
-import RevisionLog from './RevisionLog.astro';
 import TitleBlock from './TitleBlock.astro';
 import type { PageContext } from '../lib/page.ts';
 
 interface Props {
   ctx: PageContext;
-  revisions?: boolean;
 }
-const { ctx, revisions = true } = Astro.props;
+const { ctx } = Astro.props;
 const d = ctx.route.entry.data;
 ---
 
-{revisions && <RevisionLog items={d.changelog} published={d.published} revision={d.revision} />}
 <TitleBlock
   variant="full"
   title={ctx.title}
@@ -25,4 +23,5 @@ const d = ctx.route.entry.data;
   published={d.published}
   mdPath={ctx.mdPath}
   draft={ctx.draft}
+  scheduled={ctx.scheduled}
 />

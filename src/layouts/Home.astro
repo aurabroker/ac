@@ -71,14 +71,14 @@ const at = accent ? title.indexOf(accent) : -1;
     <AnswerBox summary={d.summary} points={d.summaryPoints} />
     <div class="home-body prose prose--wide"><slot /></div>
     <FAQ items={d.faq} />
-    <ContactChannels sheet={d.sheet} signal={false} pageTitle={ctx.title} />
+    <ContactChannels pageTitle={ctx.title} />
     <Disclosure show={['d', 'c']} />
     <SheetFoot ctx={ctx} />
   </div>
 </Sheet>
 
 <style>
-  /* jedna miara dla bloków końca arkusza (FAQ, kontakt, formuły, rejestr zmian, tabliczka) */
+  /* jedna miara dla bloków końca arkusza (FAQ, kontakt, formuły, tabliczka) */
   .home-sheet {
     --end-measure: 880px;
   }

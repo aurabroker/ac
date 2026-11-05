@@ -346,7 +346,7 @@ export function toPublicMarkdown(html: string, opts: { force?: boolean } = {}): 
   };
   const front = yamlStringify(fm, { lineWidth: 0 }).trim();
   const lead =
-    `> Wersja kanoniczna (HTML): ${canonical} · Analiza ryzyka: ${SITE.email} · ${SITE.phone}`;
+    `> Wersja kanoniczna (HTML): ${canonical} · Analiza ryzyka: tel. ${SITE.phone} albo formularz ${SITE.formUrl}`;
   const footer = ['---', '', REGISTRY_LINE, '', FORMULA_C].join('\n');
 
   const markdown = `---\n${front}\n---\n\n${lead}\n\n${body}\n\n${footer}\n`;

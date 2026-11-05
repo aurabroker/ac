@@ -98,7 +98,27 @@ const base = z.object({
   /** id rysunku z src/components/figures/index.ts (np. „FigPillarIT”). */
   figure: z.string().optional(),
   figureCaption: z.string().optional(),
-  /** Rejestr zmian (najnowsze na końcu). */
+  /**
+   * Rysunek izometryczny „układ scalony” (src/lib/iso): nagłówek stron bez innej grafiki i miniatury na kartach.
+   * Domyślnie motyw i etykiety wynikają z treści; tu można je nadpisać, `false` wyłącza rysunek w nagłówku.
+   */
+  iso: z
+    .union([
+      z.literal(false),
+      z.object({
+        motif: z.enum(['stack', 'qfp', 'pcb', 'bga']).optional(),
+        /** Etykiety (od najważniejszej / od góry), krótkie, bez liczb. */
+        labels: z.array(z.string().min(2).max(28)).max(4).optional(),
+        /** Wejścia po lewej (motyw pcb). */
+        inputs: z.array(z.string().min(2).max(28)).max(3).optional(),
+        /** Napis na obudowie (≤ 14 znaków); pusty = bez napisu. */
+        chip: z.string().max(14).optional(),
+        /** Czerwony akcent z podpisem (domyślnie „Wyłączenia”, gdy tabela zakresu je ma); false = bez czerwieni. */
+        fault: z.union([z.string().min(2).max(28), z.literal(false)]).optional(),
+      }),
+    ])
+    .optional(),
+  /** Rejestr zmian (najnowsze na końcu). Dane wewnętrzne — nie wyświetlane na stronach ani w .md (decyzja 4.11.2026). */
   changelog: z.array(changelogItem).default([]),
   /** Powiązane arkusze — ścieżki stron, np. „/wiedza/llmjacking/”. */
   related: z.array(z.string().regex(PATH_RE)).default([]),

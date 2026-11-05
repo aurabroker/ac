@@ -1,0 +1,37 @@
+---
+/**
+ * NeuralBackground — tło całego serwisu: dryfująca siatka węzłów pod treścią (src/scripts/neural-bg.ts).
+ * Wstawiany raz w layoucie bazowym (Sheet) i na 404. Płótno jest dekoracyjne (aria-hidden), nie łapie
+ * kliknięć i nie wpływa na układ. Bez JS, przy prefers-reduced-motion i oszczędzaniu danych zostaje puste.
+ * Czytelność: bloki z drobnym tekstem mają nieprzezroczyste białe tło (src/styles/base.css).
+ */
+---
+
+<canvas class="nbg" data-nbg aria-hidden="true"></canvas>
+
+<script>
+  import '../scripts/neural-bg.ts';
+</script>
+
+<style>
+  .nbg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    /* vh = duży widok na telefonie: płótno nie zmienia rozmiaru, gdy chowa się pasek adresu */
+    height: 100vh;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 600ms var(--ease);
+  }
+  .nbg.is-on {
+    opacity: 1;
+  }
+  @media print, (forced-colors: active) {
+    .nbg {
+      display: none;
+    }
+  }
+</style>

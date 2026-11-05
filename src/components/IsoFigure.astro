@@ -1,0 +1,61 @@
+---
+/**
+ * Rysunek izometryczny „układ scalony” w nagłówku strony (src/lib/iso). Dwa warianty tego samego rysunku:
+ * szeroki (etykiety w kolumnie obok) i wąski (etykiety łamane, mniejsza skala) — wybór przez zapytanie
+ * o kontener, więc etykiety nigdy nie wychodzą poza kartkę. Bez JS rysunek jest statyczny; z JS warstwy
+ * rozsuwają się raz przy pierwszym wejściu w widok (src/scripts/iso-explode.ts), przy ograniczeniu ruchu — nie.
+ * Ozdoba nagłówka: poza bliźniakiem .md (data-md-skip); opis tekstowy w <title>/<desc>.
+ */
+import '../styles/iso.css';
+import { isoSpecFor } from '../lib/iso/spec.ts';
+import { renderInline } from '../lib/iso/render.ts';
+import type { SiteRoute } from '../lib/routes.ts';
+
+interface Props {
+  route: SiteRoute;
+  class?: string;
+}
+const { route, class: cls } = Astro.props;
+const spec = await isoSpecFor(route);
+const uid = `iso-${route.path.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'start'}`;
+const wide = renderInline(spec, 'w', `${uid}-w`);
+const narrow = renderInline(spec, 'n', `${uid}-n`);
+---
+
+<figure class:list={['iso-fig', cls]} data-iso data-md-skip>
+  <div class="iso-fig__sheet drafting-grid">
+    <Fragment set:html={wide} />
+    <Fragment set:html={narrow} />
+  </div>
+</figure>
+
+<script>
+  import '../scripts/iso-explode.ts';
+</script>
+
+<style>
+  .iso-fig {
+    margin: 0;
+    container-type: inline-size;
+    background: var(--paper);
+  }
+  .iso-fig__sheet {
+    border: 1px solid var(--rule);
+    padding: clamp(8px, 2.4cqi, 20px);
+  }
+  .iso-fig__sheet :global(.iso-svg) {
+    margin-inline: auto;
+    max-width: 620px;
+  }
+  .iso-fig__sheet :global(.iso-svg--n) {
+    display: none;
+  }
+  @container (max-width: 459px) {
+    .iso-fig__sheet :global(.iso-svg--w) {
+      display: none;
+    }
+    .iso-fig__sheet :global(.iso-svg--n) {
+      display: block;
+    }
+  }
+</style>

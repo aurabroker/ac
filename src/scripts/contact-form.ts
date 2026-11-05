@@ -85,7 +85,7 @@ export function initContactForms() {
     // powrót po wysyłce bez JS
     const result = new URLSearchParams(location.search).get('formularz');
     if (result === 'wyslano') showDone(root, form);
-    if (result === 'blad') setErrors(form, { form: 'Nie udało się wysłać wiadomości. Zadzwoń lub napisz e-mail.' });
+    if (result === 'blad') setErrors(form, { form: 'Nie udało się wysłać wiadomości. Spróbuj ponownie albo zadzwoń: +48 500 502 702.' });
 
     // konfiguracja przekazana z innej strony
     try {
@@ -121,9 +121,9 @@ export function initContactForms() {
           showDone(root, form);
           return;
         }
-        setErrors(form, body.errors ?? { form: 'Nie udało się wysłać wiadomości. Zadzwoń lub napisz e-mail.' });
+        setErrors(form, body.errors ?? { form: 'Nie udało się wysłać wiadomości. Spróbuj ponownie albo zadzwoń: +48 500 502 702.' });
       } catch {
-        setErrors(form, { form: 'Brak połączenia. Zadzwoń: +48 500 502 702 lub napisz: cyber@auraconsulting.pl.' });
+        setErrors(form, { form: 'Brak połączenia. Spróbuj ponownie albo zadzwoń: +48 500 502 702.' });
       } finally {
         if (button) button.disabled = false;
         if (label) label.textContent = original;

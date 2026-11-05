@@ -29,6 +29,7 @@ const items = await articlesForHub(hubPath);
             summary={r.entry.data.description}
             meta={`Rew. ${r.entry.data.revision} · ${fmtDate(r.entry.data.updated)}`}
             draft={r.draft}
+            scheduled={r.scheduled ? r.entry.data.published : undefined}
           />
         ))}
       </CardGrid>

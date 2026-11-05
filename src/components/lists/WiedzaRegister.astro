@@ -1,11 +1,12 @@
 ---
 /**
- * Blog (/wiedza/): lista artykułów jako karty — kategoria, tytuł, zajawka, data, czas czytania.
+ * Blog (/wiedza/): lista artykułów jako karty — miniatura (rysunek izometryczny), kategoria, tytuł, zajawka, data, czas czytania.
  * Gdy brak opublikowanych artykułów: krótki komunikat i linki do głównych tematów.
  */
 import { getRoutes, type PillarEntry } from '../../lib/routes.ts';
 import { fmtDate, isoDate } from '../../lib/format.ts';
 import { polishText } from '../../lib/typography/polish.ts';
+import { figPathFor } from '../../lib/iso/spec.ts';
 
 const routes = await getRoutes();
 const posts = routes
@@ -35,10 +36,19 @@ const pillars = routes
       {posts.map((r) => (
         <li class="blog__item">
           <article class="post">
+            <div class="post__fig" aria-hidden="true" data-md-skip>
+              <img src={figPathFor(r.path)} width="360" height="190" loading="lazy" decoding="async" alt="" />
+            </div>
             <p class="post__meta mono">
               <span class="post__cat">{categoryOf(r)}</span>
               <span aria-hidden="true"> · </span>
-              <time datetime={isoDate(r.entry.data.published ?? r.entry.data.updated)}>{fmtDate(r.entry.data.published ?? r.entry.data.updated)}</time>
+              {r.scheduled ? (
+                <span class="post__plan">
+                  Zaplanowano: <time datetime={isoDate(r.entry.data.published)}>{fmtDate(r.entry.data.published)}</time>
+                </span>
+              ) : (
+                <time datetime={isoDate(r.entry.data.published)}>{fmtDate(r.entry.data.published)}</time>
+              )}
               <span aria-hidden="true"> · </span>
               <span>{minutes(r.entry.body)} min czytania</span>
               {r.draft && <span class="post__draft"> · SZKIC</span>}
@@ -92,6 +102,21 @@ const pillars = routes
   .post:focus-within {
     border-color: var(--ink);
   }
+  /* miniatura artykułu (rysunek izometryczny, /fig/…svg) na całą szerokość karty */
+  .post__fig {
+    margin: calc(-1 * var(--s-4)) calc(-1 * var(--s-4)) var(--s-1);
+    border-bottom: 1px solid var(--rule);
+    transition: border-color 0.2s ease;
+  }
+  .post__fig img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .post:hover .post__fig,
+  .post:focus-within .post__fig {
+    border-color: var(--ink);
+  }
   .post__meta {
     margin: 0;
     font-size: var(--fs-mono);
@@ -104,6 +129,10 @@ const pillars = routes
   }
   .post__draft {
     color: var(--signal);
+  }
+  .post__plan {
+    color: var(--ink);
+    white-space: nowrap;
   }
   .post__title {
     margin: 0;

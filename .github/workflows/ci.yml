@@ -26,6 +26,8 @@ jobs:
           node-version: 24
       - name: Skan repozytorium (bez zależności)
         run: node scripts/guard.mjs
+      - name: Harmonogram publikacji (linki między artykułami a daty)
+        run: node scripts/publish-today.mjs --check
 
   build:
     name: Build + walidacja

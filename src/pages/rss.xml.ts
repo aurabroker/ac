@@ -17,7 +17,7 @@ export const GET: APIRoute = async () => {
     // <link> kanału = indeks arkuszy; linki pozycji są ścieżkami absolutnymi od korzenia domeny
     site: `${SITE.url}/wiedza/`,
     trailingSlash: true,
-    xmlns: { atom: 'http://www.w3.org/2005/Atom' },
+    xmlns: { atom: 'http://www.w3.org/2005/Atom', dc: 'http://purl.org/dc/elements/1.1/' },
     customData: `<language>pl-pl</language><atom:link href="${SITE.url}/rss.xml" rel="self" type="application/rss+xml"/>`,
     items: await Promise.all(
       items.map(async (r) => {
@@ -29,7 +29,8 @@ export const GET: APIRoute = async () => {
           link: r.path,
           pubDate: d.published,
           description: d.description,
-          author: `${SITE.email} (${escapeHtml(author)})`,
+          // autor bez adresu e-mail (RSS <author> wymaga adresu) — kontakt publiczny: telefon i formularz
+          customData: `<dc:creator>${escapeHtml(author)}</dc:creator>`,
           content: `<p><strong>W skrócie:</strong> ${inlineMd(d.summary)}</p>${points ? `<ul>${points}</ul>` : ''}<p><a href="${SITE.url}${r.path}">Czytaj cały arkusz</a></p>`,
         };
       }),

@@ -16,6 +16,7 @@ import {
   personNode,
   authorIdFor,
   graph,
+  ORG_ID,
   type Crumb,
   type JsonLdNode,
   type WebPageType,
@@ -36,10 +37,13 @@ export interface PageContext {
   mdPath: string | null;
   noindex: boolean;
   draft: boolean;
+  /** Data publikacji jeszcze nie nadeszła (artykuł/regulacja w podglądzie): tabliczka pokazuje „Zaplanowano”. */
+  scheduled: boolean;
   crumbs: Crumb[];
   person: Person;
+  /** Autor do <meta name="author"> i bliźniaka .md: osoba przy artykułach, spółka na pozostałych stronach. */
   authorName: string;
-  /** Czy pokazywać autora (tabliczka, karta autora). Strony firmowe i prawne — nie. */
+  /** Czy pokazywać autora (tabliczka, JSON-LD Person): tylko artykuły (/wiedza/*) i regulacje (/regulacje/*). */
   showAuthor: boolean;
   jsonld: Record<string, unknown>;
 }
@@ -75,17 +79,18 @@ export async function pageContext(route: SiteRoute, extraNodes: (JsonLdNode | nu
   const url = absoluteUrl(path);
   const noindex = !route.indexable;
   const person = await getPerson(d.author);
-  const authorName = displayName(person);
-  const COMPANY_TEMPLATES = ['home', 'legal', 'contact', 'person', 'page', 'catalogue-index', 'wiedza-index'];
-  const showAuthor = !(route.kind === 'page' && COMPANY_TEMPLATES.includes((route.entry as PageEntry).data.template));
+  // Autor (osoba) tylko przy artykułach i regulacjach. Filary, karty, katalog, słownik, strony firmowe
+  // i prawne: autorem i wydawcą jest spółka (decyzja właściciela 4.11.2026).
+  const showAuthor = route.kind === 'article' || route.kind === 'regulation';
+  const authorName = showAuthor ? displayName(person) : SITE.name;
   const crumbs = breadcrumbsFor(route);
   const ogImage = `${SITE.url}/og/${ogKeyFor(path)}.png`;
   const title = d.title;
   const seoTitle = d.seoTitle ?? (path === '/' ? `${SITE.name} — ${SITE.tagline.toLowerCase()}` : `${title} · ${SITE.name}`);
-  const authorId = authorIdFor(person);
+  const authorId = showAuthor ? authorIdFor(person) : ORG_ID;
   const hasCrumbs = path !== '/';
 
-  const nodes: (JsonLdNode | null)[] = [organizationNode(), websiteNode(), personNode(person)];
+  const nodes: (JsonLdNode | null)[] = [organizationNode(), websiteNode(), showAuthor ? personNode(person) : null];
   let mainEntityId: string | undefined;
 
   if (route.kind === 'pillar' || route.kind === 'solution') {
@@ -134,7 +139,7 @@ export async function pageContext(route: SiteRoute, extraNodes: (JsonLdNode | nu
       hasBreadcrumb: hasCrumbs,
       ogImage,
       authorId,
-      reviewedById: route.kind === 'page' ? undefined : authorId,
+      reviewedById: showAuthor ? authorId : undefined,
       mainEntityId,
       aboutId: path === '/' ? `${SITE.url}/#org` : undefined,
     }),
@@ -154,6 +159,7 @@ export async function pageContext(route: SiteRoute, extraNodes: (JsonLdNode | nu
     mdPath: noindex ? null : mdPathFor(path),
     noindex,
     draft: route.draft,
+    scheduled: route.scheduled,
     crumbs,
     person,
     authorName,

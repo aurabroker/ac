@@ -7,6 +7,7 @@ import '../styles/global.css';
 import Seo from '../components/seo/Seo.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import NeuralBackground from '../components/NeuralBackground.astro';
 import type { PageContext } from '../lib/page.ts';
 
 interface Props {
@@ -50,6 +51,7 @@ const d = ctx.route.entry.data;
       <slot />
     </main>
     <SiteFooter mdPath={ctx.mdPath} />
+    <NeuralBackground />
   </body>
 </html>
 

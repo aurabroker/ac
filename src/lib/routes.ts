@@ -1,9 +1,11 @@
 /**
- * Rejestr tras: jedno źródło listy stron dla [...slug].astro, OG, sitemap, llms.txt, RSS.
+ * Rejestr tras: jedno źródło listy stron dla [...slug].astro, OG, sitemap, llms.txt, llms-full.txt, RSS,
+ * bloga, „Powiązanych” i odnośników słownika (linki do stron spoza buildu nie powstają, a `npm run links` je wyłapie).
  * Waliduje: unikalność ścieżek, istnienie hubów i autorów.
  */
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import { PREVIEW } from './env.ts';
+import { publishToday, isPublished, isScheduled } from './schedule.ts';
 import { SITE } from './site.ts';
 import { MAIN_NAV, SECTION_LABELS } from './nav.ts';
 import type { Crumb } from './seo/jsonld.ts';
@@ -23,31 +25,49 @@ export interface SiteRoute {
   kind: RouteKind;
   entry: AnyEntry;
   draft: boolean;
+  /** Artykuł lub arkusz regulacji z datą `published` w przyszłości (w buildzie tylko w podglądzie i dev). */
+  scheduled: boolean;
   /** Czy strona trafia do indeksu (sitemap, llms.txt, bliźniak .md). */
   indexable: boolean;
 }
 
 const DEV = import.meta.env.DEV;
 
-/** Drafty widoczne tylko w dev lub z PREVIEW=1. */
+/** Drafty i wpisy z harmonogramu widoczne tylko w dev lub z PREVIEW=1. */
 export const showDrafts = PREVIEW || DEV;
+
+/** „Dziś” w Europe/Warsaw w chwili builda (RRRR-MM-DD). */
+export const TODAY = publishToday();
+if (process.env.AURA_TODAY) console.warn(`[harmonogram] AURA_TODAY=${TODAY} — data testowa, nie do produkcji`);
+
+const isPost = (e: AnyEntry) => e.collection === 'wiedza' || e.collection === 'regulations';
+
+/**
+ * Jedyna reguła publikacji w produkcji. Strona stała: nie jest szkicem. Artykuł i arkusz regulacji:
+ * zatwierdzony (`draft: false`) i jego dzień `published` (Europe/Warsaw) już nadszedł (`src/lib/schedule.ts`).
+ */
+export function isLive(entry: AnyEntry, today: string = TODAY): boolean {
+  return isPost(entry) ? isPublished(entry.data, today) : !entry.data.draft;
+}
 
 function make(kind: RouteKind, path: string, entry: AnyEntry): SiteRoute {
   const draft = entry.data.draft;
+  const scheduled = isPost(entry) && isScheduled(entry.data, TODAY);
   return {
     path,
     url: SITE.url + path,
     kind,
     entry,
     draft,
-    indexable: !draft && !entry.data.noindex && !PREVIEW,
+    scheduled,
+    indexable: !draft && !scheduled && !entry.data.noindex && !PREVIEW,
   };
 }
 
 let cache: Promise<SiteRoute[]> | null = null;
 
 async function build(): Promise<SiteRoute[]> {
-  const visible = <T extends AnyEntry>(e: T) => showDrafts || !e.data.draft;
+  const visible = <T extends AnyEntry>(e: T) => showDrafts || isLive(e);
   const [pages, pillars, solutions, wiedza, regulations] = await Promise.all([
     getCollection('pages', visible),
     getCollection('pillars', visible),

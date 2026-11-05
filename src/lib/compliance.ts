@@ -38,8 +38,23 @@ export const NOTE_AI_ASSISTANCE_NO_SOURCES = 'z pomocą narzędzi AI; przed publ
 export const NOTE_EDITORIAL =
   'napisany bez narzędzi AI. Opis zakresu ma charakter ogólny i zależy od warunków konkretnej polisy.';
 
-/** Treść noty po etykiecie „Jak powstał ten tekst:”. */
+/** Treść noty po etykiecie „Jak powstał ten tekst:” (artykuły i regulacje). */
 export function creationNote(opts: { aiAssistance: boolean; hasSources: boolean }): string {
   if (!opts.aiAssistance) return NOTE_EDITORIAL;
   return opts.hasSources ? NOTE_AI_ASSISTANCE : NOTE_AI_ASSISTANCE_NO_SOURCES;
+}
+
+/**
+ * Linia redakcyjna na stronach rozwiązań (filary, karty, `/rynek-lloyds/`) — bez osoby, bo autorem
+ * tych stron jest spółka (autor z nazwiska tylko przy artykułach). Etykieta: NOTE_LABEL_EDITORIAL.
+ */
+export const NOTE_LABEL_ARTICLE = 'Jak powstał ten tekst';
+export const NOTE_LABEL_EDITORIAL = 'Opracowanie';
+
+/** Treść po etykiecie „Opracowanie:”. */
+export function editorialNote(opts: { aiAssistance: boolean; hasSources: boolean }): string {
+  if (!opts.aiAssistance) return 'Aura Consulting. Opis zakresu ma charakter ogólny i zależy od warunków konkretnej polisy.';
+  return opts.hasSources
+    ? 'Aura Consulting, z pomocą narzędzi AI, na podstawie źródeł wymienionych wyżej; przed publikacją sprawdzone ze źródłami.'
+    : 'Aura Consulting, z pomocą narzędzi AI; przed publikacją sprawdzone merytorycznie.';
 }

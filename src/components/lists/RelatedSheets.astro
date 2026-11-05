@@ -19,7 +19,13 @@ const items = paths.map((p) => routes.find((r) => r.path === p)).filter((r) => !
       <h2 id="powiazane">{heading}</h2>
       <CardGrid columns={3}>
         {items.map((r) => (
-          <SheetCard href={r.path} title={r.entry.data.title} sheet={r.entry.data.sheet} draft={r.draft} />
+          <SheetCard
+            href={r.path}
+            title={r.entry.data.title}
+            sheet={r.entry.data.sheet}
+            draft={r.draft}
+            scheduled={r.scheduled ? r.entry.data.published : undefined}
+          />
         ))}
       </CardGrid>
     </section>

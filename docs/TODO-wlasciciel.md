@@ -4,7 +4,7 @@ Lista danych i decyzji, których nie da się uzupełnić bez Ciebie. Pozycje ozn
 
 ## 1. Dane osoby (autor tekstów)
 
-Plik: `src/content/people.yaml` (wpis `id: marek-ciesla`, strona `/zespol/marek-ciesla/`). Imię i nazwisko są już wpisane — teksty podpisuje „Marek Cieśla”, a JSON-LD zawiera `Person` powiązaną ze spółką.
+Plik: `src/content/people.yaml` (wpis `id: marek-ciesla`, strona `/zespol/marek-ciesla/`). Imię i nazwisko są już wpisane — artykuły (`/wiedza/*`) i arkusze regulacji (`/regulacje/*`) podpisuje „Marek Cieśla”, a ich JSON-LD zawiera `Person` powiązaną ze spółką. Opisy rozwiązań (filary, karty, katalog, słownik) i strony firmowe nie mają autora — wydawcą jest spółka (decyzja 4.11.2026).
 
 - [ ] **Rola** — dziś: „Aura Consulting sp. z o.o. — broker ubezpieczeniowy”. Doprecyzuj funkcję, jeśli chcesz (np. „prezes zarządu”).
 - [x] **Profil LinkedIn** — wpisany (`people.yaml`, `sameAs` w JSON-LD, profil na `/zespol/marek-ciesla/`).
@@ -17,7 +17,7 @@ Plik: `src/content/people.yaml` (wpis `id: marek-ciesla`, strona `/zespol/marek-
 
 Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) są już wpisane.
 
-- [ ] Potwierdź pozostałe dane: ul. Bolkowska 2A/28, 01-466 Warszawa · KRS 0000426835 · NIP 9562300574 · REGON 341302033 · zezwolenie KNF 1972/13 · rejestr brokerów 00001851/U · tel. +48 500 502 702 · cyber@auraconsulting.pl.
+- [ ] Potwierdź pozostałe dane: ul. Bolkowska 2A/28, 01-466 Warszawa · KRS 0000426835 · NIP 9562300574 · REGON 341302033 · zezwolenie KNF 1972/13 · rejestr brokerów 00001851/U · tel. +48 500 502 702. Kontakt publiczny to telefon i formularz; `cyber@auraconsulting.pl` nie jest pokazywany w serwisie, ale nadal przyjmuje wiadomości z formularza (`CONTACT_TO`).
 - [ ] Profile zewnętrzne do `sameAs` (LinkedIn firmy, Google Business Profile) — `SITE.sameAs` w `src/lib/site.ts`.
 
 ## 3. Treści prawne do akceptacji (z prawnikiem)
@@ -29,17 +29,39 @@ Plik: `src/lib/site.ts`. Sąd rejestrowy i kapitał zakładowy (KSH art. 206) s�
 - [ ] **[blokuje start]** `/polityka-prywatnosci/` — akceptacja prawnika / IOD, w tym:
   - [ ] potwierdzenie, że IOD nie został wyznaczony (strona tak dziś mówi) — albo dane kontaktowe IOD;
   - [ ] dostawcy poczty (cyber@auraconsulting.pl) i telefonii: nazwy oraz podstawa przekazania poza EOG (DPF/SCC) albo potwierdzenie, że przetwarzają dane tylko w EOG — do wpisania z nazwy.
-- [ ] **[blokuje start]** `/reklamacje/` — akceptacja prawnika.
+- [ ] **[blokuje start]** `/reklamacje/` — akceptacja prawnika, w tym: **czy formularz kontaktowy (`/kontakt/#formularz`, z dopiskiem „Reklamacja”) wystarcza jako kanał elektroniczny** wymagany ustawą o rozpatrywaniu reklamacji (art. 3), obok telefonu i pisma — czy trzeba wskazać adres e-mail albo adres do doręczeń elektronicznych. Adresu e-mail do zapytań nie pokazujemy od 4.11.2026.
+- [ ] **[decyzja]** `/informacje-o-brokerze/` i stopka: czy przepisy (UŚUDE art. 5 — „adres elektroniczny”, informacje o pośredniku) wymagają publicznego adresu e-mail. Dziś: telefon, formularz i adres siedziby; ewentualnie wystarczy `warszawa@auraconsulting.pl` z polityki prywatności.
 - [ ] **[blokuje start]** Pisemna zgoda ubezpieczyciela / partnera underwritingowego na publikację treści o rynku Lloyd's i o programach plasowanych przez partnera (zasady KNF dot. reklamy, umowa z partnerem — TOBA) oraz — dla każdej karty — potwierdzenie `securityConfirmed` (kto jest ubezpieczycielem, jaki udział rynku Lloyd's, dokument). Bez tego karty nie wspominają Lloyd's.
-- [ ] **[blokuje start]** **Przegląd i zatwierdzenie każdej publikowanej strony przez autora.** Teksty przygotowały agenty AI (stąd domyślna nota „Jak powstał ten tekst: z pomocą narzędzi AI … przed publikacją sprawdzony ze źródłami”). Nota mówi prawdę dopiero po Twoim przeglądzie: strona główna, 4 filary + `/ubezpieczenie-ai/ai-w-firmie/`, `/ubezpieczenia/` i 12 kart, `/rynek-lloyds/`, `/slownik/`, `/wiedza/`, strony firmowe i prawne. Po przeglądzie strony możesz dopisać wpis w jej `changelog` (np. „Przegląd autora”).
+- [ ] **[blokuje start]** **Przegląd i zatwierdzenie każdej publikowanej strony przez autora.** Teksty przygotowały agenty AI (stąd domyślna nota „Jak powstał ten tekst: z pomocą narzędzi AI … przed publikacją sprawdzony ze źródłami” przy artykułach i linia „Opracowanie: Aura Consulting, z pomocą narzędzi AI …” przy filarach i kartach). Nota mówi prawdę dopiero po Twoim przeglądzie: strona główna, 4 filary + `/ubezpieczenie-ai/ai-w-firmie/`, `/ubezpieczenia/` i 12 kart, `/rynek-lloyds/`, `/slownik/`, `/wiedza/`, strony firmowe i prawne. Po przeglądzie strony możesz dopisać wpis w jej `changelog` (np. „Przegląd autora”) — rejestr nie jest pokazywany czytelnikom, zostaje w danych i w git.
 - [ ] **[blokuje start]** **Bramka „odcisku palca” (PLAN §7.3)** dla tabel zakresu w filarach i kartach: każdy wiersz zakresu ma mieć podstawę w ≥ 3 wordingach, w tym w publicznych polskich OWU (pole `basis` w `coverage`), albo zostać przeredagowany ogólniej. Dziś żaden wiersz nie ma `basis` — treść opiera się na wcześniej zweryfikowanych stronach i jednym zestawie dokumentów. Najbardziej wrażliwe: `/oc-zawodowe/` (zaległe honorarium, automatyczny okres zgłoszenia), `/oc-cyber-dla-it/` i `/ubezpieczenie-ai/` (definicje przerwy w działalności, błędu operatora, ujawnienia danych przez AI). Przegląd: Ty lub doradca compliance.
-- [ ] **[decyzja]** `/regulamin/` (regulamin świadczenia usług drogą elektroniczną, UŚUDE art. 8): serwis nie ma formularzy, kont ani newslettera, więc rekomendujemy „nie jest potrzebny” — **potwierdź opinią prawnika** albo zleć budowę strony (`src/content/pages/regulamin.mdx`).
+- [ ] **[decyzja]** `/regulamin/` (regulamin świadczenia usług drogą elektroniczną, UŚUDE art. 8): serwis nie ma kont ani newslettera, ale formularz kontaktowy jest od 4.11.2026 jedynym kanałem elektronicznym — **potwierdź opinią prawnika**, czy regulamin jest potrzebny, albo zleć budowę strony (`src/content/pages/regulamin.mdx`).
 
 ## 3a. Formularz kontaktowy (Resend)
 
 - [ ] Prawnik / IOD: akceptacja sekcji „Jak działa formularz kontaktowy?” w `/polityka-prywatnosci/` (odbiorcy: Cloudflare, Resend; przekazanie poza EOG; okres przechowywania).
 - [ ] Potwierdź zaakceptowane umowy powierzenia (DPA) z Cloudflare i Resend.
 - [ ] Wyślij próbną wiadomość z podglądu — temat ma postać „[PODGLĄD] [<tytuł strony>] Zapytanie od …” i trafia na cyber@auraconsulting.pl.
+
+## 3b. Harmonogram artykułów (co 2 dni)
+
+- [ ] **Zatwierdź artykuły do harmonogramu (zmień `draft: false`).** Przejrzyj tekst i w jego pliku zmień `draft: true` na `draft: false`. Zatwierdzony artykuł wchodzi na stronę rano w dniu z tabeli; niezatwierdzony czeka, także po terminie.
+
+| Publikacja | Artykuł | Plik |
+|---|---|---|
+| czw. 05.11.2026 | OC programisty na B2B | `src/content/wiedza/oc-programisty-b2b.mdx` |
+| sob. 07.11.2026 | LLMjacking | `src/content/wiedza/llmjacking.mdx` |
+| pon. 09.11.2026 | USA i Kanada w polisie | `src/content/wiedza/usa-kanada-w-polisie.mdx` |
+| śr. 11.11.2026 | Tech E&O a OC zawodowe | `src/content/wiedza/tech-eo-a-oc-zawodowe.mdx` |
+| pt. 13.11.2026 | Klient wymaga OC od kontraktora | `src/content/wiedza/klient-wymaga-oc-od-kontraktora.mdx` |
+| niedz. 15.11.2026 | AI Act a ubezpieczenie | `src/content/wiedza/ai-act-a-ubezpieczenie.mdx` |
+| wt. 17.11.2026 | Ransomware 2.0 | `src/content/wiedza/ransomware-2-0.mdx` |
+| czw. 19.11.2026 | PLD a software house | `src/content/wiedza/pld-a-oc-software-house.mdx` |
+| sob. 21.11.2026 | AI Act (regulacje) | `src/content/regulations/ai-act.mdx` |
+| pon. 23.11.2026 | Dyrektywa PLD (regulacje) | `src/content/regulations/pld.mdx` |
+
+- Data publikacji ma być prawdziwa. Jeśli zatwierdzasz po terminie albo start serwisu wypada później, przesuń `published` i `updated` dalszych pozycji na przyszłe dni (co 2 dni). „Stan prawny na 02.11.2026” zostaje; przy przesunięciu o kilka tygodni sprawdzimy przepisy ponownie.
+- Podgląd gałęzi pokazuje wszystkie artykuły: przyszłe z etykietą „Zaplanowano: dd.mm.rrrr”, niezatwierdzone z „SZKIC”. Cały plan ze stanami: `node scripts/publish-today.mjs --list`.
+- Publikację uruchamia codziennie o 6:05 (latem 7:05) workflow GitHub `daily-publish`: w dniu z tabeli wypycha na `main` pusty commit „Publikacja: <tytuł>”, a Cloudflare Pages buduje produkcję od nowa. Działa dopiero po scaleniu z `main` w dniu startu (GitHub uruchamia harmonogramy tylko z gałęzi domyślnej) i przy włączonych wdrożeniach produkcyjnych.
 
 ## 4. Cloudflare
 

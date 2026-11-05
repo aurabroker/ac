@@ -2,12 +2,14 @@
 /**
  * Artykuł / regulacja (PLAN §6.4): okruszki → H1 → tabliczka → „W skrócie” → „Stan prawny na”
  * → treść (definicja, H2-pytania, scenariusze, „Czego polisa nie obejmuje”, „Od czego zależy składka”)
- * → tabela zakresu → kontakt (mailto z numerem arkusza) → FAQ → źródła → autor + nota → rejestr zmian
- * → powiązane arkusze → pełna tabliczka → formuła (c).
+ * → tabela zakresu → kontakt (telefon + formularz) → FAQ → źródła z notą „Jak powstał ten tekst”
+ * → pełna tabliczka → powiązane arkusze → formuła (c). Autor — tylko w tabliczce pod H1.
  */
 import Sheet from './Sheet.astro';
 import SheetHead from '../components/SheetHead.astro';
 import SheetFoot from '../components/SheetFoot.astro';
+import IsoFigure from '../components/IsoFigure.astro';
+import { showsHeaderIso } from '../lib/iso/spec.ts';
 import DocBody from '../components/DocBody.astro';
 import AnnotatedFigure from '../components/AnnotatedFigure.astro';
 import BOM from '../components/BOM.astro';
@@ -39,7 +41,7 @@ const tocExtra = [
 
 <Sheet ctx={ctx} kind={ctx.route.kind} ogType="article">
   <div class="container">
-    <SheetHead ctx={ctx} />
+    <SheetHead ctx={ctx}>{showsHeaderIso(ctx.route) && <IsoFigure slot="figure" route={ctx.route} />}</SheetHead>
     <DocBody headings={headings} tocExtra={tocExtra}>
       {
         hub && (
@@ -55,7 +57,7 @@ const tocExtra = [
           <BOM id="tabela-zakresu" caption={d.coverageCaption ?? 'Tabela zakresu'} rows={d.coverage} />
         )
       }
-      <ContactChannels sheet={d.sheet} checklist={false} pageTitle={ctx.title} />
+      <ContactChannels checklist={false} pageTitle={ctx.title} />
       <FAQ items={d.faq} />
       <Sources items={d.sources} note={creationNote({ aiAssistance: d.aiAssistance, hasSources: d.sources.length > 0 })} />
       <SheetFoot ctx={ctx} />

@@ -15,6 +15,15 @@ export const SITE = {
   locale: 'pl_PL',
   phone: '+48 500 502 702',
   phoneE164: '+48500502702',
+  /** Godziny rozmów telefonicznych (jak w JSON-LD contactPoint.hoursAvailable). */
+  phoneHours: 'pn–pt, 9:00–17:00',
+  /** Formularz kontaktowy (Pages Function /api/kontakt). Kontakt publiczny = telefon albo formularz (decyzja 4.11.2026). */
+  formPath: '/kontakt/#formularz',
+  formUrl: 'https://www.auraconsulting.pl/kontakt/#formularz',
+  /**
+   * Skrzynka, na którą trafiają wiadomości z formularza (domyślne CONTACT_TO). Nie pokazujemy jej w serwisie,
+   * w .md, llms.txt ani JSON-LD — kontakt publiczny to telefon i formularz.
+   */
   email: 'cyber@auraconsulting.pl',
   address: {
     street: 'ul. Bolkowska 2A/28',

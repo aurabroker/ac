@@ -16,6 +16,7 @@ Serwis: projekt **Cloudflare Pages `aura-web`** (statyczny build Astro, `public/
 - [ ] Apex `auraconsulting.pl`: proxowany + **Redirect Rule 301** `https://auraconsulting.pl/*` → `https://www.auraconsulting.pl/${1}` (zachowaj ścieżkę i query). Always Use HTTPS: On.
 - [ ] Ukośnik na końcu: Pages domyślnie przekierowuje `/x` → `/x/` dla katalogów z `index.html` — sprawdź w smoke teście (kod 308/301).
 - [ ] Rollback: Pages → aura-web → Deployments → „Rollback to this deployment”.
+- [ ] Harmonogram artykułów: po scaleniu z `main` workflow `daily-publish` działa z `main`. Przy pierwszej publikacji sprawdź, że commit „Publikacja: …” od `github-actions[bot]` uruchomił wdrożenie produkcyjne w Pages. Jeśli `main` dostanie ochronę gałęzi, zezwól GitHub Actions na push (inaczej job się zatrzyma).
 - [ ] Opcjonalnie: Cloudflare Access na `*.aura-web-2s1.pages.dev` (podglądy).
 
 ## 3. Boty i AI (PLAN §4.2–4.3)

@@ -25,8 +25,6 @@ const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
       <label>Strona www (zostaw puste)<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
     </div>
 
-    <p class="cform__intro label"><Icon name="envelope" size={16} /> Formularz · temat: {pageTitle}</p>
-
     <div class="cform__grid">
       <div class="cform__field">
         <label for="cf-name">Imię i nazwisko <span class="cform__req" aria-hidden="true">*</span></label>
@@ -86,14 +84,6 @@ const pageUrl = new URL(Astro.url.pathname, SITE.url).href;
     padding-top: var(--s-3);
     border-top: 1px solid var(--rule);
     scroll-margin-top: var(--s-10);
-  }
-  .cform__intro {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin: 0 0 var(--s-2);
-    color: var(--ink-3);
-    overflow-wrap: anywhere;
   }
   .cform__trap {
     position: absolute;

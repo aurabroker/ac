@@ -45,9 +45,22 @@ if (titleAccent) {
     authorHref={ctx.showAuthor && isKnownPerson(ctx.person) ? personPath(ctx.person) : undefined}
     mdPath={ctx.mdPath}
     draft={ctx.draft}
+    scheduled={ctx.scheduled}
   />
 </header>
-{showAnswer && <AnswerBox summary={d.summary} points={d.summaryPoints} />}
+{
+  showAnswer &&
+    (Astro.slots.has('figure') ? (
+      <div class="sheet-head__pair">
+        <AnswerBox summary={d.summary} points={d.summaryPoints} />
+        <div class="sheet-head__fig">
+          <slot name="figure" />
+        </div>
+      </div>
+    ) : (
+      <AnswerBox summary={d.summary} points={d.summaryPoints} />
+    ))
+}
 {
   d.legalStateAsOf && (
     <NoteBlock variant="legal" date={d.legalStateAsOf}>
@@ -67,6 +80,28 @@ if (titleAccent) {
     font-size: var(--fs-display);
     line-height: 0.98;
     max-width: 16ch;
+  }
+  /* „W skrócie” + rysunek izometryczny (slot „figure”): obok siebie na szerokim ekranie, rysunek pod spodem niżej */
+  .sheet-head__pair {
+    display: grid;
+    gap: var(--s-3) var(--gutter);
+    margin-block: var(--s-4) var(--s-6);
+  }
+  .sheet-head__pair > :global(.answer) {
+    margin: 0;
+  }
+  .sheet-head__fig {
+    min-width: 0;
+    max-width: 640px;
+  }
+  @media (min-width: 1120px) {
+    .sheet-head__pair {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: center;
+    }
+    .sheet-head__fig {
+      max-width: none;
+    }
   }
   .sheet-head__lead {
     margin-top: var(--s-3);

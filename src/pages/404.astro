@@ -7,6 +7,7 @@ import '../styles/global.css';
 import Seo from '../components/seo/Seo.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import NeuralBackground from '../components/NeuralBackground.astro';
 import { FOOTER_NAV } from '../lib/nav.ts';
 import { SITE } from '../lib/site.ts';
 ---
@@ -67,10 +68,11 @@ import { SITE } from '../lib/site.ts';
         <span class="label">Kontakt</span>
         <a class="mono" href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>
         <span aria-hidden="true">·</span>
-        <a class="mono" href={`mailto:${SITE.email}?subject=${encodeURIComponent('[404] Nie znalazłem strony')}`}>{SITE.email}</a>
+        <a href={SITE.formPath}>formularz kontaktowy</a>
       </p>
     </main>
     <SiteFooter />
+    <NeuralBackground />
   </body>
 </html>
 

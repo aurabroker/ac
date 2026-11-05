@@ -97,7 +97,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (!env.RESEND_API_KEY) {
-    return reply(wantsJson, 503, { ok: false, errors: { form: 'Formularz jest chwilowo niedostępny. Zadzwoń lub napisz na cyber@auraconsulting.pl.' } }, pagePath);
+    return reply(wantsJson, 503, { ok: false, errors: { form: 'Formularz jest chwilowo niedostępny. Zadzwoń: +48 500 502 702 (pn–pt, 9:00–17:00).' } }, pagePath);
   }
 
   const prefix = env.CONTACT_ENV === 'preview' ? '[PODGLĄD] ' : '';
@@ -145,7 +145,7 @@ export async function onRequestPost({ request, env }) {
     res = null;
   }
   if (!res || !res.ok) {
-    return reply(wantsJson, 502, { ok: false, errors: { form: 'Nie udało się wysłać wiadomości. Zadzwoń: +48 500 502 702 lub napisz: cyber@auraconsulting.pl.' } }, pagePath);
+    return reply(wantsJson, 502, { ok: false, errors: { form: 'Nie udało się wysłać wiadomości. Spróbuj ponownie za chwilę albo zadzwoń: +48 500 502 702.' } }, pagePath);
   }
 
   await cache.put(rateKey, new Response('1', { headers: { 'cache-control': `max-age=${RATE_SECONDS}` } }));

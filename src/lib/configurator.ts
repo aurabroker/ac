@@ -15,7 +15,7 @@ export type Answers = Partial<Record<QId, string>>;
 export interface Question {
   id: QId;
   legend: string;
-  /** Krótka etykieta do podsumowania (mail, schowek). */
+  /** Krótka etykieta do podsumowania (formularz, schowek). */
   short: string;
   options: { value: string; label: string }[];
 }
