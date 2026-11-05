@@ -75,7 +75,7 @@ export ASTRO_OUT_DIR=/tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb5
 export ASTRO_CACHE_DIR=/tmp/claude-0/-home-user-ac/0bc40d0e-8893-50b3-bc04-721fdb574803/scratchpad/cache-<twój-klucz>
 npm run build                 # produkcja (bez szkiców)
 PREVIEW=1 npm run build       # podgląd: szkice i wpisy z harmonogramu widoczne („SZKIC”, „Zaplanowano: dd.mm.rrrr”), wszystko noindex, bez bliźniaków .md
-npm run validate              # bliźniaki + JSON-LD + CSP + linki (czyta ASTRO_OUT_DIR)
+npm run validate              # bliźniaki + JSON-LD + CSP + rysunki iso + linki (czyta ASTRO_OUT_DIR)
 npm run guard                 # strażnik: repo + ASTRO_OUT_DIR
 ```
 
@@ -88,8 +88,9 @@ npm run guard                 # strażnik: repo + ASTRO_OUT_DIR
 | `npm run validate:twins` | każda indeksowalna strona ma `.md` i odwrotnie; canonical; nagłówki HTML ↔ `.md` |
 | `npm run validate:jsonld` | JSON-LD parsuje się; `#org`, `#website`, `#webpage`; typy wg rodzaju strony; FAQ ↔ FAQPage; zakazy |
 | `npm run validate:csp` | brak inline `<script>`/`<style>`/`style=`; `_headers` ≤ 100 reguł |
+| `npm run validate:iso` | rysunki izometryczne: miniatura każdej strony, brak procesora, sąsiedzi w siatkach kart, podpisy, rozmiar ≤ 4 KB gz (§6, „Rysunki izometryczne”); `-- --verbose` wypisuje podpisy i siatki |
 | `npm run links` | linki i kotwice wewnętrzne w HTML, `.md`, `llms.txt`, sitemapach (offline) |
-| `npm run validate` | cztery powyższe |
+| `npm run validate` | pięć powyższych |
 | `npm run ci` | guard → check → build → guard → validate (domyślnie do `dist/`) |
 | `node scripts/publish-today.mjs` | harmonogram: co wchodzi dziś (także zaległe zatwierdzone wpisy bez builda); `--list` cały plan ze stanami; `--check` (krok w CI): link w treści (poza `related`) do szkicu lub późniejszego wpisu, data publikacji wcześniejsza niż zatwierdzenie (git), `legalStateAsOf` > `published` = błąd, stan prawny starszy niż 14 dni w dniu publikacji = ostrzeżenie; `--reschedule [--from=RRRR-MM-DD] [--dry-run]` przenosi szkice po terminie na kolejne wolne terminy co 2 dni |
 
@@ -206,7 +207,7 @@ Pola wspólne (wszystkie kolekcje stron; schemat: `src/content.config.ts`):
 | `coveragePlacement` | `auto` / `manual` | `manual` = sam wstawiasz `<BOM rows={frontmatter.coverage} />` |
 | `coverageCaption` | string | podpis tabeli zakresu |
 | `figure`, `figureCaption` | id rysunku, string | rysunek pod „W skrócie” (filary: z ploterem) |
-| `iso` | `{ motif?, labels?, inputs?, chip?, fault? }` / `false` | rysunek izometryczny „układ scalony” (§6, „Rysunki izometryczne”): nadpisanie motywu (`stack`, `qfp`, `pcb`, `bga`), etykiet (≤ 4, ≤ 28 znaków, bez liczb), wejść `pcb`, napisu na obudowie (≤ 14 znaków) i czerwonego akcentu (`false` = bez); `iso: false` — bez rysunku w nagłówku |
+| `iso` | `{ motif?, variant?, labels?, inputs?, plate?, fault? }` / `false` | rysunek izometryczny (§6, „Rysunki izometryczne”): nadpisanie motywu i wariantu z tabeli `src/lib/iso/pages.ts`, podpisów w kolejności slotów motywu (≤ 4, ≤ 28 znaków, bez liczb, słowami z treści strony), wlotów w lewej kolumnie (≤ 2, rurociąg), tabliczki znamionowej (≤ 14 znaków, nigdy marka) i czerwonego podpisu — konkretnego wyłączenia z tabeli zakresu (`false` = bez czerwieni); `iso: false` — bez rysunku w nagłówku |
 | `changelog` | `[{ rev, date, note }]` | rejestr zmian (najnowsze na końcu) — dane wewnętrzne, nie wyświetlane na stronach ani w `.md` (§1.11) |
 | `related` | ścieżki | „Powiązane arkusze” (nieistniejące w buildzie są pomijane) |
 | `legalStateAsOf` | data | blok „Stan prawny na” |
@@ -270,14 +271,73 @@ Nowy rysunek: korzeń przez `<FigFrame viewBox title desc labelledby>` (role="im
 
 Rysunek interaktywny (hero z `plotter`): wpis w `FIGURE_META` ma `parts` (tyle, ile pozycji legendy: `title`, `text` — jedno zdanie z twierdzeń serwisu, `href`, `link`), a elementy SVG części mają `data-part="n"` (także balon `<g class="bal" data-part="n">`, odnośnik i etykiety). Rozbij wspólne ścieżki na części tylko tam, gdzie trzeba podświetlić osobno; limit 40 elementów z `pathLength` dalej obowiązuje. Skrypt dokłada przyciski nad balonami (jeden przystanek Tab, strzałki, Enter przypina, Esc zamyka; nachodzące na wąskim ekranie są rozsuwane), kartę pod rysunkiem — przed wyborem z listą części jako przyciski, potem z „Wszystkie części” — i podświetlenie (niebieski tusz, reszta przygaszona). Bez JS: legenda z linkami w tytułach pozycji.
 
-### Rysunki izometryczne („układ scalony”)
+### Rysunki izometryczne (maszyny i mechanizmy)
 
-Generator w buildzie, bez JS rysującego: `src/lib/iso/` — `geom.ts` (rzut, ziarno z adresu), `motifs.ts` (motywy), `render.ts` (kadry i SVG), `spec.ts` (treść → rysunek), `glyphs.ts` (kontury znaków Plex Mono do plików). Styl: grafit 1 px, białe ściany górne, jasnoszare boczne, błękit kreślarski na wyróżnieniach, najwyżej jeden czerwony akcent (zwykle „Wyłączenia”), etykiety Plex Mono wersalikami, bez liczb i statystyk. Motywy: `stack` (płytka → kulki → podłoże → rdzeń → pokrywa, widok rozstrzelony), `qfp` (obudowa nad płytką, podpisane wyprowadzenia), `pcb` (przebieg ścieżek przez układ, przelotki, przerwany czerwony odcinek), `bga` (matryca kulek pod rdzeniem). Ziarno = adres strony: układ wyróżnień, przebieg ścieżek, liczba wyprowadzeń — każda strona inna, zawsze taka sama.
+Generator w buildzie, bez JS rysującego: `src/lib/iso/` — `geom.ts` (rzut, wektory, okręgi w dowolnej płaszczyźnie, ziarno z adresu), `scene.ts` (kontrakt sceny: 16 motywów, role, `MotifInput`, `Scene`), `prims.ts` (wspólne prymitywy: płyta bazowa, prostopadłościany, pryzmaty, walce w osiach x/y/z, koła zębate, dwuteownik, strzałki, kreskowanie, oś, krzesło, kłódka, szuflada, tabliczka), `motifs/<motyw>.ts` (jeden plik na motyw, rejestr `motifs/index.ts`), `pages.ts` (tabela strona → motyw, wariant, tabliczka, czerwony podpis; rodzina dla nowych stron), `spec.ts` (treść → rysunek), `render.ts` (kadry i SVG), `glyphs.ts` (kontury znaków Plex Mono do plików). Procesora (układu scalonego) nie ma w serwisie.
 
-- **Gdzie:** nagłówek (obok „W skrócie”, niżej pod nim; na `/wiedza/` w kolumnie obok treści) na stronach bez innej grafiki: karty katalogu, artykuły i regulacje, `/ubezpieczenie-ai/ai-w-firmie/`, `/wiedza/`, `/slownik/`, `/kontakt/`, `/o-nas/`, `/zespol/marek-ciesla/` (`showsHeaderIso`). Nie: strona główna, filary, `/ubezpieczenia/`, `/rynek-lloyds/` (mają rysunki) i strony prawne. Miniatura 360×190 — każda strona (`/fig/<ścieżka>.svg`); strony prawne: spokojna, bez podpisów i akcentów, każda w innym motywie (`iso.motif` we frontmatterze). Filary (QFP) mają stałe, różne sylwetki obudowy wg `order` (kwadratowa, szeroka, głęboka, z radiatorem), żeby cztery karty na stronie głównej się nie powtarzały.
-- **Etykiety z treści strony:** moduły z `coverage` (najpierw „zwykle w zakresie”), „Wyłączenia”, gdy tabela je ma; kontakt — „Analiza ryzyka”, „Zgłoszenie szkody” → „Formularz”, „Telefon”; osoba — `knowsAbout`; słownik — podstawowe hasła; blog — działy. Motyw: karty `stack`/`pcb`, artykuły `bga`/`qfp` (wg ziarna), regulacje i strony firmowe `stack`. Gdy wynik jest słaby — frontmatter `iso` (§5), np. regulacje: warstwy obowiązków.
-- **Nagłówek:** inline SVG (`role="img"`, `<title>` „Schemat zakresu: <temat>” / „Schemat: obszary specjalizacji” itp. — bez metafory „układu scalonego”, `<desc>` z etykietami w pisowni źródła), dwa warianty kadru — szeroki i wąski (etykiety łamane) — przełączane zapytaniem o kontener, więc etykiety nie wychodzą poza kartkę od 320 px. Skala kadru stała dla motywu; nowa skala w `FRAMES` wymaga reguły `.iso-k…` w `src/styles/iso.css` (build przerwie się bez niej). Poza bliźniakiem `.md` (`data-md-skip`).
-- **Miniatury:** samodzielne pliki SVG (atrybuty prezentacji zamiast stylów, etykiety jako kontury znaków — `<img>` nie widzi fontów strony), w kartach jako `<img loading="lazy" decoding="async" alt="">` (≈ 3 KB gz). Bez `<style>` i zasobów zewnętrznych — zgodne z CSP.
+- **Jeden temat, jedna maszyna** (plan grafik): zespół na osi (program), belka na podporach (OC i cyber dla IT, wymagania kontraktu, terytorium), przekładnia zębata (OC zawodowe), szafa serwerowa (cyber), maszyna modelu AI, manometr ze strefami (AI Act), przenośnik taśmowy (produkt, PLD), instalacja rurowa (przepływy: kontakt, rynek, LLMjacking, transakcje), mechanizm zamka (pieniądze i nadużycia), stół (zarząd), prasa (treść i wzory), pompa strzykawkowa (zdrowie), budynek w przekroju (lokal, mienie), żuraw z przeciwwagą (gwarancje), kaseta z gniazdami (wzorce, dopasowanie), archiwum arkuszy (indeksy, dokumenty). Motyw i wariant ustala tabela `pages.ts`; ziarno z adresu zmienia tylko drobiazgi. Nowa strona spoza tabeli dostaje rodzinę z sekcji: karta katalogu — z grupy, artykuł — z huba, regulacja — manometr, filar — z pola `pillar`, strona — z szablonu.
+- **Kolor = znaczenie:** tusz — przedmiot i zdarzenie objęte ochroną; błękit — części niosące moduły z tabeli zakresu; czerwień — dokładnie jedna rzecz poza ochroną (konkretne wyłączenie z tabeli zakresu tej strony), zwykle odsunięta poza przerywany obrys ochrony na wspólnej płycie bazowej. Kolory tylko z tokenów (`iso.css` ↔ `render.ts`: dwa szare boki, jeden błękitny i jeden czerwony bok).
+- **Gdzie:** nagłówek (obok „W skrócie”) na stronach bez innej grafiki: karty katalogu, artykuły i regulacje, `/ubezpieczenie-ai/ai-w-firmie/`, `/wiedza/`, `/slownik/`, `/kontakt/`, `/o-nas/`, `/zespol/marek-ciesla/` (`showsHeaderIso`). Nie: strona główna, filary, `/ubezpieczenia/`, `/rynek-lloyds/` (mają rysunki ręczne — tylko miniatura) i strony prawne. Miniatura 360×190 — każda strona (`/fig/<ścieżka>.svg`); strony prawne: spokojna (bez podpisów, błękitu, czerwieni i ruchu), każda inny przedmiot.
+- **Podpisy:** z treści strony — moduły z `coverage`, hasła słownika, specjalizacje osoby, działy bloga; tabela `pages.ts` albo `iso.labels` ustala kolejność slotów motywu. Prawa kolumna, lewa tylko dla wlotów rurociągu; czerwony zawsze po prawej. Miniatura ≤ 3 podpisy, nagłówek ≤ 4 (razem z wlotami i czerwonym).
+- **Kadry:** szeroki 560×340 i wąski 330×250 (nagłówek, przełączane zapytaniem o kontener) oraz miniatura 360×190 (obiekt ~66% szerokości). Skala dopasowana do kadru (motyw może ją ustalić przez `Scene.k`), miejsce na rozsunięcie zarezerwowane — podpisy nie wychodzą poza kadr także w stanie otwartym. Ruch w CSS w jednostkach sceny (geometria pod jedną macierzą skali): grupy w górę o 5 na poziom, zespół na osi wzdłuż osi x, część „poza ochroną” w bok o 10.
+- **Dostępność:** nagłówek — inline SVG z `role="img"`, `<title>` „<maszyna>: <temat>” i `<desc>` po polsku (co przedstawia maszyna, podpisane części, część poza ochroną). Miniatury w kartach jako `<img alt="">`. Poza bliźniakiem `.md` (`data-md-skip`).
+- **Miniatury:** samodzielne pliki SVG (atrybuty prezentacji zamiast stylów, etykiety jako kontury znaków — `<img>` nie widzi fontów strony), ~3–4 KB gz, bez `<style>` i zasobów zewnętrznych — zgodne z CSP. Korzeń każdego rysunku (miniatura i nagłówek) ma `data-motif="motyw:wariant"` dla walidacji.
+
+**Motyw → strony** (tabela `MOTIF_BY_PATH` w `src/lib/iso/pages.ts`; plan i uzasadnienie każdego rysunku: `docs/plan-grafik.md`). N+K — rysunek w nagłówku i miniatura, K — tylko miniatura (strona ma rysunek ręczny), S — spokojna miniatura strony prawnej.
+
+| Motyw (`id`) | Warianty | Strony |
+|---|---|---|
+| zespół na osi (`zespol-osiowy`) | `program`, `sprzeglo` | `/` (K), `/o-nas/`; sprzęgło: `/wiedza/tech-eo-a-oc-zawodowe/` |
+| belka na podporach (`belka`) | `ciagla`, `umowa`, `wspornik` | `/oc-cyber-dla-it/` (K); umowa: `/wiedza/klient-wymaga-oc-od-kontraktora/`; wspornik: `/wiedza/usa-kanada-w-polisie/` |
+| przekładnia zębata (`przekladnia`) | `para`, `zebnik` | `/oc-zawodowe/` (K); zębnik: `/wiedza/oc-programisty-b2b/` |
+| szafa serwerowa (`szafa-serwerowa`) | `firma`, `blokada` | `/ubezpieczenie-cyber/` (K); blokada: `/wiedza/ransomware-2-0/` |
+| maszyna modelu AI (`maszyna-ai`) | `model`, `firma` | `/ubezpieczenie-ai/` (K); firma: `/ubezpieczenie-ai/ai-w-firmie/` |
+| manometr ze strefami (`manometr`) | `regulacja`, `zawor` | `/regulacje/ai-act/`; zawór: `/wiedza/ai-act-a-ubezpieczenie/` |
+| przenośnik taśmowy (`przenosnik`) | `wycofanie`, `aktualizacja`, `naped` | `/ubezpieczenia/oc-produktu-i-wycofanie/`; aktualizacja: `/regulacje/pld/`; napęd: `/wiedza/pld-a-oc-software-house/` |
+| instalacja rurowa (`rurociag`) | `kolektor`, `rozdzielacz`, `licznik`, `kolnierz` | `/kontakt/`; rozdzielacz: `/rynek-lloyds/` (K); licznik: `/wiedza/llmjacking/`; kołnierz: `/ubezpieczenia/ubezpieczenia-transakcyjne/` |
+| mechanizm zamka (`zamek`) | `wkladka`, `skarbiec`, `kasetka` | `/ubezpieczenia/ubezpieczenie-crime/`; skarbiec: `/ubezpieczenia/instytucje-finansowe-i-fintech/`; kasetka: `/polityka-prywatnosci/` (S) |
+| stół (`stol`) | `zarzad`, `pulpit` | `/ubezpieczenia/oc-czlonkow-zarzadu-d-o/`; pulpit: `/reklamacje/` (S) |
+| prasa (`prasa`) | `drukarska`, `tlocznik` | `/ubezpieczenia/oc-mediow/`; tłocznik: `/ubezpieczenia/ochrona-prawna-ip/` |
+| pompa strzykawkowa (`pompa`) | `strzykawkowa` | `/ubezpieczenia/oc-ochrona-zdrowia/` |
+| budynek w przekroju (`budynek`) | `lokal`, `hala` | `/ubezpieczenia/oc-dzialalnosci/`; hala: `/ubezpieczenia/mienie-i-sprzet-elektroniczny/` |
+| żuraw z przeciwwagą (`zuraw`) | `wiezowy` | `/ubezpieczenia/gwarancje-ubezpieczeniowe/` |
+| kaseta z gniazdami (`kaseta`) | `wzorce`, `na-miare`, `przybory` | `/slownik/`; na miarę: `/ubezpieczenia/ryzyka-nietypowe/`; przybory: `/zespol/marek-ciesla/` |
+| archiwum arkuszy (`archiwum`) | `komoda`, `arkusze`, `szafa-aktowa` | `/ubezpieczenia/` (K); arkusze: `/wiedza/`; szafa aktowa: `/informacje-o-brokerze/` (S) |
+
+**Kolory i ruch — znaczenie stałe** (plan grafik, zasady 4–6):
+
+- tusz — przedmiot i zdarzenie objęte ochroną (wyłamany ząb, dorobiony klucz, nielegalny odczep); zdarzenie objęte ochroną nigdy nie jest czerwone;
+- błękit (wypełnienie i kropka odnośnika) — tylko części, które niosą podpisany moduł z tabeli zakresu; część bez podpisu zostaje w tuszu;
+- czerwień — dokładnie jedna rzecz, której polisa nie niesie, z podpisem = konkretne wyłączenie z tabeli zakresu tej strony (≤ 28 znaków, np. „Kary umowne”); leży poza przerywanym obrysem ochrony i przy otwarciu odsuwa się w bok („wypada” z zespołu). Wyjątki ustalone rysunkami: czerwona strefa tarczy manometru i pokrywa zespołu na osi. Ogólne „Wyłączenia” tylko wtedy, gdy nic konkretnego nie pasuje; bez wyłączenia na stronie — bez czerwieni;
+- tabliczka znamionowa — krótki skrót z tytułu (D&O, W&I, TECH E&O, LLMJACKING, RANSOMWARE, AI ACT, A–Z, BROKER, WIEDZA), nigdy marka, ubezpieczyciel, nazwa rynku ani logo;
+- bez twarzy: ludzi zastępują puste krzesła i narzędzia; strony prawne — spokojna miniatura (bez podpisów, błękitu, czerwieni i ruchu), każda inny przedmiot.
+
+**Warianty:** motyw to rodzina (temat strony), wariant to wyraźnie inna sylwetka tej samej maszyny. Wariant ustala tabela albo frontmatter — nigdy ziarno z adresu, które zmienia tylko drobiazgi (liczbę zębów, kartonów, która szuflada jest wysunięta). W jednej siatce kart obok siebie mogą stać dwa warianty tego samego motywu (wkładka i skarbiec, trzy przenośniki, belka ciągła i wspornik), ale nigdy ten sam motyw z tym samym wariantem — pilnuje tego `npm run validate:iso`. Nowy wariant: dopisz go do `variants` i `what` w `src/lib/iso/motifs/<motyw>.ts` (pierwszy na liście jest domyślny), narysuj w tym samym pliku i sprawdź miniaturę oraz oba kadry nagłówka w stanie otwartym; nieznany wariant przerywa build.
+
+**Nowa strona — jak dobrać rysunek:**
+
+1. Najpierw temat, nie wygląd: znajdź rodzinę w tabeli wyżej („jeden temat, jedna maszyna” — OC zawodowe to przekładnia, cyber to szafa serwerowa, przepływy to rury, pieniądze i nadużycia to zamek itd.). Bez wpisu strona i tak dostaje rodzinę z sekcji (`fallbackPlan`: karta katalogu — z grupy, artykuł — z huba, regulacja — manometr, filar — z `pillar`, strona — z szablonu).
+2. Wybierz wariant, który nie stanie obok tego samego wariantu w „Powiązanych” ani w siatce katalogu/bloga (sprawdź sąsiadów w buildzie: `npm run validate:iso -- --verbose` wypisuje każdą siatkę kart).
+3. Dopisz wiersz do `MOTIF_BY_PATH` (`motif`, `variant`, opcjonalnie `plate`, `fault`, `labels`) albo ustaw `iso` we frontmatterze strony.
+4. Podpisy: słowa z tej strony (moduły z `coverage`, hasła, specjalizacje), w kolejności slotów motywu (opis slotów — komentarz w pliku motywu); czerwony podpis — konkretne wyłączenie z jej tabeli zakresu.
+5. Build i podgląd: miniatura w siatce kart oraz nagłówek szeroki i wąski po rozsunięciu; `npm run validate:iso` musi przejść.
+
+Nowy motyw (siedemnasty) to decyzja właściciela: plik `motifs/<id>.ts` z `motif: MotifModule`, id w `MOTIF_IDS` (`scene.ts`) i w rejestrze `motifs/index.ts`; tylko prymitywy z `prims.ts`, kolory z tokenów, ≤ ~60 ścieżek w miniaturze.
+
+**Frontmatter `iso`** (schemat w `src/content.config.ts`, pierwszeństwo: frontmatter > `MOTIF_BY_PATH` > treść strony):
+
+| Pole | Znaczenie |
+|---|---|
+| `motif` | jeden z 16 motywów; zmiana motywu bez `variant` daje jego wariant domyślny |
+| `variant` | wariant z listy motywu (sprawdzany w buildzie) |
+| `labels` | ≤ 4 podpisy w kolejności slotów motywu; ≤ 28 znaków, bez liczb (cyfra wewnątrz słowa, np. „B2B”, dopuszczalna), słowami z treści strony |
+| `inputs` | ≤ 2 wloty w lewej kolumnie (rurociąg: kolektor, rozdzielacz) |
+| `plate` | tabliczka znamionowa, ≤ 14 znaków, nigdy marka |
+| `fault` | czerwony podpis — konkretne wyłączenie z tabeli zakresu (≤ 28 znaków); `false` = bez czerwieni |
+
+`iso: false` wyłącza rysunek w nagłówku (miniatura zostaje). Przykład: `iso: { variant: wspornik, labels: [OC zawodowe, USA i Kanada], fault: Odszkodowania karne }`.
+
+**Kontrola w CI** (`npm run validate:iso`, `scripts/validate-iso.mjs`, na danych z builda): każda strona ma miniaturę z motywem z listy, nagłówek ma ten sam motyw i wariant co miniatura; brak procesora (motywy `stack`/`qfp`/`pcb`/`bga`, klasy `i-ball`, `i-pin`, `i-pad`, `i-via`, `i-die-line`, `iso-k…`); w żadnej siatce kart obok siebie nie stoi ten sam motyw z tym samym wariantem; podpisy ≤ 28 znaków i bez liczb (w miniaturach odczytywane z konturów znaków), miniatura ≤ 3 podpisy, nagłówek ≤ 4, najwyżej jeden czerwony i zawsze po prawej; strony prawne spokojne; miniatura > 4 KB gz — ostrzeżenie, > 4,5 KB gz — błąd; `<title>`/`<desc>` niepuste i bez „układu scalonego”. Odczyt podpisów miniatur importuje `glyphs.ts` — wymaga Node z obsługą typów TS (22.18+, w CI 24); na starszym Node ta część jest pomijana z ostrzeżeniem.
 
 ---
 
@@ -295,7 +355,7 @@ Zasady: wanilia TS w `src/scripts/*.ts`, ładowana przez `<script>` w komponenci
 | `copy.ts` | konfigurator | „Skopiowano” na przycisku + komunikat dla czytnika | ≈ 0,4 KB |
 | `contact-form.ts` | `ContactForm` (w `ContactChannels`) → karty, filary, strony firmowe | ładowany leniwie (`import()`) przy pierwszym fokusie w formularzu albo przekazaniu z konfiguratora; wysyłka fetch → `/api/kontakt`, błędy przy polach (awaria → telefon). Bez JS: walidacja przeglądarki, POST i powrót na `#formularz-wyslano` / `#formularz-blad` (komunikat przez CSS `:target`) | ≈ 1,1 KB (ładowacz) + 1,3 KB na żądanie |
 | (bez zmian) | `SiteHeader`, `PlotterHero` | menu `<dialog>` (link „Menu” zamieniany na `<button aria-haspopup="dialog">`), jednorazowe rysowanie hero | 0,4 + 0,4 KB |
-| `iso-explode.ts` | `IsoFigure` → karty, artykuły, regulacje, „AI w firmie”, `/wiedza/`, `/slownik/`, `/kontakt/`, `/o-nas/`, `/zespol/…` | rysunek izometryczny: przy pierwszym wejściu w widok warstwy rozsuwają się odrobinę dalej (klasa `.is-open`, ruch w CSS); jednorazowo, przy `prefers-reduced-motion` nic | ≈ 0,3 KB |
+| `iso-explode.ts` | `IsoFigure` → karty, artykuły, regulacje, „AI w firmie”, `/wiedza/`, `/slownik/`, `/kontakt/`, `/o-nas/`, `/zespol/…` | rysunek izometryczny: przy pierwszym wejściu w widok części rozsuwają się odrobinę dalej (klasa `.is-open`, ruch w CSS); jednorazowo, przy `prefers-reduced-motion` nic | ≈ 0,3 KB |
 | `neural-bg.ts` | `NeuralBackground` (layout `Sheet` + 404) → wszystkie strony | tło: dryfująca siatka węzłów na `<canvas>` pod treścią; kursor (tylko `pointer: fine`, nie dotyk) wzmacnia linie i lekko przyciąga węzły; ~30 kl./s bez ruchu kursora, stop w ukrytej karcie, gęstość wg powierzchni (≤ 70, wąski ekran ≤ 30), DPR ≤ 2; nie startuje przy `prefers-reduced-motion` i `saveData`; niczego nie zapisuje w przeglądarce (każda strona losuje nową siatkę) | ≈ 1,3 KB |
 
 Budżet na stronę (suma gz skryptów ładowanych od razu, build 5.11.2026; leniwy `contact-form.ts` 1,3 KB poza sumą): filary z konfiguratorem ≈ 7,9 KB, strona główna ≈ 7,0 KB, pozostałe filary ≈ 5,5 KB, karty i strony firmowe z formularzem ≈ 3,8 KB, `/informacje-o-brokerze/` ≈ 3,5 KB, `/ubezpieczenia/` ≈ 3,3 KB, strony prawne i `/rynek-lloyds/` ≈ 2,5 KB, `/slownik/` ≈ 2,5 KB, `/wiedza/` ≈ 1,8 KB, 404 ≈ 1,6 KB. Filary są tuż pod limitem — nowy skrypt na filarze wymaga odchudzenia innego albo decyzji o limicie. Limit: pojedynczy skrypt ≤ 8 KB gz; strona ≤ 8 KB gz. Mikrointerakcje bez JS (CSS): linia wymiarowa pod linkami w tekście i u dołu kart po najechaniu, krótkie rozwijanie FAQ (`::details-content`, Chromium; gdzie indziej od razu).

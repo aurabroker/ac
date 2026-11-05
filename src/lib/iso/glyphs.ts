@@ -15,10 +15,25 @@ type SatoriFont = { name: string; data: Buffer; weight: 500; style: 'normal' };
 let fonts: SatoriFont[] | null = null;
 const cache = new Map<string, string>();
 
+/**
+ * Plik fontu z node_modules: najpierw względem tego modułu (działa z każdego katalogu roboczego, np. walidator
+ * uruchomiony spoza repo), potem względem katalogu roboczego (build Astro: moduł bywa w paczce poza repo).
+ */
+function fontFile(spec: string): Buffer {
+  let err: unknown;
+  for (const base of [import.meta.url, join(process.cwd(), 'package.json')]) {
+    try {
+      return readFileSync(createRequire(base).resolve(spec));
+    } catch (e) {
+      err = e;
+    }
+  }
+  throw err;
+}
+
 function loadFonts(): SatoriFont[] {
   if (fonts) return fonts;
-  const req = createRequire(join(process.cwd(), 'package.json'));
-  const file = (spec: string) => readFileSync(req.resolve(spec));
+  const file = fontFile;
   fonts = [
     { name: 'Plex Mono', weight: 500, style: 'normal', data: file('@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff') },
     { name: 'Plex Mono Ext', weight: 500, style: 'normal', data: file('@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-ext-500-normal.woff') },
@@ -26,13 +41,30 @@ function loadFonts(): SatoriFont[] {
   return fonts;
 }
 
-/** Przesuwa współrzędne ścieżki (tylko M/L/Q/C/Z — tak zapisuje satori) tak, by linia bazowa była w y = 0. */
+/**
+ * Przesuwa współrzędne ścieżki (tylko M/L/Q/C/Z — tak zapisuje satori) tak, by linia bazowa była w y = 0,
+ * zaokrągla do całych jednostek (em = 100: przy 9,5 px to < 0,05 px) i usuwa odcinki zerowej długości.
+ */
 function rebase(d: string): string {
-  return d
-    .replace(/(-?\d*\.?\d+)\s+(-?\d*\.?\d+)/g, (_, x: string, y: string) => `${+(+x).toFixed(1)} ${+(+y - BASELINE).toFixed(1)}`)
-    .replace(/\s+/g, ' ')
-    .replace(/ ?([MLQCZ]) ?/g, '$1')
-    .trim();
+  const out: string[] = [];
+  let cx = NaN;
+  let cy = NaN;
+  for (const m of d.matchAll(/([MLQCZ])([^MLQCZ]*)/g)) {
+    const cmd = m[1];
+    const n = (m[2].match(/-?\d*\.?\d+(?:e-?\d+)?/g) ?? []).map(Number);
+    if (cmd === 'Z') {
+      out.push('Z');
+      continue;
+    }
+    const pts: string[] = [];
+    for (let i = 0; i + 1 < n.length; i += 2) pts.push(`${Math.round(n[i])} ${Math.round(n[i + 1] - BASELINE)}`);
+    const [ex, ey] = pts[pts.length - 1].split(' ').map(Number);
+    if (cmd === 'L' && ex === cx && ey === cy) continue;
+    out.push(cmd + pts.join(' '));
+    cx = ex;
+    cy = ey;
+  }
+  return out.join('').replace(/ -/g, '-');
 }
 
 /** Kontur znaku (pusta ścieżka dla spacji). */

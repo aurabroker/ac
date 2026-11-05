@@ -55,6 +55,8 @@ jobs:
         run: npm run validate:jsonld
       - name: CSP i nagłówki
         run: npm run validate:csp
+      - name: Rysunki izometryczne (miniatury, motywy, podpisy, sąsiedzi w siatkach kart)
+        run: npm run validate:iso
       - uses: actions/upload-artifact@v4
         with:
           name: dist

@@ -14,6 +14,15 @@ import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { COVERAGE_KEYS } from './lib/coverage.ts';
+import { HAS_NUMBER, LABEL_MAX, MOTIF_IDS } from './lib/iso/scene.ts';
+
+/** Podpis rysunku: 2–28 znaków, bez liczb (scene.ts HAS_NUMBER — ta sama reguła w spec.ts i validate-iso; „B2B” dozwolone). */
+const isoLabel = () =>
+  z
+    .string()
+    .min(2)
+    .max(LABEL_MAX)
+    .refine((s) => !HAS_NUMBER.test(s), 'podpis rysunku bez liczb (cyfra wewnątrz słowa, np. „B2B”, dozwolona)');
 
 const PATH_RE = /^\/(?:[a-z0-9-]+\/)*$/;
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -99,23 +108,28 @@ const base = z.object({
   figure: z.string().optional(),
   figureCaption: z.string().optional(),
   /**
-   * Rysunek izometryczny „układ scalony” (src/lib/iso): nagłówek stron bez innej grafiki i miniatury na kartach.
-   * Domyślnie motyw i etykiety wynikają z treści; tu można je nadpisać, `false` wyłącza rysunek w nagłówku.
+   * Rysunek izometryczny (src/lib/iso): maszyna albo mechanizm w nagłówku stron bez innej grafiki i miniatura na kartach.
+   * Motyw i wariant ustala tabela src/lib/iso/pages.ts; tu można je nadpisać. Podpisy — z treści strony,
+   * w kolejności slotów motywu. `false` wyłącza rysunek w nagłówku.
    */
   iso: z
     .union([
       z.literal(false),
-      z.object({
-        motif: z.enum(['stack', 'qfp', 'pcb', 'bga']).optional(),
-        /** Etykiety (od najważniejszej / od góry), krótkie, bez liczb. */
-        labels: z.array(z.string().min(2).max(28)).max(4).optional(),
-        /** Wejścia po lewej (motyw pcb). */
-        inputs: z.array(z.string().min(2).max(28)).max(3).optional(),
-        /** Napis na obudowie (≤ 14 znaków); pusty = bez napisu. */
-        chip: z.string().max(14).optional(),
-        /** Czerwony akcent z podpisem (domyślnie „Wyłączenia”, gdy tabela zakresu je ma); false = bez czerwieni. */
-        fault: z.union([z.string().min(2).max(28), z.literal(false)]).optional(),
-      }),
+      z
+        .object({
+          motif: z.enum(MOTIF_IDS).optional(),
+          /** Wariant sylwetki motywu (np. „wspornik”); sprawdzany w buildzie (src/lib/iso/motifs/<motyw>.ts). */
+          variant: z.string().regex(/^[a-z-]+$/).optional(),
+          /** Podpisy modułów w kolejności slotów motywu: krótkie, bez cyfr, słowami z treści strony. */
+          labels: z.array(isoLabel()).max(4).optional(),
+          /** Wloty w lewej kolumnie (rurociąg: kolektor, rozdzielacz). */
+          inputs: z.array(isoLabel()).max(2).optional(),
+          /** Tabliczka znamionowa: krótki skrót z tytułu (≤ 14 znaków), nigdy marka. */
+          plate: z.string().min(1).max(14).optional(),
+          /** Czerwony podpis: konkretne wyłączenie z tabeli zakresu tej strony; false = bez czerwieni. */
+          fault: z.union([isoLabel(), z.literal(false)]).optional(),
+        })
+        .strict(),
     ])
     .optional(),
   /** Rejestr zmian (najnowsze na końcu). Dane wewnętrzne — nie wyświetlane na stronach ani w .md (decyzja 4.11.2026). */

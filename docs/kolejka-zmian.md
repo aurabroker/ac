@@ -104,3 +104,15 @@ Właściciel: pełna zgoda na koncepcję rysunków złożeniowych/rozstrzelonych
 „Czy możesz włączyć dostęp do strony podglądu innym agentom AI? Chciałem dokonać samokontroli.”
 
 - **Wdrożone (5.11):** `robots.txt` podglądu wpuszcza agentów pobierających stronę na prośbę użytkownika (ChatGPT-User, Claude-User, Perplexity-User, MistralAI-User, Meta-ExternalFetcher), `Content-Signal: search=no, ai-input=yes, ai-train=no`. Wyszukiwarki i boty treningowe — nadal `Disallow`, cały podgląd nadal `noindex`. Produkcja bez zmian (`src/lib/seo/bots.ts`).
+
+## 11. Rysunki: kilkanaście motywów zamiast procesora (zgłoszone 5.11.2026)
+
+Właściciel (streszczenie): grafiki procesora były tylko przykładem, a teraz „procesor” widać na każdej karcie i w każdym nagłówku — zaplanować kilkanaście innych, logicznie spójnych grafik. Po przedstawieniu planu (`docs/plan-grafik.md`): „wykonaj”.
+
+- Plan: 16 maszyn i mechanizmów w jednym języku szkicownika — jeden temat, jedna maszyna (przekładnia przy OC zawodowym, szafa serwerowa przy cyber, żuraw przy gwarancjach, rury przy przepływach…), wspólna płyta bazowa z przerywanym obrysem ochrony, stałe znaczenie kolorów (tusz — objęte ochroną, błękit — części niosące moduły z tabeli zakresu, czerwień — jedna rzecz poza ochroną).
+- Decyzje (rekomendacje planu przyjęte):
+  - procesor (układ scalony) znika z całego serwisu — miniatury, nagłówki, role rysunku i style;
+  - czerwony podpis to konkretne wyłączenie z tabeli zakresu strony (≤ 28 znaków, np. „Kary umowne”, „Działanie umyślne”), ogólne „Wyłączenia” tylko gdy nic nie pasuje;
+  - trzy przenośniki (produkt, PLD, PLD a software house) zostają jedną rodziną „produkt” w trzech wyraźnie różnych wariantach;
+  - wszystkie strony przełączone naraz; rysunki ręczne (strona główna, 4 filary, `/ubezpieczenia/`, `/rynek-lloyds/`) bez zmian — te strony dostają tylko nowe miniatury; strony prawne — spokojne miniatury (bez podpisów, błękitu, czerwieni i ruchu), każda inny przedmiot.
+- **Wdrożone (5.11):** generator `src/lib/iso/` przebudowany na 16 motywów (kontrakt sceny `scene.ts`, prymitywy `prims.ts`, jeden plik na motyw w `motifs/`, tabela strona → motyw i wariant w `pages.ts`); 38 miniatur i 28 rysunków w nagłówkach, części rozsuwają się raz przy wejściu w widok, czerwona część odsuwa się w bok, przy `prefers-reduced-motion` bez ruchu. Podpisy i czerwone wyłączenia z treści stron (frontmatter `iso`), opisy dostępne po polsku opisują maszynę. Nowa kontrola w CI: `npm run validate:iso` (miniatura każdej strony, brak procesora, brak identycznych sąsiadów w siatkach kart, podpisy ≤ 28 znaków bez liczb, miniatura ≤ 4 KB gz). Opis: `docs/CONVENTIONS.md` §6 „Rysunki izometryczne”, plan i odstępstwa: `docs/plan-grafik.md`.

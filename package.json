@@ -16,8 +16,9 @@
     "validate:twins": "node scripts/validate-twins.mjs",
     "validate:jsonld": "node scripts/validate-jsonld.mjs",
     "validate:csp": "node scripts/validate-csp.mjs",
+    "validate:iso": "node scripts/validate-iso.mjs",
     "links": "node scripts/check-links.mjs",
-    "validate": "npm run validate:twins && npm run validate:jsonld && npm run validate:csp && npm run links",
+    "validate": "npm run validate:twins && npm run validate:jsonld && npm run validate:csp && npm run validate:iso && npm run links",
     "ci": "npm run guard && npm run check && npm run build && npm run guard && npm run validate"
   },
   "dependencies": {

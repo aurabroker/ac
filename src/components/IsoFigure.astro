@@ -1,9 +1,10 @@
 ---
 /**
- * Rysunek izometryczny „układ scalony” w nagłówku strony (src/lib/iso). Dwa warianty tego samego rysunku:
- * szeroki (etykiety w kolumnie obok) i wąski (etykiety łamane, mniejsza skala) — wybór przez zapytanie
- * o kontener, więc etykiety nigdy nie wychodzą poza kartkę. Bez JS rysunek jest statyczny; z JS warstwy
- * rozsuwają się raz przy pierwszym wejściu w widok (src/scripts/iso-explode.ts), przy ograniczeniu ruchu — nie.
+ * Rysunek izometryczny w nagłówku strony (src/lib/iso): maszyna albo mechanizm z tematu strony (motyw i wariant —
+ * src/lib/iso/pages.ts). Dwa kadry tego samego rysunku: szeroki (etykiety w kolumnie obok) i wąski (etykiety łamane,
+ * mniejsza skala) — wybór przez zapytanie o kontener, więc etykiety nigdy nie wychodzą poza kartkę. Bez JS rysunek
+ * jest statyczny (już rozsunięty); z JS części rozsuwają się raz przy pierwszym wejściu w widok
+ * (src/scripts/iso-explode.ts), przy ograniczeniu ruchu — nie.
  * Ozdoba nagłówka: poza bliźniakiem .md (data-md-skip); opis tekstowy w <title>/<desc>.
  */
 import '../styles/iso.css';

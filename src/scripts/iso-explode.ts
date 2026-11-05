@@ -1,6 +1,6 @@
 /**
- * Rysunek izometryczny w nagłówku: przy pierwszym wejściu w widok warstwy rozsuwają się odrobinę dalej
- * (klasa .is-open; ruch w CSS: src/styles/iso.css). Jednorazowo; przy prefers-reduced-motion — nic.
+ * Rysunek izometryczny w nagłówku: przy pierwszym wejściu w widok części rozsuwają się odrobinę dalej
+ * (klasa .is-open; ruch w CSS: src/styles/iso.css). Jednorazowo; przy prefers-reduced-motion — nic (rysunek już rozsunięty).
  */
 const figs = document.querySelectorAll<HTMLElement>('[data-iso]');
 if (figs.length && 'IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {

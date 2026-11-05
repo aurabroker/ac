@@ -1,8 +1,15 @@
 /*
- * Rysunki izometryczne „układ scalony” (src/lib/iso, IsoFigure.astro). Grafit 1 px, białe ściany górne,
- * jasnoszare boczne, błękit kreślarski do wyróżnień, jeden czerwony akcent. Bez atrybutów style (CSP).
- * Rozstrzelenie: grupy .iso-e1….iso-e5 przesuwają się w górę o n·--iso-step, linie konstrukcyjne .iso-cl
- * rozciągają się o --iso-cl (stały stosunek, bo poziomy grup leżą co G0 = 44, krok STEP0 = 5).
+ * Rysunki izometryczne w nagłówku (src/lib/iso, IsoFigure.astro): maszyny i mechanizmy w rzucie izometrycznym.
+ * Tusz 1 px, białe ściany górne, dwie szare boczne, błękit kreślarski = części niosące moduły ochrony,
+ * czerwień = jedna rzecz poza ochroną. Bez atrybutów style (CSP). Te same kolory ma plik miniatury
+ * (render.ts → ROLE_ATTR) — zmiana tutaj wymaga zmiany tam.
+ *
+ * Ruch (raz, przy wejściu w widok: skrypt dodaje .is-open; bez JS i przy ograniczeniu ruchu — stan wyjściowy,
+ * już rozsunięty): geometria jest w jednostkach sceny pod jedną macierzą skali, więc przesunięcia niżej są
+ * w jednostkach sceny (STEP0 = 5 na grupę, OUT0 = 10 dla części „out”) i nie zależą od kadru.
+ *   .iso-eN      — grupa N: w górę o N·5, a w .iso-ax-x (zespół na osi) wzdłuż osi x sceny o N·5;
+ *   .iso-cl      — linia konstrukcyjna: rozciąga się o 1 + STEP0/G0 (G0 = 44), od dołu albo od początku osi;
+ *   .iso-out     — część poza ochroną: odsuwa się w bok o 10 (kierunek: .iso-od-nx / -y / -ny, domyślnie +x).
  */
 .iso-svg {
   display: block;
@@ -11,18 +18,33 @@
   overflow: visible;
   font-family: var(--font-mono);
   --iso-cl: 1.1136;
+  /* jedyny odcień boku części błękitnej i jedyny boku części czerwonej (render.ts: SIDE_HI, SIDE_SIG) */
+  --iso-side-r: #f4f6f8;
+  --iso-side-l: #e7ebef;
+  --iso-side-hi: #dde6f8;
+  --iso-side-sig: #f8e1d7;
+  /* odsunięcie części „out” (jednostki sceny): +x sceny = w prawo-w dół */
+  --iso-ox: 8.66px;
+  --iso-oy: 5px;
 }
-/* krok rozsunięcia = STEP0 (5) · skala kadru k (render.ts → FRAMES) */
-.iso-k42 { --iso-step: 2.1px; }
-.iso-k56 { --iso-step: 2.8px; }
-.iso-k58 { --iso-step: 2.9px; }
-.iso-k60 { --iso-step: 3px; }
-.iso-k84 { --iso-step: 4.2px; }
-.iso-k90 { --iso-step: 4.5px; }
-.iso-svg path {
+.iso-od-nx {
+  --iso-ox: -8.66px;
+  --iso-oy: -5px;
+}
+.iso-od-y {
+  --iso-ox: -8.66px;
+  --iso-oy: 5px;
+}
+.iso-od-ny {
+  --iso-ox: 8.66px;
+  --iso-oy: -5px;
+}
+.iso-svg :is(path, circle) {
   vector-effect: non-scaling-stroke;
 }
-.iso-svg :is(.i-top, .i-top-hi, .i-side-r, .i-side-l) {
+
+/* ściany */
+.iso-svg :is(.i-top, .i-side-r, .i-side-l, .i-top-hi, .i-side-hi, .i-bore) {
   stroke: var(--ink-2);
   stroke-width: 1;
   stroke-linejoin: round;
@@ -30,84 +52,110 @@
 .iso-svg .i-top {
   fill: var(--paper);
 }
+.iso-svg .i-side-r {
+  fill: var(--iso-side-r);
+}
+.iso-svg :is(.i-side-l, .i-bore) {
+  fill: var(--iso-side-l);
+}
 .iso-svg .i-top-hi {
   fill: var(--blue-wash);
 }
-.iso-svg .i-side-r {
-  fill: #f4f6f8;
+.iso-svg .i-side-hi {
+  fill: var(--iso-side-hi);
 }
-.iso-svg .i-side-l {
-  fill: #e7ebef;
+.iso-svg :is(.i-top-sig, .i-side-sig) {
+  stroke: var(--signal);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.iso-svg .i-top-sig {
+  fill: var(--signal-wash);
+}
+.iso-svg .i-side-sig {
+  fill: var(--iso-side-sig);
+}
+.iso-svg .i-mask {
+  fill: var(--paper);
+  stroke: none;
+}
+.iso-svg :is(.i-solid, .i-solid-hi, .i-solid-sig) {
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+.iso-svg .i-solid {
+  fill: var(--ink-2);
+  stroke: var(--ink-2);
+}
+.iso-svg .i-solid-hi {
+  fill: var(--blue);
+  stroke: var(--blue);
+}
+.iso-svg .i-solid-sig {
+  fill: var(--signal);
+  stroke: var(--signal);
+}
+
+/* linie */
+.iso-svg :is(.i-edge, .i-fine, .i-fine-ink, .i-fine-d, .i-cl, .i-axis, .i-proj, .i-trace-hi, .i-edge-sig, .i-fault, .i-hatch, .i-hatch-sig) {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 .iso-svg .i-edge {
-  fill: none;
   stroke: var(--ink-2);
   stroke-width: 1;
 }
-.iso-svg :is(.i-fine, .i-fine-d, .i-cl) {
-  fill: none;
+.iso-svg :is(.i-fine, .i-fine-d, .i-cl, .i-axis, .i-hatch) {
   stroke: var(--graphite);
+  stroke-width: 0.75;
+}
+.iso-svg .i-fine-ink {
+  stroke: var(--ink-2);
   stroke-width: 0.75;
 }
 .iso-svg .i-fine-d {
   stroke-dasharray: 2 2;
+  stroke-linecap: butt;
 }
 .iso-svg .i-cl {
   stroke-dasharray: 3 3;
+  stroke-linecap: butt;
+}
+.iso-svg .i-axis {
+  stroke-dasharray: 10 2.5 1.5 2.5;
+  stroke-linecap: butt;
 }
 .iso-svg .i-proj {
-  fill: none;
   stroke: var(--blue);
   stroke-width: 0.75;
   stroke-dasharray: 2 2.5;
+  stroke-linecap: butt;
 }
-.iso-svg :is(.i-trace, .i-pin) {
-  fill: none;
-  stroke: var(--ink-2);
-  stroke-width: 1;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-.iso-svg :is(.i-trace-hi, .i-pin-hi) {
-  fill: none;
+.iso-svg .i-trace-hi {
   stroke: var(--blue);
   stroke-width: 1.4;
-  stroke-linejoin: round;
-  stroke-linecap: round;
 }
-.iso-svg .i-pin-sig {
-  fill: none;
+.iso-svg .i-edge-sig {
   stroke: var(--signal);
-  stroke-width: 1.4;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+  stroke-width: 1.5;
 }
 .iso-svg .i-fault {
-  fill: none;
   stroke: var(--signal);
   stroke-width: 1.5;
   stroke-dasharray: 4 3;
+  stroke-linecap: butt;
 }
-.iso-svg :is(.i-pad, .i-ball, .i-via) {
-  fill: var(--paper);
-  stroke: var(--ink-2);
-  stroke-width: 0.75;
-}
-.iso-svg :is(.i-pad-hi, .i-ball-hi) {
-  fill: var(--blue-wash);
-  stroke: var(--blue);
-  stroke-width: 1.1;
-}
-.iso-svg :is(.i-pad-sig, .i-ball-sig) {
-  fill: var(--signal-wash);
+.iso-svg .i-hatch-sig {
   stroke: var(--signal);
-  stroke-width: 1.1;
-}
-.iso-svg .i-die-line {
-  fill: none;
-  stroke: var(--blue);
   stroke-width: 0.75;
 }
+/* obrys przerywany: część warunkowa */
+.iso-svg .i-d {
+  stroke-dasharray: 3 2.2;
+  stroke-linecap: butt;
+}
+
 /* odnośniki i etykiety */
 .iso-svg .i-ld {
   fill: none;
@@ -143,9 +191,9 @@
   fill: var(--signal);
 }
 
-/* rozstrzelenie przy pierwszym wejściu w widok (skrypt dodaje .is-open; bez JS i przy ograniczeniu ruchu — stan wyjściowy) */
+/* rozstrzelenie przy pierwszym wejściu w widok */
 @media (prefers-reduced-motion: no-preference) {
-  .iso-svg :is(.iso-e1, .iso-e2, .iso-e3, .iso-e4, .iso-e5, .iso-cl) {
+  .iso-svg :is(.iso-e1, .iso-e2, .iso-e3, .iso-e4, .iso-e5, .iso-out, .iso-cl) {
     transition: transform 1100ms cubic-bezier(0.22, 0.8, 0.25, 1);
   }
   .iso-svg .iso-cl {
@@ -153,21 +201,46 @@
     transform-origin: 50% 100%;
   }
   .is-open .iso-svg .iso-e1 {
-    transform: translateY(calc(var(--iso-step) * -1));
+    transform: translate(0, -5px);
   }
   .is-open .iso-svg .iso-e2 {
-    transform: translateY(calc(var(--iso-step) * -2));
+    transform: translate(0, -10px);
   }
   .is-open .iso-svg .iso-e3 {
-    transform: translateY(calc(var(--iso-step) * -3));
+    transform: translate(0, -15px);
   }
   .is-open .iso-svg .iso-e4 {
-    transform: translateY(calc(var(--iso-step) * -4));
+    transform: translate(0, -20px);
   }
   .is-open .iso-svg .iso-e5 {
-    transform: translateY(calc(var(--iso-step) * -5));
+    transform: translate(0, -25px);
   }
   .is-open .iso-svg .iso-cl {
     transform: scaleY(var(--iso-cl));
+  }
+  /* zespół na osi: wzdłuż osi x sceny (cos 30°, sin 30°) · 5 na grupę; linie od początku osi */
+  .iso-ax-x .iso-cl {
+    transform-origin: 0 0;
+  }
+  .is-open .iso-ax-x .iso-e1 {
+    transform: translate(4.33px, 2.5px);
+  }
+  .is-open .iso-ax-x .iso-e2 {
+    transform: translate(8.66px, 5px);
+  }
+  .is-open .iso-ax-x .iso-e3 {
+    transform: translate(12.99px, 7.5px);
+  }
+  .is-open .iso-ax-x .iso-e4 {
+    transform: translate(17.32px, 10px);
+  }
+  .is-open .iso-ax-x .iso-e5 {
+    transform: translate(21.65px, 12.5px);
+  }
+  .is-open .iso-ax-x .iso-cl {
+    transform: scale(var(--iso-cl));
+  }
+  .is-open .iso-svg .iso-out {
+    transform: translate(var(--iso-ox), var(--iso-oy));
   }
 }

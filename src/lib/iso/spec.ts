@@ -1,33 +1,37 @@
 /**
- * Treść strony → rysunek izometryczny (motyw, etykiety, napis na obudowie, czerwony akcent).
- * Etykiety pochodzą z treści tej strony: moduły z tabeli zakresu (`coverage[].module`), krótkie nagłówki H2,
- * specjalizacje osoby, hasła słownika, działy bloga. Frontmatter `iso` nadpisuje wybór (CONVENTIONS §6),
- * `iso: false` wyłącza rysunek. Na rysunkach nie ma liczb ani statystyk.
+ * Treść strony → rysunek izometryczny (motyw, wariant, podpisy, tabliczka, czerwony podpis, opis dostępny).
+ * Motyw i wariant: tabela MOTIF_BY_PATH (src/lib/iso/pages.ts), dla nowych stron — rodzina z sekcji (fallbackPlan).
+ * Podpisy pochodzą z treści tej strony: moduły z tabeli zakresu (`coverage[].module`), hasła słownika,
+ * specjalizacje osoby, działy bloga; tabela albo frontmatter `iso` ustala kolejność slotów motywu.
+ * Frontmatter `iso` nadpisuje wszystko (CONVENTIONS §5), `iso: false` wyłącza rysunek w nagłówku.
+ * Na rysunkach nie ma liczb ani statystyk; czerwień = jedno konkretne wyłączenie z tabeli zakresu.
  */
 import { getCollection } from 'astro:content';
-import { hash } from './geom.ts';
-import type { Motif } from './motifs.ts';
+import { HAS_NUMBER, LABEL_MAX, type MotifId } from './scene.ts';
+import { MOTIFS, resolveVariant } from './motifs/index.ts';
+import { MOTIF_BY_PATH, fallbackPlan, type RouteHint } from './pages.ts';
 import type { IsoSpec } from './render.ts';
 import { MAIN_NAV } from '../nav.ts';
 import { getPerson } from '../people.ts';
-import { shortTitle, type PageEntry, type PillarEntry, type SiteRoute } from '../routes.ts';
+import { shortTitle, type PageEntry, type SiteRoute } from '../routes.ts';
 import { ogKeyFor } from '../site.ts';
 
 /** Miniatura strony (plik SVG z builda, src/pages/fig/[...key].svg.ts): `/` → `/fig/index.svg`. */
 export const figPathFor = (pagePath: string) => `/fig/${ogKeyFor(pagePath)}.svg`;
 
 export interface IsoOverride {
-  motif?: Motif;
+  motif?: MotifId;
+  variant?: string;
   labels?: string[];
   inputs?: string[];
-  chip?: string;
+  plate?: string;
   fault?: string | false;
 }
 
 const EXCLUDED_MODULE = /^wyłączeni/i;
 const GENERIC = /^(inne|rozszerzenie|koszty)$/i;
 
-/** Etykieta z nazwy modułu/nagłówka: bez nawiasów i znaku zapytania, bez liczb, ≤ 28 znaków. */
+/** Etykieta z nazwy modułu/nagłówka: bez nawiasów i znaku zapytania, bez liczb (scene.HAS_NUMBER), ≤ 28 znaków. */
 export function cleanLabel(s: string): string | null {
   let t = s
     .replace(/\s*\([^)]*\)/g, '')
@@ -35,10 +39,11 @@ export function cleanLabel(s: string): string | null {
     .replace(/\s+/g, ' ')
     .trim();
   t = t.replace(/\s+\d+(?:[.,]\d+)?$/, '');
-  if (t.length > 28 && t.includes(' / ')) t = t.split(' / ')[0];
-  if (t.length > 28 && t.includes(' — ')) t = t.split(' — ')[0];
-  if (t.length < 2 || t.length > 28) return null;
-  if (/\d{2,}|%|\d[.,]\d/.test(t)) return null;
+  if (t.length > LABEL_MAX && t.includes(' / ')) t = t.split(' / ')[0];
+  if (t.length > LABEL_MAX && t.includes(' — ')) t = t.split(' — ')[0];
+  if (t.length > LABEL_MAX && t.includes(', ')) t = t.split(', ')[0];
+  if (t.length < 2 || t.length > LABEL_MAX) return null;
+  if (HAS_NUMBER.test(t)) return null;
   return t;
 }
 
@@ -55,7 +60,7 @@ const uniq = (arr: (string | null | undefined)[]) => {
   return out;
 };
 
-type CoverageRow = { module?: string; label: string };
+type CoverageRow = { module?: string; label: string; event?: string };
 
 /** Moduły z tabeli zakresu: najpierw „zwykle w zakresie”, potem opcjonalne i zależne od oceny ryzyka. */
 function modules(coverage: CoverageRow[]): string[] {
@@ -68,8 +73,20 @@ function modules(coverage: CoverageRow[]): string[] {
   return uniq([...named.filter((t) => t && !GENERIC.test(t)), ...named.filter((t) => t && GENERIC.test(t))]);
 }
 
-const hasExclusions = (coverage: CoverageRow[]) =>
-  coverage.some((c) => c.label === 'excluded' || (c.module && EXCLUDED_MODULE.test(c.module)));
+const isExcluded = (c: CoverageRow) => c.label === 'excluded' || (!!c.module && EXCLUDED_MODULE.test(c.module));
+
+/**
+ * Czerwony podpis strony spoza tabeli MOTIF_BY_PATH: pierwsze wyłączenie z tabeli zakresu, którego zdarzenie
+ * mieści się w podpisie (cleanLabel: ≤ 28 znaków, bez liczb). Nigdy ogólne „Wyłączenia” — brak takiego wiersza
+ * = brak czerwieni (wtedy `iso.fault` we frontmatterze).
+ */
+const exclusionLabel = (coverage: CoverageRow[]): string | undefined => {
+  for (const c of coverage) if (isExcluded(c) && c.event) {
+    const t = cleanLabel(c.event);
+    if (t) return t;
+  }
+  return undefined;
+};
 
 /** Krótkie nagłówki H2 z treści (np. „Kim jesteśmy?” → „Kim jesteśmy”). */
 function headings(body: string | undefined, max = 22): string[] {
@@ -81,144 +98,76 @@ function headings(body: string | undefined, max = 22): string[] {
   return uniq(out);
 }
 
-/** Napis na obudowie: skrót z nawiasu („(D&O)”) albo krótki człon przed dwukropkiem („LLMjacking: …”). */
-function chipFor(title: string): string | undefined {
-  const paren = /\(([^)]{2,12})\)/.exec(title)?.[1];
-  if (paren) return paren;
-  const head = title.split(':')[0].trim();
-  if (head !== title.trim()) {
-    const t = head.replace(/\s+\d+(?:[.,]\d+)?$/, '');
-    if (t.length <= 14 && !/\d{2,}/.test(t)) return t;
-  }
-  return undefined;
-}
-
-const pickBy = (seed: string, options: Motif[]) => options[hash(seed) % options.length];
-
 /** Rysunek w nagłówku: tylko tam, gdzie strona nie ma innej grafiki i nie jest stroną prawną ani główną. */
 export function showsHeaderIso(route: SiteRoute): boolean {
   const d = route.entry.data as { iso?: IsoOverride | false; figure?: string; template?: string };
   if (d.iso === false || d.figure) return false;
+  if (MOTIF_BY_PATH[route.path]?.calm) return false;
   if (route.kind === 'page') return !['home', 'legal', 'catalogue-index'].includes(d.template ?? '');
   return true;
+}
+
+const pillarNav = () => MAIN_NAV.filter((l) => /^\/(oc-|ubezpieczenie-)/.test(l.href)).map((l) => l.label);
+
+/** Podpisy z treści strony, gdy ani frontmatter, ani tabela ich nie ustala. */
+async function autoLabels(route: SiteRoute, cov: CoverageRow[]): Promise<string[]> {
+  const d = route.entry.data as PageEntry['data'];
+  if (route.kind === 'page') {
+    const t = d.template;
+    if (t === 'home' || t === 'wiedza-index' || t === 'catalogue-index') return pillarNav();
+    if (t === 'glossary') {
+      // pojęcia, od których zależy, czy roszczenie trafi do polisy (wstęp strony słownika)
+      const core = ['claims-made', 'data-retroaktywna', 'suma-gwarancyjna', 'udzial-wlasny'];
+      const terms = await getCollection('glossary');
+      return core.map((id) => terms.find((e) => e.data.id === id)?.data.term).filter((s): s is string => !!s);
+    }
+    if (t === 'person') {
+      const person = await getPerson(d.person ?? d.author);
+      return uniq(person.knowsAbout.map((s) => cleanLabel(s.split(' — ')[0])));
+    }
+  }
+  const mods = modules(cov);
+  return mods.length ? mods : headings(route.entry.body);
+}
+
+function hintFor(route: SiteRoute): RouteHint {
+  const d = route.entry.data as { template?: string; group?: string; hub?: string; pillar?: string };
+  return { kind: route.kind, path: route.path, template: d.template, group: d.group, hub: d.hub, pillar: d.pillar };
 }
 
 export async function isoSpecFor(route: SiteRoute): Promise<IsoSpec> {
   const d = route.entry.data as PageEntry['data'] & { iso?: IsoOverride | false; coverage: CoverageRow[] };
   const o: IsoOverride = d.iso || {};
-  const seed = route.path;
   const cov = d.coverage ?? [];
-  let motif: Motif = 'stack';
-  let labels: string[] = modules(cov);
-  let inputs: string[] = [];
-  let chip = chipFor(d.title);
-  let fault: string | undefined = hasExclusions(cov) ? 'Wyłączenia' : undefined;
-  let calm = false;
-  let variant: number | undefined;
-  // nazwa dostępna rysunku: temat strony, bez metafory „układu scalonego”
-  let title = `Schemat zakresu: ${shortTitle(d.title)}`;
+  const inTable = route.path in MOTIF_BY_PATH;
+  const plan = MOTIF_BY_PATH[route.path] ?? fallbackPlan(hintFor(route));
+  const motif: MotifId = o.motif ?? plan.motif;
+  // frontmatter zmienia motyw → wariant z frontmattera albo domyślny nowego motywu
+  const variant = resolveVariant(motif, o.variant ?? (motif === plan.motif ? plan.variant : undefined));
+  const calm = !!plan.calm || d.template === 'legal';
 
-  switch (route.kind) {
-    case 'solution':
-      motif = pickBy(seed, ['stack', 'pcb']);
-      break;
-    case 'article':
-      motif = pickBy(seed, ['bga', 'qfp']);
-      break;
-    case 'regulation':
-      motif = 'stack';
-      chip = undefined;
-      break;
-    case 'pillar': {
-      motif = route.entry.id.includes('/') ? 'stack' : 'qfp';
-      chip = undefined;
-      // cztery filary obok siebie na stronie głównej: każdy z inną sylwetką obudowy
-      const order = (route.entry as PillarEntry).data.order;
-      if (motif === 'qfp') variant = [4, 0, 5, 2][(order - 1 + 4) % 4];
-      break;
-    }
-    case 'page': {
-      const t = d.template;
-      chip = undefined;
-      title = `Schemat: ${shortTitle(d.title)}`;
-      if (t === 'contact') {
-        title = 'Schemat: kanały kontaktu';
-        motif = 'pcb';
-        inputs = ['Analiza ryzyka', 'Zgłoszenie szkody'];
-        labels = ['Formularz', 'Telefon'];
-        chip = 'Broker';
-      } else if (t === 'person') {
-        title = 'Schemat: obszary specjalizacji';
-        motif = 'qfp';
-        const person = await getPerson(d.person ?? d.author);
-        labels = uniq(person.knowsAbout.map((s) => cleanLabel(s.split(' — ')[0])));
-      } else if (t === 'wiedza-index') {
-        title = 'Schemat: główne tematy';
-        motif = 'bga';
-        labels = MAIN_NAV.filter((l) => /^\/(oc-|ubezpieczenie-)/.test(l.href)).map((l) => l.label);
-        chip = 'Wiedza';
-      } else if (t === 'glossary') {
-        title = 'Schemat: podstawowe pojęcia';
-        motif = 'bga';
-        // pojęcia, od których zależy, czy roszczenie trafi do polisy (wstęp strony słownika)
-        const core = ['claims-made', 'data-retroaktywna', 'suma-gwarancyjna', 'udzial-wlasny'];
-        const terms = await getCollection('glossary');
-        labels = core.map((id) => terms.find((e) => e.data.id === id)?.data.term).filter((s): s is string => !!s);
-        chip = 'A–Z';
-      } else if (t === 'catalogue-index') {
-        motif = 'bga';
-        labels = MAIN_NAV.filter((l) => /^\/(oc-|ubezpieczenie-)/.test(l.href)).map((l) => l.label);
-      } else if (t === 'home') {
-        motif = 'stack';
-        labels = MAIN_NAV.filter((l) => /^\/(oc-|ubezpieczenie-)/.test(l.href)).map((l) => l.label);
-      } else {
-        motif = 'stack';
-        calm = t === 'legal';
-        // strony prawne: spokojna miniatura bez podpisów i bez akcentów
-        if (calm) {
-          labels = [];
-          fault = undefined;
-        } else if (!labels.length) labels = headings(route.entry.body);
-      }
-    }
-  }
-
-  if (o.motif) motif = o.motif;
-  if (o.labels) labels = o.labels;
-  if (o.inputs) inputs = o.inputs;
-  if (o.chip !== undefined) chip = o.chip || undefined;
-  if (o.fault === false) fault = undefined;
-  else if (o.fault) fault = o.fault;
-  if (motif === 'pcb' && !inputs.length) {
-    // karta jako przebieg: dwa pierwsze moduły wchodzą, pozostałe wychodzą
-    inputs = labels.slice(0, 2);
-    labels = labels.slice(2);
+  let labels = o.labels ?? plan.labels ?? (await autoLabels(route, cov));
+  let inputs = o.inputs ?? plan.inputs ?? [];
+  let fault: string | undefined = o.fault === false ? undefined : (o.fault ?? plan.fault ?? (!inTable ? exclusionLabel(cov) : undefined));
+  let plate = o.plate ?? plan.plate;
+  if (calm) {
+    labels = [];
+    inputs = [];
+    fault = undefined;
+    plate = undefined;
   }
 
   const up = (s: string) => s.toLocaleUpperCase('pl');
-  const shown = labels.slice(0, 4);
-  // opis z etykietami w pisowni źródła (skróty jak OC, D&O, AI zostają wielkimi literami)
-  const list = (a: string[]) => a.join(', ');
-  const faultNote = fault ? ` Czerwienią oznaczono: ${fault}.` : '';
-  const desc =
-    motif === 'stack'
-      ? `Układ scalony w widoku rozstrzelonym, warstwy od góry: ${list([...(fault ? [fault] : []), ...shown])}.`
-      : motif === 'qfp'
-        ? `Obudowa układu scalonego nad płytką drukowaną${shown.length ? `; podpisane wyprowadzenia: ${list(shown)}` : ''}.${faultNote}`
-        : motif === 'pcb'
-          ? `Ścieżki płytki drukowanej prowadzą przez układ${inputs.length ? ` od: ${list(inputs)}` : ''}${shown.length ? ` do: ${list(shown)}` : ''}.${fault ? ` Przerwana ścieżka: ${fault}.` : ''}`
-          : `Matryca kulek pod rdzeniem układu scalonego${shown.length ? `; wyróżnione pola: ${list(shown)}` : ''}.${faultNote}`;
-
   return {
-    seed,
     motif,
+    variant,
     labels: labels.map(up),
     inputs: inputs.map(up),
-    chip: chip ? up(chip) : undefined,
+    plate: plate ? up(plate) : undefined,
     fault: fault ? up(fault) : undefined,
     calm,
-    variant,
-    title,
-    desc,
+    title: `${MOTIFS[motif].name}: ${shortTitle(d.title)}`,
+    // opis powstaje w render.ts osobno dla każdego kadru — tylko z podpisami, które kadr pokazuje
+    about: { variant, labels, inputs, fault, calm },
   };
 }
