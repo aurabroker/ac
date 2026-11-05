@@ -37,7 +37,7 @@ Serwis: projekt **Cloudflare Pages `aura-web`** (statyczny build Astro, `public/
 - [x] **Email Obfuscation:** Off (5.11; wcześniej On) (wstrzykuje skrypt — CSP). **Rocket Loader:** Off.
 - [ ] **Reguły cache:** bez „Cache Everything” dla HTML (statyczne zasoby `/_astro/*` mają `immutable` z `_headers`).
 - [ ] **HSTS** etap 1: `max-age=86400`, bez `includeSubDomains`, bez preload; etap 2 (po audycie wszystkich nazw DNS): 6 miesięcy z `includeSubDomains`.
-- [ ] **Web Analytics** (beacon JS): Off do decyzji IOD; po włączeniu — dopisz źródła do CSP w `public/_headers` i zaktualizuj politykę prywatności.
+- [x] **Web Analytics** (beacon JS): Off dla `www.auraconsulting.pl` (5.11: jedyna reguła Web Analytics strefy zmieniona z „include *” na „exclude www.auraconsulting.pl”, bo automatycznie wstrzykiwany `beacon.min.js` łamał CSP; limit planu Free to jedna reguła). Do decyzji IOD; po włączeniu — dopisz źródła do CSP w `public/_headers` i zaktualizuj politykę prywatności.
 - [ ] Powiadomienia: certyfikaty, błędy Workera, wzrost 5xx/1015/1027 dla botów.
 
 ## 5. Weryfikacja po wdrożeniu (smoke)
