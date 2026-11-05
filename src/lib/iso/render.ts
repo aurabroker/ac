@@ -35,6 +35,8 @@ export interface IsoSpec {
   fault?: string;
   /** Spokojna scena (strony prawne). */
   calm: boolean;
+  /** Podpisy to nie moduły z tabeli zakresu — części w tuszu (bez błękitu). */
+  ink?: boolean;
   /** Nazwa dostępna rysunku (po polsku). */
   title: string;
   /**
@@ -108,6 +110,7 @@ export function sceneFor(spec: IsoSpec, kind: FrameKind): Scene {
     fault: spec.calm ? undefined : spec.fault,
     plate: spec.calm ? undefined : spec.plate,
     calm: spec.calm,
+    ink: !!spec.ink,
     frame: kind,
     thumb: kind === 't',
     maxLabels: f.maxLabels,
@@ -384,16 +387,20 @@ interface Part {
   stretch: boolean;
   items: Item[];
 }
-/** Przebiegi (grupa, „out”) w kolejności malowania; kolejne elementy tej samej roli łączone w jedną ścieżkę. */
-function runs(items: Item[], calm: boolean) {
+/**
+ * Przebiegi (grupa, „out”) w kolejności malowania; kolejne elementy tej samej roli łączone w jedną ścieżkę.
+ * Linie rozciągane (stretch) zostają osobno tylko tam, gdzie jest ruch (każda skaluje się od swojego końca).
+ */
+function runs(items: Item[], calm: boolean, motion: boolean) {
   const out: { g: number; out: boolean; parts: Part[] }[] = [];
   for (const it of items) {
     const role = (calm && CALM[it.role]) || it.role;
     let grp = out[out.length - 1];
     if (!grp || grp.g !== it.g || grp.out !== !!it.out) out.push((grp = { g: it.g, out: !!it.out, parts: [] }));
     const last = grp.parts[grp.parts.length - 1];
-    if (last && last.role === role && last.dash === !!it.dash && last.eo === !!it.eo && !it.stretch && !last.stretch) last.items.push(it);
-    else grp.parts.push({ role, dash: !!it.dash, eo: !!it.eo, stretch: !!it.stretch, items: [it] });
+    const st = motion && !!it.stretch;
+    if (last && last.role === role && last.dash === !!it.dash && last.eo === !!it.eo && !st && !last.stretch) last.items.push(it);
+    else grp.parts.push({ role, dash: !!it.dash, eo: !!it.eo, stretch: st, items: [it] });
   }
   return out;
 }
@@ -443,10 +450,10 @@ export function renderInline(spec: IsoSpec, kind: 'w' | 'n', uid: string): strin
   const open = (g: number, o: boolean) =>
     (L.motion && g ? `<g class="iso-e${g}">` : '<g>') + (L.motion && o ? '<g class="iso-out">' : '');
   const close = (o: boolean) => (L.motion && o ? '</g></g>' : '</g>');
-  for (const run of runs(L.items, L.calm)) {
+  for (const run of runs(L.items, L.calm, L.motion)) {
     out.push(open(run.g, run.out));
     for (const p of run.parts) {
-      const c = [`i-${p.role}`, ...(p.dash ? ['i-d'] : []), ...(p.stretch && L.motion ? ['iso-cl'] : [])].join(' ');
+      const c = [`i-${p.role}`, ...(p.dash ? ['i-d'] : []), ...(p.stretch ? ['iso-cl'] : [])].join(' ');
       out.push(`<path class="${c}"${p.eo ? ' fill-rule="evenodd"' : ''} d="${p.items.map((it) => segsD(it.d, id, 1)).join('')}"/>`);
     }
     out.push(close(run.out));
@@ -552,7 +559,7 @@ export async function renderFile(spec: IsoSpec): Promise<string> {
     `<defs><pattern id="gr" width="12" height="12" patternUnits="userSpaceOnUse"><path d="M12 0H0V12" fill="none" stroke="#eef1f4" stroke-width=".6"/></pattern>${defs.join('')}</defs>`,
     `<rect width="${L.W}" height="${L.H}" fill="#fff"/><rect width="${L.W}" height="${L.H}" fill="url(#gr)"/>`,
   );
-  for (const run of runs(L.items, L.calm))
+  for (const run of runs(L.items, L.calm, false))
     for (const p of run.parts)
       out.push(
         `<path ${ROLE_ATTR[p.role]}${p.dash ? DASH : ''}${p.eo ? ' fill-rule="evenodd"' : ''} d="${p.items.map((it) => segsD(it.d, map, L.k)).join('')}"/>`,

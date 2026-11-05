@@ -72,7 +72,8 @@ function cover(s: Sketch, g: number, x0: number, L: number, R: number, thumb: bo
 
 function program(s: Sketch, m: MotifInput, zt: number) {
   const t = hi(m);
-  const B = budget(m);
+  // miniatura: kołnierz i tarcza czołowa (kotwice daleko od siebie — odnośnik środkowej tarczy przeciąłby czołową)
+  const B = budget(m, { order: m.thumb ? [0, 2] : [0, 1, 2] });
   const tone = (i: number): Tone => (B.slots[i] ? t : 'ink');
   bearing(s, 8, m.thumb, zt);
   let x = 44;
@@ -161,17 +162,11 @@ function sprzeglo(s: Sketch, m: MotifInput, zt: number) {
   const hx = 70;
   const HL = 30;
   disc(s, 1, hx, HL, 27, tone(0));
-  if (m.plate && !m.thumb) {
-    // tabliczka styczna do płaszcza piasty (normalna ku widzowi), napis wzdłuż osi
-    const k = Math.SQRT1_2;
-    const ctr: V3 = [hx + HL / 2, YC + 27.3 * k, ZC + 27.3 * k];
-    const u: V3 = [1, 0, 0];
-    const v: V3 = [0, k, -k];
-    const w = 24;
-    const h = 7.5;
-    const corner = (a: number, b: number): V3 => [ctr[0] + u[0] * a, ctr[1] + v[1] * b, ctr[2] + v[2] * b];
-    s.poly(1, 'fine-ink', [corner(-w / 2, -h / 2), corner(w / 2, -h / 2), corner(w / 2, h / 2), corner(-w / 2, h / 2)]);
-    s.mark(1, m.plate, ctr, { u, v, size: 4.6, max: w - 3 });
+  if (m.plate) {
+    // tabliczka na płycie przed zespołem (na piaście napis miałby < 5 px); znika w kadrze, gdzie byłby < 7 px
+    const ctr: V3 = [92, 75, zt];
+    const plateR: V3[] = [[ctr[0] - 34, 69, zt], [ctr[0] + 34, 69, zt], [ctr[0] + 34, 81, zt], [ctr[0] - 34, 81, zt]];
+    s.mark(0, m.plate, ctr, { size: 9, max: 62, plate: plateR });
   }
   const aHub1 = rimAt([hx + HL, YC, ZC], 'x', 27, RIM);
   const jawsAt = m.thumb ? [90, 330] : [90, 210, 330];

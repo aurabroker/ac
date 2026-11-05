@@ -50,6 +50,8 @@ const narrow = renderInline(spec, 'n', `${uid}-n`);
   }
   .iso-fig__sheet :global(.iso-svg--n) {
     display: none;
+    /* kadr wąski (330 px) w szerszej kolumnie (np. boczna kolumna /wiedza/ ~440 px) nie rośnie ponad ~1,15× — podpisy ≤ 11,5 px */
+    max-width: 380px;
   }
   @container (max-width: 459px) {
     .iso-fig__sheet :global(.iso-svg--w) {

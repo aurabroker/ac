@@ -166,6 +166,7 @@ export async function isoSpecFor(route: SiteRoute): Promise<IsoSpec> {
     plate: plate ? up(plate) : undefined,
     fault: fault ? up(fault) : undefined,
     calm,
+    ...(plan.ink ? { ink: true } : {}),
     title: `${MOTIFS[motif].name}: ${shortTitle(d.title)}`,
     // opis powstaje w render.ts osobno dla każdego kadru — tylko z podpisami, które kadr pokazuje
     about: { variant, labels, inputs, fault, calm },

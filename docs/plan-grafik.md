@@ -49,9 +49,9 @@ Legenda: **N+K** to rysunek w nagłówku i na karcie, **K** to tylko karta (stro
 | `/wiedza/usa-kanada-w-polisie/` | belka (wspornik) | N+K | OC zawodowe · USA i Kanada (podpora przerywana) | strzałka na końcu wspornika: Odszkodowania karne |
 | `/oc-zawodowe/` | przekładnia (para kół) | K | OC zawodowe · Rozszerzenie | luźne koło: Kary umowne |
 | `/wiedza/oc-programisty-b2b/` | przekładnia (mały zębnik) | N+K | OC zawodowe · Rozszerzenie OC · Cyber | luźne koło: Kary umowne |
-| `/ubezpieczenie-cyber/` | szafa serwerowa | K | Reakcja na incydent · Odtworzenie i przestój | przecięty kabel: Awarie infrastruktury |
-| `/wiedza/ransomware-2-0/` | szafa serwerowa (blokada) | N+K | Wymuszenie · Odtworzenie i przestój · Reakcja na incydent · Odpowiedzialność | przecięty kabel: Awarie infrastruktury |
-| `/ubezpieczenie-ai/` | maszyna AI (model) | K | OC zawodowe · Cyberprzestępstwa | przecięty kabel: Awarie infrastruktury |
+| `/ubezpieczenie-cyber/` | szafa serwerowa | K | Reakcja na incydent · Odtworzenie i przestój | przecięty kabel: Rozległe awarie zasilania |
+| `/wiedza/ransomware-2-0/` | szafa serwerowa (blokada) | N+K | Wymuszenie · Odtworzenie i przestój · Reakcja na incydent · Odpowiedzialność | przecięty kabel: Rozległe awarie zasilania |
+| `/ubezpieczenie-ai/` | maszyna AI (model) | K | OC zawodowe · Cyberprzestępstwa | przecięty kabel: Rozległe awarie zasilania |
 | `/ubezpieczenie-ai/ai-w-firmie/` | maszyna AI (firma) | N+K | OC zawodowe · Cyber · Cyberprzestępstwa | upuszczony detal: Własna strata z decyzji AI |
 | `/regulacje/ai-act/` | manometr | N+K | Systemy wysokiego ryzyka · Obowiązki przejrzystości · Kompetencje w zakresie AI | strefa tarczy: Zakazane praktyki |
 | `/wiedza/ai-act-a-ubezpieczenie/` | manometr (zawór) | N+K | OC zawodowe · Koszty postępowań · OC za produkt · Cyber | strefa tarczy: Kary i grzywny |
@@ -76,7 +76,7 @@ Legenda: **N+K** to rysunek w nagłówku i na karcie, **K** to tylko karta (stro
 | `/slownik/` | kaseta (wzorce) | N+K | Claims made · Data retroaktywna · Suma gwarancyjna · Udział własny | brak |
 | `/ubezpieczenia/ryzyka-nietypowe/` | kaseta (na miarę) | N+K | Wydarzenia · Badania kliniczne · Bezpieczeństwo osób · Terroryzm i sabotaż | bryła bez gniazda: Działania wojenne |
 | `/zespol/marek-ciesla/` | kaseta (przybory) | N+K | Cyber · OC zawodowe · D&O · Transakcje | brak |
-| `/ubezpieczenia/` | archiwum (komoda) | K | Szkody wyrządzone innym · Zarząd i nadużycia · Transakcje i IP | brak (szuflada ryzyk nietypowych linią przerywaną) |
+| `/ubezpieczenia/` | archiwum (komoda) | K | Szkody wyrządzone innym · Zarząd i nadużycia · Transakcje i kontrakty | brak (szuflada ryzyk nietypowych linią przerywaną) |
 | `/wiedza/` | archiwum (komoda z arkuszami) | N+K | OC i cyber dla IT · Ubezpieczenie AI · Cyber · OC zawodowe | brak |
 | `/informacje-o-brokerze/` | archiwum (szafa aktowa) | S | — | — |
 
@@ -147,9 +147,26 @@ Zgłoszenie właściciela (streszczenie): grafiki procesora były tylko przykła
 - Kontrola w CI: `npm run validate:iso` (każda strona ma miniaturę, brak procesora, brak identycznych sąsiadów w siatkach kart, podpisy ≤ 28 znaków bez liczb, miniatura ≤ 4 KB gz, opis bez „układu scalonego”).
 - Szkice przeszły krytykę arkusza i poprawki przed wdrożeniem; na miniaturach nie ma drobiazgów (nakrętek, podkładek, sprężyn) — zostają w nagłówkach.
 - Odstępstwa:
-  - `/ubezpieczenia/`: podpisy „Zarząd i nadużycia” i „Transakcje i IP” — tak brzmią skróty grup na tej stronie.
-  - Tłocznik (ochrona prawna IP): zamiast czterech słupów dwa krótkie kołki prowadzące; kształt matrycy, stempla i kopii — butelka, żeby wnęka była czytelna z góry.
+  - `/ubezpieczenia/`: podpisy „Zarząd i nadużycia” i „Transakcje i kontrakty” (skróty grup katalogu).
+  - Tłocznik (ochrona prawna IP): słupy prowadzące (widać trzy z czterech) i płyta górna tylko z tyłu, z wysięgnikiem do trzpienia stempla — gniazdo i stempel zostają widoczne z góry; kształt matrycy, stempla i kopii — butelka.
   - Maszyna modelu AI: bez przymiaru tolerancji; pokrywa uniesiona i odsunięta w lewo, żeby nie zasłaniała płyt sieci.
   - Hala (mienie): dach jako obrys nad tylną ścianą, bez bramy i gaśnicy; w miniaturze jeden regał.
   - Zespół na osi i zawór manometru: sprężyna, otwory i podkładka tylko w nagłówku, w miniaturze obudowa zamiast sprężyny.
-  - Nagłówki z limitem czterech podpisów: część slotów nie ma podpisu (np. „Cyber” przy gnieździe danych pompy, „Umowa B2B” na belce).
+  - Nagłówki z limitem czterech podpisów: część slotów nie ma podpisu (np. „Cyber” przy gnieździe danych pompy — moduły pompy są cztery, a czerwony podpis zajmuje czwarte miejsce). „Umowa B2B” jest tabliczką na bloku umowy (belka, wariant „umowa”).
+
+### Poprawki po przeglądzie (5.11.2026)
+
+- Przekładnia: wyłamany ząb z przodu zębnika (na tle płyty), zygzak pęknięcia u nasady, przerywany zarys gniazda, odłamek tuż nad luką; podpis zębnika wskazuje odłamek. W miniaturze bez podkładki — moduł niesie piasta zębnika.
+- Manometr (AI Act): tarcza na pochyłym pulpicie (prawie „en face”), strefa wysokiego ryzyka i przejrzystość w lewej kolumnie (odnośnik w prawo przeciąłby czerwoną strefę), szersza płyta z króćcem — tarcza wypełnia ponad połowę miniatury. Zawór: niższy i mniejszy manometr w miniaturze, większa tabliczka AI ACT na zbiorniku.
+- Ubezpieczenia transakcyjne: oba kołnierze (polisa sprzedającego i kupującego) podpisane w każdym kadrze, opaska („ryzyka zidentyfikowane”) tylko w szerokim nagłówku.
+- Archiwum arkuszy (`/wiedza/`): jeden arkusz uniesiony (róg podwinięty ćwiercią walca), pozostałe działy na czołach wysuniętych schodkowo szuflad.
+- PLD: skrzynia odbiorcy firmowego wyraźnie poza obrysem ochrony; napęd: „Cyber” na ekranie pierwszego urządzenia, „OC za produkt” na ostatnim.
+- Prasa drukarska: forma jako strona (pasek tytułu, ramka zdjęcia, wiersze), stos wydruków jedną bryłą po prawej od łoża.
+- Kradzież (crime): „Socjotechnika” na dorobionej kopii klucza (lewa kolumna), podpisy pakietów kołków na skrajnych pakietach. Skarbiec: dolny rygiel (D&O) w lewej kolumnie.
+- Szafa serwerowa: w miniaturze niższa szafa; biblioteka kopii w błękicie; tabliczka RANSOMWARE na płycie przed szafą. LLMJACKING i TECH E&O — także na płycie bazowej (na urządzeniu napis miałby < 5 px).
+- Czerwony podpis „Rozległe awarie zasilania” (zamiast „Awarie infrastruktury”) na `/ubezpieczenie-cyber/`, `/ubezpieczenie-ai/` i `/wiedza/ransomware-2-0/` — zgodnie z wierszem wyłączeń.
+- Maszyna AI: podłużne tace z arkuszami (bez kwadratu z wpustem, który przypominał obudowę układu).
+- `/o-nas/`: kroki pracy w tuszu (to nie moduły z tabeli zakresu).
+- Słownik: płytki wzorcowe różnią się grubością, nie wysokością (nie wykres słupkowy). Ryzyka nietypowe: bryła bez gniazda w wycięciu obrysu, z dala od krawędzi płyty. Żuraw: ładunek wisi wysoko (pion do płyty), w miniaturze niższy maszt.
+- Belka „umowa”: wysoki blok z tabliczką UMOWA B2B; „wspornik”: szersza przerwa między płytami.
+- Tabliczki: znikają w kadrze, w którym napis miałby < 7 px. Spokojne miniatury: płyta ze znacznikami na krawędziach także pod kasetką.

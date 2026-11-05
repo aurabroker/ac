@@ -138,7 +138,7 @@ export const lineRole = (tone: Tone = 'ink'): Role => LINE[tone];
 /** Pełne wypełnienie w danym tonie: solid / solid-hi / solid-sig. */
 export const solidRole = (tone: Tone = 'ink'): Role => SOLID[tone];
 /** Ton modułu: błękit, chyba że scena spokojna. */
-export const hi = (m: MotifInput): Tone => (m.calm ? 'ink' : 'hi');
+export const hi = (m: MotifInput): Tone => (m.calm || m.ink ? 'ink' : 'hi');
 
 /** Rola ściany wg normalnej (dominująca składowa: z → góra, x → side-r, y → side-l). */
 export function faceRole(n: V3, f: Faces = 'ink'): Role {
@@ -953,7 +953,7 @@ export function crack(s: Sketch, g: number, a: V3, b: V3, o: { n?: number; amp?:
 }
 
 /** Ton slotu: błękit tylko dla części, która niesie podpisany moduł (w spokojnej scenie zawsze tusz). */
-export const slotTone = (m: MotifInput, label: string | undefined): Tone => (label && !m.calm ? 'hi' : 'ink');
+export const slotTone = (m: MotifInput, label: string | undefined): Tone => (label && !m.calm && !m.ink ? 'hi' : 'ink');
 
 /**
  * Podział budżetu etykiet kadru ze slotami: czerwona zawsze, wloty (najwyżej `inputs`, domyślnie połowa reszty),

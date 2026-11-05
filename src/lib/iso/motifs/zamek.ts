@@ -3,11 +3,13 @@
  *   wkladka  — /ubezpieczenia/ubezpieczenie-crime/: wkładka bębenkowa wzdłuż osi x; pakiety kołków wyjęte
  *              z gniazd nad wieżą korpusu, klucz wysunięty z kanału wzdłuż osi, na płycie dorobiona kopia klucza
  *              (inne nacięcia — zdarzenie objęte ochroną, tusz). Czerwień: pakiet kołków odłożony poza obrys
- *              (szkody pośrednie). Sloty: [pakiet 1, pakiet 3, pakiet 5, czoło bębenka].
+ *              (szkody pośrednie). Sloty: [pakiet 1, pakiet 5, dorobiona kopia klucza (socjotechnika), czoło
+ *              bębenka] — pakiety skrajne: ich kotwice leżą daleko od siebie, odnośniki nie przecinają kołków.
  *   skarbiec — /ubezpieczenia/instytucje-finansowe-i-fintech/: okrągłe drzwi skarbca o osi x wysunięte z ościeżnicy
  *              (rozstrzelenie wzdłuż osi drzwi), rygle promieniowe (rygiel = polisa), koło z trzema szprychami.
  *              Czerwień: rygiel wyjęty z drzwi i odłożony poza obrys (straty z inwestycji).
- *              Sloty: rygle widoczne obok koła, od góry [OC zawodowe, Crime, D&O, Cyber] — odnośniki w prawo.
+ *              Sloty: rygle widoczne obok koła, od góry [OC zawodowe, Crime, D&O, Cyber] — odnośniki w prawo; dolny
+ *              rygiel (D&O) — w lewo (odnośnik w prawo przeciąłby koło).
  *   kasetka  — /polityka-prywatnosci/ (spokojna): zamknięta kasetka na dokumenty z czołem wkładki, g0, bez ruchu.
  * Miniatura: bez sprężyn, bez gałek koła i tarczy szyfrowej; nagłówek: linie konstrukcyjne n·G0.
  */
@@ -31,6 +33,8 @@ function keyBlade(a0: number, len: number, b0: number, h: number, cuts: number[]
 
 function wkladka(m: MotifInput, s: Sketch) {
   const L = take(m);
+  // wąski nagłówek: bez podpisu kopii klucza (lewa kolumna zmniejszyłaby rysunek o połowę)
+  if (m.frame === 'n') L.labels = L.labels.slice(0, 2);
   const thumb = m.thumb;
   const W = 274;
   const D = 120;
@@ -64,11 +68,14 @@ function wkladka(m: MotifInput, s: Sketch) {
     });
 
   // dorobiona kopia klucza: leży płasko na płycie przed korpusem (inne nacięcia)
+  const tCopy = slotTone(m, L.labels[2]);
   const copy = keyBlade(36, 74, 0, 14, [3, 7, 2, 6, 4]).map(([a, b]): V3 => [a, 104 - b, zt + 2.5]);
-  if (thumb) s.poly(0, 'top', copy);
-  else s.prism(0, copy, [0, 0, -2.5], 'ink');
-  s.ell(0, 'top', [123, 97, zt + 2.5], 'z', 13);
+  if (thumb) s.poly(0, tCopy === 'hi' ? 'top-hi' : 'top', copy);
+  else s.prism(0, copy, [0, 0, -2.5], tCopy);
+  s.ell(0, tCopy === 'hi' ? 'top-hi' : 'top', [123, 97, zt + 2.5], 'z', 13);
   s.ell(0, 'bore', [128, 97, zt + 2.5], 'z', 4);
+  // socjotechnika = dorobiony klucz: kotwica na czubku pióra, lewa kolumna (w prawo odnośnik przeciąłby wysunięty klucz)
+  s.label(L.labels[2], [37, 100, zt + 2.5], 'l', 0, tCopy);
 
   // korpus: walec + wieża, czoło (profil) na x = xb
   s.cylX(0, [xa, yc, zc], xb - xa, R, { noCap: true });
@@ -89,10 +96,10 @@ function wkladka(m: MotifInput, s: Sketch) {
   // gniazda kołków
   for (const x of pins) s.ell(0, 'bore', [x, yc, zTop], 'z', pr + 0.5);
 
-  // pakiety kołków (g1) — nad gniazdami; sloty 0..2 → pakiety 1, 3, 5
+  // pakiety kołków (g1) — nad gniazdami; sloty 0, 1 → pakiety 1 i 5 (skrajne)
   const lift = thumb ? 14 : G0;
   const zP = zTop + lift;
-  const slotOf = [0, -1, 1, -1, 2];
+  const slotOf = [0, -1, -1, -1, 1];
   for (const i of [0, 4]) {
     const a: V3 = [pins[i] + pr + 0.5, yc, zTop];
     if (thumb) s.line(0, 'cl', a, [a[0], yc, zP]);
@@ -136,8 +143,8 @@ function ringFaceX(s: Sketch, g: number, role: Role, x: number, yc: number, zc: 
 function skarbiec(m: MotifInput, s: Sketch) {
   const L = take(m);
   const thumb = m.thumb;
-  const W = thumb ? 168 : 200;
-  const D = thumb ? 142 : 178;
+  const W = thumb ? 196 : 200;
+  const D = thumb ? 168 : 178;
   const { zt } = plate(s, { x0: 0, y0: 0, w: W, d: D, protect: null });
   protectPoly(s, [[10, 10], [W - 10, 10], [W - 10, D - 56], [W - 58, D - 56], [W - 58, D - 10], [10, D - 10]], zt);
 
@@ -147,11 +154,11 @@ function skarbiec(m: MotifInput, s: Sketch) {
   const zc = zt + Rd + Rb + 5;
   const xs = 14; // ościeżnica: x od xs do xs + T
   const T = 10;
-  const gap = thumb ? 30 : G0; // ościeżnica → drzwi (nagłówek: linia konstrukcyjna G0)
+  const gap = thumb ? 40 : G0; // ościeżnica → drzwi (nagłówek: linia konstrukcyjna G0)
   const xd = xs + T + gap; // tył drzwi
   const th = 18;
   const xf = xd + th; // czoło drzwi
-  const xw = xf + (thumb ? 24 : G0); // koło (piasta)
+  const xw = xf + (thumb ? 32 : G0); // koło (piasta)
 
   // rygiel wyjęty (czerwień) — leży na płycie poza obrysem, przed drzwiami po prawej
   if (L.fault)
@@ -175,6 +182,8 @@ function skarbiec(m: MotifInput, s: Sketch) {
   const dir = (t: number): V3 => [0, Math.cos(deg(t)), Math.sin(deg(t))];
   const red = 90; // gniazdo wyjętego rygla (u góry)
   const slotAt: Record<number, number> = { 135: 0, 180: 1, 270: 2, 225: 3 };
+  // dolny rygiel leży pod kołem (koło wysunięte do przodu): jego podpis idzie w lewo
+  const sideAt: Record<number, 'l' | 'r'> = { 270: 'l' };
   const front = (t: number) => Math.cos(deg(t)) + Math.sin(deg(t)) > 0.01;
   const xbolt = xd + th / 2;
   const bolt = (t: number) => {
@@ -226,14 +235,15 @@ function skarbiec(m: MotifInput, s: Sketch) {
   for (const [t, sl] of Object.entries(slotAt)) {
     const d = dir(+t);
     const r = Rd + Rb;
-    s.label(L.labels[sl], [xbolt + 2, yc + r * d[1], zc + r * d[2]], 'r', 1, slotTone(m, L.labels[sl]));
+    s.label(L.labels[sl], [xbolt + 2, yc + r * d[1], zc + r * d[2]], sideAt[+t] ?? 'r', 1, slotTone(m, L.labels[sl]));
   }
 }
 
 /* ---------------- kasetka (spokojna) ---------------- */
 
 function kasetka(s: Sketch) {
-  const { zt } = plate(s, { x0: 0, y0: 0, w: 196, d: 128, protect: null, ticks: false });
+  // spokojna płyta jak wszystkie: bez obrysu ochrony, ze znacznikami na krawędziach (jedna reguła dla stron prawnych)
+  const { zt } = plate(s, { x0: 0, y0: 0, w: 196, d: 128, protect: null });
   const x0 = 40;
   const x1 = 158;
   const y0 = 28;
@@ -271,7 +281,7 @@ function build(m: MotifInput) {
 }
 
 const PART: Record<string, string[]> = {
-  wkladka: ['pierwszy pakiet kołków', 'trzeci pakiet kołków', 'piąty pakiet kołków', 'czoło bębenka'],
+  wkladka: ['pierwszy pakiet kołków', 'piąty pakiet kołków', 'dorobiona kopia klucza na płycie', 'czoło bębenka'],
   skarbiec: ['rygiel u góry', 'rygiel z prawej', 'rygiel u dołu', 'rygiel za kołem'],
 };
 

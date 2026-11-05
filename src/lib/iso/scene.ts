@@ -180,6 +180,8 @@ export interface MotifInput {
   plate?: string;
   /** Spokojna miniatura strony prawnej. */
   calm: boolean;
+  /** Podpisy to nie moduły z tabeli zakresu (np. kroki pracy brokera na /o-nas/): części w tuszu, bez błękitu. */
+  ink?: boolean;
   frame: FrameKind;
   /** frame === 't' — budżet detali miniatury (~60 ścieżek, bez nakrętek, podkładek, śrub i sprężyn). */
   thumb: boolean;

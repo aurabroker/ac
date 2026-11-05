@@ -2,8 +2,8 @@
  * Motyw „Kaseta z gniazdami” — otwarta skrzynka warsztatowa, we wkładce gniazda wycięte na wymiar przedmiotów
  * (wzorce i dopasowanie). Wkładka to wierzch skrzynki (bez unoszących się warstw); przedmioty stoją albo leżą
  * nieco nad swoimi gniazdami (g1).
- *   wzorce   — /slownik/: komplet sześciu płytek wzorcowych stojących pionowo w gniazdach (schodki malejące ku
- *              przodowi), wieko otwarte do tyłu i oparte o płytę, na wieku grawer z tabliczki (A–Z).
+ *   wzorce   — /slownik/: komplet sześciu płytek wzorcowych stojących pionowo w gniazdach (coraz cieńsze ku
+ *              przodowi, wysokości prawie równe), wieko otwarte do tyłu i oparte o płytę, na wieku grawer (A–Z).
  *   na-miare — /ubezpieczenia/ryzyka-nietypowe/: cztery duże, wyraźnie różne gniazda (koło, pierścień, trójkąt,
  *              kwadrat) i bryły nad nimi; czerwień: nieregularna bryła bez gniazda poza kasetą i obrysem.
  *   przybory — /zespol/marek-ciesla/: bez wieka; cyrkiel, ekierka i przymiar (nagłówek: także grafion) nad
@@ -53,20 +53,25 @@ function wzorce(m: MotifInput, s: Sketch) {
   caseSides(s, 0, x0, y0, x1, y1, zt, ZT);
   for (const x of [x0 + 26, x1 - 40]) s.cylX(0, [x, y0, ZT], 14, 3);
   if (!thumb) for (const x of [x0 + 34, x1 - 46]) s.poly(0, 'fine-ink', [[x, y1, ZT - 5], [x + 12, y1, ZT - 5], [x + 12, y1, ZT - 13], [x, y1, ZT - 13]]);
-  const H = thumb ? [60, 53, 46, 40, 34] : [60, 54, 48, 42, 37, 32];
-  const bx = (i: number) => 34 + (thumb ? 36 : 30) * i;
-  const bw = 10;
+  // komplet płytek: różna GRUBOŚĆ (jak prawdziwe płytki wzorcowe), wysokości maleją tylko lekko — nie wykres słupkowy;
+  // odstęp i spadek wysokości dają kotwice co ~20 jedn. (podpisy bez ukośnych odnośników przez sąsiednie płytki)
+  const H = thumb ? [50, 47, 44, 41, 38] : [52, 49, 46, 43, 40, 37];
+  const BW = thumb ? [16, 12, 8, 5, 3] : [16, 12, 9, 6, 4, 2.5];
+  const bx = (i: number) => 32 + (thumb ? 36 : 34) * i;
+  // miniatura: podpisy co drugą płytkę (0, 2, 4) — trzy podpisy w niskim kadrze bez zbiegania się odnośników
+  const blockOf = (slot: number) => (thumb ? slot * 2 : slot);
   const bd = 34;
   const yb = 86;
-  const holes: Hole[] = H.map((_, i) => rectZ(bx(i) - 1.5, yb - 1.5, bx(i) + bw + 1.5, yb + bd + 1.5, ZT));
+  const holes: Hole[] = H.map((_, i) => rectZ(bx(i) - 1.5, yb - 1.5, bx(i) + BW[i] + 1.5, yb + bd + 1.5, ZT));
   insertWithHoles(s, 0, rectZ(x0, y0, x1, y1, ZT), holes, 5, 'top', thumb);
 
   // płytki wzorcowe (g1) — stoją pionowo (cienkie płytki, nie słupki), uniesione nad gniazdami
   const lift = thumb ? 8 : 16;
   H.forEach((h, i) => {
-    const tone = i < 4 ? slotTone(m, L.labels[i]) : 'ink';
-    s.box(1, bx(i), yb, ZT + lift, bw, bd, h, tone);
-    if (i < 4) s.label(L.labels[i], [bx(i) + bw, yb + 3, ZT + lift + h], 'r', 1, tone);
+    const slot = [0, 1, 2, 3].find((k) => blockOf(k) === i);
+    const tone = slot !== undefined ? slotTone(m, L.labels[slot]) : 'ink';
+    s.box(1, bx(i), yb, ZT + lift, BW[i], bd, h, tone);
+    if (slot !== undefined) s.label(L.labels[slot], [bx(i) + BW[i], yb + 3, ZT + lift + h], 'r', 1, tone);
   });
 }
 
@@ -90,9 +95,10 @@ function naMiare(m: MotifInput, s: Sketch) {
   // bryła bez gniazda (czerwień) — nieregularna, leży poza kasetą i obrysem
   if (L.fault)
     s.out(() => {
-      const jag: V3[] = at([[240, 98], [258, 94], [268, 103], [263, 111], [272, 118], [250, 121], [243, 112]], zt);
-      s.prism(0, jag, [0, 0, 15], 'sig');
-      s.label(L.fault, [268, 103, zt + 15], 'r', 0, 'sig');
+      // w wycięciu obrysu, z dala od krawędzi płyty (także po odsunięciu o OUT0 wzdłuż +x)
+      const jag: V3[] = at([[238, 94], [250, 90], [257, 97], [254, 103], [259, 109], [243, 112], [239, 105]], zt);
+      s.prism(0, jag, [0, 0, 13], 'sig');
+      s.label(L.fault, [257, 97, zt + 13], 'r', 0, 'sig');
     });
 
   caseSides(s, 0, x0, y0, x1, y1, zt, ZT);
@@ -214,7 +220,7 @@ function build(m: MotifInput) {
 }
 
 const PART: Record<string, string[]> = {
-  wzorce: ['najwyższa płytka wzorcowa', 'druga płytka', 'trzecia płytka', 'czwarta płytka'],
+  wzorce: ['najgrubsza płytka wzorcowa', 'druga płytka', 'trzecia płytka', 'czwarta płytka'],
   'na-miare': ['kula', 'pierścień', 'graniastosłup trójkątny', 'kostka'],
   przybory: ['cyrkiel', 'ekierka', 'przymiar', 'grafion'],
 };

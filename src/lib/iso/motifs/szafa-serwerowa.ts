@@ -18,10 +18,6 @@ const T = 6;
 const XF = 52;
 const WY = 54;
 const Z1 = T + 8;
-const H = 100;
-const ZT = Z1 + H;
-const GAP = 16;
-const ZC = ZT + GAP;
 /** Kabel zasilania (y, oś z), punkt przerwania (x), wtyczka (x). */
 const CY = 14;
 const XB = 108;
@@ -41,6 +37,11 @@ function slots(s: Sketch, g: number, y0: number, y1: number, z0: number, z1: num
 function build(m: MotifInput) {
   const s = new Sketch();
   const t = m.thumb;
+  // miniatura: niższa szafa (bez drugiego serwera) i niższe uniesienie pokrywy — wysoka bryła zajęłaby ~40% szerokości
+  const H = t ? 66 : 100;
+  const ZT = Z1 + H;
+  const GAP = t ? 6 : 16;
+  const ZC = ZT + GAP;
   const lock = m.variant === 'blokada';
   const L = take(m);
   // sloty → ton (błękit tylko, gdy część niesie podpis w tym kadrze)
@@ -51,7 +52,7 @@ function build(m: MotifInput) {
   const tLock = slotTone(m, lock ? lab(0) : undefined);
 
   const y0 = lock ? -38 : -24;
-  plate(s, { x0: -22, y0, w: 172, d: 72 - y0, protect: [-14, y0 + 8, 100, 64] });
+  plate(s, { x0: -22, y0, w: 172, d: 72 - y0, protect: [-14, y0 + 8, 100, 59] });
 
   /* g0: kabel zasilania od cokołu do punktu przerwania (tusz) */
   s.cylX(0, [XF - 6, CY, T + 2.4], XB - 2 - (XF - 6), 2.2);
@@ -63,12 +64,14 @@ function build(m: MotifInput) {
   s.pocket(2, rectZ(0, 0, XF, WY + 2, ZT), rectZ(3, 3, XF - 3, WY - 1, ZT), 4);
   // czoło jednostek (jedna płaszczyzna x = XF, szwy między jednostkami)
   s.poly(2, SIDE_R.ink, rectX(XF, 3, WY - 1, Z1 + 3, ZT - 3));
-  const zBak = [Z1 + 4, Z1 + 30] as const; // biblioteka kopii
-  const zSrv = [Z1 + 31, Z1 + 53] as const; // serwer danych
-  const zSv2 = [Z1 + 54, Z1 + 66] as const; // drugi serwer
-  const zCon = [Z1 + 67, Z1 + 74] as const; // konsola (szuflada)
-  const zTop = [Z1 + 75, ZT - 4] as const; // panel krosowy + zaślepki
-  for (const z of [zBak[1] + 0.5, zSrv[1] + 0.5, zSv2[1] + 0.5, zCon[1] + 0.5]) s.line(2, 'fine-ink', [XF, 3, z], [XF, WY - 1, z]);
+  const zBak = (t ? [Z1 + 4, Z1 + 26] : [Z1 + 4, Z1 + 30]) as readonly [number, number]; // biblioteka kopii
+  const zSrv = (t ? [Z1 + 27, Z1 + 45] : [Z1 + 31, Z1 + 53]) as readonly [number, number]; // serwer danych
+  const zSv2 = t ? null : ([Z1 + 54, Z1 + 66] as const); // drugi serwer (tylko nagłówek)
+  const zCon = (t ? [Z1 + 46, Z1 + 53] : [Z1 + 67, Z1 + 74]) as readonly [number, number]; // konsola (szuflada)
+  const zTop = (t ? [Z1 + 54, ZT - 3] : [Z1 + 75, ZT - 4]) as readonly [number, number]; // panel krosowy + zaślepki
+  for (const z of [zBak[1] + 0.5, zSrv[1] + 0.5, ...(zSv2 ? [zSv2[1] + 0.5] : []), zCon[1] + 0.5]) s.line(2, 'fine-ink', [XF, 3, z], [XF, WY - 1, z]);
+  // biblioteka kopii niesie moduł „odtworzenie” — błękitne czoło (odnośnik wskazuje zabarwioną część)
+  if (tBak === 'hi' && !lock) s.poly(2, SIDE_R.hi, rectX(XF, 3, WY - 1, zBak[0], zBak[1]));
   // biblioteka kopii: dwa rzędy pionowych szczelin kaset (w „blokadzie” jedna pusta — kaseta wyjęta)
   const nB = t ? 6 : 8;
   const hb = (zBak[1] - zBak[0] - 5) / 2;
@@ -89,7 +92,7 @@ function build(m: MotifInput) {
   };
   if (tSrv === 'hi') s.poly(2, SIDE_R.hi, rectX(XF, 3, WY - 1, zSrv[0], zSrv[1]));
   bays(zSrv[0], zSrv[1], t ? 2 : 3);
-  bays(zSv2[0], zSv2[1], 1);
+  if (zSv2) bays(zSv2[0], zSv2[1], 1);
   // konsola zamknięta (blokada) — czoło z uchwytem; panel krosowy i zaślepki
   if (lock) {
     if (tCon === 'hi') s.poly(2, SIDE_R.hi, rectX(XF, 3, WY - 1, zCon[0], zCon[1]));
@@ -102,13 +105,13 @@ function build(m: MotifInput) {
       s.poly(2, 'solid', rectX(XF, y - 0.8, y + 0.8, zTop[0] + 2, zTop[0] + 4));
     }
   }
-  for (const z of [zTop[0] + 9, zTop[0] + 15]) s.line(2, 'fine-ink', [XF, 8, z], [XF, WY - 6, z]);
+  for (const z of t ? [zTop[0] + 5] : [zTop[0] + 9, zTop[0] + 15]) s.line(2, 'fine-ink', [XF, 8, z], [XF, WY - 6, z]);
   // rama czoła (z otworem) i panel boczny ze szczelinami wentylacji
   s.loops(2, SIDE_R.ink, [rectX(XF, 0, WY + 2, Z1, ZT), rectX(XF, 3, WY - 1, Z1 + 3, ZT - 3)]);
   s.poly(2, SIDE_L.ink, rectY(WY + 2, 0, XF, Z1, ZT));
   {
     const n = t ? 5 : 8;
-    for (const zc of [Z1 + 14, ZT - 16])
+    for (const zc of t ? [Z1 + 12, ZT - 12] : [Z1 + 14, ZT - 16])
       for (let i = 0; i < n; i++) {
         const x = 10 + ((XF - 20) * (i + 0.5)) / n;
         s.line(2, t ? 'fine-ink' : 'edge', [x, WY + 2, zc - 6], [x, WY + 2, zc + 6]);
@@ -166,7 +169,7 @@ function build(m: MotifInput) {
   /* g3: pokrywa z wentylatorami (i tabliczką) */
   s.box(3, 0, 0, ZC, XF, WY + 2, 6);
   const zc = ZC + 6;
-  const fy = m.plate ? 19 : 27;
+  const fy = 27;
   for (const xc of [14, 38]) {
     s.ell(3, 'bore', [xc, fy, zc], 'z', 9);
     s.ell(3, 'top', [xc, fy, zc], 'z', 3);
@@ -177,10 +180,8 @@ function build(m: MotifInput) {
         const a = (Math.PI / 2) * i + 0.5;
         s.line(3, 'fine-ink', [xc + 3 * Math.cos(a), fy + 3 * Math.sin(a), zc], [xc + 8.5 * Math.cos(a + 0.6), fy + 8.5 * Math.sin(a + 0.6), zc]);
       }
-  if (m.plate) {
-    s.poly(3, 'fine-ink', rectZ(5, 37, 47, 47, zc));
-    s.mark(3, m.plate, [26, 42, zc], { size: 5.6, max: 38 });
-  }
+  // tabliczka na płycie przed szafą (na pokrywie długi napis miałby < 6 px); znika w kadrze, gdzie byłby < 7 px
+  if (m.plate) s.mark(0, m.plate, [50, 66, T], { size: 10, max: 76, plate: rectZ(10, 61, 90, 71, T) });
 
   /* czerwień: odcięty odcinek kabla — punkt przerwania, linia przerywana, wtyczka */
   if (L.fault)
@@ -203,7 +204,7 @@ function build(m: MotifInput) {
     s.label(lab(1), aBak, 'r', 2, tBak);
     s.label(lab(2), aSrv, 'r', 2, tSrv);
   }
-  return s.scene();
+  return s.scene({ zoom: t ? 1.1 : 1 });
 }
 
 const PARTS: Record<string, readonly string[]> = {

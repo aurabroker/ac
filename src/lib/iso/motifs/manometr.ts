@@ -154,10 +154,11 @@ function regulacja(s: Sketch, m: MotifInput) {
   }
   s.ring(1, 'side-r', G, n, R - 2.5, R + 1.5);
   s.ring(1, 'top', add(G, mul(n, 2.5)), n, R - 2.5, R + 1.5);
-  const B = budget(m, { order: m.thumb ? [0] : [0, 1, 2] });
-  // węższe kolumny: miniatura — 9 znaków, nagłówek szeroki — prawa kolumna 14 (tarcza dostaje szerokość kadru)
+  // miniatura: tylko wysokie ryzyko (+ czerwień); wąski nagłówek: bez pierścienia (dwie kolumny i tak zwężają tarczę)
+  const B = budget(m, { order: m.thumb ? [0] : m.frame === 'n' ? [0, 1] : [0, 1, 2] });
+  // węższe kolumny: miniatura i wąski nagłówek — 9 znaków, szeroki — prawa kolumna 14 (tarcza dostaje szerokość kadru)
   const wrap = m.thumb ? 9 : undefined;
-  const wrapR = m.thumb ? 9 : m.frame === 'w' ? 14 : undefined;
+  const wrapR = m.thumb || m.frame === 'n' ? 9 : m.frame === 'w' ? 14 : undefined;
   const mid = (r0 + r1) / 2;
   // wysokie ryzyko: lewy koniec łuku (godz. ~11) → lewa kolumna; przejrzystość: środek łuku (godz. ~9) → lewa
   s.label(B.slots[0], P(on(C, r1, 72)), 'l', 0, t, wrap);

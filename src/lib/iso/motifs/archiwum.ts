@@ -4,12 +4,13 @@
  *   komoda       (/ubezpieczenia/): niska, szeroka komoda na plany; trzy szuflady wysunięte schodkowo (dolna najdalej)
  *                — każda to grupa katalogu; górna zamknięta, narysowana linią przerywaną (ryzyka nietypowe, ocena
  *                indywidualna — tusz, nie czerwień);
- *   arkusze      (/wiedza/): ta sama komoda z tabliczką; górna szuflada wysunięta, arkusze LEŻĄ w niej wachlarzem,
- *                tylko jeden uniesiony, z podwiniętym rogiem (uwaga z arkusza: bez stosu płyt nad skrzynią);
+ *   arkusze      (/wiedza/): ta sama komoda z tabliczką; szuflady wysunięte schodkowo (dolna najdalej), w każdej
+ *                leży arkusz; z górnej, uchylonej, wyjęty JEDEN arkusz z podwiniętym rogiem (ćwierć walca), uniesiony
+ *                nad komodą; pozostałe działy to szuflady — po jednym podpisie na czole, kotwice ≥ 12 jedn. od siebie;
  *   szafa-aktowa (/informacje-o-brokerze/, spokojna): wysoka zamknięta szafa aktowa, złożona w g0, bez ruchu.
  * Grupy: g0 płyta + korpus, g1 wysunięte szuflady (z arkuszami w środku), g2 arkusz uniesiony.
  * Arkusz uniesiony wisi tuż nad szufladą (linie rzutu w jego grupie). Bez czerwieni (strony-indeksy i prawne).
- * Sloty — komoda: 0 szuflada górna wysunięta, 1 środkowa, 2 dolna; arkusze: 0 arkusz uniesiony, 1–3 arkusze w szufladzie.
+ * Sloty — komoda: 0 szuflada górna wysunięta, 1 środkowa, 2 dolna; arkusze: 0 arkusz uniesiony, 1–3 szuflady od góry.
  */
 import { Sketch, plate, take, type V3 } from '../prims.ts';
 import type { DescInput, MotifInput, MotifModule, Tone } from '../scene.ts';
@@ -60,15 +61,15 @@ function chest(s: Sketch, closed: number[], t: boolean, dashedTop: boolean) {
 
 /**
  * Arkusz rysunku leżący płasko: środek (cx, cy), wymiar L (x) × W (y), obrót ang, poziom z. Ramka, tabliczka
- * w prawym rogu (max x, min y), prosty rysunek (prostokąt z otworem). curl — bliższy róg (+L/2, +W/2) podwinięty
- * do góry. Zwraca kotwicę (prawy róg arkusza).
+ * w prawym rogu (max x, min y), prosty rysunek (prostokąt z otworem). curl — lewy róg na rysunku (−L/2, +W/2)
+ * podwinięty ćwiercią walca do góry i do środka arkusza. Zwraca kotwicę (prawy róg arkusza).
  */
 function sheet(s: Sketch, g: number, cx: number, cy: number, L: number, W: number, z: number, ang: number, tone: Tone, detail: boolean, curl = 0): V3 {
   const R = rot(cx, cy, ang, z);
   const c = curl;
   const box = (u0: number, v0: number, u1: number, v1: number, zz: number, cc: number): V3[] =>
     cc
-      ? [R(u0, v0, zz), R(u1, v0, zz), R(u1, v1 - cc, zz), R(u1 - cc, v1, zz), R(u0, v1, zz)]
+      ? [R(u0, v0, zz), R(u1, v0, zz), R(u1, v1, zz), R(u0 + cc, v1, zz), R(u0, v1 - cc, zz)]
       : [R(u0, v0, zz), R(u1, v0, zz), R(u1, v1, zz), R(u0, v1, zz)];
   s.prism(g, box(-L / 2, -W / 2, L / 2, W / 2, z, c), [0, 0, 0.8], tone);
   const zt = z + 0.8;
@@ -84,8 +85,18 @@ function sheet(s: Sketch, g: number, cx: number, cy: number, L: number, W: numbe
     s.ell(g, 'fine', Q(-1, 13), 'z', 3.6);
   }
   if (c) {
-    // podwinięty róg: trójkąt zagięty nad arkusz i uniesiony
-    s.poly(g, TOP[tone], [R(L / 2, W / 2 - c, zt), R(L / 2 - c, W / 2, zt), R(L / 2 - c * 0.95, W / 2 - c * 0.95, zt + c * 0.55)]);
+    // podwinięty róg: ćwierć walca o osi równoległej do linii zgięcia — arkusz unosi się łukiem i zawija do środka
+    const rho = c * 0.6;
+    const k = Math.SQRT1_2;
+    const arc = (e0: number, e1: number) =>
+      Array.from({ length: 5 }, (_, i) => {
+        const th = (i / 4) * (Math.PI / 2);
+        return R(e0 + k * rho * Math.sin(th), e1 - k * rho * Math.sin(th), zt + rho * (1 - Math.cos(th)));
+      });
+    const a1 = arc(-L / 2, W / 2 - c);
+    const a2 = arc(-L / 2 + c, W / 2);
+    s.poly(g, TOP[tone], [...a1, ...[...a2].reverse()]);
+    s.line(g, 'fine', a1[2], a2[2]);
   }
   return R(L / 2, -W / 2 + 2, z + 0.4);
 }
@@ -113,31 +124,27 @@ function arkusze(m: MotifInput) {
   const s = new Sketch();
   const t = m.thumb;
   const L = take(m);
-  plate(s, { x0: -16, y0: -16, w: X + 74, d: Y + 30, protect: [-8, -8, X + 58, Y + 8] });
-  chest(s, [0, 1, 2], t, false);
+  plate(s, { x0: -16, y0: -16, w: X + 80, d: Y + 30, protect: [-8, -8, X + 62, Y + 8] });
+  chest(s, [], t, false);
   s.mark(0, m.plate, [26, Y - 22, TOPZ + 4], { size: 7.5, max: 46 });
-  const P = 50;
   const tS = [0, 1, 2, 3].map((k) => slotTone(m, L.labels[k]));
-  const aIn: V3[] = [];
-  // arkusze leżą w szufladzie wachlarzem (sloty 1–3: od spodu)
-  // spodni wysunięty najdalej do przodu — brzegi arkuszy schodzą stopniami (kotwice jedna pod drugą)
-  const fan: [number, number, number][] = [[8, 4, 0.03], [0, 0, -0.03], [-8, -4, 0.02]];
-  pulled(s, 1, 3, P, 'ink', t, (z) => {
-    fan.forEach(([dx, dy, a], k) => {
-      aIn.push(sheet(s, 1, X + P / 2 + dx, Y / 2 + dy, 30, 84, z + k * 1.2, a, tS[3 - k], k === 2 && !t));
-    });
-  });
-  // jeden arkusz wyjęty z szuflady i uniesiony tuż nad nią, z podwiniętym rogiem; linie rzutu wiszą pod nim (g2)
-  const zr = zb(3) + DH;
-  const LIFT = 20;
-  for (const [x, y] of [[X + P - 3, 12], [X + P - 3, Y - 12]] as const) s.line(2, 'proj', [x, y, zr + LIFT], [x, y, zr]);
-  const aTop = sheet(s, 2, X + P / 2 + 6, Y / 2, 36, 92, zr + LIFT, 0.02, tS[0], true, 12);
+  // szuflady wysunięte schodkowo (dolna najdalej — każde czoło widać); w każdej leży arkusz (miniatura: pusta)
+  const P = [48, 34, 20, 8];
+  for (const i of [0, 1, 2]) {
+    const slot = 3 - i;
+    const inside = t ? undefined : (z: number) => void sheet(s, 1, X + P[i] / 2 + 1, Y / 2, Math.max(10, P[i] - 8), 84, z, 0.01, 'ink', false);
+    const a = pulled(s, 1, i, P[i], tS[slot], t, inside);
+    s.label(L.labels[slot], a, 'r', 1, tS[slot]);
+  }
+  // górna szuflada uchylona; arkusz z niej wyjęty i uniesiony nad komodą, z podwiniętym rogiem (linie rzutu pod nim)
+  pulled(s, 1, 3, P[3], 'ink', t);
+  const LIFT = 14;
+  const zs = TOPZ + 4 + LIFT;
+  const cx = X - 10;
+  for (const [x, y] of [[cx + 17, 12], [cx + 17, Y - 12]] as const) s.line(2, 'proj', [x, y, zs], [x, y, TOPZ + 4]);
+  const aTop = sheet(s, 2, cx, Y / 2, 38, 92, zs, 0.02, tS[0], !t, 16);
   s.label(L.labels[0], aTop, 'r', 2, tS[0]);
-  // w szufladzie: wierzchni arkusz — slot 1, środkowy — 2, spodni — 3
-  s.label(L.labels[1], aIn[2], 'r', 1, tS[1]);
-  s.label(L.labels[2], aIn[1], 'r', 1, tS[2]);
-  s.label(L.labels[3], aIn[0], 'r', 1, tS[3]);
-  return s.scene();
+  return s.scene({ zoom: 1.2 });
 }
 
 /* ---------------- szafa aktowa: informacje o brokerze (spokojna) ---------------- */
@@ -145,8 +152,9 @@ function szafaAktowa() {
   const s = new Sketch();
   const SX = 56;
   const SY = 46;
-  const H = 124;
-  plate(s, { x0: -20, y0: -20, w: SX + 44, d: SY + 40, protect: null });
+  const H = 108;
+  // szersza płyta i niższa szafa: wysoka bryła nie zostawia pustej miniatury
+  plate(s, { x0: -44, y0: -40, w: SX + 90, d: SY + 78, protect: null });
   s.box(0, 3, 3, T, SX - 6, SY - 6, 5);
   s.box(0, 0, 0, T + 5, SX, SY, H - 5);
   const n = 4;
@@ -159,7 +167,7 @@ function szafaAktowa() {
     s.box(0, SX, SY / 2 - 7, z + dh * 0.4, 2.5, 14, 2.4);
   }
   s.ell(0, 'fine-ink', [SX + 0.05, SY - 8, T + H - 6], 'x', 1.6);
-  return s.scene({ calm: true });
+  return s.scene({ calm: true, zoom: 1.3 });
 }
 
 function build(m: MotifInput) {
@@ -169,7 +177,7 @@ function build(m: MotifInput) {
 
 const PARTS: Record<string, readonly string[]> = {
   komoda: ['górna wysunięta szuflada', 'środkowa szuflada', 'dolna szuflada, wysunięta najdalej'],
-  arkusze: ['arkusz uniesiony nad szufladą', 'wierzchni arkusz w szufladzie', 'środkowy arkusz', 'spodni arkusz'],
+  arkusze: ['arkusz uniesiony nad komodą', 'druga szuflada od góry', 'trzecia szuflada', 'dolna szuflada'],
 };
 
 function describe(d: DescInput): string {
@@ -182,7 +190,7 @@ export const motif: MotifModule = {
   variants: ['komoda', 'arkusze', 'szafa-aktowa'],
   what: {
     komoda: 'niska komoda kreślarska z płaskimi szufladami wysuniętymi schodkowo — każda szuflada to grupa ubezpieczeń; górna, zamknięta, narysowana linią przerywaną: ryzyka nietypowe, ocena indywidualna',
-    arkusze: 'komoda kreślarska z wysuniętą szufladą, w której leżą arkusze rysunków; jeden arkusz z podwiniętym rogiem uniesiony nad szufladą',
+    arkusze: 'komoda kreślarska z szufladami wysuniętymi schodkowo, w każdej leży arkusz; z górnej wyjęty jeden arkusz rysunku z podwiniętym rogiem, uniesiony nad komodą',
     'szafa-aktowa': 'wysoka, zamknięta szafa aktowa z czterema szufladami, ramkami na etykiety i uchwytami',
   },
   build,

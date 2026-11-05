@@ -8,7 +8,8 @@
  *   fault  — czerwony podpis: konkretne wyłączenie z tabeli zakresu tej strony (≤ 28 znaków); strony z `iso.fault`
  *            we frontmatterze mają go tam (plan, krok 7);
  *   calm   — spokojna miniatura strony prawnej (bez podpisów, bez błękitu i czerwieni, bez ruchu).
- * Ziarno z adresu zmienia tylko drobiazgi rysunku — nigdy motywu ani wariantu.
+ *   ink    — podpisy to nie moduły ochrony (np. kroki pracy na /o-nas/): części w tuszu, bez błękitu.
+ * Rysunek jest deterministyczny: ta sama treść daje ten sam plik.
  */
 import type { MotifId } from './scene.ts';
 
@@ -20,12 +21,15 @@ export interface PagePlan {
   inputs?: string[];
   plate?: string;
   calm?: boolean;
+  /** Podpisy to nie moduły ochrony (np. kroki pracy) — części w tuszu, bez błękitu. */
+  ink?: boolean;
 }
 
 export const MOTIF_BY_PATH: Record<string, PagePlan> = {
   // strony firmowe i indeksy (strona główna, filary, katalog i rynek mają rysunki ręczne — tu tylko miniatura)
   '/': { motif: 'zespol-osiowy', variant: 'program', fault: 'Wyłączenia' },
-  '/o-nas/': { motif: 'zespol-osiowy', variant: 'program' },
+  // kroki pracy brokera, nie moduły z tabeli zakresu: tusz, bez błękitu
+  '/o-nas/': { motif: 'zespol-osiowy', variant: 'program', ink: true },
   '/kontakt/': { motif: 'rurociag', variant: 'kolektor', plate: 'BROKER' },
   '/rynek-lloyds/': { motif: 'rurociag', variant: 'rozdzielacz' },
   '/ubezpieczenia/': { motif: 'archiwum', variant: 'komoda' },
@@ -40,12 +44,12 @@ export const MOTIF_BY_PATH: Record<string, PagePlan> = {
   // filary
   '/oc-cyber-dla-it/': { motif: 'belka', variant: 'ciagla' },
   '/oc-zawodowe/': { motif: 'przekladnia', variant: 'para' },
-  '/ubezpieczenie-cyber/': { motif: 'szafa-serwerowa', variant: 'firma', fault: 'Awarie infrastruktury' },
+  '/ubezpieczenie-cyber/': { motif: 'szafa-serwerowa', variant: 'firma', fault: 'Rozległe awarie zasilania' },
   '/ubezpieczenie-ai/': {
     motif: 'maszyna-ai',
     variant: 'model',
     labels: ['OC zawodowe', 'Cyberprzestępstwa', 'Cyber'],
-    fault: 'Awarie infrastruktury',
+    fault: 'Rozległe awarie zasilania',
   },
   '/ubezpieczenie-ai/ai-w-firmie/': { motif: 'maszyna-ai', variant: 'firma', fault: 'Własna strata z decyzji AI' },
 
@@ -87,6 +91,7 @@ export const MOTIF_BY_PATH: Record<string, PagePlan> = {
   '/wiedza/klient-wymaga-oc-od-kontraktora/': {
     motif: 'belka',
     variant: 'umowa',
+    plate: 'Umowa B2B',
     labels: ['OC zawodowe', 'OC działalności', 'Cyber'],
     fault: 'Kary umowne',
   },

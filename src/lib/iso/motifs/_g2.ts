@@ -3,7 +3,7 @@
  * tam, gdzie miniatura musi zmieścić się w ~4 KB gz. Tylko prymitywy Sketch, role i tony z fundamentu.
  */
 import { P, Sketch, arcSegs, circ, deg, type V2, type V3 } from '../prims.ts';
-import type { MotifInput, Role, Seg, Tone } from '../scene.ts';
+import type { Role, Seg, Tone } from '../scene.ts';
 
 const TOP: Record<Tone, Role> = { ink: 'top', hi: 'top-hi', sig: 'top-sig' };
 const SIDE: Record<Tone, Role> = { ink: 'side-r', hi: 'side-hi', sig: 'side-sig' };

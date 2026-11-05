@@ -88,6 +88,35 @@ function hopper(s: Sketch, g: number, cx: number, cy: number, z: number, sheets:
   return { left: [cx - r1 * 0.55, cy + (r0 + r1) / 2 + 1, z + H * 0.6] as V3 };
 }
 
+/**
+ * Płaska, podłużna taca (proporcje ≥ 2:1, bez wpuszczonego kwadratu) z arkuszami wachlarzem: każdy arkusz lekko obrócony,
+ * na wierzchnim — wiersze tekstu i zagięty róg. Nic tu nie przypomina obudowy układu scalonego.
+ */
+function tray(s: Sketch, g: number, x0: number, y0: number, z: number, a: number, b: number, tone: Tone, n: number) {
+  s.box(g, x0, y0, z, a, b, 3, tone);
+  const zt = z + 3;
+  const cx = x0 + a / 2;
+  const cy = y0 + b / 2;
+  const L = a * 0.62;
+  const W = b * 0.62;
+  for (let i = 0; i < n; i++) {
+    const ang = (i - (n - 1) / 2) * 0.16;
+    const c = Math.cos(ang);
+    const sn = Math.sin(ang);
+    const zz = zt + 0.6 + i * 1.1;
+    const ox = cx + (i - (n - 1) / 2) * 3;
+    const P = (u: number, v: number): V3 => [ox + u * c - v * sn, cy + u * sn + v * c, zz];
+    const top = i === n - 1;
+    const f = 4;
+    // wierzchni arkusz: zagięty róg (+u, +v)
+    s.poly(g, 'top', top ? [P(-L / 2, -W / 2), P(L / 2, -W / 2), P(L / 2, W / 2 - f), P(L / 2 - f, W / 2), P(-L / 2, W / 2)] : [P(-L / 2, -W / 2), P(L / 2, -W / 2), P(L / 2, W / 2), P(-L / 2, W / 2)]);
+    if (top) {
+      s.poly(g, 'side-r', [P(L / 2, W / 2 - f), P(L / 2 - f, W / 2), P(L / 2 - f, W / 2 - f)]);
+      segs(s, g, 'fine', [0, 1, 2].map((k): [V3, V3] => [P(-L / 2 + 4, -W / 2 + 4 + (k * (W - 8)) / 2.5), P(L / 2 - (k === 2 ? 14 : 5), -W / 2 + 4 + (k * (W - 8)) / 2.5)]));
+    }
+  }
+}
+
 /* ---------- wariant: model ---------- */
 function model(s: Sketch, m: MotifInput) {
   const t = hi(m);
@@ -106,15 +135,13 @@ function model(s: Sketch, m: MotifInput) {
   const Bw = 62;
   const zH = housing(s, 1, 0, 0, T, A, Bw, 44);
 
-  /* g0: taca wyników z kartami (moduł: OC zawodowe) */
-  const tx0 = 114;
-  const tx1 = 154;
-  const ty0 = 12;
-  const ty1 = 50;
+  /* g0: podłużna taca wyników z arkuszami (moduł: OC zawodowe) */
+  const tx0 = 108;
+  const tx1 = 166;
+  const ty0 = 17;
+  const ty1 = 45;
   const tT: Tone = B.slots[0] ? t : 'ink';
-  s.box(0, tx0, ty0, T, tx1 - tx0, ty1 - ty0, 8, tT);
-  s.poly(0, 'bore', [[tx0 + 3, ty0 + 3, T + 8], [tx1 - 3, ty0 + 3, T + 8], [tx1 - 3, ty1 - 3, T + 8], [tx0 + 3, ty1 - 3, T + 8]]);
-  boxes(s, 0, (head ? [0, 1, 2] : [1]).map((i): Box => [tx0 + 6 - i * 1.5, ty0 + 6 + i, T + 8 + 1 + i * 2.6, 28, 24, 1.4]));
+  tray(s, 0, tx0, ty0, T, tx1 - tx0, ty1 - ty0, tT, head ? 3 : 2);
 
   /* g1: rynna wyników z obudowy do tacy */
   const rz0 = T + 30;
@@ -162,7 +189,7 @@ function model(s: Sketch, m: MotifInput) {
   const kAt = key(s, 4, kx, ky, zs + 8, kT, 10, m.thumb);
 
   s.label(B.slots[1], kAt, 'r', 4, kT);
-  s.label(B.slots[0], [tx1, ty1 - 6, T + 3], 'r', 0, tT);
+  s.label(B.slots[0], [tx1, ty1 - 6, T + 1.5], 'r', 0, tT);
   s.label(B.slots[2], hp.left, 'l', 3, t);
 
   /* czerwień: kabel za obrysem przecięty (szczelina), z wtyczką przy krawędzi płyty */
@@ -232,12 +259,10 @@ function firma(s: Sketch, m: MotifInput) {
   s.poly(2, 'fine-ink', [[xF, ports[0], zw], [134, ports[0], zw], [134, 38, zw]], false);
   s.poly(2, 'fine-ink', [[xF, ports[2], zw], [76, ports[2], zw], [76, 50, zw], [82, 50, zw]], false);
 
-  /* g2: taca dokumentów (asystent) */
-  const dx0 = 82;
-  const dy0 = 40;
-  s.box(2, dx0, dy0, zt, 32, 24, 4);
-  s.poly(2, 'bore', [[dx0 + 2, dy0 + 2, zt + 4], [dx0 + 30, dy0 + 2, zt + 4], [dx0 + 30, dy0 + 22, zt + 4], [dx0 + 2, dy0 + 22, zt + 4]]);
-  boxes(s, 2, (head ? [0, 1, 2] : [1]).map((i): Box => [dx0 + 4 + i * 2, dy0 + 3 - i, zt + 4.5 + i * 2, 22, 18, 1.2]));
+  /* g2: podłużna taca dokumentów (asystent) z arkuszami */
+  const dx0 = 80;
+  const dy0 = 44;
+  tray(s, 2, dx0, dy0, zt, 44, 20, 'ink', head ? 3 : 2);
 
   /* g2: ramię agenta (moduł: OC zawodowe): podstawa, człon 1, przegub, człon 2 poza krawędź stołu, chwytak */
   const aT: Tone = B.slots[0] ? t : 'ink';

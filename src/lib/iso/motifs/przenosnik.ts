@@ -167,13 +167,15 @@ function aktualizacja(s: Sketch, m: MotifInput) {
   const t = hi(m);
   const B = budget(m);
   const head = !m.thumb;
-  plate(s, { x0: -18, y0: -24, w: 214, d: 128, protect: [-10, -16, 188, 60], ticks: 30 });
+  // obrys ochrony kończy się przed linią (y = 50); skrzynia stoi tak daleko i jest tak niska, że na rysunku nie
+  // zasłania obrysu (y0 − 2·h > 50) — wyraźnie poza ochroną
+  plate(s, { x0: -18, y0: -24, w: 214, d: 128, protect: [-10, -16, 188, 50], ticks: 30 });
   const X1 = 160;
   const px = 72;
   const zTop = 104;
 
   // czerwień: zsuwnia z boku linii (+y) na bocznicę do skrzyni odbiorcy firmowego, poza obrysem (rysowana na końcu)
-  const cr = { x0: 118, x1: 150, y0: 70, y1: 96, h: 17 };
+  const cr = { x0: 118, x1: 150, y0: 76, y1: 100, h: 12 };
 
   // g4: tylny słup bramki za taśmą
   boxes(s, 4, [[px - 3, -12, T, 6, 6, zTop - T]], 'ink', { top: false });
@@ -206,7 +208,8 @@ function aktualizacja(s: Sketch, m: MotifInput) {
   boxes(s, 4, [[px - 3, W + 6, T, 6, 6, zTop - T]], 'ink', { top: false });
   s.box(4, px - 5, -14, zTop, 10, W + 28, 8);
 
-  s.label(B.slots[0], d3.front, 'r', 3, t);
+  // czoło urządzenia nisko i z lewej — kotwica wyraźnie odsunięta od kieszeni (podpis „brak aktualizacji”)
+  s.label(B.slots[0], [d3.front[0], d3.front[1] + 6, d3.front[2] - 3], 'r', 3, t);
   s.label(B.slots[1], d3.pocket, 'r', 3, t);
   s.label(B.slots[2], [px + 8, cy, kz + 8], 'r', 4, t);
 
@@ -224,8 +227,8 @@ function aktualizacja(s: Sketch, m: MotifInput) {
     s.out(() => {
       s.box(0, cr.x0, cr.y0, T, cr.x1 - cr.x0, cr.y1 - cr.y0, cr.h, 'sig');
       segs(s, 0, 'edge-sig', [
-        [[cr.x1, cr.y0, T + 8.5], [cr.x1, cr.y1, T + 8.5]],
-        [[cr.x0, cr.y1, T + 8.5], [cr.x1, cr.y1, T + 8.5]],
+        [[cr.x1, cr.y0, T + cr.h / 2], [cr.x1, cr.y1, T + cr.h / 2]],
+        [[cr.x0, cr.y1, T + cr.h / 2], [cr.x1, cr.y1, T + cr.h / 2]],
       ]);
       s.label(B.fault, [cr.x1, (cr.y0 + cr.y1) / 2, T + cr.h * 0.6], 'r', 0, 'sig');
     });
@@ -261,8 +264,9 @@ function naped(s: Sketch, m: MotifInput) {
   const sg = vgear(s, 2, [pc[0], gy + 0.5, pc[2]], { teeth: small.teeth, m: mod, thk: 4.5, tone: t, phase: meshPhase(big, small, th), bore: 2 });
   const zg = pc[2];
   s.label(B.slots[0], [pc[0] + sg.rp * 0.7, sg.front, zg + sg.rp * 0.3], 'r', 2, t);
+  // „OC za produkt” — ostatnie urządzenie (czoło), „Cyber” — ekran pierwszego (odnośnik idzie nad pozostałymi)
   s.label(B.slots[1], devs[2].front, 'r', 3, t);
-  s.label(B.slots[2], devs[2].screen, 'r', 3, t);
+  s.label(B.slots[2], devs[0].screen, 'r', 3, t);
 
   // czerwień: kaseta z poprawką odłożona z przodu po prawej, poza obrysem
   if (B.fault)
@@ -291,7 +295,7 @@ const WHAT: Record<string, string> = {
 const PARTS: Record<string, string[]> = {
   wycofanie: ['kartony na taśmie', 'wózek zwrotów', 'taśma'],
   aktualizacja: ['urządzenie za bramką', 'jego pusta kieszeń na kasetę', 'kaseta aktualizacji'],
-  naped: ['mały zębnik napędu', 'urządzenia na taśmie', 'ekran urządzenia'],
+  naped: ['mały zębnik napędu', 'ostatnie urządzenie na taśmie', 'ekran pierwszego urządzenia'],
 };
 
 const RED: Record<string, string> = {

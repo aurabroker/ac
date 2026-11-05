@@ -7,7 +7,7 @@
  * a po rozsunięciu koniec linii trafia dokładnie w spód części górnej.
  */
 import { BASIS, P, STEP0, Sketch, arcSegs, circ, type V3 } from '../prims.ts';
-import type { DescInput, MotifInput, Role, Seg, Tone } from '../scene.ts';
+import type { DescInput, Role, Seg, Tone } from '../scene.ts';
 
 export { slotTone } from '../prims.ts';
 

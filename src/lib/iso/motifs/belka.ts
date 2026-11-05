@@ -15,7 +15,7 @@
  * Sloty podpisów: ciagla [podpora środkowa (stała), podpora przy wolnym końcu, podpora bliższa];
  * umowa [środkowa, bliższa, przy wolnym końcu]; wspornik [podpora stała na pierwszej płycie, podpora przerywana].
  */
-import { budget, Sketch, hi, plate, type V3 } from '../prims.ts';
+import { budget, Sketch, hi, nameplate, plate, type V3 } from '../prims.ts';
 import type { MotifInput, MotifModule, Tone } from '../scene.ts';
 import { arrows } from './_g1.ts';
 
@@ -121,10 +121,12 @@ function ciagla(s: Sketch, m: MotifInput, umowa: boolean) {
     const zK = zTip + ARR;
     arrows(s, 3, (m.thumb ? [70, 140] : [62, 105, 148]).map((y): [V3, V3] => [[XC, y, zK], [XC, y, zTip]]), { hl: 7, hw: 5 });
     redLoad(s, 18, zK - 1, T + 3, B.fault);
+    // duży, wysoki blok (sylwetka wyraźnie inna niż wspornik nad przerwą) z tabliczką na czole
     const y0 = 4;
     const y1 = 166;
-    const H = 20;
-    s.box(4, XC - 19, y0, zK, 38, y1 - y0, H, 'ink');
+    const H = m.thumb ? 22 : 30;
+    s.box(4, XC - 22, y0, zK, 44, y1 - y0, H, 'ink');
+    nameplate(s, 4, m.plate, [XC + 22, 96, zK + H / 2], { face: 'x', w: 96, h: 16, size: 11 });
     // arkusz umowy na bloku: prostokąt z zagiętym rogiem i wiersze tekstu (bez napisów)
     const zs = zK + H;
     s.poly(4, 'top', [[XC - 11, 40, zs + 0.6], [XC + 11, 40, zs + 0.6], [XC + 11, 140, zs + 0.6], [XC - 3, 140, zs + 0.6], [XC - 11, 132, zs + 0.6]]);
@@ -140,14 +142,14 @@ function wspornik(s: Sketch, m: MotifInput) {
   const t = hi(m);
   // pierwsza płyta (terytorium objęte polisą) i druga, za przerwą — bez obrysu ochrony
   plate(s, { x0: 0, y0: 112, w: 70, d: 188, protect: [9, 121, 61, 291], ticks: 30 });
-  plate(s, { x0: 0, y0: 0, w: 70, d: 74, protect: null, ticks: false });
+  plate(s, { x0: 0, y0: 0, w: 70, d: 60, protect: null, ticks: false });
   const B = budget(m);
   foot(s, 250, 'ink');
   foot(s, 165, 'hi');
-  foot(s, 44, 'dash');
+  foot(s, 34, 'dash');
   support(s, 250, 'roller', 'ink', t, m.thumb);
   const aPin = support(s, 165, 'pin', 'hi', t, m.thumb);
-  const aDash = support(s, 44, 'pin', 'dash', t, m.thumb);
+  const aDash = support(s, 34, 'pin', 'dash', t, m.thumb);
   beam(s, 2, 14, 272);
   arrows(s, 3, [
     [[XC, 210, zTip + ARR], [XC, 210, zTip]],

@@ -70,7 +70,8 @@ function zarzad(m: MotifInput) {
   seats(s, 1, [[26, 66], [78, 66]], T, { back: '+y', S: 20, bh: 18, tone: t });
 
   s.label(B.slots[0], cBack.top, 'r', 1, t);
-  s.label(B.slots[1], [X1, Y1 * 0.7, zT + 3] as V3, 'r', 3, t);
+  // blat: przedni narożnik (kotwica ≥ 18 jedn. pod teczką — odnośniki nie zbiegają się)
+  s.label(B.slots[1], [X1, Y1, zT + 3] as V3, 'r', 3, t);
   s.label(B.slots[2], [98, 21, zB + 1.2] as V3, 'r', 3, fT);
 
   // czerwień: krzesło odsunięte od stołu poza obrys ochrony
@@ -117,7 +118,8 @@ function pulpit() {
   );
   // pióro obok arkusza
   s.line(0, 'edge', onLid(64, 0.22, 1.4), onLid(69, 0.8, 1.4));
-  return s.scene({ calm: true });
+  // mały przedmiot: większa skala kadru (miniatura nie zostaje pusta przy limicie skali)
+  return s.scene({ calm: true, zoom: 1.3 });
 }
 
 function build(m: MotifInput) {

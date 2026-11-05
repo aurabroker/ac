@@ -14,13 +14,11 @@ import { guide, segs } from './_g3.ts';
 
 const T = 6;
 const zF = T + 8; // wierzch fundamentu
-const zM = 92; // wierzch masztu
-const zR = zM + 9; // spód wysięgników (nad wieńcem)
 const JH = 11; // wysokość wysięgnika
 const CJ = 7; // wysokość przeciwwysięgnika
 
 /** Kratownica na ścianie masztu x = 8 albo y = 8: poziome pasy i przekątne naprzemiennie. */
-function lattice(s: Sketch, face: 'x' | 'y', n: number) {
+function lattice(s: Sketch, face: 'x' | 'y', n: number, zM: number) {
   const at = (t: number, z: number): V3 => (face === 'x' ? [8, t, z] : [t, 8, z]);
   const [a0, a1] = face === 'x' ? [-8, 8] : [8, -8];
   const h = (zM - zF) / n;
@@ -49,6 +47,9 @@ function build(m: MotifInput) {
   const t = hi(m);
   const B = budget(m);
   const head = !m.thumb;
+  // miniatura: niższy maszt (wysoka bryła zajęłaby połowę szerokości kadru)
+  const zM = head ? 92 : 76; // wierzch masztu
+  const zR = zM + 9; // spód wysięgników (nad wieńcem)
 
   /* g0: płyta, obrys placu budowy, fundament */
   plate(s, { x0: -154, y0: -30, w: 274, d: 62, protect: [-146, -22, 76, 24], ticks: 30 });
@@ -56,8 +57,8 @@ function build(m: MotifInput) {
 
   /* g1: maszt kratowy */
   s.box(1, -8, -8, zF, 16, 16, zM - zF);
-  lattice(s, 'x', head ? 6 : 4);
-  lattice(s, 'y', head ? 6 : 4);
+  lattice(s, 'x', head ? 6 : 4, zM);
+  lattice(s, 'y', head ? 6 : 4, zM);
 
   /* g2: wieniec, wysięgnik z wózkiem i hakiem, iglica, przeciwwysięgnik */
   s.cylZ(2, [0, 0, zM + 3], 6, 11);
@@ -67,16 +68,19 @@ function build(m: MotifInput) {
   // wózek, liny, zblocze, hak
   const xh = -98;
   s.box(2, xh - 7, -7, zR - 5, 14, 14, 5);
+  // krótkie liny: ładunek wisi wysoko nad płytą (wyraźnie inaczej niż czerwony ładunek stojący na ziemi)
+  const zb = zR - 22; // spód zblocza
   segs(s, 2, 'edge', [
-    [[xh - 2.5, 0, zR - 5], [xh - 2.5, 0, 72]],
-    [[xh + 2.5, 0, zR - 5], [xh + 2.5, 0, 72]],
+    [[xh - 2.5, 0, zR - 5], [xh - 2.5, 0, zb + 8]],
+    [[xh + 2.5, 0, zR - 5], [xh + 2.5, 0, zb + 8]],
   ]);
-  s.box(2, xh - 5, -5, 64, 10, 10, 8);
-  s.line(2, 'edge', [xh, 0, 64], [xh, 0, 60]);
-  s.arc(2, 'edge', [xh, 0, 56.5], 'y', 3.5, Math.PI / 2, 2.3 * Math.PI);
-  // ładunek kontraktu na zawiesiach (tusz)
-  const L = { x0: xh - 16, x1: xh + 16, y0: -13, y1: 13, z0: 26, z1: 42 };
-  const hook: V3 = [xh, 0, 53];
+  s.box(2, xh - 5, -5, zb, 10, 10, 8);
+  s.line(2, 'edge', [xh, 0, zb], [xh, 0, zb - 4]);
+  s.arc(2, 'edge', [xh, 0, zb - 7.5], 'y', 3.5, Math.PI / 2, 2.3 * Math.PI);
+  // ładunek kontraktu na zawiesiach (tusz); pion (linia ukryta) do płyty pokazuje, że wisi
+  const hook: V3 = [xh, 0, zb - 11];
+  const L = { x0: xh - 16, x1: xh + 16, y0: -13, y1: 13, z0: zb - 38, z1: zb - 22 };
+  s.line(2, 'fine-d', [xh, 0, L.z0], [xh, 0, T]);
   segs(s, 2, 'fine-ink', [
     [hook, [L.x0, L.y0, L.z1]],
     [hook, [L.x1, L.y0, L.z1]],

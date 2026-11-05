@@ -5,13 +5,14 @@
  *             płyta dociskowa; łoże z formą wysunięte spod płyty, nad formą arkusz z odbitką, z przodu stos wydruków;
  *             czerwień: jeden arkusz odłożony poza stos i poza obrys (umyślne naruszenie);
  *   tlocznik  (/ubezpieczenia/ochrona-prawna-ip/): wykrojnik rozłożony — płyta dolna z matrycą (gniazdo zastrzeżonego
- *             kształtu widoczne z góry) i dwoma tylnymi kołkami prowadzącymi, nad nią stempel tego samego kształtu
- *             z trzpieniem; obok wypraska-kopia tego kształtu (tusz — zdarzenie objęte ochroną);
+ *             kształtu widoczne z góry) i słupami prowadzącymi (widać trzy z czterech), nad nią stempel tego samego
+ *             kształtu z trzpieniem, a nad nim płyta górna na słupach (tylna, z wysięgnikiem do trzpienia — nie zasłania
+ *             gniazda ani stempla); obok wypraska-kopia tego kształtu (tusz — zdarzenie objęte ochroną);
  *             czerwień: nowa matryca o innym kształcie poza obrysem (nowy wzór bez zgłoszenia).
  * Uwagi z arkusza: kształt wzoru nie jest strzałką (zarys butelki — klasyczny wzór przemysłowy), gniazdo matrycy
- * widać z góry (stempel uniesiony o G0), bez płyty górnej na słupach (nie „stół”), wszystkie podpisy w prawej kolumnie.
+ * widać z góry (stempel uniesiony o G0, płyta górna tylko z tyłu), wszystkie podpisy w prawej kolumnie.
  * Grupy — drukarska: g0 płyta, stół, kolumny, stos; g1 forma; g2 arkusz; g3 płyta dociskowa; g4 belka z wrzecionem.
- *          tłocznik: g0 płyta dolna z matrycą, kołki, wypraska; g1 stempel z trzpieniem.
+ *          tłocznik: g0 płyta dolna z matrycą, słupy, wypraska; g1 stempel z trzpieniem; g2 płyta górna.
  * Linie rzutu forma → arkusz i matryca → stempel mają dokładnie G0 (rozciągają się z rozstrzeleniem).
  * Sloty — drukarska: 0 forma, 1 arkusz z odbitką, 2 stos wydruków; tłocznik: 0 matryca (płyta dolna), 1 stempel.
  */
@@ -75,24 +76,14 @@ function drukarska(m: MotifInput) {
   s.cylZ(3, [cx, 30, zP + 8], 5, 6);
   s.cylZ(4, [cx, 30, zP + 15], zB - zP - 15, 2.8);
 
-  /* g1: forma z reliefem (bloki — bez prawdziwych słów) */
+  /* g1: forma drukowa: płyta z treścią strony (pasek tytułu, ramka zdjęcia, 3–4 wiersze) — linie, nie bloki */
   const fx0 = bx0 + 6;
   const fx1 = bx1 - 6;
   const fy0 = 11;
   const fy1 = 49;
   s.box(1, fx0, fy0, zF, fx1 - fx0, fy1 - fy0, 4, tForm);
   const zt = zF + 4;
-  const Lf = fx1 - fx0;
-  const Wf = fy1 - fy0;
-  const rel = (a: number, b: number, c: number, d: number, h: number) => s.box(1, fx0 + Lf * a, fy0 + Wf * b, zt, Lf * (c - a), Wf * (d - b), h);
-  rel(0.08, 0.12, 0.17, 0.88, 1.8);
-  rel(0.27, 0.55, 0.58, 0.88, 1.4);
-  const nl = t ? 2 : 5;
-  for (let i = 0; i < nl; i++) {
-    const a = 0.29 + (i * 0.62) / nl;
-    const under = a > 0.6;
-    rel(a, under ? 0.12 : 0.12, a + 0.04, under ? 0.88 : 0.47, 1.2);
-  }
+  page(s, 1, rot((fx0 + fx1) / 2, (fy0 + fy1) / 2, 0, zt), fx1 - fx0, fy1 - fy0, 'ink', true);
   const aForm: V3 = [fx1, fy0 + 5, zF + 2];
   // linie rzutu forma → arkusz (dokładnie G0)
   const zS = zt + G0;
@@ -120,15 +111,18 @@ function drukarska(m: MotifInput) {
   s.sphere(4, [cx - 27, 30, zH], 3.6, { equator: false });
   s.sphere(4, [cx + 27, 30, zH], 3.6, { equator: false });
 
-  /* g0: stos wydruków z przodu */
-  const kx0 = 72;
-  const ky0 = 66;
-  const nS = t ? 3 : 5;
-  const off = [[0, 0], [1.2, -0.8], [-0.6, 0.9], [0.8, 0.4], [-0.9, -0.6]];
-  for (let i = 0; i < nS; i++) s.box(0, kx0 + off[i][0], ky0 + off[i][1], T + i * 1.5, 40, 30, 1.5, i === nS - 1 ? tStack : 'ink');
-  const zk = T + nS * 1.5;
-  page(s, 0, rot(kx0 + 20, ky0 + 15, 0, zk), 40, 30, 'ink', t);
-  const aStack: V3 = [kx0 + 40, ky0 + 6, T + 3];
+  /* g0: stos wydruków z przodu, na prawo od łoża (odnośnik w prawo nie przecina łoża): jedna bryła, arkusze — kreski */
+  const kx0 = 104;
+  const ky0 = 62;
+  const KL = 34;
+  const KW = 26;
+  const KH = 6;
+  s.box(0, kx0, ky0, T, KL, KW, KH, tStack);
+  const lines: [V3, V3][] = [];
+  for (let z = T + 2; z < T + KH; z += 2) lines.push([[kx0 + KL, ky0, z], [kx0 + KL, ky0 + KW, z]], [[kx0, ky0 + KW, z], [kx0 + KL, ky0 + KW, z]]);
+  for (const [a, b] of lines) s.line(0, 'fine', a, b);
+  page(s, 0, rot(kx0 + KL / 2, ky0 + KW / 2, 0, T + KH), KL, KW, 'ink', t);
+  const aStack: V3 = [kx0 + KL, ky0 + 5, T + 3];
 
   /* czerwień: arkusz odłożony poza stos i poza obrys (obrócony) */
   if (L.fault)
@@ -181,19 +175,24 @@ function tlocznik(m: MotifInput) {
   s.pocket(0, rectZ(0, 0, X, Y, zL), cav, 7, { floor: tDie === 'hi' ? 'top-hi' : 'bore' });
   s.poly(0, tDie === 'hi' ? 'trace-hi' : 'edge', cav);
   const aDie: V3 = [X, 12, zL - 4];
-  // dwa kołki prowadzące z tyłu (krawędź x = 0) — bez płyty górnej: nie „stół”, gniazdo widać z góry
-  for (const [x, y] of [[10, 10], [10, Y - 10]] as const) {
-    s.cylZ(0, [x, y, zL], 40, 3.6);
-    if (!t) s.ell(0, 'fine', [x, y, zL + 40], 'z', 1.8);
-  }
+  // cztery słupy prowadzące w narożnikach (przedni lewy zasłania matryca — widać trzy), na nich w nagłówku płyta górna
+  const PH = t ? 34 : G0 + 22;
+  const posts = [[9, 9], [X - 9, 9], [9, Y - 9]] as const;
+  for (const [x, y] of posts) s.cylZ(0, [x, y, zL], PH, 3.4, { tone: 'ink' });
   // linie rzutu matryca → stempel (dokładnie G0)
   for (const i of [0, 7, 2]) s.stretch(0, cav[i], 1, 'proj');
 
   /* g1: stempel — ten sam kształt, uniesiony o G0, z trzpieniem */
-  const zP0 = zL + G0;
+  const zP0 = zL + (t ? 26 : G0);
   s.prism(1, shape(cx, cy, zP0, SK), [0, 0, 14], tPunch);
   s.cylZ(1, [cx - 10 * SK, cy, zP0 + 14], 12, 7);
   const aPunch: V3 = [cx + 23 * SK, cy - 4 * SK, zP0 + 7];
+  /* g2: płyta górna (trzyma stempel) — z tyłu nad słupami, z tulejami prowadzącymi; przód stempla zostaje widoczny */
+  const zU = zP0 + 14 + 12;
+  const UX = t ? 40 : 46;
+  s.box(2, 0, 0, zU, UX, Y, 8, 'ink');
+  for (const [x, y] of posts) if (x < UX) s.ell(2, 'bore', [x, y, zU + 8], 'z', 3.8);
+  s.box(2, UX, cy - 9, zU, cx - 10 * SK - UX + 7, 18, 8, 'ink');
 
   /* g0: wypraska-kopia obok (tusz — zdarzenie objęte ochroną) */
   s.prism(0, shape(132, 64, T, 0.9), [0, 0, 3]);
@@ -236,7 +235,7 @@ export const motif: MotifModule = {
   variants: ['drukarska', 'tlocznik'],
   what: {
     drukarska: 'ręczna prasa drukarska z belką na dwóch kolumnach, wrzecionem z pokrętłem i płytą dociskową; łoże z formą wysunięte spod płyty, nad formą arkusz z odbitką, obok stos wydruków',
-    tlocznik: 'wykrojnik rozłożony na płytę dolną z gniazdem w kształcie butelki i uniesiony nad nią stempel tego samego kształtu; obok leży wypraska, kopia wzoru',
+    tlocznik: 'wykrojnik na słupach prowadzących rozłożony na płytę dolną z gniazdem w kształcie butelki, uniesiony nad nią stempel tego samego kształtu i płytę górną; obok leży wypraska, kopia wzoru',
   },
   build,
   describe,

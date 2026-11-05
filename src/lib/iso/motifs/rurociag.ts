@@ -74,7 +74,8 @@ function lifted(s: Sketch, gStem: number, top: V3, R: number, lift: number, plai
 /* ---------- kolektor: /kontakt/ ---------- */
 function kolektor(s: Sketch, m: MotifInput) {
   const t = hi(m);
-  const B = budget(m, { inputs: 2 });
+  // miniatura: jeden wlot w lewej kolumnie (węższe kolumny — instalacja dostaje szerokość kadru)
+  const B = budget(m, { inputs: m.thumb ? 1 : 2 });
   const r = 7.5;
   const ZP = T + 14 + r;
   const xh = 100;
@@ -109,14 +110,17 @@ function kolektor(s: Sketch, m: MotifInput) {
     outAnch.push(rimAt([179, y, ZP], 'x', r + 5, [1, -0.2]));
   }
   B.inputs.forEach((txt, i) => s.label(txt, inAnch[i], 'l', 1, 'ink'));
-  s.label(B.slots[0], outAnch[0], 'r', 1, t);
-  s.label(B.slots[1], outAnch[1], 'r', 1, t);
+  // miniatura: węższa prawa kolumna (instalacja dostaje szerokość kadru)
+  const wrap = m.thumb ? 10 : undefined;
+  s.label(B.slots[0], outAnch[0], 'r', 1, t, wrap);
+  s.label(B.slots[1], outAnch[1], 'r', 1, t, wrap);
 }
 
 /* ---------- rozdzielacz: /rynek-lloyds/ ---------- */
 function rozdzielacz(s: Sketch, m: MotifInput) {
   const t = hi(m);
-  const B = budget(m, { inputs: 1 });
+  // miniatura: bez złączki (jej odnośnik w lewo przeciąłby wlot i podporę) — wlot po lewej, gruba gałąź po prawej
+  const B = budget(m, { inputs: 1, order: m.thumb ? [1, 2] : [0, 1, 2] });
   const yh = 40;
   const ZP = T + 16 + 10;
   const xh = 96;
@@ -131,7 +135,8 @@ function rozdzielacz(s: Sketch, m: MotifInput) {
   s.cylX(2, [42, yh, ZP], 4, 14, { tone: 'ink' });
   s.cylX(2, [46, yh, ZP], 16, 11, { r1: 6.5, tone: 'ink' });
   s.cylX(2, [62, yh, ZP], 4, 10, { tone: 'ink' });
-  const aRed = rimAt([46, yh, ZP], 'x', 11, [-0.4, -1]);
+  // kotwica złączki: szczyt jej szerszego końca (wyżej niż kołnierz wlotu na rysunku)
+  const aRed = rimAt([46, yh, ZP], 'x', 14, [0, -1]);
   s.cylX(1, [66, yh, ZP], xh - 66, 6.5, { noCap: true });
   // piasta rozdzielacza (kula na cokole, g2)
   s.box(0, xh - 9, yh - 9, T, 18, 18, zh - RH - T + 4);
@@ -171,7 +176,10 @@ function rozdzielacz(s: Sketch, m: MotifInput) {
 /* ---------- licznik: /wiedza/llmjacking/ ---------- */
 function licznik(s: Sketch, m: MotifInput) {
   const t = hi(m);
-  const B = budget(m);
+  // wylot (slot 2) ma podpis w lewej kolumnie — w wąskim nagłówku dwie kolumny zmniejszyłyby rysunek: tam bez niego;
+  // w szerokim prawa kolumna węższa (14 znaków), żeby rysunek nie zmalał przez dwie kolumny
+  const B = budget(m, { order: m.frame === 'n' ? [0, 1] : [0, 1, 2] });
+  const wrapR = m.frame === 'w' ? 14 : undefined;
   const r = 8;
   const ZP = T + 14 + r;
   const XP = 40;
@@ -191,7 +199,7 @@ function licznik(s: Sketch, m: MotifInput) {
     s.cylX(2, [XP + 28, yd, ZP], 4, 13, { tone: deadTone });
     if (!m.thumb) for (let i = 0; i < 4; i++) s.ell(2, 'bore', onCircle([XP + 32, yd, ZP], 'x', 9.5, 45 + i * 90), 'x', 1.3);
     aDead = rimAt([XP + 32, yd, ZP], 'x', 13, [1, -0.1]);
-    s.label(B.fault, aDead, 'r', 2, 'sig');
+    s.label(B.fault, aDead, 'r', 2, 'sig', wrapR);
   });
   s.cylY(1, [XP, yd + 8, ZP], 46, r, { noCap: true });
   // licznik skrzynkowy (g2): kołnierze, korpus, okienko z liczydłem (bez cyfr) na wierzchu, tabliczka na boku
@@ -205,11 +213,12 @@ function licznik(s: Sketch, m: MotifInput) {
     const ya = y0 + 10 + i * 5.6;
     s.poly(2, 'bore', [[XP - 7, ya, zt], [XP + 5, ya, zt], [XP + 5, ya + 4.2, zt], [XP - 7, ya + 4.2, zt]]);
   }
-  // tabliczka na boku licznika (w miniaturze pismo miałoby ~3 px — tam bez niej)
-  if (m.plate && !m.thumb) {
-    const xf = XP + 19.05;
-    s.poly(2, 'fine-ink', [[xf, y1 - 4, ZP - 5], [xf, y0 + 4, ZP - 5], [xf, y0 + 4, ZP + 7], [xf, y1 - 4, ZP + 7]]);
-    s.mark(2, m.plate, [xf, (y0 + y1) / 2, ZP + 1], { u: [0, -1, 0], v: [0, 0, -1], size: 5.2, max: y1 - y0 - 11 });
+  // tabliczka na płycie, obok rury przy wylocie (bok licznika jest za mały na czytelny napis); znika, gdy < 7 px
+  if (m.plate) {
+    const xm = 62;
+    const ym = 214;
+    const plateR: V3[] = [[xm - 9, ym + 44, T], [xm - 9, ym - 44, T], [xm + 9, ym - 44, T], [xm + 9, ym + 44, T]];
+    s.mark(0, m.plate, [xm, ym, T], { u: [0, -1, 0], v: [1, 0, 0], size: 11, max: 82, plate: plateR });
   }
   flange(s, 2, 'y', [XP, y1, ZP], r);
   // kotwica pod tabliczką (odnośnik w prawo przechodzi pod podporą i martwą odnogą)
@@ -231,17 +240,19 @@ function licznik(s: Sketch, m: MotifInput) {
   // dalej rura do wylotu (lewy dolny koniec)
   s.cylY(1, [XP, yt + 8, ZP], 262 - yt - 8, r, { noCap: true });
   flange(s, 1, 'y', [XP, 262, ZP], r);
-  const aOut = rimAt([XP, 265, ZP], 'y', r + 5, [1, 0.6]);
-  s.label(B.slots[0], aMeter, 'r', 2, t);
-  s.label(B.slots[1], aTap, 'r', 2, 'ink');
-  s.label(B.slots[2], aOut, 'r', 1, t);
+  // wylot (lewy dolny koniec rury): odnośnik w prawo biegłby wzdłuż całej przedniej krawędzi płyty — lewa kolumna
+  const aOut = rimAt([XP, 265, ZP], 'y', r + 5, [-1, 0.2]);
+  s.label(B.slots[0], aMeter, 'r', 2, t, wrapR);
+  s.label(B.slots[1], aTap, 'r', 2, 'ink', wrapR);
+  s.label(B.slots[2], aOut, 'l', 1, t);
 }
 
 /* ---------- kolnierz: /ubezpieczenia/ubezpieczenia-transakcyjne/ ---------- */
 function kolnierz(s: Sketch, m: MotifInput) {
   const t = hi(m);
-  // oba kołnierze (dwie spółki) mają podpis w każdym kadrze; opaska („ryzyka zidentyfikowane”) — tylko gdy zostaje miejsce
-  const B = budget(m, { order: [0, 1, 2] });
+  // oba kołnierze (dwie spółki) mają podpis w każdym kadrze; opaska („ryzyka zidentyfikowane”) bez podpisu — jej
+  // odnośnik musiałby przejść nad kołnierzami i zepchnąć ich podpisy na rurę B (opaska zostaje w tuszu)
+  const B = budget(m, { order: [0, 1] });
   const YP = 40;
   const r = 12;
   const ZP = T + 28;
@@ -261,7 +272,7 @@ function kolnierz(s: Sketch, m: MotifInput) {
       return [x + (i % 2 ? amp : -amp), YP + rr * Math.cos((a * Math.PI) / 180), ZP + rr * Math.sin((a * Math.PI) / 180)] as V3;
     });
   s.poly(0, 'edge', crackPts(70, 0, 100, 6, 2.2, r + 0.2), false);
-  const clamp = s.cylX(0, [62, YP, ZP], 16, r + 2.5, { tone: t });
+  const clamp = s.cylX(0, [62, YP, ZP], 16, r + 2.5, { tone: B.slots[2] ? t : 'ink' });
   if (!m.thumb) s.box(0, 66, YP - 4, ZP + r + 1.5, 8, 8, 5, 'ink');
   void clamp;
   // szczyt opaski leży na rysunku wyżej niż szczyty kołnierzy: jej odnośnik idzie górą, nad złączem
@@ -278,9 +289,10 @@ function kolnierz(s: Sketch, m: MotifInput) {
   s.cylX(1, [116, YP, ZP], 2.5, RF - 3, { tone: 'ink', bore: r - 1 });
   // strona B (g2): kołnierz, odcinek z czerwoną rysą bez opaski, blok
   flange(s, 2, 'x', [131, YP, ZP], r, tB, 11);
-  const aFlB = rimAt([134, YP, ZP], 'x', RF, TOPDIR);
+  // kołnierz B: prawy górny skraj — odnośnik w prawo idzie nad rurą B i blokiem B
+  const aFlB = rimAt([134, YP, ZP], 'x', RF, RIM);
   s.cylX(2, [134, YP, ZP], 100, r, { noCap: true });
-  const red = crackPts(147, 8, 112, 8, 3, r + 0.3);
+  const red = crackPts(156, 8, 112, 8, 3, r + 0.3);
   s.poly(2, B.fault ? 'edge-sig' : 'edge', red, false);
   block(2, 234);
   s.label(B.slots[0], aFlB, 'r', 2, tB);
