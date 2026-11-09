@@ -40,6 +40,8 @@ Serwis: projekt **Cloudflare Pages `aura-web`** (statyczny build Astro, `public/
 - [x] **Web Analytics** (beacon JS): Off dla `www.auraconsulting.pl` — Configuration Rule „Disable RUM” dla `http.host eq "www.auraconsulting.pl"` (5.11; automatycznie wstrzykiwany `beacon.min.js` łamał CSP i przeczył polityce prywatności). Reguła Web Analytics strefy (include `*`, auto-install) bez zmian — subdomeny mierzone jak wcześniej. Pomiar ruchu w przeglądarce: GA4 za zgodą (gałąź `feat/ga4-consent`, CSP już ma źródła Google) — reguła „Disable RUM” zostaje.
 - [ ] Powiadomienia: certyfikaty, błędy Workera, wzrost 5xx/1015/1027 dla botów.
 
+- [ ] **Alert o niedostarczonych zgłoszeniach z formularza** (`functions/api/resend-webhook.js`, 9.11.2026): webhook Resend → `https://www.auraconsulting.pl/api/resend-webhook` na zdarzenia `email.bounced`, `email.suppressed`, `email.failed`. Zmienne w Cloudflare Pages (Production): `RESEND_WEBHOOK_SECRET` (secret, „Signing secret” webhooka z panelu Resend) i `ALERT_TO` (adres inny niż `CONTACT_TO`). Bez nich funkcja odpowiada 503 i alertów nie ma. Powód: 6.11 jedno odbicie zablokowało `CONTACT_TO` w Resend i przez 3 dni zgłoszenia nie docierały.
+
 ## 5. Weryfikacja po wdrożeniu (smoke)
 
 ```bash
