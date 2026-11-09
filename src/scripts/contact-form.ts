@@ -3,8 +3,51 @@
 // Konfigurator wpisuje podsumowanie do pola [data-cform-config] i wysyła zdarzenie `cform-config`;
 // z innej strony przekazuje je przez sessionStorage (klucz niżej).
 // Po udanej wysyłce: zdarzenie GA4 generate_lead (wysyłane tylko przy zgodzie — src/scripts/analytics.ts).
+// Ochrona przed spamem: Cloudflare Turnstile (src/lib/turnstile.ts) — widżet renderowany w [data-turnstile] przy
+// pierwszym fokusie; token (cf-turnstile-response) sprawdza /api/kontakt. Token jest jednorazowy: reset po każdej próbie.
 
 import { track } from './analytics.ts';
+import { TURNSTILE_ACTION, TURNSTILE_SCRIPT, TURNSTILE_SITEKEY } from '../lib/turnstile.ts';
+
+interface Turnstile {
+  render(el: HTMLElement, opts: Record<string, unknown>): string;
+  reset(id?: string): void;
+  getResponse(id?: string): string | undefined;
+}
+declare global {
+  interface Window {
+    turnstile?: Turnstile;
+  }
+}
+
+const TS_FIELD = 'cf-turnstile-response';
+const TS_WAIT_MS = 8000;
+let tsLoad: Promise<Turnstile | null> | null = null;
+
+function loadTurnstile(): Promise<Turnstile | null> {
+  tsLoad ??= new Promise((resolve) => {
+    if (window.turnstile) return resolve(window.turnstile);
+    const s = document.createElement('script');
+    s.src = TURNSTILE_SCRIPT;
+    s.async = true;
+    s.onload = () => resolve(window.turnstile ?? null);
+    s.onerror = () => resolve(null); // np. bloker treści
+    document.head.appendChild(s);
+  });
+  return tsLoad;
+}
+
+/** Token Turnstile; czeka do TS_WAIT_MS, aż niewidoczne sprawdzenie się zakończy. */
+async function turnstileToken(ts: Turnstile | null, id: string | undefined): Promise<string> {
+  if (!ts || id === undefined) return '';
+  const end = Date.now() + TS_WAIT_MS;
+  let token = ts.getResponse(id) ?? '';
+  while (!token && Date.now() < end) {
+    await new Promise((r) => setTimeout(r, 250));
+    token = ts.getResponse(id) ?? '';
+  }
+  return token;
+}
 
 const CONFIG_KEY = 'aura-config-handoff';
 
@@ -82,6 +125,26 @@ export function initContactForms() {
     if (pending) applyConfig(root, pending);
     root.addEventListener('cform-config', () => applyConfig(root, config?.value ?? ''));
 
+    // Turnstile: render od razu po załadowaniu warstwy JS (zwykle przy pierwszym fokusie), żeby token był gotowy
+    let widgetId: string | undefined;
+    const box = form.querySelector<HTMLElement>('[data-turnstile]');
+    const tsReady: Promise<Turnstile | null> = box
+      ? loadTurnstile().then((ts) => {
+          if (ts) {
+            widgetId = ts.render(box, {
+              sitekey: TURNSTILE_SITEKEY,
+              action: TURNSTILE_ACTION,
+              appearance: 'interaction-only',
+              size: 'flexible',
+              theme: 'light',
+              language: 'pl',
+              'refresh-expired': 'auto',
+            });
+          }
+          return ts;
+        })
+      : Promise.resolve(null);
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const errors = validate(form);
@@ -95,8 +158,21 @@ export function initContactForms() {
       const original = label?.textContent ?? '';
       if (button) button.disabled = true;
       if (label) label.textContent = 'Wysyłanie…';
+      const ts = await tsReady;
+      const token = await turnstileToken(ts, widgetId);
+      if (box && !token) {
+        if (button) button.disabled = false;
+        if (label) label.textContent = original;
+        setErrors(form, {
+          form: ts
+            ? 'Trwa sprawdzanie zabezpieczenia przed spamem. Jeśli nad przyciskiem widać pole do zaznaczenia, zaznacz je i wyślij ponownie.'
+            : 'Nie udało się wczytać zabezpieczenia przed spamem (może je blokować rozszerzenie przeglądarki). Spróbuj ponownie albo zadzwoń: +48 500 502 702.',
+        });
+        return;
+      }
       const data = Object.fromEntries(new FormData(form).entries());
       data.consent = (form.elements.namedItem('consent') as HTMLInputElement).checked ? 'on' : '';
+      if (token) data[TS_FIELD] = token;
       try {
         const res = await fetch(form.action, {
           method: 'POST',
@@ -115,6 +191,7 @@ export function initContactForms() {
       } finally {
         if (button) button.disabled = false;
         if (label) label.textContent = original;
+        if (ts && widgetId !== undefined) ts.reset(widgetId); // token jednorazowy — nowy na kolejną próbę
       }
     });
   }

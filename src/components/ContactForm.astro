@@ -6,6 +6,8 @@
  * Działa bez JS: zwykły POST z walidacją przeglądarki, powrót 303 na #formularz-wyslano albo #formularz-blad
  * (komunikat odsłania CSS :target). Z JS — fetch i błędy przy polach; skrypt ładuje się dopiero przy pierwszym
  * fokusie w formularzu albo przekazaniu podsumowania z konfiguratora (zdarzenie `cform-config`, sessionStorage).
+ * Ochrona przed spamem: Cloudflare Turnstile w [data-turnstile] (src/lib/turnstile.ts) — zwykle niewidoczny;
+ * bez JS wysyłka jest odrzucana (komunikat w <noscript> wskazuje telefon).
  */
 import Icon from './Icon.astro';
 import { SITE } from '../lib/site.ts';
@@ -75,6 +77,10 @@ const topic = Astro.url.pathname.startsWith(CYBER_HUB) || hub === CYBER_HUB ? 'c
       </div>
     </div>
 
+    <div class="cform__turnstile" data-turnstile></div>
+    <noscript>
+      <p class="cform__note">Formularz wymaga włączonego JavaScriptu (zabezpieczenie przed spamem). Możesz też zadzwonić: <a href={`tel:${SITE.phoneE164}`}>{SITE.phone}</a>.</p>
+    </noscript>
     <div class="cform__actions">
       <button type="submit" class="btn btn--signal" data-cform-submit><Icon name="arrow-right" size={18} /><span data-label>Wyślij zapytanie</span></button>
       <p class="cform__note">Odpowiadamy w dni robocze, zwykle w ciągu jednego dnia roboczego.</p>
@@ -128,6 +134,13 @@ const topic = Astro.url.pathname.startsWith(CYBER_HUB) || hub === CYBER_HUB ? 'c
   }
   .cform__result--err {
     border-left-color: var(--signal);
+  }
+  /* Turnstile: kontener pusty, dopóki widżet nie musi pokazać pola do zaznaczenia */
+  .cform__turnstile {
+    margin-top: var(--s-2);
+  }
+  .cform__turnstile:empty {
+    display: none;
   }
   .cform__result:target {
     display: block;

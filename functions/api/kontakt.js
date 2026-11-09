@@ -9,11 +9,15 @@
 // Reklamacje i szkody mają w temacie dodatkowy znacznik („[REKLAMACJA] ”, „[SZKODA] ”) — 30-dniowy termin
 // odpowiedzi na reklamację (ustawa o rozpatrywaniu reklamacji, art. 6) widać od razu w skrzynce.
 // Bez JS: odpowiedź 303 na stronę formularza z kotwicą #formularz-wyslano albo #formularz-blad (komunikat w HTML, CSS :target).
-// Ochrona przed spamem: pole-pułapka, minimalny czas wypełnienia, sprawdzenie Origin, limit 1 wysyłki / 20 s / IP.
+// Ochrona przed spamem: pole-pułapka, minimalny czas wypełnienia, sprawdzenie Origin, limit 1 wysyłki / 20 s / IP
+// oraz Cloudflare Turnstile (od 9.11.2026): gdy ustawiony jest TURNSTILE_SECRET_KEY, wysyłka bez ważnego tokenu
+// `cf-turnstile-response` (action „kontakt”, hostname serwisu) jest odrzucana — także bez JS (komunikat w <noscript>).
 
 const ALLOWED_HOSTS = [/^(www\.)?auraconsulting\.pl$/, /(^|\.)aura-web-2s1\.pages\.dev$/, /^localhost(:\d+)?$/, /^127\.0\.0\.1(:\d+)?$/];
 const EMAIL_RE = /^[^\s@<>()[\],;:"]+@[^\s@<>()[\],;:"]+\.[a-z]{2,}$/i;
 const RATE_SECONDS = 20;
+const TURNSTILE_ACTION = 'kontakt'; // jak w src/lib/turnstile.ts
+const TURNSTILE_VERIFY = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const TAG_SITE = '[AI_AURA]'; // znacznik każdej wiadomości z formularzy serwisu
 const TAG_CYBER = '[CYBER_AURA]'; // zamiast TAG_SITE, gdy zapytanie dotyczy cyber
 const CYBER_PAGE = /^\/ubezpieczenie-cyber\//;
@@ -52,6 +56,25 @@ function hostAllowed(value) {
     return ALLOWED_HOSTS.some((re) => re.test(host));
   } catch {
     return false;
+  }
+}
+
+/** Siteverify: true = człowiek; false = odrzuć; null = Turnstile niedostępny (błąd sieci/odpowiedzi). */
+async function verifyTurnstile(secret, token, ip) {
+  if (!token || typeof token !== 'string' || token.length > 2048) return false;
+  try {
+    const res = await fetch(TURNSTILE_VERIFY, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ secret, response: token, remoteip: ip, idempotency_key: crypto.randomUUID() }),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) return null;
+    const r = await res.json();
+    if (!r.success) return false;
+    return r.action === TURNSTILE_ACTION && ALLOWED_HOSTS.some((re) => re.test(String(r.hostname || '')));
+  } catch {
+    return null;
   }
 }
 
@@ -120,8 +143,19 @@ export async function onRequestPost({ request, env }) {
   if (!consent) errors.consent = 'Zaznacz prośbę o kontakt.';
   if (Object.keys(errors).length) return reply(wantsJson, 422, { ok: false, errors }, pagePath);
 
-  // prosty limit: 1 wysyłka na 20 s z jednego adresu IP (cache brzegowy Cloudflare)
   const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+
+  if (env.TURNSTILE_SECRET_KEY) {
+    const human = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, data['cf-turnstile-response'], ip);
+    if (human === null) {
+      return reply(wantsJson, 503, { ok: false, errors: { form: 'Nie udało się sprawdzić zabezpieczenia przed spamem. Spróbuj ponownie za chwilę albo zadzwoń: +48 500 502 702.' } }, pagePath);
+    }
+    if (!human) {
+      return reply(wantsJson, 403, { ok: false, errors: { form: 'Nie udało się potwierdzić, że wiadomość wysyła człowiek. Odśwież stronę i spróbuj ponownie albo zadzwoń: +48 500 502 702.' } }, pagePath);
+    }
+  }
+
+  // prosty limit: 1 wysyłka na 20 s z jednego adresu IP (cache brzegowy Cloudflare)
   const rateKey = new Request(`https://rate-limit.invalid/kontakt/${encodeURIComponent(ip)}`);
   const cache = caches.default;
   if (await cache.match(rateKey)) {

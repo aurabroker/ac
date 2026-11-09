@@ -1,10 +1,11 @@
 # Nagłówki Cloudflare Pages (limit: 100 reguł; build dopisuje reguły canonical dla .md).
 # CSP: źródła Google (googletagmanager.com, *.google-analytics.com, *.analytics.google.com) tylko dla GA4,
 # który ładuje się wyłącznie po zgodzie (src/lib/analytics.ts). Bez zgody przeglądarka się z nimi nie łączy.
+# challenges.cloudflare.com (script-src, frame-src): Cloudflare Turnstile w formularzu kontaktowym (src/lib/turnstile.ts).
 # Uwaga: nagłówki z tego pliku NIE dotyczą odpowiedzi Pages Function (/api/kontakt ustawia własne).
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://www.googletagmanager.com; font-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; manifest-src 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://www.googletagmanager.com; font-src 'self'; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; manifest-src 'self'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), browsing-topics=()

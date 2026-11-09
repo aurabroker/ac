@@ -3,8 +3,8 @@ title: "Polityka prywatności"
 description: "Jak Aura Consulting przetwarza dane osobowe: administrator, cele i podstawy prawne, odbiorcy, okres przechowywania, prawa osób, pliki cookie i statystyki."
 seoTitle: "Polityka prywatności i informacja RODO · Aura Consulting"
 published: 2026-11-02
-updated: 2026-11-05
-revision: "F"
+updated: 2026-11-09
+revision: "G"
 path: "/polityka-prywatnosci/"
 template: "legal"
 sheet: "AC-022"
@@ -38,6 +38,7 @@ changelog:
   - { rev: "D", date: 2026-11-04, note: "Kontakt przez telefon albo formularz; konfigurację wysyła się tylko formularzem." }
   - { rev: "E", date: 2026-11-05, note: "Resend: bez niepotwierdzonej informacji o regionie wysyłki." }
   - { rev: "F", date: 2026-11-05, note: "Statystyki Google Analytics 4 za zgodą (baner zgody, ustawienia w stopce), odbiorca Google, przekazanie poza EOG." }
+  - { rev: "G", date: 2026-11-09, note: "Formularz chroniony przez Cloudflare Turnstile (ochrona przed spamem)." }
 order: 62
 ---
 
@@ -81,14 +82,14 @@ Formularz na stronach serwisu wysyła Twoją wiadomość e-mailem do nas. W tema
 - **Cel i podstawa:** odpowiedź na zapytanie i przygotowanie oferty na Twoje żądanie — art. 6 ust. 1 lit. b RODO; gdy piszesz w imieniu firmy — nasz prawnie uzasadniony interes w kontakcie z jej przedstawicielem, art. 6 ust. 1 lit. f RODO. Zaznaczenie pola przy formularzu potwierdza, że prosisz o kontakt; nie jest zgodą na marketing.
 - **Odbiorcy:** Cloudflare, Inc. (hosting i przetworzenie formularza) oraz Resend, Inc. (wysyłka wiadomości e-mail), działający na nasze zlecenie, a także nasz dostawca poczty elektronicznej. Przekazanie poza EOG — na podstawach opisanych niżej (art. 45 lub 46 RODO).
 - **Jak długo:** do 12 miesięcy od ostatniego kontaktu, jeśli nie zawrzemy umowy; dłużej, jeśli wymagają tego przepisy albo ustalenie, dochodzenie lub obrona roszczeń.
-- **Ochrona przed spamem:** formularz ma pole-pułapkę i limit wysyłek; do jego działania krótkotrwale używamy adresu IP (art. 6 ust. 1 lit. f RODO). Nie profilujemy osób wysyłających formularz.
+- **Ochrona przed spamem:** formularz ma pole-pułapkę i limit wysyłek, a od 9 listopada 2026 r. chroni go także Cloudflare Turnstile. Turnstile sprawdza w tle (zwykle bez żadnego zadania do wykonania), czy formularz wypełnia człowiek, a nie automat: przetwarza adres IP oraz informacje o przeglądarce i urządzeniu. Nie widzi treści formularza i nie służy do reklamy ani śledzenia. Podstawa: nasz prawnie uzasadniony interes w ochronie serwisu przed spamem i nadużyciami, art. 6 ust. 1 lit. f RODO. Dostawca: Cloudflare, Inc., działający na nasze zlecenie (przekazanie poza EOG — jak niżej). Nie profilujemy osób wysyłających formularz.
 
 ## Komu przekazujemy dane?
 
 Tylko tym podmiotom, które potrzebują ich do realizacji celów opisanych wyżej:
 
 - **ubezpieczycielom i podmiotom działającym w ich imieniu** (np. partnerom underwritingowym) — w zakresie potrzebnym do przygotowania oferty, zawarcia i wykonania umowy ubezpieczenia; są one odrębnymi administratorami danych i informują o tym we własnych dokumentach;
-- **dostawcom usług**, którzy działają na nasze zlecenie: hostingu, dostarczania strony i obsługi formularza (Cloudflare, Inc.), wysyłki wiadomości z formularza (Resend, Inc.), statystyk odwiedzin — tylko za Twoją zgodą (Google Ireland Limited), poczty elektronicznej, telefonii, usług IT oraz księgowości;
+- **dostawcom usług**, którzy działają na nasze zlecenie: hostingu, dostarczania strony, obsługi formularza i jego ochrony przed spamem — Turnstile (Cloudflare, Inc.), wysyłki wiadomości z formularza (Resend, Inc.), statystyk odwiedzin — tylko za Twoją zgodą (Google Ireland Limited), poczty elektronicznej, telefonii, usług IT oraz księgowości;
 - **organom publicznym**, gdy wymagają tego przepisy (na przykład Komisji Nadzoru Finansowego, sądom).
 
 ## Czy dane trafiają poza Europejski Obszar Gospodarczy?
